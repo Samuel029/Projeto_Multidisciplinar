@@ -1,12 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Website</title>
-</head>
-<body>
-    <h1>Welcome to My Website</h1>
-    <p>This is the homepage of my website.</p>
-</body>
-</html>
+{% extends "layout.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+    <div class="jumbotron">
+        <h1 class="display-4">Bem-vindo ao Sistema de Autenticação</h1>
+        {% if current_user.is_authenticated %}
+            <p class="lead">Olá {{ current_user.username }}! Você está logado com o email {{ current_user.email }}.</p>
+        {% else %}
+            <p class="lead">Este é um sistema de autenticação com Flask e MySQL que inclui registro, login e redefinição de senha.</p>
+            <hr class="my-4">
+            <p>Registre-se ou faça login para continuar.</p>
+            <a class="btn btn-primary btn-lg" href="{{ url_for('register') }}" role="button">Registrar</a>
+            <a class="btn btn-secondary btn-lg" href="{{ url_for('login') }}" role="button">Login</a>
+        {% endif %}
+    </div>
+{% endblock %}
