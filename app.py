@@ -5,7 +5,7 @@ from flask import Flask, render_template, url_for, flash, redirect, request, ses
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager, login_user, current_user, logout_user, login_required, UserMixin
 from flask_mail import Mail, Message
-from datetime import datetime, timedelta, UTC
+from datetime import datetime, timedelta
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField
@@ -15,7 +15,7 @@ from itsdangerous import URLSafeTimedSerializer as Serializer
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = 'chave-secreta-padrao'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:felipe080807@localhost/banco_login'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
@@ -230,6 +230,10 @@ def debug_users():
     return render_template('debug_users.html', title='Usuários Registrados', users=users)
 
 with app.app_context():
+    db_dir = os.path.dirname(app.config['SQLALCHEMY_DATABASE_URI'].replace('sqlite:///', ''))
+    if db_dir and not os.path.exists(db_dir):
+        os.makedirs(db_dir)
+    
     db.create_all()
     print("Tabelas criadas com sucesso!")
 
