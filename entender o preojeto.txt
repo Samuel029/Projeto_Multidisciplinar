@@ -13,5 +13,5 @@ o arquivo .gitignore não mexa nele, ele serve para quanto fazer um commit ele l
 
 ou seja, backend mexe com a pasta back e app.py
 
-front mexe com html e css
+front mexe com html e css 
 
