@@ -21,7 +21,7 @@ app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = 'felipepereirabritto08@gmail.com' 
-app.config['MAIL_PASSWORD'] = 'cdws sdkp hpzl ecqt'
+app.config['MAIL_PASSWORD'] = 'tlce mwsx snue ceoe'
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
 
 db = SQLAlchemy(app)
