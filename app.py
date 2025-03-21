@@ -17,11 +17,12 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'chave-secreta-padrao'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_SERVER'] = 'smtp.sendgrid.net'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'felipepereirabritto08@gmail.com' 
-app.config['MAIL_PASSWORD'] = 'psxt mmkq iuqs hhln'
+app.config['MAIL_USERNAME'] = 'apikey'
+app.config['MAIL_PASSWORD'] = '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'
+app.config['MAIL_DEFAULT_SENDER'] = 'felipepereirabritto08@gmail.com'
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
 
 db = SQLAlchemy(app)
@@ -115,7 +116,7 @@ def load_user(user_id):
 def send_reset_code_email(user, code):
     try:
         msg = Message('Código de Recuperação de Senha',
-                    sender=app.config['MAIL_USERNAME'],
+                    sender=app.config['MAIL_DEFAULT_SENDER'],
                     recipients=[user.email])
         msg.body = f'''Para redefinir sua senha, use o seguinte código de verificação:
 
