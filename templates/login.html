@@ -1,64 +1,26 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='login.css') }}">
-</head>
+    <title>Login/Signup Form</title>
+    <link rel="stylesheet" href="login.css">
+    <link href="https://unkpg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
 </head>
 <body>
-    <div class="container mt-5">
-        <div class="content-section">
-            <form method="POST" action="">
-                {{ form.hidden_tag() }}
-                <fieldset class="form-group">
-                    <legend class="border-bottom mb-4">Login</legend>
-                    <div class="form-group">
-                        {{ form.email.label(class="form-control-label") }}
-                        {% if form.email.errors %}
-                            {{ form.email(class="form-control form-control-lg is-invalid") }}
-                            <div class="invalid-feedback">
-                                {% for error in form.email.errors %}
-                                    <span>{{ error }}</span>
-                                {% endfor %}
-                            </div>
-                        {% else %}
-                            {{ form.email(class="form-control form-control-lg") }}
-                        {% endif %}
-                    </div>
-                    <div class="form-group mt-3">
-                        {{ form.password.label(class="form-control-label") }}
-                        {% if form.password.errors %}
-                            {{ form.password(class="form-control form-control-lg is-invalid") }}
-                            <div class="invalid-feedback">
-                                {% for error in form.password.errors %}
-                                    <span>{{ error }}</span>
-                                {% endfor %}
-                            </div>
-                        {% else %}
-                            {{ form.password(class="form-control form-control-lg") }}
-                        {% endif %}
-                    </div>
-                    <div class="form-check mt-3">
-                        {{ form.remember(class="form-check-input") }}
-                        {{ form.remember.label(class="form-check-label") }}
-                    </div>
-                </fieldset>
-                <div class="form-group mt-3">
-                    {{ form.submit(class="btn btn-outline-info") }}
-                    <small class="text-muted ms-2">
-                        <a href="{{ url_for('reset_request') }}">Esqueceu a senha?</a>
-                    </small>
-                </div>
-            </form>
-            <div class="border-top pt-3 mt-3">
-                <small class="text-muted">
-                    Precisa de uma conta? <a class="ms-2" href="{{ url_for('register') }}">Registre-se agora</a>
-                </small>
-            </div>
+    <div> class="container">
+        <div> class = "form-box login">
+            <form action="#"></form>
+        <h1>Login</h1>
+        <div> class= "input-box">
+            <input type="text" placeholder="Username" required>
+            <i> class='bx bxs-user'></i>
         </div>
-    </div>
-</body>
+        <div> class="input-box">
+            <input type="password" placeholder="Password"
+required>
+            <i> class='bx bxs-lock-alt'></i> 
+               </div>
+    
+</body> 
 </html>
