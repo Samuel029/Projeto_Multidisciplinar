@@ -27,7 +27,10 @@ body {
 
 .content-section:hover {
     transform: translateY(-5px);
+    box-shadow: 0 20px 35px rgba(71, 118, 230, 0.2);
 }
+
+
 
 .content-section::before {
     content: '';
@@ -38,7 +41,6 @@ body {
     height: 5px;
     background: linear-gradient(90deg, #4776E6 0%, #8E54E9 100%);
 }
-
 
 legend {
     font-size: 28px;
