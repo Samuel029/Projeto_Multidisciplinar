@@ -230,6 +230,11 @@ def debug_users():
     users = User.query.all()
     return render_template('debug_users.html', title='Usuários Registrados', users=users)
 
+@app.route("/dashboard")
+@login_required  # This ensures only logged-in users can access it
+def dashboard():
+    return render_template('dashboard.html')
+
 with app.app_context():
     db_dir = os.path.dirname(app.config['SQLALCHEMY_DATABASE_URI'].replace('sqlite:///', ''))
     if db_dir and not os.path.exists(db_dir):
