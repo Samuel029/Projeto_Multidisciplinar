@@ -3,12 +3,13 @@
 {% block content %}
     <div class="jumbotron">
         <h1 class="display-4">Bem-vindo ao Sistema de Autenticação</h1>
+        <p class="lead">Este é um sistema de autenticação com Flask e MySQL.</p>
+        <hr class="my-4">
         {% if current_user.is_authenticated %}
-            <p class="lead">Olá {{ current_user.username }}! Você está logado com o email {{ current_user.email }}.</p>
+            <p>Você está logado como {{ current_user.username }}.</p>
+            <a class="btn btn-primary btn-lg" href="{{ url_for('dashboard') }}" role="button">Ir para Dashboard</a>
         {% else %}
-            <p class="lead">Este é um sistema de autenticação com Flask e MySQL que inclui registro, login e redefinição de senha.</p>
-            <hr class="my-4">
-            <p>Registre-se ou faça login para continuar.</p>
+            <p>Registre-se ou faça login para acessar o sistema.</p>
             <a class="btn btn-primary btn-lg" href="{{ url_for('register') }}" role="button">Registrar</a>
             <a class="btn btn-secondary btn-lg" href="{{ url_for('login') }}" role="button">Login</a>
         {% endif %}

@@ -153,7 +153,7 @@ def register():
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('home'))
+        return redirect(url_for('dashboard'))  # Alterado para redirecionar para dashboard
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
@@ -165,7 +165,7 @@ def login():
             login_user(user, remember=form.remember.data)
             next_page = request.args.get('next')
             flash('Login realizado com sucesso!', 'success')
-            return redirect(next_page) if next_page else redirect(url_for('home'))
+            return redirect(next_page) if next_page else redirect(url_for('dashboard'))  # Alterado para dashboard
     return render_template('login.html', title='Login', form=form)
 
 @app.route("/logout")

@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+    <div class="content-section">
+        <div class="media">
+            <img class="rounded-circle account-img" src="{{ url_for('static', filename='profile_pics/default.jpg') }}">
+            <div class="media-body">
+                <h2 class="account-heading">{{ current_user.username }}</h2>
+                <p class="text-secondary">{{ current_user.email }}</p>
+            </div>
+        </div>
+        
+        <h3 class="mt-4">Área Logada</h3>
+        <p>Conteúdo exclusivo para usuários autenticados.</p>
+        
+        <div class="border-top pt-3 mt-4">
+            <a class="btn btn-info" href="{{ url_for('home') }}">Voltar para Home</a>
+        </div>
+    </div>
+{% endblock %}

@@ -18,4 +18,4 @@ front mexe com html e css
 
 instale as bibliotecas abaixo
 
-pip install Flask Flask-Bcrypt Flask-Login Flask-Mail Flask-SQLAlchemy Flask-WTF WTForms itsdangerous
+pip install Flask Flask-Bcrypt Flask-Login Flask-Mail Flask-SQLAlchemy Flask-WTF WTForms itsdangerous login_validator
