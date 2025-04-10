@@ -1,0 +1,10 @@
+Flask
+Flask-Bcrypt
+Flask-Login
+Flask-Mail
+Flask-SQLAlchemy
+Flask-WTF
+WTForms
+itsdangerous
+email-validator
+gunicorn
