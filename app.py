@@ -28,7 +28,7 @@ app.config['MAIL_DEFAULT_SENDER'] = 'technobugproject@gmail.com'
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 mail = Mail(app)
-
+ 
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 login_manager.login_message = 'Por favor, faça login para acessar esta página.'
