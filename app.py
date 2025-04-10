@@ -93,10 +93,6 @@ class RequestResetForm(FlaskForm):
         if not user:
             raise ValidationError('Não existe uma conta com esse email. Registre-se primeiro.')
 
-class VerifyResetCodeForm(FlaskForm):
-    code = StringField('Código de Verificação', validators=[DataRequired(), Length(min=6, max=6)])
-    submit = SubmitField('Verificar Código')
-
 class ResetPasswordForm(FlaskForm):
     password = PasswordField('Nova Senha', validators=[DataRequired()])
     confirm_password = PasswordField('Confirmar Senha', validators=[DataRequired(), EqualTo('password')])
@@ -199,15 +195,15 @@ def verify_reset_code():
         flash('Usuário não encontrado.', 'danger')
         return redirect(url_for('reset_request'))
 
-    form = VerifyResetCodeForm()
-    if form.validate_on_submit():
-        if user.verify_reset_code(form.code.data):
+    if request.method == 'POST':
+        input_code = request.form.get('reset_code')
+        if user.verify_reset_code(input_code):
             session['allow_password_reset'] = True
             return redirect(url_for('reset_password'))
         else:
             flash('Código inválido ou expirado.', 'danger')
     
-    return render_template('verify_reset_code.html', form=form)
+    return render_template('verify_reset_code.html')
 
 @app.route("/reset_password/final", methods=['GET', 'POST'])
 def reset_password():
@@ -233,7 +229,7 @@ def reset_password():
         session.pop('reset_email', None)
         flash('Sua senha foi atualizada! Você pode fazer login agora.', 'success')
         return redirect(url_for('login'))
-    return render_template('reset_password.html', form=form)
+    return render_template('reset_token.html', form=form)
 
 @app.route("/dashboard")
 @login_required
