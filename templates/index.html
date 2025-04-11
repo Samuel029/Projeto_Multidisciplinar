@@ -1,17 +1,130 @@
 {% extends "basetelaregistro.html" %}
 {% block title %}Home{% endblock %}
+
 {% block content %}
-    <div class="jumbotron">
-        <h1 class="display-4">Bem-vindo ao Sistema de Autenticação</h1>
-        <p class="lead">Este é um sistema de autenticação com Flask e MySQL.</p>
-        <hr class="my-4">
-        {% if current_user.is_authenticated %}
-            <p>Você está logado como {{ current_user.username }}.</p>
-            <a class="btn btn-primary btn-lg" href="{{ url_for('dashboard') }}" role="button">Ir para Dashboard</a>
-        {% else %}
-            <p>Registre-se ou faça login para acessar o sistema.</p>
-            <a class="btn btn-primary btn-lg" href="{{ url_for('register') }}" role="button">Registrar</a>
-            <a class="btn btn-secondary btn-lg" href="{{ url_for('login') }}" role="button">Login</a>
-        {% endif %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="jumbotron animate__animated animate__fadeIn">
+            <h1 class="display-4">Bem-vindo ao TechnoBug</h1>
+            <p class="lead">Suporte adicional para alunos do curso técnico em Desenvolvimento de Sistemas</p>
+            
+            <hr class="my-4">
+            
+            <div class="row mb-4">
+                <div class="col-md-4 text-center mb-3 mb-md-0">
+                    <div class="feature-icon mb-2">
+                        <i class="fas fa-book-open fa-3x text-danger"></i>
+                    </div>
+                    <h5>Materiais Resumidos</h5>
+                    <p class="small">Conteúdos simplificados para revisão rápida</p>
+                </div>
+                
+                <div class="col-md-4 text-center mb-3 mb-md-0">
+                    <div class="feature-icon mb-2">
+                        <i class="fas fa-users fa-3x text-danger"></i>
+                    </div>
+                    <h5>Comunidade Colaborativa</h5>
+                    <p class="small">Troque conhecimentos com outros alunos</p>
+                </div>
+                
+                <div class="col-md-4 text-center">
+                    <div class="feature-icon mb-2">
+                        <i class="fas fa-code fa-3x text-danger"></i>
+                    </div>
+                    <h5>Exercícios Práticos</h5>
+                    <p class="small">Pratique com exemplos complementares</p>
+                </div>
+            </div>
+            
+            {% if current_user.is_authenticated %}
+                <div class="authenticated-section p-3 bg-light rounded">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fas fa-user-check text-success mr-3 fa-2x"></i>
+                        <div>
+                            <h5 class="mb-0">Olá, {{ current_user.username }}!</h5>
+                            <p class="text-muted mb-0">Bom te ver novamente</p>
+                        </div>
+                    </div>
+                    
+                    <p class="mb-4">Acesse o painel de estudos para continuar sua jornada de aprendizado.</p>
+                    
+                    <div class="action-buttons">
+                        <a class="btn btn-primary btn-lg" href="{{ url_for('dashboard') }}" role="button">
+                            <i class="fas fa-graduation-cap mr-2"></i>Painel de Estudos
+                        </a>
+                        <a class="btn btn-outline-secondary btn-lg ml-2" href="#" role="button">
+                            <i class="fas fa-user-cog mr-2"></i>Meu Perfil
+                        </a>
+                    </div>
+                </div>
+            {% else %}
+                <div class="cta-section">
+                    <p class="mb-4">O TechnoBug é seu companheiro de estudos digital, criado para ser um suporte extra ao AVA oficial. Junte-se a outros alunos para aprender de forma mais dinâmica e colaborativa!</p>
+                    
+                    <div class="action-buttons">
+                        <a class="btn btn-primary btn-lg" href="{{ url_for('register') }}" role="button">
+                            <i class="fas fa-user-plus mr-2"></i>Criar Conta
+                        </a>
+                        <a class="btn btn-outline-secondary btn-lg ml-2" href="{{ url_for('login') }}" role="button">
+                            <i class="fas fa-sign-in-alt mr-2"></i>Login
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="info-section mt-4">
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="card animate__animated animate__fadeInLeft">
+                        <div class="card-body">
+                            <h4 class="card-title">
+                                <i class="fas fa-question-circle text-danger mr-2"></i>
+                                Por que TechnoBug?
+                            </h4>
+                            <p class="card-text">Nossa plataforma foi criada como complemento ao AVA oficial do curso. Aqui você encontra explicações simplificadas, dicas práticas e um espaço colaborativo para compartilhar conhecimentos e superar desafios em desenvolvimento de sistemas.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 mb-4">
+                    <div class="card animate__animated animate__fadeInRight">
+                        <div class="card-body">
+                            <h4 class="card-title">
+                                <i class="fas fa-cogs text-danger mr-2"></i>
+                                Recursos Principais
+                            </h4>
+                            <ul class="card-text pl-3">
+                                <li>Materiais resumidos e diretos</li>
+                                <li>Fórum de dúvidas entre alunos</li>
+                                <li>Exercícios complementares</li>
+                                <li>Dicas para projetos práticos</li>
+                                <li>Exemplos de código comentados</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+
+    $(window).scroll(function() {
+        var scrollPos = $(window).scrollTop();
+        
+        $('.info-section .card').each(function() {
+            var cardPos = $(this).offset().top;
+            
+            if (scrollPos + window.innerHeight - 100 > cardPos) {
+                if ($(this).hasClass('animate__fadeInLeft') || $(this).hasClass('animate__fadeInRight')) {
+                    $(this).addClass('animate__animated');
+                }
+            }
+        });
+    });
+</script>
 {% endblock %}
