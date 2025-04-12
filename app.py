@@ -1,357 +1,103 @@
-import os
-import random
-import string
-from flask import Flask, render_template, url_for, flash, redirect, request, session
-from flask_bcrypt import Bcrypt
-from flask_login import LoginManager, login_user, current_user, logout_user, login_required, UserMixin
-from flask_mail import Mail, Message
-from datetime import datetime, timedelta
+from flask import Flask, render_template, request, redirect, url_for, flash, session
 from flask_sqlalchemy import SQLAlchemy
-from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField
-from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
+from werkzeug.security import generate_password_hash, check_password_hash
+import os
+from backend.config import Config
+from backend.extensions import db
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'sua-chave-secreta-forte-aqui'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'technobugproject@gmail.com'
-app.config['MAIL_PASSWORD'] = 'ubuv bcui ozjo yuyx'
-app.config['MAIL_DEFAULT_SENDER'] = 'technobugproject@gmail.com'
+app.config.from_object(Config)
+db.init_app(app)
 
-db = SQLAlchemy(app)
-bcrypt = Bcrypt(app)
-mail = Mail(app)
+with app.app_context():
+    from backend.models import User
+    db.create_all()
 
-login_manager = LoginManager(app)
-login_manager.login_view = 'login'
-login_manager.login_message = 'Por favor, faça login para acessar esta página.'
-login_manager.login_message_category = 'info'
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    from backend.models import User
 
-class User(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(20), unique=True, nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.String(60), nullable=False)
-    date_registered = db.Column(db.DateTime, default=datetime.now)
-    reset_code = db.Column(db.String(6), nullable=True)
-    reset_code_expiry = db.Column(db.DateTime, nullable=True)
-
-    def set_reset_code(self):
-        code = ''.join(random.choices(string.digits, k=6))
-        self.reset_code = code
-        self.reset_code_expiry = datetime.now() + timedelta(minutes=15)
-        return code
-
-    def verify_reset_code(self, code):
-        if self.reset_code is None or self.reset_code_expiry is None:
-            return False
-        if self.reset_code != code:
-            return False
-        return datetime.now() <= self.reset_code_expiry
-
-    def clear_reset_code(self):
-        self.reset_code = None
-        self.reset_code_expiry = None
-
-    def __repr__(self):
-        return f"User('{self.username}', '{self.email}')"
-
-class RegistrationForm(FlaskForm):
-    username = StringField('Nome de usuário', validators=[DataRequired(), Length(min=2, max=20)])
-    email = StringField('Email', validators=[DataRequired(), Email()])
-    password = PasswordField('Senha', validators=[DataRequired()])
-    confirm_password = PasswordField('Confirmar Senha', validators=[DataRequired(), EqualTo('password')])
-    submit = SubmitField('Cadastrar')
-
-    def validate_username(self, username):
-        user = User.query.filter_by(username=username.data).first()
-        if user:
-            raise ValidationError('Nome de usuário já existe. Por favor, escolha outro.')
-
-    def validate_email(self, email):
-        user = User.query.filter_by(email=email.data).first()
-        if user:
-            raise ValidationError('Email já está em uso. Por favor, escolha outro.')
-
-class LoginForm(FlaskForm):
-    email = StringField('Email', validators=[DataRequired(), Email()])
-    password = PasswordField('Senha', validators=[DataRequired()])
-    remember = BooleanField('Lembrar-me')
-    submit = SubmitField('Login')
-
-class RequestResetForm(FlaskForm):
-    email = StringField('Email', validators=[DataRequired(), Email()])
-    submit = SubmitField('Solicitar Código de Recuperação')
-
-    def validate_email(self, email):
-        user = User.query.filter_by(email=email.data).first()
+    # Verifica se há sessão e se o usuário ainda existe no banco
+    user_id = session.get('user_id')
+    if user_id:
+        user = db.session.get(User, user_id)  # Usando a forma recomendada para SQLAlchemy 2.0
         if not user:
-            raise ValidationError('Não existe uma conta com esse email. Registre-se primeiro.')
+            session.clear()  # Limpa a sessão se o usuário não existir mais
+        else:
+            return redirect(url_for('telainicial'))
 
-class ResetPasswordForm(FlaskForm):
-    password = PasswordField('Nova Senha', validators=[DataRequired()])
-    confirm_password = PasswordField('Confirmar Senha', validators=[DataRequired(), EqualTo('password')])
-    submit = SubmitField('Redefinir Senha')
-
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
-
-def send_reset_code_email(user, code):
-    try:
-        msg = Message('Código de Recuperação de Senha', recipients=[user.email])
-        msg.body = f'''Para redefinir sua senha, use o seguinte código:
-
-{code}
-
-Este código é válido por 15 minutos.
-
-Se você não solicitou isso, ignore este email.
-'''
-        mail.send(msg)
-        return True
-    except Exception as e:
-        print(f"Erro ao enviar email: {e}")
-        return False
-
-@app.route("/")
-def home():
+    if request.method == 'POST':
+        if 'login' in request.form:
+            email = request.form.get('email')
+            password = request.form.get('password')
+            
+            if not email or not password:
+                flash('Por favor, preencha todos os campos.', 'error')
+                return redirect(url_for('index'))
+            
+            user = User.query.filter_by(email=email).first()
+            if user and check_password_hash(user.password, password):
+                session['user_id'] = user.id
+                session['username'] = user.username
+                flash(f'Bem-vindo de volta, {user.username}!', 'success')
+                return redirect(url_for('telainicial'))
+            else:
+                flash('Email ou senha incorretos.', 'error')
+                return redirect(url_for('index'))
+                
+        elif 'register' in request.form:
+            username = request.form.get('username')
+            email = request.form.get('email')
+            password = request.form.get('password')
+            confirm_password = request.form.get('confirm_password')
+            
+            if not username or not email or not password or not confirm_password:
+                flash('Por favor, preencha todos os campos.', 'error')
+                return redirect(url_for('index'))
+                
+            if password != confirm_password:
+                flash('As senhas não coincidem.', 'error')
+                return redirect(url_for('index'))
+                
+            existing_user = User.query.filter_by(email=email).first()
+            if existing_user:
+                flash('Este email já está em uso.', 'error')
+                return redirect(url_for('index'))
+                
+            new_user = User(
+                username=username,
+                email=email,
+                password=generate_password_hash(password)
+            )
+            db.session.add(new_user)
+            db.session.commit()
+            
+            flash('Conta criada com sucesso! Faça login para continuar.', 'success')
+            return redirect(url_for('index'))
+    
     return render_template('index.html')
 
-@app.route("/register", methods=['GET', 'POST'])
-def register():
-    if current_user.is_authenticated:
-        return redirect(url_for('home'))
+@app.route('/telainicial')
+def telainicial():
+    from backend.models import User
+    user_id = session.get('user_id')
+    if not user_id:
+        flash('Por favor, faça login para acessar esta página.', 'error')
+        return redirect(url_for('index'))
     
-    form = RegistrationForm()
-    if form.validate_on_submit():
-        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        user = User(username=form.username.data, email=form.email.data, password=hashed_password)
-        db.session.add(user)
-        db.session.commit()
-        flash('Conta criada com sucesso! Faça login.', 'success')
-        return redirect(url_for('login'))
-    return render_template('register.html', title='Registrar', form=form)
+    user = db.session.get(User, user_id)
+    if not user:
+        session.clear()
+        flash('Sua sessão expirou ou o usuário não existe mais.', 'error')
+        return redirect(url_for('index'))
+    
+    return render_template('telainicial.html', user=user)
 
-@app.route("/login", methods=['GET', 'POST'])
-def login():
-    if current_user.is_authenticated:
-        return redirect(url_for('home'))
-    
-    form = LoginForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
-        if user and bcrypt.check_password_hash(user.password, form.password.data):
-            login_user(user, remember=form.remember.data)
-            next_page = request.args.get('next')
-            flash('Login realizado com sucesso!', 'success')
-            return redirect(next_page) if next_page else redirect(url_for('dashboard'))
-        else:
-            flash('Login falhou. Verifique email e senha.', 'danger')
-    return render_template('login.html', title='Login', form=form)
-
-@app.route("/modern_login", methods=['GET', 'POST'])
-def modern_login():
-    if current_user.is_authenticated:
-        return redirect(url_for('dashboard'))
-    
-    login_form = LoginForm()
-    register_form = RegistrationForm()
-    
-    # Lógica para o formulário de login
-    if login_form.validate_on_submit() and request.form.get('submit') == 'Login':
-        user = User.query.filter_by(email=login_form.email.data).first()
-        if user and bcrypt.check_password_hash(user.password, login_form.password.data):
-            login_user(user, remember=login_form.remember.data)
-            next_page = request.args.get('next')
-            flash('Login realizado com sucesso!', 'success')
-            return redirect(next_page) if next_page else redirect(url_for('dashboard'))
-        else:
-            flash('Login falhou. Verifique email e senha.', 'danger')
-    
-    # Lógica para o formulário de registro
-    if register_form.validate_on_submit() and request.form.get('submit') == 'Cadastrar':
-        hashed_password = bcrypt.generate_password_hash(register_form.password.data).decode('utf-8')
-        user = User(username=register_form.username.data, email=register_form.email.data, password=hashed_password)
-        db.session.add(user)
-        db.session.commit()
-        flash('Conta criada com sucesso! Faça login.', 'success')
-        return redirect(url_for('modern_login'))
-    
-    return render_template('modern_login_register.html', 
-                           login_form=login_form,
-                           register_form=register_form)
-
-@app.route("/logout")
+@app.route('/logout')
 def logout():
-    logout_user()
-    flash('Você foi desconectado.', 'info')
-    return redirect(url_for('home'))
-
-@app.route("/reset_password", methods=['GET', 'POST'])
-def reset_request():
-    if current_user.is_authenticated:
-        return redirect(url_for('home'))
-    
-    form = RequestResetForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
-        if user:
-            reset_code = user.set_reset_code()
-            db.session.commit()
-            if send_reset_code_email(user, reset_code):
-                session['reset_email'] = user.email
-                flash('Um email com o código de recuperação foi enviado.', 'info')
-                return redirect(url_for('verify_reset_code'))
-            else:
-                flash('Erro ao enviar email. Tente novamente.', 'danger')
-    return render_template('reset_request.html', title='Redefinir Senha', form=form)
-
-@app.route("/verify_reset_code", methods=['GET', 'POST'])
-def verify_reset_code():
-    if current_user.is_authenticated:
-        return redirect(url_for('home'))
-
-    email = session.get('reset_email')
-    if not email:
-        flash('Sessão expirada. Solicite um novo código.', 'warning')
-        return redirect(url_for('reset_request'))
-
-    user = User.query.filter_by(email=email).first()
-    if not user:
-        flash('Usuário não encontrado.', 'danger')
-        return redirect(url_for('reset_request'))
-
-    if request.method == 'POST':
-        input_code = request.form.get('reset_code')
-        if user.verify_reset_code(input_code):
-            session['allow_password_reset'] = True
-            return redirect(url_for('reset_password'))
-        else:
-            flash('Código inválido ou expirado.', 'danger')
-    
-    return render_template('verify_reset_code.html')
-
-@app.route("/reset_password/final", methods=['GET', 'POST'])
-def reset_password():
-    if current_user.is_authenticated:
-        return redirect(url_for('home'))
-
-    if not session.get('allow_password_reset') or not session.get('reset_email'):
-        flash('Acesso não autorizado.', 'danger')
-        return redirect(url_for('reset_request'))
-
-    user = User.query.filter_by(email=session['reset_email']).first()
-    if not user:
-        flash('Usuário não encontrado.', 'danger')
-        return redirect(url_for('reset_request'))
-
-    form = ResetPasswordForm()
-    if form.validate_on_submit():
-        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        user.password = hashed_password
-        user.clear_reset_code()
-        db.session.commit()
-        session.pop('allow_password_reset', None)
-        session.pop('reset_email', None)
-        flash('Sua senha foi atualizada! Você pode fazer login agora.', 'success')
-        return redirect(url_for('login'))
-    return render_template('reset_token.html', title='Redefinir Senha', form=form)
-
-@app.route("/dashboard")
-@login_required
-def dashboard():
-    return render_template('dashboard.html', title='Dashboard')
-
-# Nova rota para exibir usuários para depuração
-@app.route("/debug/users")
-@login_required
-def debug_users():
-    users = User.query.all()
-    return render_template('debug_users.html', users=users)
-
-# Nova rota para interface moderna de redefinição de senha
-@app.route("/modern_reset_request", methods=['GET', 'POST'])
-def modern_reset_request():
-    if current_user.is_authenticated:
-        return redirect(url_for('home'))
-    
-    form = RequestResetForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
-        if user:
-            reset_code = user.set_reset_code()
-            db.session.commit()
-            if send_reset_code_email(user, reset_code):
-                session['reset_email'] = user.email
-                flash('Um email com o código de recuperação foi enviado.', 'info')
-                return redirect(url_for('modern_verify_reset_code'))
-            else:
-                flash('Erro ao enviar email. Tente novamente.', 'danger')
-    return render_template('modern_reset_request.html', form=form)
-
-# Nova rota para interface moderna de verificação de código
-@app.route("/modern_verify_reset_code", methods=['GET', 'POST'])
-def modern_verify_reset_code():
-    if current_user.is_authenticated:
-        return redirect(url_for('home'))
-
-    email = session.get('reset_email')
-    if not email:
-        flash('Sessão expirada. Solicite um novo código.', 'warning')
-        return redirect(url_for('modern_reset_request'))
-
-    user = User.query.filter_by(email=email).first()
-    if not user:
-        flash('Usuário não encontrado.', 'danger')
-        return redirect(url_for('modern_reset_request'))
-
-    if request.method == 'POST':
-        input_code = request.form.get('reset_code')
-        if user.verify_reset_code(input_code):
-            session['allow_password_reset'] = True
-            return redirect(url_for('modern_reset_password'))
-        else:
-            flash('Código inválido ou expirado.', 'danger')
-    
-    return render_template('modern_verify_reset_code.html')
-
-# Nova rota para interface moderna de redefinição de senha
-@app.route("/modern_reset_password", methods=['GET', 'POST'])
-def modern_reset_password():
-    if current_user.is_authenticated:
-        return redirect(url_for('home'))
-
-    if not session.get('allow_password_reset') or not session.get('reset_email'):
-        flash('Acesso não autorizado.', 'danger')
-        return redirect(url_for('modern_reset_request'))
-
-    user = User.query.filter_by(email=session['reset_email']).first()
-    if not user:
-        flash('Usuário não encontrado.', 'danger')
-        return redirect(url_for('modern_reset_request'))
-
-    form = ResetPasswordForm()
-    if form.validate_on_submit():
-        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        user.password = hashed_password
-        user.clear_reset_code()
-        db.session.commit()
-        session.pop('allow_password_reset', None)
-        session.pop('reset_email', None)
-        flash('Sua senha foi atualizada! Você pode fazer login agora.', 'success')
-        return redirect(url_for('modern_login'))
-    return render_template('modern_reset_token.html', form=form)
-
-def create_tables():
-    with app.app_context():
-        db.create_all()
+    session.clear()
+    flash('Você saiu da sua conta.', 'info')
+    return redirect(url_for('index'))
 
 if __name__ == '__main__':
-    create_tables()
     app.run(debug=True)
