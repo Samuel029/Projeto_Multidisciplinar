@@ -1,0 +1,40 @@
+{% extends "modern_login_base.html" %}
+{% block title %}Nova Senha{% endblock %}
+
+{% block content %}
+<div class="container" id="container">
+    <div class="form-container login" style="width: 100%;">
+        <form method="POST" action="{{ url_for('reset_password') }}">
+            {{ form.hidden_tag() }}
+            <h1>Nova Senha</h1>
+            <p>Digite sua nova senha</p>
+            
+            <!-- Campo: password -->
+            {% if form.password.errors %}
+                {{ form.password(placeholder="Nova Senha", class="input-error") }}
+                <div class="error-message">
+                    {% for error in form.password.errors %}
+                        <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                {{ form.password(placeholder="Nova Senha") }}
+            {% endif %}
+            
+            <!-- Campo: confirm_password -->
+            {% if form.confirm_password.errors %}
+                {{ form.confirm_password(placeholder="Confirmar Senha", class="input-error") }}
+                <div class="error-message">
+                    {% for error in form.confirm_password.errors %}
+                        <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                {{ form.confirm_password(placeholder="Confirmar Senha") }}
+            {% endif %}
+            
+            {{ form.submit(class="btn") }}
+        </form>
+    </div>
+</div>
+{% endblock %}

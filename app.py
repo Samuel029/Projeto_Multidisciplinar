@@ -141,7 +141,7 @@ def register():
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('dashboard'))
+        return redirect(url_for('home'))
     
     form = LoginForm()
     if form.validate_on_submit():
@@ -154,6 +154,38 @@ def login():
         else:
             flash('Login falhou. Verifique email e senha.', 'danger')
     return render_template('login.html', title='Login', form=form)
+
+@app.route("/modern_login", methods=['GET', 'POST'])
+def modern_login():
+    if current_user.is_authenticated:
+        return redirect(url_for('dashboard'))
+    
+    login_form = LoginForm()
+    register_form = RegistrationForm()
+    
+    # Lógica para o formulário de login
+    if login_form.validate_on_submit() and request.form.get('submit') == 'Login':
+        user = User.query.filter_by(email=login_form.email.data).first()
+        if user and bcrypt.check_password_hash(user.password, login_form.password.data):
+            login_user(user, remember=login_form.remember.data)
+            next_page = request.args.get('next')
+            flash('Login realizado com sucesso!', 'success')
+            return redirect(next_page) if next_page else redirect(url_for('dashboard'))
+        else:
+            flash('Login falhou. Verifique email e senha.', 'danger')
+    
+    # Lógica para o formulário de registro
+    if register_form.validate_on_submit() and request.form.get('submit') == 'Cadastrar':
+        hashed_password = bcrypt.generate_password_hash(register_form.password.data).decode('utf-8')
+        user = User(username=register_form.username.data, email=register_form.email.data, password=hashed_password)
+        db.session.add(user)
+        db.session.commit()
+        flash('Conta criada com sucesso! Faça login.', 'success')
+        return redirect(url_for('modern_login'))
+    
+    return render_template('modern_login_register.html', 
+                           login_form=login_form,
+                           register_form=register_form)
 
 @app.route("/logout")
 def logout():
@@ -178,7 +210,7 @@ def reset_request():
                 return redirect(url_for('verify_reset_code'))
             else:
                 flash('Erro ao enviar email. Tente novamente.', 'danger')
-    return render_template('reset_request.html', form=form)
+    return render_template('reset_request.html', title='Redefinir Senha', form=form)
 
 @app.route("/verify_reset_code", methods=['GET', 'POST'])
 def verify_reset_code():
@@ -229,12 +261,92 @@ def reset_password():
         session.pop('reset_email', None)
         flash('Sua senha foi atualizada! Você pode fazer login agora.', 'success')
         return redirect(url_for('login'))
-    return render_template('reset_token.html', form=form)
+    return render_template('reset_token.html', title='Redefinir Senha', form=form)
 
 @app.route("/dashboard")
 @login_required
 def dashboard():
     return render_template('dashboard.html', title='Dashboard')
+
+# Nova rota para exibir usuários para depuração
+@app.route("/debug/users")
+@login_required
+def debug_users():
+    users = User.query.all()
+    return render_template('debug_users.html', users=users)
+
+# Nova rota para interface moderna de redefinição de senha
+@app.route("/modern_reset_request", methods=['GET', 'POST'])
+def modern_reset_request():
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+    
+    form = RequestResetForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user:
+            reset_code = user.set_reset_code()
+            db.session.commit()
+            if send_reset_code_email(user, reset_code):
+                session['reset_email'] = user.email
+                flash('Um email com o código de recuperação foi enviado.', 'info')
+                return redirect(url_for('modern_verify_reset_code'))
+            else:
+                flash('Erro ao enviar email. Tente novamente.', 'danger')
+    return render_template('modern_reset_request.html', form=form)
+
+# Nova rota para interface moderna de verificação de código
+@app.route("/modern_verify_reset_code", methods=['GET', 'POST'])
+def modern_verify_reset_code():
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+
+    email = session.get('reset_email')
+    if not email:
+        flash('Sessão expirada. Solicite um novo código.', 'warning')
+        return redirect(url_for('modern_reset_request'))
+
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        flash('Usuário não encontrado.', 'danger')
+        return redirect(url_for('modern_reset_request'))
+
+    if request.method == 'POST':
+        input_code = request.form.get('reset_code')
+        if user.verify_reset_code(input_code):
+            session['allow_password_reset'] = True
+            return redirect(url_for('modern_reset_password'))
+        else:
+            flash('Código inválido ou expirado.', 'danger')
+    
+    return render_template('modern_verify_reset_code.html')
+
+# Nova rota para interface moderna de redefinição de senha
+@app.route("/modern_reset_password", methods=['GET', 'POST'])
+def modern_reset_password():
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+
+    if not session.get('allow_password_reset') or not session.get('reset_email'):
+        flash('Acesso não autorizado.', 'danger')
+        return redirect(url_for('modern_reset_request'))
+
+    user = User.query.filter_by(email=session['reset_email']).first()
+    if not user:
+        flash('Usuário não encontrado.', 'danger')
+        return redirect(url_for('modern_reset_request'))
+
+    form = ResetPasswordForm()
+    if form.validate_on_submit():
+        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        user.password = hashed_password
+        user.clear_reset_code()
+        db.session.commit()
+        session.pop('allow_password_reset', None)
+        session.pop('reset_email', None)
+        flash('Sua senha foi atualizada! Você pode fazer login agora.', 'success')
+        return redirect(url_for('modern_login'))
+    return render_template('modern_reset_token.html', form=form)
 
 def create_tables():
     with app.app_context():
