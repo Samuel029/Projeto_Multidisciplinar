@@ -1,26 +1,50 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
 import os
-from backend.config import Config
-from backend.extensions import db
+from flask_migrate import Migrate
 
+# Configuração do aplicativo
 app = Flask(__name__)
-app.config.from_object(Config)
-db.init_app(app)
+app.config.from_object('backend.config.Config')
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
-with app.app_context():
-    from backend.models import User
-    db.create_all()
+# Modelos
+class User(db.Model):
+    __tablename__ = 'users'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(64), index=True, nullable=False)
+    email = db.Column(db.String(120), index=True, unique=True, nullable=False)
+    password = db.Column(db.String(128), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    def __repr__(self):
+        return f'<User {self.username}>'
 
+class Post(db.Model):
+    __tablename__ = 'posts'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Text, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    
+    # Relacionamento
+    author = db.relationship('User', backref=db.backref('posts', lazy=True))
+    
+    def __repr__(self):
+        return f'<Post {self.id} by {self.author.username}>'
+
+# Rotas
 @app.route('/', methods=['GET', 'POST'])
 def registroelogin():
-    from backend.models import User
-
     # Verifica se há sessão e se o usuário ainda existe no banco
     user_id = session.get('user_id')
     if user_id:
-        user = db.session.get(User, user_id)  # Usando a forma recomendada para SQLAlchemy 2.0
+        user = db.session.get(User, user_id)
         if not user:
             session.clear()  # Limpa a sessão se o usuário não existir mais
         else:
@@ -77,9 +101,8 @@ def registroelogin():
     
     return render_template('registroelogin.html')
 
-@app.route('/telainicial')
+@app.route('/telainicial', methods=['GET', 'POST'])
 def telainicial():
-    from backend.models import User
     user_id = session.get('user_id')
     if not user_id:
         flash('Por favor, faça login para acessar esta página.', 'error')
@@ -91,13 +114,49 @@ def telainicial():
         flash('Sua sessão expirou ou o usuário não existe mais.', 'error')
         return redirect(url_for('registroelogin'))
     
-    return render_template('telainicial.html', user=user)
+    # Adicionar nova postagem
+    if request.method == 'POST':
+        content = request.form.get('content')
+        if content:
+            new_post = Post(content=content, user_id=user.id)
+            db.session.add(new_post)
+            db.session.commit()
+            flash('Postagem publicada com sucesso!', 'success')
+            return redirect(url_for('telainicial'))  # Redireciona para evitar reenvio do formulário
+    
+    # Obter todas as postagens ordenadas por data (mais recente primeiro)
+    posts = Post.query.order_by(Post.created_at.desc()).all()
+    
+    return render_template('telainicial.html', user=user, posts=posts)
 
 @app.route('/logout')
 def logout():
     session.clear()
     flash('Você saiu da sua conta.', 'info')
     return redirect(url_for('registroelogin'))
+
+# Rota para deletar postagem (opcional)
+@app.route('/delete_post/<int:post_id>', methods=['POST'])
+def delete_post(post_id):
+    if 'user_id' not in session:
+        flash('Por favor, faça login para realizar esta ação.', 'error')
+        return redirect(url_for('registroelogin'))
+    
+    post = Post.query.get_or_404(post_id)
+    
+    # Verifica se o usuário é o autor da postagem
+    if post.user_id != session['user_id']:
+        flash('Você não tem permissão para deletar esta postagem.', 'error')
+        return redirect(url_for('telainicial'))
+    
+    db.session.delete(post)
+    db.session.commit()
+    flash('Postagem deletada com sucesso!', 'success')
+    return redirect(url_for('telainicial'))
+
+# Criar tabelas no banco de dados (para desenvolvimento)
+with app.app_context():
+    db.create_all()
 
 if __name__ == '__main__':
     app.run(debug=True)
