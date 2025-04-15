@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const drawerLinks = document.querySelectorAll('.offcanvas .nav-link');
         drawerLinks.forEach(link => {
             link.addEventListener('click', function() {
-                const bsOffcanvas = bootstrap.Offcanvas.getInstance(sideMenu);
+                const bsOffcanvas = bootstrap.Offcanvas.getInstance(sideMenu) || new bootstrap.Offcanvas(sideMenu);
                 if (bsOffcanvas) bsOffcanvas.hide();
             });
         });
@@ -126,10 +126,28 @@ document.addEventListener('DOMContentLoaded', function() {
         document.addEventListener('click', function(event) {
             const isClickInsideDrawer = sideMenu.contains(event.target);
             const isClickOnToggler = event.target.closest('.navbar-toggler');
-            if (!isClickInsideDrawer && !isClickOnToggler && sideMenu.classList.contains('show')) {
-                const bsOffcanvas = bootstrap.Offcanvas.getInstance(sideMenu);
-                if (bsOffcanvas) bsOffcanvas.hide();
+            const isOffcanvasOpen = sideMenu.classList.contains('show');
+            
+            if (!isClickInsideDrawer && !isClickOnToggler && isOffcanvasOpen) {
+                const bsOffcanvas = bootstrap.Offcanvas.getInstance(sideMenu) || new bootstrap.Offcanvas(sideMenu);
+                if (bsOffcanvas) {
+                    bsOffcanvas.hide();
+                }
             }
+        });
+
+        // Gerencia o scroll quando o offcanvas está aberto
+        sideMenu.addEventListener('shown.bs.offcanvas', function() {
+            document.body.style.overflow = 'hidden'; // Impede scroll da página
+            document.body.style.paddingRight = '0'; // Evita deslocamento por scrollbar
+            // Força recalcular a posição do offcanvas
+            sideMenu.style.top = '0';
+            sideMenu.style.height = '100vh';
+        });
+
+        sideMenu.addEventListener('hidden.bs.offcanvas', function() {
+            document.body.style.overflow = ''; // Restaura o scroll
+            document.body.style.paddingRight = ''; // Restaura padding
         });
     }
 
