@@ -14,7 +14,7 @@ with app.app_context():
     db.create_all()
 
 @app.route('/', methods=['GET', 'POST'])
-def index():
+def registroelogin():
     from backend.models import User
 
     # Verifica se há sessão e se o usuário ainda existe no banco
@@ -33,7 +33,7 @@ def index():
             
             if not email or not password:
                 flash('Por favor, preencha todos os campos.', 'error')
-                return redirect(url_for('index'))
+                return redirect(url_for('registroelogin'))
             
             user = User.query.filter_by(email=email).first()
             if user and check_password_hash(user.password, password):
@@ -43,7 +43,7 @@ def index():
                 return redirect(url_for('telainicial'))
             else:
                 flash('Email ou senha incorretos.', 'error')
-                return redirect(url_for('index'))
+                return redirect(url_for('registroelogin'))
                 
         elif 'register' in request.form:
             username = request.form.get('username')
@@ -53,16 +53,16 @@ def index():
             
             if not username or not email or not password or not confirm_password:
                 flash('Por favor, preencha todos os campos.', 'error')
-                return redirect(url_for('index'))
+                return redirect(url_for('registroelogin'))
                 
             if password != confirm_password:
                 flash('As senhas não coincidem.', 'error')
-                return redirect(url_for('index'))
+                return redirect(url_for('registroelogin'))
                 
             existing_user = User.query.filter_by(email=email).first()
             if existing_user:
                 flash('Este email já está em uso.', 'error')
-                return redirect(url_for('index'))
+                return redirect(url_for('registroelogin'))
                 
             new_user = User(
                 username=username,
@@ -73,9 +73,9 @@ def index():
             db.session.commit()
             
             flash('Conta criada com sucesso! Faça login para continuar.', 'success')
-            return redirect(url_for('index'))
+            return redirect(url_for('registroelogin'))
     
-    return render_template('index.html')
+    return render_template('registroelogin.html')
 
 @app.route('/telainicial')
 def telainicial():
@@ -83,13 +83,13 @@ def telainicial():
     user_id = session.get('user_id')
     if not user_id:
         flash('Por favor, faça login para acessar esta página.', 'error')
-        return redirect(url_for('index'))
+        return redirect(url_for('registroelogin'))
     
     user = db.session.get(User, user_id)
     if not user:
         session.clear()
         flash('Sua sessão expirou ou o usuário não existe mais.', 'error')
-        return redirect(url_for('index'))
+        return redirect(url_for('registroelogin'))
     
     return render_template('telainicial.html', user=user)
 
@@ -97,7 +97,7 @@ def telainicial():
 def logout():
     session.clear()
     flash('Você saiu da sua conta.', 'info')
-    return redirect(url_for('index'))
+    return redirect(url_for('registroelogin'))
 
 if __name__ == '__main__':
     app.run(debug=True)

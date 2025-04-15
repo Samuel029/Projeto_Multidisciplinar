@@ -1,10 +1,10 @@
-{% extends "base.html" %}
+{% extends "baselogin.html" %}
 
 {% block content %}
 <div class="container" id="container">
     <!-- Criar (Register) Form -->
     <div class="form-container criar">
-        <form method="POST" action="{{ url_for('index') }}">
+        <form method="POST" action="{{ url_for('registroelogin') }}">
             <h1>Crie uma conta!</h1>
             <div class="social-icons">
                 <a href="#" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
@@ -23,7 +23,7 @@
     
     <!-- Login Form -->
     <div class="form-container login">
-        <form method="POST" action="{{ url_for('index') }}">
+        <form method="POST" action="{{ url_for('registroelogin') }}">
             <h1>Login</h1>
             <div class="social-icons">
                 <a href="#" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
