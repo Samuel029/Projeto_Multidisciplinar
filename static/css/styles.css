@@ -1,22 +1,39 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
-*{
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: 'Poppins', sans-serif;
 }
-body{
+
+body {
     background-color: #ffff;
     background: linear-gradient(to right, #ffffff, hsl(205, 100%, 59%));
+    min-height: 100vh;
     display: flex;
-    align-items: center;
-    justify-content: center;
     flex-direction: column;
-    height: 100vh;
 }
 
-.container{
+header {
+    background-color: #2f528b;
+    color: white;
+    padding: 1rem;
+}
+
+header nav ul {
+    display: flex;
+    list-style: none;
+    gap: 1rem;
+    justify-content: center;
+}
+
+header nav a {
+    color: white;
+    text-decoration: none;
+}
+
+.container {
     background-color: #ffff;
     border-radius: 30px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
@@ -25,27 +42,29 @@ body{
     width: 768px;
     max-width: 100%;
     min-height: 480px;
+    margin: 2rem auto;
+    flex-grow: 1;
 }
 
-.container p{
+.container p {
     font-size: 14px;
     line-height: 20px;
     letter-spacing: 0.3px;
     margin: 20px 0;
 }
 
-.container span{
+.container span {
     font-size: 12px;
 }
 
-.container a{
+.container a {
     color: #333;
     font-size: 13px;
     text-decoration: none;
     margin: 15px 0 10px;
 }
 
-.container button{
+.container button {
     background-color: #2f528b;
     color: #ffff;
     font-size: 12px;
@@ -59,12 +78,12 @@ body{
     cursor: pointer;
 }
 
-.container button.hidden{
+.container button.hidden {
     background-color: transparent;
     border-color: #ffff;
 }
 
-.container form{
+.container form {
     background-color: #ffff;
     display: flex;
     align-items: center;
@@ -74,7 +93,7 @@ body{
     height: 100%;    
 }
 
-.container input{
+.container input {
     background-color: #eee;
     border: none;
     margin: 8px 0;
@@ -84,53 +103,53 @@ body{
     width: 100%;
 }
 
-.form-container{
+.form-container {
     position: absolute;
     top: 0;
     height: 100%;
     transition: all 0.6s ease-in-out;
 }
 
-.login{
+.login {
     left: 0;
     width: 50%;
     z-index: 2;
 }
 
-.container.active .login{
+.container.active .login {
     transform: translateX(100%);
 }
 
-.criar{
+.criar {
     left: 0;
     width: 50%;
     opacity: 0;
     z-index: 1;
 }
 
-.container.active .criar{
+.container.active .criar {
     transform: translateX(100%);
     opacity: 1;
     z-index: 5;
     animation: move 0.6s;
 }
 
-@keyframes move{
-    0%, 49.99%{
+@keyframes move {
+    0%, 49.99% {
         opacity: 0;
         z-index: 1;
     }
-    50%, 100%{
+    50%, 100% {
         opacity: 1;
         z-index: 5;
     }
 }
 
-.social-icons{
+.social-icons {
     margin: 20px 0;
 }
 
-.social-icons a{
+.social-icons a {
     border: 1px solid #ccc;
     border-radius: 20%;
     display: inline-flex;
@@ -141,7 +160,7 @@ body{
     height: 40px;
 }
 
-.toggle-container{
+.toggle-container {
     position: absolute;
     top: 0;
     left: 50%;
@@ -153,12 +172,12 @@ body{
     z-index: 1000;
 }
 
-.container.active .toggle-container{
+.container.active .toggle-container {
     transform: translateX(-100%);
     border-radius: 0px 150px 100px 0px;
 }
 
-.toggle{
+.toggle {
     background-color: #2f528b;
     height: 100%;
     background: linear-gradient(to right, #2f528b, #039dda);
@@ -171,11 +190,11 @@ body{
     transition: all 0.6s ease-in-out;
 }
 
-.container.active .toggle{
+.container.active .toggle {
     transform: translateX(50%);
 }
 
-.toggle-panel{
+.toggle-panel {
     position: absolute;
     width: 50%;
     height: 100%;
@@ -190,21 +209,22 @@ body{
     transition: all 0.6s ease-in-out;
 }
 
-.toggle-left{
+.toggle-left {
     left: 0;
     transform: translateX(200%);
 }
 
-.container.active .toggle-left{
+.container.active .toggle-left {
     left: 0;
     transform: translateX(0);
 }
-.toggle-right{
+
+.toggle-right {
     right: 0;
     transform: translateX(0);
 }
 
-.container.active .toggle-right{
+.container.active .toggle-right {
     transform: translateX(200%);
 }
 
@@ -272,4 +292,12 @@ body{
     letter-spacing: 0.5px;
     font-size: 12px;
     text-decoration: none;
+}
+
+footer {
+    background-color: #2f528b;
+    color: white;
+    text-align: center;
+    padding: 1rem;
+    margin-top: auto;
 }

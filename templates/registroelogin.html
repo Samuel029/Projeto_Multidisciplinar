@@ -1,66 +1,101 @@
-{% extends "baselogin.html" %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <title>TechnoBug</title>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="#">Início</a></li>
+                <li><a href="#">Sobre</a></li>
+                <li><a href="#">Serviços</a></li>
+                <li><a href="#">Contato</a></li>
+            </ul>
+        </nav>
+    </header>
 
-{% block content %}
-<div class="container" id="container">
-    <!-- Criar (Register) Form -->
-    <div class="form-container criar">
-        <form method="POST" action="{{ url_for('registroelogin') }}">
-            <h1>Crie uma conta!</h1>
-            <div class="social-icons">
-                <a href="#" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
-                <a href="#" class="icon"><i class="fa-brands fa-facebook-f"></i></a>
-                <a href="#" class="icon"><i class="fa-brands fa-github"></i></a>
-                <a href="#" class="icon"><i class="fa-brands fa-linkedin-in"></i></a>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash-message {{ category }}">
+                        {{ message }}
+                        <span class="close-btn">&times;</span>
+                    </div>
+                {% endfor %}
             </div>
-            <span>ou use seu e-mail para registrar</span>
-            <input type="text" name="username" placeholder="Nome de usuário">
-            <input type="email" name="email" placeholder="Email">
-            <input type="password" name="password" placeholder="Senha">
-            <input type="password" name="confirm_password" placeholder="Confirme sua senha">
-            <button type="submit" name="register" value="register">Criar</button>
-        </form>
-    </div>
-    
-    <!-- Login Form -->
-    <div class="form-container login">
-        <form method="POST" action="{{ url_for('registroelogin') }}">
-            <h1>Login</h1>
-            <div class="social-icons">
-                <a href="#" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
-                <a href="#" class="icon"><i class="fa-brands fa-facebook-f"></i></a>
-                <a href="#" class="icon"><i class="fa-brands fa-github"></i></a>
-                <a href="#" class="icon"><i class="fa-brands fa-linkedin-in"></i></a>
-            </div>
-            <span>ou use seu e-mail e senha</span>
-            <input type="email" name="email" placeholder="Email">
-            <input type="password" name="password" placeholder="Senha">
-            <a href="#">Esqueceu sua senha?</a>
-            <button type="submit" name="login" value="login">Login</button>
-        </form>
-    </div>
-    
-    <!-- Toggle Container -->
-    <div class="toggle-container">
-        <div class="toggle">
-            <div class="toggle-panel toggle-left">
-                <h1>Bem-vindo de volta!</h1>
-                <p>Acesse com sua conta pessoal</p>
-                <button class="hidden" id="login">Login</button>
-            </div>
-            <div class="toggle-panel toggle-right">
-                <h1>Olá!</h1>
-                <p>Crie sua conta!</p>
-                <button class="hidden" id="criar">Criar</button>
+        {% endif %}
+    {% endwith %}
+
+    <div class="container" id="container">
+        <div class="form-container criar">
+            <form method="POST" action="{{ url_for('registroelogin') }}">
+                <h1>Crie uma conta!</h1>
+                <div class="social-icons">
+                    <a href="#" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
+                    <a href="#" class="icon"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#" class="icon"><i class="fa-brands fa-github"></i></a>
+                    <a href="#" class="icon"><i class="fa-brands fa-linkedin-in"></i></a>
+                </div>
+                <span>ou use seu e-mail para registrar</span>
+                <input type="text" name="username" placeholder="Nome de usuário">
+                <input type="email" name="email" placeholder="Email">
+                <input type="password" name="password" placeholder="Senha">
+                <input type="password" name="confirm_password" placeholder="Confirme sua senha">
+                <button type="submit" name="register" value="register">Criar</button>
+            </form>
+        </div>
+        
+        <div class="form-container login">
+            <form method="POST" action="{{ url_for('registroelogin') }}">
+                <h1>Login</h1>
+                <div class="social-icons">
+                    <a href="#" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
+                    <a href="#" class="icon"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#" class="icon"><i class="fa-brands fa-github"></i></a>
+                    <a href="#" class="icon"><i class="fa-brands fa-linkedin-in"></i></a>
+                </div>
+                <span>ou use seu e-mail e senha</span>
+                <input type="email" name="email" placeholder="Email">
+                <input type="password" name="password" placeholder="Senha">
+                <a href="#">Esqueceu sua senha?</a>
+                <button type="submit" name="login" value="login">Login</button>
+            </form>
+        </div>
+        
+        <div class="toggle-container">
+            <div class="toggle">
+                <div class="toggle-panel toggle-left">
+                    <h1>Bem-vindo de volta!</h1>
+                    <p>Acesse com sua conta pessoal</p>
+                    <button class="hidden" id="login">Login</button>
+                </div>
+                <div class="toggle-panel toggle-right">
+                    <h1>Olá!</h1>
+                    <p>Crie sua conta!</p>
+                    <button class="hidden" id="criar">Criar</button>
+                </div>
             </div>
         </div>
+        
+        {% if user %}
+        <div class="user-welcome">
+            <h2>Bem-vindo, {{ user.username }}!</h2>
+            <p>Você está logado com o email: {{ user.email }}</p>
+            <a href="{{ url_for('logout') }}" class="logout-btn">Sair</a>
+        </div>
+        {% endif %}
     </div>
+
+    <footer>
+        <p>&copy; 2025 TechnoBug. Todos os direitos reservados.</p>
+    </footer>
     
-    {% if user %}
-    <div class="user-welcome">
-        <h2>Bem-vindo, {{ user.username }}!</h2>
-        <p>Você está logado com o email: {{ user.email }}</p>
-        <a href="{{ url_for('logout') }}" class="logout-btn">Sair</a>
-    </div>
-    {% endif %}
-</div>
-{% endblock %}
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
