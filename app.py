@@ -1,24 +1,27 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 import os
+import firebase_admin
+from firebase_admin import auth, credentials
 from flask_migrate import Migrate
 
-# Configuração do aplicativo
 app = Flask(__name__)
 app.config.from_object('backend.config.Config')
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
-# Modelos
+cred = credentials.Certificate('technobug-6daca-firebase-adminsdk-fbsvc-19273e6f57.json')
+firebase_admin.initialize_app(cred)
+
 class User(db.Model):
     __tablename__ = 'users'
     
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, nullable=False)
     email = db.Column(db.String(120), index=True, unique=True, nullable=False)
-    password = db.Column(db.String(128), nullable=False)
+    password = db.Column(db.String(128), nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     def __repr__(self):
@@ -32,24 +35,21 @@ class Post(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     
-    # Relacionamento
     author = db.relationship('User', backref=db.backref('posts', lazy=True))
     
     def __repr__(self):
         return f'<Post {self.id} by {self.author.username}>'
 
-# Rotas
 @app.route('/', methods=['GET', 'POST'])
 def registroelogin():
-    # Verifica se há sessão e se o usuário ainda existe no banco
+
     user_id = session.get('user_id')
     if user_id:
         user = db.session.get(User, user_id)
         if not user:
-            session.clear()  # Limpa a sessão se o usuário não existir mais
+            session.clear()
         else:
             return redirect(url_for('telainicial'))
-
     if request.method == 'POST':
         if 'login' in request.form:
             email = request.form.get('email')
@@ -60,7 +60,7 @@ def registroelogin():
                 return redirect(url_for('registroelogin'))
             
             user = User.query.filter_by(email=email).first()
-            if user and check_password_hash(user.password, password):
+            if user and user.password and check_password_hash(user.password, password):
                 session['user_id'] = user.id
                 session['username'] = user.username
                 flash(f'Bem-vindo de volta, {user.username}!', 'success')
@@ -101,6 +101,37 @@ def registroelogin():
     
     return render_template('registroelogin.html')
 
+@app.route('/verify-token', methods=['POST'])
+def verify_token():
+    id_token = request.json.get('idToken')
+    try:
+
+        decoded_token = auth.verify_id_token(id_token)
+        email = decoded_token.get('email')
+
+        username = decoded_token.get('name', email.split('@')[0])
+        uid = decoded_token['uid']
+        
+
+        user = User.query.filter_by(email=email).first()
+        if not user:
+
+            user = User(
+                username=username,
+                email=email,
+                password=''
+            )
+            db.session.add(user)
+            db.session.commit()
+
+        session['user_id'] = user.id
+        session['username'] = user.username
+        
+        return jsonify({'status': 'success', 'user': {'id': user.id, 'username': user.username, 'email': user.email}})
+    except Exception as e:
+        print(f"Erro ao verificar token: {str(e)}")
+        return jsonify({'status': 'error', 'message': str(e)}), 401
+
 @app.route('/telainicial', methods=['GET', 'POST'])
 def telainicial():
     user_id = session.get('user_id')
@@ -114,7 +145,6 @@ def telainicial():
         flash('Sua sessão expirou ou o usuário não existe mais.', 'error')
         return redirect(url_for('registroelogin'))
     
-    # Adicionar nova postagem
     if request.method == 'POST':
         content = request.form.get('content')
         if content:
@@ -122,9 +152,8 @@ def telainicial():
             db.session.add(new_post)
             db.session.commit()
             flash('Postagem publicada com sucesso!', 'success')
-            return redirect(url_for('telainicial'))  # Redireciona para evitar reenvio do formulário
+            return redirect(url_for('telainicial'))
     
-    # Obter todas as postagens ordenadas por data (mais recente primeiro)
     posts = Post.query.order_by(Post.created_at.desc()).all()
     
     return render_template('telainicial.html', user=user, posts=posts)
@@ -135,7 +164,6 @@ def logout():
     flash('Você saiu da sua conta.', 'info')
     return redirect(url_for('registroelogin'))
 
-# Rota para deletar postagem (opcional)
 @app.route('/delete_post/<int:post_id>', methods=['POST'])
 def delete_post(post_id):
     if 'user_id' not in session:
@@ -144,7 +172,6 @@ def delete_post(post_id):
     
     post = Post.query.get_or_404(post_id)
     
-    # Verifica se o usuário é o autor da postagem
     if post.user_id != session['user_id']:
         flash('Você não tem permissão para deletar esta postagem.', 'error')
         return redirect(url_for('telainicial'))
@@ -154,7 +181,6 @@ def delete_post(post_id):
     flash('Postagem deletada com sucesso!', 'success')
     return redirect(url_for('telainicial'))
 
-# Criar tabelas no banco de dados (para desenvolvimento)
 with app.app_context():
     db.create_all()
 

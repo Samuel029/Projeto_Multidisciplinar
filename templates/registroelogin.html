@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <title>TechnoBug</title>
 </head>
@@ -18,26 +18,26 @@
             </ul>
         </nav>
     </header>
-
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             <div class="flash-messages">
                 {% for category, message in messages %}
                     <div class="flash-message {{ category }}">
                         {{ message }}
-                        <span class="close-btn">&times;</span>
+                        <span class="close-btn">×</span>
                     </div>
                 {% endfor %}
             </div>
         {% endif %}
     {% endwith %}
-
     <div class="container" id="container">
         <div class="form-container criar">
             <form method="POST" action="{{ url_for('registroelogin') }}">
                 <h1>Crie uma conta!</h1>
                 <div class="social-icons">
-                    <a href="#" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
+                    <a href="#" class="icon" id="google-sign-up" title="Criar conta com Google" aria-label="Criar conta com Google">
+                        <i class="fa-brands fa-google-plus-g"></i>
+                    </a>
                     <a href="#" class="icon"><i class="fa-brands fa-facebook-f"></i></a>
                     <a href="#" class="icon"><i class="fa-brands fa-github"></i></a>
                     <a href="#" class="icon"><i class="fa-brands fa-linkedin-in"></i></a>
@@ -55,7 +55,9 @@
             <form method="POST" action="{{ url_for('registroelogin') }}">
                 <h1>Login</h1>
                 <div class="social-icons">
-                    <a href="#" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
+                    <a href="#" class="icon" id="google-login" title="Entrar com Google" aria-label="Entrar com Google">
+                        <i class="fa-brands fa-google-plus-g"></i>
+                    </a>
                     <a href="#" class="icon"><i class="fa-brands fa-facebook-f"></i></a>
                     <a href="#" class="icon"><i class="fa-brands fa-github"></i></a>
                     <a href="#" class="icon"><i class="fa-brands fa-linkedin-in"></i></a>
@@ -91,11 +93,85 @@
         </div>
         {% endif %}
     </div>
-
     <footer>
-        <p>&copy; 2025 TechnoBug. Todos os direitos reservados.</p>
+        <p>© 2025 TechnoBug. Todos os direitos reservados.</p>
     </footer>
     
+    <!-- Carregando o SDK do Firebase usando o método de script CDN (mais compatível) -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    
+    <script>
+      // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyC1fhqZQXIgC2JwU-NVJLex_mURZ2qow6k",
+  authDomain: "technobug-6daca.firebaseapp.com",
+  projectId: "technobug-6daca",
+  storageBucket: "technobug-6daca.firebasestorage.app",
+  messagingSenderId: "1042406795811",
+  appId: "1:1042406795811:web:6c26f03b0f739900325f96",
+  measurementId: "G-Q0JNCFQLH8"
+};
+      
+      // Inicializar Firebase (usando versão de compatibilidade)
+      firebase.initializeApp(firebaseConfig);
+      
+      // Botão Google para criar conta
+      document.getElementById('google-sign-up').addEventListener('click', function(e) {
+        e.preventDefault();
+        signUpWithGoogle();
+      });
+      
+      // Botão Google para login
+      document.getElementById('google-login').addEventListener('click', function(e) {
+        e.preventDefault();
+        signInWithGoogle();
+      });
+      
+      // Função para criar conta com Google
+      function signUpWithGoogle() {
+        // O fluxo é igual ao login, pois o back-end cria o usuário se não existir
+        signInWithGoogle();
+      }
+
+      // Função para login com Google
+      function signInWithGoogle() {
+        console.log("Iniciando login/criação com Google...");
+        const provider = new firebase.auth.GoogleAuthProvider();
+        provider.addScope('profile');
+        provider.addScope('email');
+        
+        firebase.auth().signInWithPopup(provider)
+          .then((result) => {
+            console.log("Login/criação bem-sucedido:", result.user.email);
+            // O usuário foi autenticado com sucesso
+            return result.user.getIdToken();
+          })
+          .then((idToken) => {
+            console.log("Token obtido, enviando para o servidor...");
+            // Enviar o token para o back-end
+            return fetch('/verify-token', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ idToken: idToken })
+            });
+          })
+          .then(response => response.json())
+          .then(data => {
+            console.log("Resposta do servidor:", data);
+            if (data.status === 'success') {
+              // Redirecionar para a tela inicial
+              window.location.href = '{{ url_for("telainicial") }}';
+            } else {
+              alert('Erro: ' + data.message);
+            }
+          })
+          .catch((error) => {
+            console.error('Erro detalhado:', error);
+            alert('Erro ao fazer login/criar conta: ' + error.message);
+          });
+      }
+    </script>
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>
