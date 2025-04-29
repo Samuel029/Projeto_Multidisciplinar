@@ -3,175 +3,250 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechnoBug - Suporte ao Aprendizado de Desenvolvimento de Sistemas</title>
+    <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-    <title>TechnoBug</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/registroelogin.css') }}">
 </head>
 <body>
-    <header>
-        <nav>
-            <ul>
-                <li><a href="#">Início</a></li>
-                <li><a href="#">Sobre</a></li>
-                <li><a href="#">Serviços</a></li>
-                <li><a href="#">Contato</a></li>
-            </ul>
-        </nav>
-    </header>
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            <div class="flash-messages">
-                {% for category, message in messages %}
-                    <div class="flash-message {{ category }}">
-                        {{ message }}
-                        <span class="close-btn">×</span>
-                    </div>
-                {% endfor %}
+    <!-- Header Section - Simplified -->
+    <header id="main-header">
+        <div class="header-container">
+            <div class="logo">
+                <h1>TechnoBug</h1>
+                <p class="tagline">Seu companheiro de estudos em Desenvolvimento de Sistemas</p>
             </div>
-        {% endif %}
-    {% endwith %}
-    <div class="container" id="container">
-        <div class="form-container criar">
-            <form method="POST" action="{{ url_for('registroelogin') }}">
-                <h1>Crie uma conta!</h1>
-                <div class="social-icons">
-                    <a href="#" class="icon" id="google-sign-up" title="Criar conta com Google" aria-label="Criar conta com Google">
-                        <i class="fa-brands fa-google-plus-g"></i>
-                    </a>
-                    <a href="#" class="icon"><i class="fa-brands fa-facebook-f"></i></a>
-                    <a href="#" class="icon"><i class="fa-brands fa-github"></i></a>
-                    <a href="#" class="icon"><i class="fa-brands fa-linkedin-in"></i></a>
-                </div>
-                <span>ou use seu e-mail para registrar</span>
-                <input type="text" name="username" placeholder="Nome de usuário">
-                <input type="email" name="email" placeholder="Email">
-                <input type="password" name="password" placeholder="Senha">
-                <input type="password" name="confirm_password" placeholder="Confirme sua senha">
-                <button type="submit" name="register" value="register">Criar</button>
-            </form>
         </div>
-        
+    </header>
+
+    <!-- Main Login Container -->
+    <div class="container" id="login-container">
         <div class="form-container login">
-            <form method="POST" action="{{ url_for('registroelogin') }}">
-                <h1>Login</h1>
+            <form>
+                <h1>Entrar</h1>
                 <div class="social-icons">
                     <a href="#" class="icon" id="google-login" title="Entrar com Google" aria-label="Entrar com Google">
-                        <i class="fa-brands fa-google-plus-g"></i>
+                        <i class="fab fa-google"></i>
                     </a>
-                    <a href="#" class="icon"><i class="fa-brands fa-facebook-f"></i></a>
-                    <a href="#" class="icon"><i class="fa-brands fa-github"></i></a>
-                    <a href="#" class="icon"><i class="fa-brands fa-linkedin-in"></i></a>
+                    <a href="#" class="icon"><i class="fab fa-github"></i></a>
                 </div>
                 <span>ou use seu e-mail e senha</span>
-                <input type="email" name="email" placeholder="Email">
-                <input type="password" name="password" placeholder="Senha">
+                <input type="email" placeholder="Email" required>
+                <input type="password" placeholder="Senha" required>
                 <a href="#">Esqueceu sua senha?</a>
-                <button type="submit" name="login" value="login">Login</button>
+                <button>Entrar</button>
             </form>
         </div>
-        
+
+        <div class="form-container criar">
+            <form>
+                <h1>Criar Conta</h1>
+                <div class="social-icons">
+                    <a href="#" class="icon" id="google-sign-up" title="Criar conta com Google" aria-label="Criar conta com Google">
+                        <i class="fab fa-google"></i>
+                    </a>
+                    <a href="#" class="icon"><i class="fab fa-github"></i></a>
+                </div>
+                <span>ou use seu email para cadastro</span>
+                <input type="text" placeholder="Nome" required>
+                <input type="email" placeholder="Email" required>
+                <input type="password" placeholder="Senha" required>
+                <input type="password" placeholder="Confirme sua senha" required>
+                <button>Cadastrar</button>
+            </form>
+        </div>
+
         <div class="toggle-container">
             <div class="toggle">
                 <div class="toggle-panel toggle-left">
                     <h1>Bem-vindo de volta!</h1>
-                    <p>Acesse com sua conta pessoal</p>
-                    <button class="hidden" id="login">Login</button>
+                    <p>Entre com seus dados para acessar todos os recursos do TechnoBug</p>
+                    <button class="hidden" id="login">Entrar</button>
                 </div>
                 <div class="toggle-panel toggle-right">
-                    <h1>Olá!</h1>
-                    <p>Crie sua conta!</p>
-                    <button class="hidden" id="criar">Criar</button>
+                    <h1>Olá, Estudante!</h1>
+                    <p>Registre-se para começar sua jornada de aprendizado com o TechnoBug</p>
+                    <button class="hidden" id="register">Cadastrar</button>
                 </div>
             </div>
         </div>
-        
-        {% if user %}
-        <div class="user-welcome">
-            <h2>Bem-vindo, {{ user.username }}!</h2>
-            <p>Você está logado com o email: {{ user.email }}</p>
-            <a href="{{ url_for('logout') }}" class="logout-btn">Sair</a>
-        </div>
-        {% endif %}
     </div>
-    <footer>
-        <p>© 2025 TechnoBug. Todos os direitos reservados.</p>
+
+    <!-- Flash Messages Container -->
+    <div class="flash-messages" id="flash-messages"></div>
+
+    <!-- User Welcome Screen (Initially Hidden) -->
+    <div class="user-welcome" id="user-welcome" style="display: none;">
+        <h1>Bem-vindo ao TechnoBug!</h1>
+        <p>Seu suporte de aprendizado em Desenvolvimento de Sistemas</p>
+        <div class="app-info">
+            <p>O TechnoBug funciona como um guia prático, reunindo materiais resumidos, dicas rápidas, exercícios complementares e um espaço para perguntas e respostas entre os alunos.</p>
+        </div>
+        <a href="#" class="btn-primary">Explorar Conteúdos</a>
+        <a href="#" class="logout-btn">Sair</a>
+    </div>
+
+    <!-- Footer Section -->
+    <footer id="main-footer">
+        <div class="footer-container">
+            <div class="footer-logo">
+                <h3>TechnoBug</h3>
+                <p>Uma ferramenta complementar de aprendizado para estudantes de Desenvolvimento de Sistemas.</p>
+            </div>
+            <div class="footer-social">
+                <h4>Siga-nos</h4>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-github"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="footer-about">
+                <h4>Sobre</h4>
+                <p>O TechnoBug é um projeto desenvolvido para apoiar estudantes do curso técnico em Desenvolvimento de Sistemas, oferecendo recursos complementares ao AVA oficial.</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 TechnoBug - Todos os direitos reservados</p>
+        </div>
     </footer>
-    
-    <!-- Carregando o SDK do Firebase usando o método de script CDN (mais compatível) -->
+
+    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-    
-    <script>
-      // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyC1fhqZQXIgC2JwU-NVJLex_mURZ2qow6k",
-  authDomain: "technobug-6daca.firebaseapp.com",
-  projectId: "technobug-6daca",
-  storageBucket: "technobug-6daca.firebasestorage.app",
-  messagingSenderId: "1042406795811",
-  appId: "1:1042406795811:web:6c26f03b0f739900325f96",
-  measurementId: "G-Q0JNCFQLH8"
-};
-      
-      // Inicializar Firebase (usando versão de compatibilidade)
-      firebase.initializeApp(firebaseConfig);
-      
-      // Botão Google para criar conta
-      document.getElementById('google-sign-up').addEventListener('click', function(e) {
-        e.preventDefault();
-        signUpWithGoogle();
-      });
-      
-      // Botão Google para login
-      document.getElementById('google-login').addEventListener('click', function(e) {
-        e.preventDefault();
-        signInWithGoogle();
-      });
-      
-      // Função para criar conta com Google
-      function signUpWithGoogle() {
-        // O fluxo é igual ao login, pois o back-end cria o usuário se não existir
-        signInWithGoogle();
-      }
 
-      // Função para login com Google
-      function signInWithGoogle() {
-        console.log("Iniciando login/criação com Google...");
-        const provider = new firebase.auth.GoogleAuthProvider();
-        provider.addScope('profile');
-        provider.addScope('email');
-        
-        firebase.auth().signInWithPopup(provider)
-          .then((result) => {
-            console.log("Login/criação bem-sucedido:", result.user.email);
-            // O usuário foi autenticado com sucesso
-            return result.user.getIdToken();
-          })
-          .then((idToken) => {
-            console.log("Token obtido, enviando para o servidor...");
-            // Enviar o token para o back-end
-            return fetch('/verify-token', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ idToken: idToken })
+    <script src="{{ url_for('static', filename='js/fantasyHeaderFooter.js') }}"></script>
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyC1fhqZQXIgC2JwU-NVJLex_mURZ2qow6k",
+            authDomain: "technobug-6daca.firebaseapp.com",
+            projectId: "technobug-6daca",
+            storageBucket: "technobug-6daca.firebasestorage.app",
+            messagingSenderId: "1042406795811",
+            appId: "1:1042406795811:web:6c26f03b0f739900325f96",
+            measurementId: "G-Q0JNCFQLH8"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+
+        // Google Sign-Up Button
+        document.getElementById('google-sign-up').addEventListener('click', function(e) {
+            e.preventDefault();
+            signUpWithGoogle();
+        });
+
+        // Google Login Button
+        document.getElementById('google-login').addEventListener('click', function(e) {
+            e.preventDefault();
+            signInWithGoogle();
+        });
+
+        // Function for Google Sign-Up (same as login since backend handles user creation)
+        function signUpWithGoogle() {
+            signInWithGoogle();
+        }
+
+        // Function for Google Login
+        function signInWithGoogle() {
+            console.log("Iniciando login/criação com Google...");
+            const provider = new firebase.auth.GoogleAuthProvider();
+            provider.addScope('profile');
+            provider.addScope('email');
+
+            firebase.auth().signInWithPopup(provider)
+                .then((result) => {
+                    console.log("Login/criação bem-sucedido:", result.user.email);
+                    return result.user.getIdToken();
+                })
+                .then((idToken) => {
+                    console.log("Token obtido, enviando para o servidor...");
+                    return fetch('/verify-token', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ idToken: idToken })
+                    });
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Resposta do servidor:", data);
+                    if (data.status === 'success') {
+                        showFlashMessage('Login realizado com sucesso!', 'success');
+                        document.getElementById('login-container').style.display = 'none';
+                        document.getElementById('user-welcome').style.display = 'flex';
+                        // Redirecione para a tela inicial se necessário
+                        // window.location.href = '/telainicial';
+                    } else {
+                        showFlashMessage('Erro: ' + data.message, 'error');
+                    }
+                })
+                .catch((error) => {
+                    console.error('Erro detalhado:', error);
+                    showFlashMessage('Erro ao fazer login/criar conta: ' + error.message, 'error');
+                });
+        }
+
+        const container = document.getElementById('login-container');
+        const registerBtn = document.getElementById('register');
+        const loginBtn = document.getElementById('login');
+
+        registerBtn.addEventListener('click', () => {
+            container.classList.add('active');
+        });
+
+        loginBtn.addEventListener('click', () => {
+            container.classList.remove('active');
+        });
+
+        // Flash message functions
+        function showFlashMessage(message, type = 'info') {
+            const flashContainer = document.getElementById('flash-messages');
+            const flashMessage = document.createElement('div');
+            flashMessage.className = `flash-message ${type}`;
+            flashMessage.innerHTML = `
+                ${message}
+                <span class="close-btn">&times;</span>
+            `;
+            
+            flashContainer.appendChild(flashMessage);
+            
+            const closeBtn = flashMessage.querySelector('.close-btn');
+            closeBtn.addEventListener('click', () => {
+                flashMessage.remove();
             });
-          })
-          .then(response => response.json())
-          .then(data => {
-            console.log("Resposta do servidor:", data);
-            if (data.status === 'success') {
-              // Redirecionar para a tela inicial
-              window.location.href = '{{ url_for("telainicial") }}';
-            } else {
-              alert('Erro: ' + data.message);
-            }
-          })
-          .catch((error) => {
-            console.error('Erro detalhado:', error);
-            alert('Erro ao fazer login/criar conta: ' + error.message);
-          });
-      }
+            
+            setTimeout(() => {
+                flashMessage.remove();
+            }, 5000);
+        }
+
+        // Example form submission handling
+        const loginForm = document.querySelector('.login form');
+        const registerForm = document.querySelector('.criar form');
+
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            // Here you would normally handle login with backend
+            // For demo purposes:
+            document.getElementById('login-container').style.display = 'none';
+            document.getElementById('user-welcome').style.display = 'flex';
+            showFlashMessage('Login realizado com sucesso!', 'success');
+        });
+
+        registerForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            // Here you would normally handle registration with backend
+            showFlashMessage('Conta criada com sucesso! Você pode fazer login agora.', 'success');
+            container.classList.remove('active');
+        });
+
+        // Logout handling
+        document.querySelector('.logout-btn').addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('login-container').style.display = 'block';
+            document.getElementById('user-welcome').style.display = 'none';
+            showFlashMessage('Você saiu da sua conta', 'info');
+        });
     </script>
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>

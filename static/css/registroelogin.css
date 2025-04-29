@@ -1,0 +1,524 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background: linear-gradient(to bottom, #ffffff, hsl(205, 100%, 59%));
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header Styles */
+header {
+    background: linear-gradient(to right, #2f528b, #039dda);
+    color: white;
+    padding: 2rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.logo h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 0.5rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.tagline {
+    font-size: 1rem;
+    opacity: 0.9;
+}
+
+/* Main Container Styles */
+.container {
+    background-color: #ffffff;
+    border-radius: 30px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
+    position: relative;
+    overflow: hidden;
+    width: 768px;
+    max-width: 90%;
+    min-height: 480px;
+    margin: 3rem auto;
+}
+
+.container p {
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: 0.3px;
+    margin: 20px 0;
+}
+
+.container span {
+    font-size: 12px;
+}
+
+.container a {
+    color: #333;
+    font-size: 13px;
+    text-decoration: none;
+    margin: 15px 0 10px;
+}
+
+.container button {
+    background-color: #2f528b;
+    color: #ffffff;
+    font-size: 12px;
+    padding: 10px 45px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.container button:hover {
+    background-color: #039dda;
+    transform: translateY(-2px);
+}
+
+.container button.hidden {
+    background-color: transparent;
+    border: 1px solid #ffffff;
+    color: #ffffff;
+}
+
+.container form {
+    background-color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 0 40px;
+    height: 100%;
+    width: 100%;
+}
+
+.container input {
+    background-color: #eee;
+    border: none;
+    margin: 8px 0;
+    padding: 10px 15px;
+    font-size: 13px;
+    border-radius: 8px;
+    width: 100%;
+    transition: background-color 0.3s;
+}
+
+.container input:focus {
+    background-color: #ddd;
+    outline: none;
+}
+
+.form-container {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 50%;
+    transition: all 0.6s ease-in-out;
+}
+
+.login {
+    left: 0;
+    z-index: 2;
+}
+
+.container.active .login {
+    transform: translateX(100%);
+    z-index: 1;
+}
+
+.criar {
+    left: 0;
+    opacity: 0;
+    z-index: 1;
+}
+
+.container.active .criar {
+    transform: translateX(100%);
+    opacity: 1;
+    z-index: 5;
+    animation: move 0.6s;
+}
+
+@keyframes move {
+    0%, 49.99% {
+        opacity: 0;
+        z-index: 1;
+    }
+    50%, 100% {
+        opacity: 1;
+        z-index: 5;
+    }
+}
+
+.social-icons {
+    margin: 20px 0;
+}
+
+.social-icons a {
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 5px;
+    width: 40px;
+    height: 40px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.social-icons a:hover {
+    background-color: #2f528b;
+    color: #ffffff;
+}
+
+.toggle-container {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 50%;
+    height: 100%;
+    overflow: hidden;
+    transition: all 0.6s ease-in-out;
+    border-radius: 150px 0 0 100px;
+    z-index: 1000;
+}
+
+.container.active .toggle-container {
+    transform: translateX(-100%);
+    border-radius: 0 150px 100px 0;
+}
+
+.toggle {
+    background: linear-gradient(to right, #2f528b, #039dda);
+    height: 100%;
+    color: #ffffff;
+    position: relative;
+    left: -100%;
+    width: 200%;
+    transform: translateX(0);
+    transition: all 0.6s ease-in-out;
+}
+
+.container.active .toggle {
+    transform: translateX(50%);
+}
+
+.toggle-panel {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 0 30px;
+    text-align: center;
+    top: 0;
+    transform: translateX(0);
+    transition: all 0.6s ease-in-out;
+}
+
+.toggle-left {
+    left: 0;
+    transform: translateX(-200%);
+}
+
+.container.active .toggle-left {
+    transform: translateX(0);
+}
+
+.toggle-right {
+    right: 0;
+    transform: translateX(0);
+}
+
+.container.active .toggle-right {
+    transform: translateX(200%);
+}
+
+/* Flash Messages */
+.flash-messages {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    width: 300px;
+}
+
+.flash-message {
+    margin-bottom: 10px;
+    padding: 15px;
+    border-radius: 4px;
+    color: #fff;
+    position: relative;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.flash-message.success {
+    background-color: #4CAF50;
+}
+
+.flash-message.error {
+    background-color: #F44336;
+}
+
+.flash-message.info {
+    background-color: #2196F3;
+}
+
+.close-btn {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+/* User Welcome */
+.user-welcome {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 20px;
+    text-align: center;
+}
+
+.user-welcome h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.user-welcome p {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.btn-primary {
+    display: inline-block;
+    background-color: #2f528b;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    font-size: 12px;
+    text-decoration: none;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.btn-primary:hover {
+    background-color: #039dda;
+    transform: translateY(-2px);
+}
+
+.logout-btn {
+    display: inline-block;
+    background-color: #2f528b;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    font-size: 12px;
+    text-decoration: none;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.logout-btn:hover {
+    background-color: #039dda;
+    transform: translateY(-2px);
+}
+
+/* Footer Styles */
+footer {
+    background: linear-gradient(to right, #2f528b, #039dda);
+    color: white;
+    padding: 2rem;
+    margin-top: auto;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 2rem;
+}
+
+.footer-logo h3 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.footer-logo p {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.footer-social h4,
+.footer-about h4 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+.footer-social .social-icons {
+    display: flex;
+    gap: 1rem;
+}
+
+.footer-social .social-icons a {
+    border: none;
+    width: 35px;
+    height: 35px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.footer-social .social-icons a:hover {
+    background-color: #ffffff;
+    color: #2f528b;
+}
+
+.footer-about p {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    line-height: 1.6;
+}
+
+.footer-bottom {
+    text-align: center;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.footer-bottom p {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        width: 95%;
+        min-height: 600px;
+    }
+
+    .form-container {
+        width: 100%;
+        position: static;
+        transform: none !important;
+        opacity: 1 !important;
+        z-index: 1 !important;
+    }
+
+    .login, .criar {
+        width: 100%;
+        transition: none;
+        display: none;
+    }
+
+    .login.active, .criar.active {
+        display: flex;
+    }
+
+    .container.active .login {
+        display: none;
+    }
+
+    .container.active .criar {
+        display: flex;
+    }
+
+    .toggle-container {
+        position: static;
+        width: 100%;
+        border-radius: 0;
+        height: auto;
+    }
+
+    .toggle {
+        position: static;
+        width: 100%;
+        left: 0;
+        transform: none;
+        height: auto;
+    }
+
+    .toggle-panel {
+        position: static;
+        width: 100%;
+        padding: 20px;
+        transform: none !important;
+    }
+
+    .container.active .toggle-container {
+        transform: none;
+    }
+
+    .container.active .toggle {
+        transform: none;
+    }
+
+    .footer-container {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .footer-social .social-icons {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        min-height: 500px;
+    }
+
+    .form-container {
+        padding: 0 20px;
+    }
+
+    .user-welcome h1 {
+        font-size: 1.5rem;
+    }
+
+    .user-welcome p {
+        font-size: 0.9rem;
+    }
+
+    .btn-primary, .logout-btn {
+        padding: 8px 16px;
+        font-size: 11px;
+    }
+}
