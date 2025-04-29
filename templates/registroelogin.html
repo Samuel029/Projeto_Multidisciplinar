@@ -22,7 +22,7 @@
     <!-- Main Login Container -->
     <div class="container" id="login-container">
         <div class="form-container login">
-            <form>
+            <form method="POST" action="{{ url_for('registroelogin') }}">
                 <h1>Entrar</h1>
                 <div class="social-icons">
                     <a href="#" class="icon" id="google-login" title="Entrar com Google" aria-label="Entrar com Google">
@@ -34,12 +34,12 @@
                 <input type="email" placeholder="Email" required>
                 <input type="password" placeholder="Senha" required>
                 <a href="#">Esqueceu sua senha?</a>
-                <button>Entrar</button>
+                <button type="submit" name="login" value="login">Entrar</button>
             </form>
         </div>
 
         <div class="form-container criar">
-            <form>
+            <form method="POST" action="{{ url_for('registroelogin') }}">
                 <h1>Criar Conta</h1>
                 <div class="social-icons">
                     <a href="#" class="icon" id="google-sign-up" title="Criar conta com Google" aria-label="Criar conta com Google">
@@ -52,7 +52,7 @@
                 <input type="email" placeholder="Email" required>
                 <input type="password" placeholder="Senha" required>
                 <input type="password" placeholder="Confirme sua senha" required>
-                <button>Cadastrar</button>
+                <button type="submit" name="register" value="register">Cadastrar</button>
             </form>
         </div>
 
@@ -172,10 +172,8 @@
                     console.log("Resposta do servidor:", data);
                     if (data.status === 'success') {
                         showFlashMessage('Login realizado com sucesso!', 'success');
-                        document.getElementById('login-container').style.display = 'none';
-                        document.getElementById('user-welcome').style.display = 'flex';
-                        // Redirecione para a tela inicial se necessário
-                        // window.location.href = '/telainicial';
+                        // Redirecionar para a tela inicial
+                        window.location.href = '{{ url_for("telainicial") }}';
                     } else {
                         showFlashMessage('Erro: ' + data.message, 'error');
                     }
@@ -226,26 +224,102 @@
 
         loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            // Here you would normally handle login with backend
-            // For demo purposes:
-            document.getElementById('login-container').style.display = 'none';
-            document.getElementById('user-welcome').style.display = 'flex';
-            showFlashMessage('Login realizado com sucesso!', 'success');
+            // Enviar formulário de login para o backend
+            const email = loginForm.querySelector('input[type="email"]').value;
+            const password = loginForm.querySelector('input[type="password"]').value;
+            
+            // Exemplo usando fetch para enviar dados ao backend
+            fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: email,
+                    password: password
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    showFlashMessage('Login realizado com sucesso!', 'success');
+                    window.location.href = '{{ url_for("telainicial") }}';
+                } else {
+                    showFlashMessage(data.message || 'Erro ao fazer login', 'error');
+                }
+            })
+            .catch(error => {
+                showFlashMessage('Erro ao conectar com o servidor', 'error');
+                console.error('Erro:', error);
+            });
         });
 
         registerForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            // Here you would normally handle registration with backend
-            showFlashMessage('Conta criada com sucesso! Você pode fazer login agora.', 'success');
-            container.classList.remove('active');
+            const name = registerForm.querySelector('input[type="text"]').value;
+            const email = registerForm.querySelector('input[type="email"]').value;
+            const password = registerForm.querySelectorAll('input[type="password"]')[0].value;
+            const confirmPassword = registerForm.querySelectorAll('input[type="password"]')[1].value;
+            
+            if (password !== confirmPassword) {
+                showFlashMessage('As senhas não coincidem!', 'error');
+                return;
+            }
+            
+            // Enviar dados para o backend
+            fetch('/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: name,
+                    email: email,
+                    password: password
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    showFlashMessage('Conta criada com sucesso! Você pode fazer login agora.', 'success');
+                    container.classList.remove('active');
+                } else {
+                    showFlashMessage(data.message || 'Erro ao criar conta', 'error');
+                }
+            })
+            .catch(error => {
+                showFlashMessage('Erro ao conectar com o servidor', 'error');
+                console.error('Erro:', error);
+            });
         });
 
         // Logout handling
         document.querySelector('.logout-btn').addEventListener('click', (e) => {
             e.preventDefault();
-            document.getElementById('login-container').style.display = 'block';
-            document.getElementById('user-welcome').style.display = 'none';
-            showFlashMessage('Você saiu da sua conta', 'info');
+            
+            // Fazer logout no servidor
+            fetch('/logout', {
+                method: 'GET'
+            })
+            .then(response => {
+                document.getElementById('login-container').style.display = 'block';
+                document.getElementById('user-welcome').style.display = 'none';
+                showFlashMessage('Você saiu da sua conta', 'info');
+                
+                // Se está usando Firebase, fazer logout também
+                firebase.auth().signOut().then(() => {
+                    console.log('Logout do Firebase realizado com sucesso');
+                }).catch((error) => {
+                    console.error('Erro ao fazer logout do Firebase:', error);
+                });
+                
+                // Redirecionar para a página de login
+                window.location.href = '{{ url_for("registroelogin") }}';
+            })
+            .catch(error => {
+                console.error('Erro ao fazer logout:', error);
+                showFlashMessage('Erro ao fazer logout', 'error');
+            });
         });
     </script>
 </body>

@@ -1,0 +1,24 @@
+melhore isso pique no talo só que tem apenas essas categorias
+
+versionamento
+
+i.a
+
+modelagem a banco de dados
+
+lógica
+
+processos
+
+front-end
+
+back-end
+
+programação android
+
+projeto multidisciplinar
+
+carreiras
+
+redes
+

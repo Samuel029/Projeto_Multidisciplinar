@@ -132,6 +132,26 @@ def verify_token():
         print(f"Erro ao verificar token: {str(e)}")
         return jsonify({'status': 'error', 'message': str(e)}), 401
 
+@app.route('/materiais-de-estudo')
+def materiais():
+    """Página de Materiais de Estudo"""
+    return render_template('materiaisestudo.html')
+
+@app.route('/pdfs-e-apostilas')
+def pdfs():
+    """Página de PDFs e Apostilas"""
+    return render_template('pdfeapostilas.html')
+
+@app.route('/videos-e-tutoriais')
+def videos():
+    """Página de Vídeos e Tutoriais"""
+    return render_template('videosetutoriais.html')
+
+@app.route('/codigo')
+def codigo():
+    """Página de Exemplos de Código"""
+    return render_template('exemplosdecodigo.html')
+
 @app.route('/telainicial', methods=['GET', 'POST'])
 def telainicial():
     user_id = session.get('user_id')

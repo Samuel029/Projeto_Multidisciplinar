@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Videoteca Tech</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/videoseetutoriais.css') }}">
+</head>
+<body>
+    <header class="app-header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-graduation-cap"></i>
+                <span>Videoteca Tech</span>
+            </div>
+
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Pesquisar vídeos, tutoriais, tópicos...">
+            </div>
+
+            <button class="btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" aria-controls="offcanvasMenu">
+                <i class="fas fa-bars"></i>
+                <span>Menu</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Offcanvas Menu -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasMenuLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasMenuLabel">Menu</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <ul class="navbar-nav">
+                <li class="nav-item mb-2"><a class="nav-link active" href="#"><i class="fas fa-home me-2"></i>Página Inicial</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('materiais') }}"><i class="fas fa-book me-2"></i>Materiais de Estudo</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('pdfs') }}"><i class="fas fa-file-pdf me-2"></i>PDFs e Apostilas</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('videos') }}"><i class="fas fa-video me-2"></i>Vídeos e Tutoriais</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('codigo') }}"><i class="fas fa-code me-2"></i>Exemplos de Código</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="#"><i class="fas fa-question-circle me-2"></i>Perguntas Frequentes</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="#"><i class="fas fa-users me-2"></i>Comunidade</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="#"><i class="fas fa-cog me-2"></i>Configurações</a></li>
+                <li class="nav-item"><a class="nav-link text-danger" href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt me-2"></i>Sair</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <nav class="category-nav">
+        <div class="categories-wrapper">
+            <div class="categories">
+                <div class="category active">Todos</div>
+                <div class="category">Versionamento</div>
+                <div class="category">I.A</div>
+                <div class="category">Modelagem a Banco de Dados</div>
+                <div class="category">Lógica</div>
+                <div class="category">Processos</div>
+                <div class="category">Front-end</div>
+                <div class="category">Back-end</div>
+                <div class="category">Programação Android</div>
+                <div class="category">Projeto Multidisciplinar</div>
+                <div class="category">Carreiras</div>
+                <div class="category">Redes</div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <main class="main-content">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-fire"></i>
+                    <span>Tutoriais em Destaque</span>
+                </h2>
+                <div class="section-actions">
+                    <div class="view-toggle">
+                        <button class="active">
+                            <i class="fas fa-th"></i>
+                        </button>
+                        <button>
+                            <i class="fas fa-list"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="video-grid">
+                <!-- Card 1: Versionamento -->
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <img src="/api/placeholder/500/320" alt="Thumbnail do vídeo">
+                        <div class="video-category-tag">Versionamento</div>
+                        <div class="video-play-icon">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="video-duration">14:27</div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">Git Avançado: Branching e Merging Eficiente</h3>
+                        <div class="video-meta">
+                            <div class="instructor">
+                                <div class="instructor-avatar">
+                                    <img src="/api/placeholder/100/100" alt="Instrutor">
+                                </div>
+                                <span class="instructor-name">Equipe DevMasters</span>
+                            </div>
+                            <div class="video-stats">
+                                <span><i class="fas fa-eye"></i> 25.7K</span>
+                                <span><i class="fas fa-thumbs-up"></i> 3.8K</span>
+                            </div>
+                        </div>
+                        <p class="video-description">Aprenda técnicas avançadas de Git para gerenciar fluxos de trabalho complexos em equipes de desenvolvimento.</p>
+                        <div class="video-tags">
+                            <span class="video-tag">Git</span>
+                            <span class="video-tag">DevOps</span>
+                            <span class="video-tag">GitHub</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2: I.A -->
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <img src="/api/placeholder/500/320" alt="Thumbnail do vídeo">
+                        <div class="video-category-tag">I.A</div>
+                        <div class="video-play-icon">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="video-duration">22:15</div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">Machine Learning com TensorFlow: Primeiros Passos</h3>
+                        <div class="video-meta">
+                            <div class="instructor">
+                                <div class="instructor-avatar">
+                                    <img src="/api/placeholder/100/100" alt="Instrutor">
+                                </div>
+                                <span class="instructor-name">Dra. Santos</span>
+                            </div>
+                            <div class="video-stats">
+                                <span><i class="fas fa-eye"></i> 18.7K</span>
+                                <span><i class="fas fa-thumbs-up"></i> 2.3K</span>
+                            </div>
+                        </div>
+                        <p class="video-description">Introdução prática à construção de modelos de machine learning utilizando a biblioteca TensorFlow e Python.</p>
+                        <div class="video-tags">
+                            <span class="video-tag">Python</span>
+                            <span class="video-tag">TensorFlow</span>
+                            <span class="video-tag">ML</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3: Banco de Dados -->
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <img src="/api/placeholder/500/320" alt="Thumbnail do vídeo">
+                        <div class="video-category-tag">Banco de Dados</div>
+                        <div class="video-play-icon">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="video-duration">18:32</div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">Modelagem de Banco de Dados Relacional: Do Zero ao Avançado</h3>
+                        <div class="video-meta">
+                            <div class="instructor">
+                                <div class="instructor-avatar">
+                                    <img src="/api/placeholder/100/100" alt="Instrutor">
+                                </div>
+                                <span class="instructor-name">Prof. Almeida</span>
+                            </div>
+                            <div class="video-stats">
+                                <span><i class="fas fa-eye"></i> 15.3K</span>
+                                <span><i class="fas fa-thumbs-up"></i> 1.8K</span>
+                            </div>
+                        </div>
+                        <p class="video-description">Aprenda a desenhar modelos ER eficientes e implementar bancos de dados relacionais com MySQL.</p>
+                        <div class="video-tags">
+                            <span class="video-tag">SQL</span>
+                            <span class="video-tag">MySQL</span>
+                            <span class="video-tag">ER</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4: Lógica -->
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <img src="/api/placeholder/500/320" alt="Thumbnail do vídeo">
+                        <div class="video-category-tag">Lógica</div>
+                        <div class="video-play-icon">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="video-duration">12:48</div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">Algoritmos e Lógica de Programação: Fundamentos Essenciais</h3>
+                        <div class="video-meta">
+                            <div class="instructor">
+                                <div class="instructor-avatar">
+                                    <img src="/api/placeholder/100/100" alt="Instrutor">
+                                </div>
+                                <span class="instructor-name">Prof. Costa</span>
+                            </div>
+                            <div class="video-stats">
+                                <span><i class="fas fa-eye"></i> 20.1K</span>
+                                <span><i class="fas fa-thumbs-up"></i> 2.5K</span>
+                            </div>
+                        </div>
+                        <p class="video-description">Construa uma base sólida em programação através de conceitos de lógica, fluxogramas e pseudocódigo.</p>
+                        <div class="video-tags">
+                            <span class="video-tag">Algoritmos</span>
+                            <span class="video-tag">Pseudocódigo</span>
+                            <span class="video-tag">Iniciante</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 5: Front-end -->
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <img src="/api/placeholder/500/320" alt="Thumbnail do vídeo">
+                        <div class="video-category-tag">Front-end</div>
+                        <div class="video-play-icon">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="video-duration">16:05</div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">React Hooks: Dominando o Estado e Ciclo de Vida</h3>
+                        <div class="video-meta">
+                            <div class="instructor">
+                                <div class="instructor-avatar">
+                                    <img src="/api/placeholder/100/100" alt="Instrutor">
+                                </div>
+                                <span class="instructor-name">Profa. Lima</span>
+                            </div>
+                            <div class="video-stats">
+                                <span><i class="fas fa-eye"></i> 16.8K</span>
+                                <span><i class="fas fa-thumbs-up"></i> 2.1K</span>
+                            </div>
+                        </div>
+                        <p class="video-description">Tutorial completo sobre o uso de hooks no React para gerenciar estado e efeitos colaterais de forma eficiente.</p>
+                        <div class="video-tags">
+                            <span class="video-tag">React</span>
+                            <span class="video-tag">JavaScript</span>
+                            <span class="video-tag">Hooks</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 6: Back-end -->
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <img src="/api/placeholder/500/320" alt="Thumbnail do vídeo">
+                        <div class="video-category-tag">Back-end</div>
+                        <div class="video-play-icon">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="video-duration">19:42</div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">API REST com Node.js e Express: Criando Serviços Robustos</h3>
+                        <div class="video-meta">
+                            <div class="instructor">
+                                <div class="instructor-avatar">
+                                    <img src="/api/placeholder/100/100" alt="Instrutor">
+                                </div>
+                                <span class="instructor-name">Prof. Silva</span>
+                            </div>
+                            <div class="video-stats">
+                                <span><i class="fas fa-eye"></i> 14.2K</span>
+                                <span><i class="fas fa-thumbs-up"></i> 1.7K</span>
+                            </div>
+                        </div>
+                        <p class="video-description">Aprenda a desenvolver APIs REST completas com autenticação, validação e documentação utilizando o ecossistema Node.js.</p>
+                        <div class="video-tags">
+                            <span class="video-tag">Node.js</span>
+                            <span class="video-tag">Express</span>
+                            <span class="video-tag">API</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 7: Android -->
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <img src="/api/placeholder/500/320" alt="Thumbnail do vídeo">
+                        <div class="video-category-tag">Android</div>
+                        <div class="video-play-icon">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="video-duration">23:18</div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">Desenvolvimento Android com Kotlin e Jetpack Compose</h3>
+                        <div class="video-meta">
+                            <div class="instructor">
+                                <div class="instructor-avatar">
+                                    <img src="/api/placeholder/100/100" alt="Instrutor">
+                                </div>
+                                <span class="instructor-name">Prof. Mendes</span>
+                            </div>
+                            <div class="video-stats">
+                                <span><i class="fas fa-eye"></i> 22.4K</span>
+                                <span><i class="fas fa-thumbs-up"></i> 3.1K</span>
+                            </div>
+                        </div>
+                        <p class="video-description">Tutorial completo sobre como criar interfaces modernas para Android utilizando Jetpack Compose e Kotlin.</p>
+                        <div class="video-tags">
+                            <span class="video-tag">Kotlin</span>
+                            <span class="video-tag">Android</span>
+                            <span class="video-tag">Compose</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 8: Projeto Multidisciplinar -->
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <img src="/api/placeholder/500/320" alt="Thumbnail do vídeo">
+                        <div class="video-category-tag">Multidisciplinar</div>
+                        <div class="video-play-icon">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="video-duration">32:09</div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">Projeto Full Stack: Da Concepção ao Deploy</h3>
+                        <div class="video-meta">
+                            <div class="instructor">
+                                <div class="instructor-avatar">
+                                    <img src="/api/placeholder/100/100" alt="Instrutor">
+                                </div>
+                                <span class="instructor-name">Equipe DevMasters</span>
+                            </div>
+                            <div class="video-stats">
+                                <span><i class="fas fa-eye"></i> 25.7K</span>
+                                <span><i class="fas fa-thumbs-up"></i> 3.8K</span>
+                            </div>
+                        </div>
+                        <p class="video-description">Série completa que aborda todas as etapas de criação de um aplicativo real: do design ao backend, frontend e deploy.</p>
+                        <div class="video-tags">
+                            <span class="video-tag">MERN Stack</span>
+                            <span class="video-tag">DevOps</span>
+                            <span class="video-tag">UX/UI</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 9: Carreiras -->
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <img src="/api/placeholder/500/320" alt="Thumbnail do vídeo">
+                        <div class="video-category-tag">Carreiras</div>
+                        <div class="video-play-icon">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="video-duration">15:43</div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">Carreira em Tech: Como se Tornar um Desenvolvedor Full Stack</h3>
+                        <div class="video-meta">
+                            <div class="instructor">
+                                <div class="instructor-avatar">
+                                    <img src="/api/placeholder/100/100" alt="Instrutor">
+                                </div>
+                                <span class="instructor-name">Dra. Cardoso</span>
+                            </div>
+                            <div class="video-stats">
+                                <span><i class="fas fa-eye"></i> 30.2K</span>
+                                <span><i class="fas fa-thumbs-up"></i> 4.5K</span>
+                            </div>
+                        </div>
+                        <p class="video-description">Guia completo com dicas práticas sobre formação, portfólio e entrevistas para iniciar ou impulsionar sua carreira como desenvolvedor.</p>
+                        <div class="video-tags">
+                            <span class="video-tag">Carreira</span>
+                            <span class="video-tag">Emprego</span>
+                            <span class="video-tag">Entrevistas</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 10: Redes -->
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <img src="/api/placeholder/500/320" alt="Thumbnail do vídeo">
+                        <div class="video-category-tag">Redes</div>
+                        <div class="video-play-icon">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="video-duration">20:57</div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">Redes e Segurança: Configuração de Firewall e VPN</h3>
+                        <div class="video-meta">
+                            <div class="instructor">
+                                <div class="instructor-avatar">
+                                    <img src="/api/placeholder/100/100" alt="Instrutor">
+                                </div>
+                                <span class="instructor-name">Prof. Ferreira</span>
+                            </div>
+                            <div class="video-stats">
+                                <span><i class="fas fa-eye"></i> 18.9K</span>
+                                <span><i class="fas fa-thumbs-up"></i> 2.6K</span>
+                            </div>
+                        </div>
+                        <p class="video-description">Aprenda a proteger ambientes de rede empresariais através de configurações avançadas de firewall e implementação de VPN segura.</p>
+                        <div class="video-tags">
+                            <span class="video-tag">Segurança</span>
+                            <span class="video-tag">Networking</span>
+                            <span class="video-tag">VPN</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 11: Processos -->
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <img src="/api/placeholder/500/320" alt="Thumbnail do vídeo">
+                        <div class="video-category-tag">Processos</div>
+                        <div class="video-play-icon">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="video-duration">17:35</div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">Scrum Master: Gerenciando Projetos Ágeis</h3>
+                        <div class="video-meta">
+                            <div class="instructor">
+                                <div class="instructor-avatar">
+                                    <img src="/api/placeholder/100/100" alt="Instrutor">
+                                </div>
+                                <span class="instructor-name">Profa. Ribeiro</span>
+                            </div>
+                            <div class="video-stats">
+                                <span><i class="fas fa-eye"></i> 21.3K</span>
+                                <span><i class="fas fa-thumbs-up"></i> 3.2K</span>
+                            </div>
+                        </div>
+                        <p class="video-description">Tutorial completo sobre como implementar e gerenciar metodologias ágeis em equipes de desenvolvimento de software.</p>
+                        <div class="video-tags">
+                            <span class="video-tag">Agile</span>
+                            <span class="video-tag">Scrum</span>
+                            <span class="video-tag">Gestão</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 12: I.A Avançado -->
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <img src="/api/placeholder/500/320" alt="Thumbnail do vídeo">
+                        <div class="video-category-tag">I.A</div>
+                        <div class="video-play-icon">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="video-duration">28:13</div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">Redes Neurais Convolucionais para Visão Computacional</h3>
+                        <div class="video-meta">
+                            <div class="instructor">
+                                <div class="instructor-avatar">
+                                    <img src="/api/placeholder/100/100" alt="Instrutor">
+                                </div>
+                                <span class="instructor-name">Dr. Pereira</span>
+                            </div>
+                            <div class="video-stats">
+                                <span><i class="fas fa-eye"></i> 19.8K</span>
+                                <span><i class="fas fa-thumbs-up"></i> 2.9K</span>
+                            </div>
+                        </div>
+                        <p class="video-description">Aprenda a implementar e treinar CNNs para reconhecimento de imagens e detecção de objetos com PyTorch.</p>
+                        <div class="video-tags">
+                            <span class="video-tag">Deep Learning</span>
+                            <span class="video-tag">PyTorch</span>
+                            <span class="video-tag">CNN</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <footer class="app-footer">
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>Sobre Nós</h3>
+                <ul class="footer-links">
+                    <li><a href="#"><i class="fas fa-info-circle"></i> Nossa Missão</a></li>
+                    <li><a href="#"><i class="fas fa-users"></i> Equipe</a></li>
+                    <li><a href="#"><i class="fas fa-building"></i> Parceiros</a></li>
+                    <li><a href="#"><i class="fas fa-newspaper"></i> Blog</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-column">
+                <h3>Recursos</h3>
+                <ul class="footer-links">
+                    <li><a href="#"><i class="fas fa-book"></i> Biblioteca</a></li>
+                    <li><a href="#"><i class="fas fa-code"></i> Projetos</a></li>
+                    <li><a href="#"><i class="fas fa-certificate"></i> Certificações</a></li>
+                    <li><a href="#"><i class="fas fa-download"></i> Downloads</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-column">
+                <h3>Comunidade</h3>
+                <ul class="footer-links">
+                    <li><a href="#"><i class="fas fa-comments"></i> Fórum</a></li>
+                    <li><a href="#"><i class="fas fa-chalkboard-teacher"></i> Webinars</a></li>
+                    <li><a href="#"><i class="fas fa-handshake"></i> Programas de Mentoria</a></li>
+                    <li><a href="#"><i class="fas fa-laptop-code"></i> Hackathons</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-column">
+                <h3>Contato</h3>
+                <ul class="footer-links">
+                    <li><a href="#"><i class="fas fa-envelope"></i> Suporte</a></li>
+                    <li><a href="#"><i class="fas fa-headset"></i> Fale Conosco</a></li>
+                    <li><a href="#"><i class="fas fa-map-marker-alt"></i> Localização</a></li>
+                    <li><a href="#"><i class="fas fa-question-circle"></i> FAQ</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>© 2025 Videoteca Tech. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Funcionalidade para seleção de categorias
+            const categories = document.querySelectorAll('.category');
+
+            categories.forEach(category => {
+                category.addEventListener('click', function() {
+                    categories.forEach(c => c.classList.remove('active'));
+                    this.classList.add('active');
+
+                    const categoryName = this.textContent.trim();
+                    if (categoryName === 'Todos') {
+                        document.querySelectorAll('.video-card').forEach(card => {
+                            card.style.display = 'block';
+                        });
+                    } else {
+                        document.querySelectorAll('.video-card').forEach(card => {
+                            const cardCategory = card.querySelector('.video-category-tag').textContent.trim();
+                            const categoryMap = {
+                                'I.A': ['I.A'],
+                                'Modelagem a Banco de Dados': ['Banco de Dados'],
+                                'Programação Android': ['Android'],
+                                'Projeto Multidisciplinar': ['Multidisciplinar'],
+                                'Versionamento': ['Versionamento']
+                            };
+
+                            const matchedCategories = categoryMap[categoryName] || [categoryName];
+                            if (matchedCategories.includes(cardCategory)) {
+                                card.style.display = 'block';
+                            } else {
+                                card.style.display = 'none';
+                            }
+                        });
+                    }
+                });
+            });
+
+            // Toggle de visualização (grid/lista)
+            const viewToggleButtons = document.querySelectorAll('.view-toggle button');
+            const videoGrid = document.querySelector('.video-grid');
+
+            viewToggleButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    viewToggleButtons.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+
+                    if (this.querySelector('i').classList.contains('fa-list')) {
+                        videoGrid.style.gridTemplateColumns = '1fr';
+                        videoGrid.querySelectorAll('.video-card').forEach(card => {
+                            card.style.display = 'flex';
+                            card.querySelector('.video-thumbnail').style.width = '280px';
+                            card.querySelector('.video-info').style.flex = '1';
+                        });
+                    } else {
+                        videoGrid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(300px, 1fr))';
+                        videoGrid.querySelectorAll('.video-card').forEach(card => {
+                            card.style.display = 'block';
+                            card.querySelector('.video-thumbnail').style.width = 'auto';
+                        });
+                    }
+                });
+            });
+
+            // Funcionalidade de pesquisa
+            const searchInput = document.querySelector('.search-bar input');
+
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase().trim();
+
+                document.querySelectorAll('.video-card').forEach(card => {
+                    const title = card.querySelector('.video-title').textContent.toLowerCase();
+                    const description = card.querySelector('.video-description').textContent.toLowerCase();
+                    const instructor = card.querySelector('.instructor-name').textContent.toLowerCase();
+                    const category = card.querySelector('.video-category-tag').textContent.toLowerCase();
+                    const tags = Array.from(card.querySelectorAll('.video-tag')).map(tag => tag.textContent.toLowerCase());
+
+                    // Mapear termos de pesquisa para categorias
+                    const searchCategoryMap = {
+                        'versionamento': 'versionamento',
+                        'ia': 'i.a',
+                        'i.a': 'i.a',
+                        'banco de dados': 'banco de dados',
+                        'modelagem a banco de dados': 'banco de dados',
+                        'logica': 'lógica',
+                        'processos': 'processos',
+                        'frontend': 'front-end',
+                        'front-end': 'front-end',
+                        'backend': 'back-end',
+                        'back-end': 'back-end',
+                        'android': 'android',
+                        'programação android': 'android',
+                        'multidisciplinar': 'multidisciplinar',
+                        'projeto multidisciplinar': 'multidisciplinar',
+                        'carreiras': 'carreiras',
+                        'redes': 'redes'
+                    };
+
+                    const matchedCategory = searchCategoryMap[searchTerm] || searchTerm;
+
+                    if (title.includes(searchTerm) ||
+                        description.includes(searchTerm) ||
+                        instructor.includes(searchTerm) ||
+                        category.includes(matchedCategory) ||
+                        tags.some(tag => tag.includes(searchTerm))) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

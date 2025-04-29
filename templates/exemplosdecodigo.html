@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exemplos de Código</title>
+    <style>
+        /* Estilos comuns */
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --text-color: #333;
+            --background-color: #f9f9f9;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+            --code-background: #2d2d2d;
+            --tag-color: #61dafb;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2.5rem;
+        }
+
+        /* Exemplos de Código - Estrutura de abas/tabs */
+        .code-section {
+            margin-bottom: 40px;
+        }
+
+        .code-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .code-icon {
+            font-size: 26px;
+            margin-right: 15px;
+            color: var(--primary-color);
+        }
+
+        .code-title {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            margin: 0;
+        }
+
+        .code-tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+
+        .code-tab {
+            padding: 12px 24px;
+            cursor: pointer;
+            border: 1px solid transparent;
+            border-bottom: none;
+            border-radius: 5px 5px 0 0;
+            background-color: #eee;
+            margin-right: 5px;
+            transition: var(--transition);
+        }
+
+        .code-tab.active {
+            background-color: var(--code-background);
+            color: white;
+            border-color: #ddd;
+        }
+
+        .code-tab:hover:not(.active) {
+            background-color: #ddd;
+        }
+
+        .code-content {
+            background-color: var(--code-background);
+            border-radius: 0 5px 5px 5px;
+            padding: 5px;
+            margin-bottom: 30px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .code-block {
+            position: relative;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            line-height: 1.5;
+        }
+
+        .code-language {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+
+        .code-actions {
+            display: flex;
+            justify-content: flex-end;
+            padding: 10px;
+            background-color: #222;
+            border-radius: 0 0 5px 5px;
+        }
+
+        .code-action-btn {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            margin-left: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .code-action-btn:hover {
+            background-color: #2980b9;
+        }
+
+        .code-action-icon {
+            margin-right: 5px;
+        }
+
+        /* Syntax highlighting simulated */
+        .token-keyword {
+            color: #ff79c6;
+        }
+        .token-function {
+            color: #50fa7b;
+        }
+        .token-string {
+            color: #f1fa8c;
+        }
+        .token-comment {
+            color: #6272a4;
+        }
+        .token-punctuation {
+            color: #bd93f9;
+        }
+        .token-tag {
+            color: var(--tag-color);
+        }
+        .token-attr-name {
+            color: #50fa7b;
+        }
+        .token-attr-value {
+            color: #f1fa8c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Repositório de Código</h1>
+        
+        <section class="code-section">
+            <div class="code-header">
+                <div class="code-icon">📝</div>
+                <h2 class="code-title">Exemplos de Código</h2>
+            </div>
+            
+            <div class="code-tabs">
+                <div class="code-tab active">HTML</div>
+                <div class="code-tab">CSS</div>
+                <div class="code-tab">JavaScript</div>
+                <div class="code-tab">Python</div>
+            </div>
+            
+            <div class="code-content">
+                <div class="code-block">
+                    <div class="code-language">HTML</div>
+                    <pre><span class="token-punctuation">&lt;!</span><span class="token-tag">DOCTYPE</span> <span class="token-attr-name">html</span><span class="token-punctuation">&gt;</span>
+<span class="token-punctuation">&lt;</span><span class="token-tag">html</span> <span class="token-attr-name">lang</span><span class="token-punctuation">=</span><span class="token-attr-value">"pt-BR"</span><span class="token-punctuation">&gt;</span>
+<span class="token-punctuation">&lt;</span><span class="token-tag">head</span><span class="token-punctuation">&gt;</span>
+    <span class="token-punctuation">&lt;</span><span class="token-tag">meta</span> <span class="token-attr-name">charset</span><span class="token-punctuation">=</span><span class="token-attr-value">"UTF-8"</span><span class="token-punctuation">&gt;</span>
+    <span class="token-punctuation">&lt;</span><span class="token-tag">meta</span> <span class="token-attr-name">name</span><span class="token-punctuation">=</span><span class="token-attr-value">"viewport"</span> <span class="token-attr-name">content</span><span class="token-punctuation">=</span><span class="token-attr-value">"width=device-width, initial-scale=1.0"</span><span class="token-punctuation">&gt;</span>
+    <span class="token-punctuation">&lt;</span><span class="token-tag">title</span><span class="token-punctuation">&gt;</span>Meu Site<span class="token-punctuation">&lt;/</span><span class="token-tag">title</span><span class="token-punctuation">&gt;</span>
+    <span class="token-punctuation">&lt;</span><span class="token-tag">link</span> <span class="token-attr-name">rel</span><span class="token-punctuation">=</span><span class="token-attr-value">"stylesheet"</span> <span class="token-attr-name">href</span><span class="token-punctuation">=</span><span class="token-attr-value">"style.css"</span><span class="token-punctuation">&gt;</span>
+<span class="token-punctuation">&lt;/</span><span class="token-tag">head</span><span class="token-punctuation">&gt;</span>
+<span class="token-punctuation">&lt;</span><span class="token-tag">body</span><span class="token-punctuation">&gt;</span>
+    <span class="token-punctuation">&lt;</span><span class="token-tag">header</span><span class="token-punctuation">&gt;</span>
+        <span class="token-punctuation">&lt;</span><span class="token-tag">h1</span><span class="token-punctuation">&gt;</span>Bem-vindo ao Meu Site<span class="token-punctuation">&lt;/</span><span class="token-tag">h1</span><span class="token-punctuation">&gt;</span>
+        <span class="token-punctuation">&lt;</span><span class="token-tag">nav</span><span class="token-punctuation">&gt;</span>
+            <span class="token-punctuation">&lt;</span><span class="token-tag">ul</span><span class="token-punctuation">&gt;</span>
+                <span class="token-punctuation">&lt;</span><span class="token-tag">li</span><span class="token-punctuation">&gt;&lt;</span><span class="token-tag">a</span> <span class="token-attr-name">href</span><span class="token-punctuation">=</span><span class="token-attr-value">"#"</span><span class="token-punctuation">&gt;</span>Início<span class="token-punctuation">&lt;/</span><span class="token-tag">a</span><span class="token-punctuation">&gt;&lt;/</span><span class="token-tag">li</span><span class="token-punctuation">&gt;</span>
+                <span class="token-punctuation">&lt;</span><span class="token-tag">li</span><span class="token-punctuation">&gt;&lt;</span><span class="token-tag">a</span> <span class="token-attr-name">href</span><span class="token-punctuation">=</span><span class="token-attr-value">"#"</span><span class="token-punctuation">&gt;</span>Sobre<span class="token-punctuation">&lt;/</span><span class="token-tag">a</span><span class="token-punctuation">&gt;&lt;/</span><span class="token-tag">li</span><span class="token-punctuation">&gt;</span>
+                <span class="token-punctuation">&lt;</span><span class="token-tag">li</span><span class="token-punctuation">&gt;&lt;</span><span class="token-tag">a</span> <span class="token-attr-name">href</span><span class="token-punctuation">=</span><span class="token-attr-value">"#"</span><span class="token-punctuation">&gt;</span>Contato<span class="token-punctuation">&lt;/</span><span class="token-tag">a</span><span class="token-punctuation">&gt;&lt;/</span><span class="token-tag">li</span><span class="token-punctuation">&gt;</span>
+            <span class="token-punctuation">&lt;/</span><span class="token-tag">ul</span><span class="token-punctuation">&gt;</span>
+        <span class="token-punctuation">&lt;/</span><span class="token-tag">nav</span><span class="token-punctuation">&gt;</span>
+    <span class="token-punctuation">&lt;/</span><span class="token-tag">header</span><span class="token-punctuation">&gt;</span>
+    
+    <span class="token-punctuation">&lt;</span><span class="token-tag">main</span><span class="token-punctuation">&gt;</span>
+        <span class="token-punctuation">&lt;</span><span class="token-tag">section</span><span class="token-punctuation">&gt;</span>
+            <span class="token-punctuation">&lt;</span><span class="token-tag">h2</span><span class="token-punctuation">&gt;</span>Seção Principal<span class="token-punctuation">&lt;/</span><span class="token-tag">h2</span><span class="token-punctuation">&gt;</span>
+            <span class="token-punctuation">&lt;</span><span class="token-tag">p</span><span class="token-punctuation">&gt;</span>Este é um exemplo de código HTML.<span class="token-punctuation">&lt;/</span><span class="token-tag">p</span><span class="token-punctuation">&gt;</span>
+        <span class="token-punctuation">&lt;/</span><span class="token-tag">section</span><span class="token-punctuation">&gt;</span>
+    <span class="token-punctuation">&lt;/</span><span class="token-tag">main</span><span class="token-punctuation">&gt;</span>
+    
+    <span class="token-punctuation">&lt;</span><span class="token-tag">footer</span><span class="token-punctuation">&gt;</span>
+        <span class="token-punctuation">&lt;</span><span class="token-tag">p</span><span class="token-punctuation">&gt;</span>&copy; 2025 Meu Site. Todos os direitos reservados.<span class="token-punctuation">&lt;/</span><span class="token-tag">p</span><span class="token-punctuation">&gt;</span>
+    <span class="token-punctuation">&lt;/</span><span class="token-tag">footer</span><span class="token-punctuation">&gt;</span>
+<span class="token-punctuation">&lt;/</span><span class="token-tag">body</span><span class="token-punctuation">&gt;</span>
+<span class="token-punctuation">&lt;/</span><span class="token-tag">html</span><span class="token-punctuation">&gt;</span>

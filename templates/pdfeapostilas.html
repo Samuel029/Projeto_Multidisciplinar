@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDFs e Apostilas</title>
+    <style>
+        /* Estilos comuns */
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --text-color: #333;
+            --background-color: #f9f9f9;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2.5rem;
+        }
+
+        /* PDFs e Apostilas - Estrutura de Lista */
+        .pdfs-section {
+            margin-bottom: 40px;
+        }
+
+        .pdfs-title {
+            display: flex;
+            align-items: center;
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--secondary-color);
+        }
+
+        .pdfs-title i {
+            margin-right: 15px;
+            font-size: 1.8rem;
+        }
+
+        .pdfs-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .pdf-item {
+            background-color: white;
+            margin-bottom: 15px;
+            padding: 15px;
+            border-radius: 6px;
+            box-shadow: var(--card-shadow);
+            display: flex;
+            align-items: center;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .pdf-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+            background-color: #f0f7ff;
+        }
+
+        .pdf-icon {
+            margin-right: 15px;
+            color: var(--accent-color);
+            font-size: 24px;
+        }
+
+        .pdf-details {
+            flex-grow: 1;
+        }
+
+        .pdf-title {
+            font-weight: 600;
+            margin: 0 0 5px 0;
+            color: var(--primary-color);
+        }
+
+        .pdf-meta {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .pdf-download {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .pdf-download:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Biblioteca Digital</h1>
+        
+        <section class="pdfs-section">
+            <h2 class="pdfs-title"><i>📄</i> PDFs e Apostilas</h2>
+            
+            <ul class="pdfs-list">
+                <li class="pdf-item">
+                    <div class="pdf-icon">📑</div>
+                    <div class="pdf-details">
+                        <h3 class="pdf-title">Apostila de Matemática</h3>
+                        <div class="pdf-meta">PDF • 5.2 MB • Atualizado em 15/04/2023</div>
+                    </div>
+                    <button class="pdf-download">Baixar</button>
+                </li>
+                
+                <li class="pdf-item">
+                    <div class="pdf-icon">📑</div>
+                    <div class="pdf-details">
+                        <h3 class="pdf-title">Apostila de Física</h3>
+                        <div class="pdf-meta">PDF • 3.8 MB • Atualizado em 22/03/2023</div>
+                    </div>
+                    <button class="pdf-download">Baixar</button>
+                </li>
+                
+                <li class="pdf-item">
+                    <div class="pdf-icon">📑</div>
+                    <div class="pdf-details">
+                        <h3 class="pdf-title">Apostila de Química</h3>
+                        <div class="pdf-meta">PDF • 4.1 MB • Atualizado em 05/04/2023</div>
+                    </div>
+                    <button class="pdf-download">Baixar</button>
+                </li>
+            </ul>
+        </section>
+    </div>
+</body>
+</html>
