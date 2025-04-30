@@ -1,27 +1,57 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 import os
 import firebase_admin
 from firebase_admin import auth, credentials
-from flask_migrate import Migrate
+from firebase_admin.auth import InvalidIdTokenError, ExpiredIdTokenError, RevokedIdTokenError
+from uuid import uuid4
+import re
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 app = Flask(__name__)
 app.config.from_object('backend.config.Config')
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', os.urandom(24).hex())
+app.config['SESSION_COOKIE_SECURE'] = True  # Requires HTTPS in production
+app.config['SESSION_COOKIE_HTTPONLY'] = True
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
-cred = credentials.Certificate('technobug-6daca-firebase-adminsdk-fbsvc-19273e6f57.json')
-firebase_admin.initialize_app(cred)
+# Rate limiting
+limiter = Limiter(
+    app=app,
+    key_func=get_remote_address,
+    default_limits=["200 per day", "50 per hour"]
+)
 
+# Initialize Firebase
+try:
+    cred = credentials.Certificate('technobug-6daca-firebase-adminsdk-fbsvc-19273e6f57.json')
+    firebase_admin.initialize_app(cred)
+except FileNotFoundError:
+    print("Erro: Arquivo de credenciais do Firebase não encontrado.")
+    raise
+except Exception as e:
+    print(f"Erro ao inicializar Firebase: {str(e)}")
+    raise
+
+# Models
 class User(db.Model):
     __tablename__ = 'users'
     
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, nullable=False)
     email = db.Column(db.String(120), index=True, unique=True, nullable=False)
-    password = db.Column(db.String(128), nullable=True)
+    password = db.Column(db.String(128), nullable=True)  # Nullable for Firebase users
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     def __repr__(self):
@@ -40,9 +70,20 @@ class Post(db.Model):
     def __repr__(self):
         return f'<Post {self.id} by {self.author.username}>'
 
-@app.route('/', methods=['GET', 'POST'])
-def registroelogin():
+# CSRF Token Generation
+@app.before_request
+def generate_csrf_token():
+    if 'csrf_token' not in session:
+        session['csrf_token'] = str(uuid4())
 
+# Password Strength Validation
+def is_strong_password(password):
+    pattern = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$'
+    return re.match(pattern, password)
+
+@app.route('/', methods=['GET', 'POST'])
+@limiter.limit("5 per minute")  # Limit login attempts
+def registroelogin():
     user_id = session.get('user_id')
     if user_id:
         user = db.session.get(User, user_id)
@@ -50,7 +91,14 @@ def registroelogin():
             session.clear()
         else:
             return redirect(url_for('telainicial'))
+
     if request.method == 'POST':
+        # Validate CSRF token
+        if request.form.get('csrf_token') != session.get('csrf_token'):
+            flash('Token CSRF inválido.', 'error')
+            return redirect(url_for('registroelogin'))
+        session['csrf_token'] = str(uuid4())  # Regenerate CSRF token
+
         if 'login' in request.form:
             email = request.form.get('email')
             password = request.form.get('password')
@@ -83,6 +131,10 @@ def registroelogin():
                 flash('As senhas não coincidem.', 'error')
                 return redirect(url_for('registroelogin'))
                 
+            if not is_strong_password(password):
+                flash('A senha deve ter pelo menos 8 caracteres, incluindo 1 maiúscula, 1 minúscula, 1 número e 1 caractere especial.', 'error')
+                return redirect(url_for('registroelogin'))
+                
             existing_user = User.query.filter_by(email=email).first()
             if existing_user:
                 flash('Este email já está em uso.', 'error')
@@ -99,27 +151,23 @@ def registroelogin():
             flash('Conta criada com sucesso! Faça login para continuar.', 'success')
             return redirect(url_for('registroelogin'))
     
-    return render_template('registroelogin.html')
+    return render_template('registroelogin.html', csrf_token=session['csrf_token'])
 
 @app.route('/verify-token', methods=['POST'])
 def verify_token():
     id_token = request.json.get('idToken')
     try:
-
         decoded_token = auth.verify_id_token(id_token)
         email = decoded_token.get('email')
-
         username = decoded_token.get('name', email.split('@')[0])
         uid = decoded_token['uid']
-        
 
         user = User.query.filter_by(email=email).first()
         if not user:
-
             user = User(
                 username=username,
                 email=email,
-                password=''
+                password=''  # No password for Firebase users
             )
             db.session.add(user)
             db.session.commit()
@@ -128,28 +176,33 @@ def verify_token():
         session['username'] = user.username
         
         return jsonify({'status': 'success', 'user': {'id': user.id, 'username': user.username, 'email': user.email}})
+    except InvalidIdTokenError as e:
+        print(f"Invalid token: {str(e)}")
+        return jsonify({'status': 'error', 'message': 'Token inválido.'}), 401
+    except ExpiredIdTokenError as e:
+        print(f"Expired token: {str(e)}")
+        return jsonify({'status': 'error', 'message': 'Token expirado.'}), 401
+    except RevokedIdTokenError as e:
+        print(f"Revoked token: {str(e)}")
+        return jsonify({'status': 'error', 'message': 'Token revogado.'}), 401
     except Exception as e:
         print(f"Erro ao verificar token: {str(e)}")
-        return jsonify({'status': 'error', 'message': str(e)}), 401
+        return jsonify({'status': 'error', 'message': 'Erro ao verificar token. Verifique a sincronização do relógio do dispositivo.'}), 401
 
 @app.route('/materiais-de-estudo')
 def materiais():
-    """Página de Materiais de Estudo"""
     return render_template('materiaisestudo.html')
 
 @app.route('/pdfs-e-apostilas')
 def pdfs():
-    """Página de PDFs e Apostilas"""
     return render_template('pdfeapostilas.html')
 
 @app.route('/videos-e-tutoriais')
 def videos():
-    """Página de Vídeos e Tutoriais"""
     return render_template('videosetutoriais.html')
 
 @app.route('/codigo')
 def codigo():
-    """Página de Exemplos de Código"""
     return render_template('exemplosdecodigo.html')
 
 @app.route('/telainicial', methods=['GET', 'POST'])
