@@ -106,7 +106,7 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <p>© 2025 TechnoBug - Todos os direitos reservados</p>
+            <p>&copy; 2025 TechnoBug - Todos os direitos reservados</p>
         </div>
     </footer>
 
@@ -130,27 +130,16 @@
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
 
-        // Flag to prevent multiple authentication requests
-        let isAuthenticating = false;
-        const maxRetries = 3;
-        let retryCount = 0;
-
         // Google Sign-Up Button
         document.getElementById('google-sign-up').addEventListener('click', function(e) {
             e.preventDefault();
-            if (!isAuthenticating) {
-                retryCount = 0; // Reset retry count
-                signUpWithGoogle();
-            }
+            signUpWithGoogle();
         });
 
         // Google Login Button
         document.getElementById('google-login').addEventListener('click', function(e) {
             e.preventDefault();
-            if (!isAuthenticating) {
-                retryCount = 0; // Reset retry count
-                signInWithGoogle();
-            }
+            signInWithGoogle();
         });
 
         // Function for Google Sign-Up (same as login since backend handles user creation)
@@ -158,39 +147,16 @@
             signInWithGoogle();
         }
 
-        // Function for Google Login with Retry Logic
+        // Function for Google Login
         function signInWithGoogle() {
-            if (isAuthenticating) {
-                console.log("Autenticação já em andamento, ignorando nova solicitação.");
-                return;
-            }
-
-            // Check network status
-            if (!navigator.onLine) {
-                showFlashMessage('Você está offline. Conecte-se à internet e tente novamente.', 'error');
-                return;
-            }
-
-            isAuthenticating = true;
-            console.log(`Iniciando login/criação com Google (Tentativa ${retryCount + 1}/${maxRetries})...`);
-
-            // Disable buttons to prevent multiple clicks
-            const loginButton = document.getElementById('google-login');
-            const signUpButton = document.getElementById('google-sign-up');
-            loginButton.classList.add('disabled');
-            signUpButton.classList.add('disabled');
-            loginButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Conectando...';
-            signUpButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Conectando...';
-
+            console.log("Iniciando login/criação com Google...");
             const provider = new firebase.auth.GoogleAuthProvider();
             provider.addScope('profile');
             provider.addScope('email');
 
-            // Try signInWithPopup first
             firebase.auth().signInWithPopup(provider)
                 .then((result) => {
                     console.log("Login/criação bem-sucedido:", result.user.email);
-                    retryCount = 0; // Reset retry count on success
                     return result.user.getIdToken();
                 })
                 .then((idToken) => {
@@ -201,16 +167,12 @@
                         body: JSON.stringify({ idToken: idToken })
                     });
                 })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`Erro na requisição: ${response.statusText}`);
-                    }
-                    return response.json();
-                })
+                .then(response => response.json())
                 .then(data => {
                     console.log("Resposta do servidor:", data);
                     if (data.status === 'success') {
                         showFlashMessage('Login realizado com sucesso!', 'success');
+                        // Redirecionar para a tela inicial
                         window.location.href = '{{ url_for("telainicial") }}';
                     } else {
                         showFlashMessage('Erro: ' + data.message, 'error');
@@ -218,87 +180,7 @@
                 })
                 .catch((error) => {
                     console.error('Erro detalhado:', error);
-                    if (error.code === 'auth/network-request-failed' && retryCount < maxRetries - 1) {
-                        retryCount++;
-                        console.log(`Tentativa de rede falhou, tentando novamente (${retryCount}/${maxRetries})...`);
-                        setTimeout(() => {
-                            isAuthenticating = false; // Allow retry
-                            signInWithGoogle();
-                        }, 2000 * retryCount); // Exponential backoff
-                    } else if (error.code === 'auth/popup-blocked') {
-                        console.log("Popup bloqueado, tentando redirecionamento...");
-                        firebase.auth().signInWithRedirect(provider)
-                            .catch((redirectError) => {
-                                console.error('Erro no redirecionamento:', redirectError);
-                                showFlashMessage('Não foi possível abrir o popup de login. Desative o bloqueador de popups e tente novamente.', 'error');
-                            });
-                    } else if (error.code === 'auth/network-request-failed') {
-                        showFlashMessage('Falha na conexão com a internet. Verifique sua rede e tente novamente.', 'error');
-                    } else {
-                        showFlashMessage('Erro ao fazer login/criar conta: ' + error.message, 'error');
-                    }
-                })
-                .finally(() => {
-                    if (!firebase.auth().isSignInWithRedirectPending) { // Only reset if not using redirect
-                        isAuthenticating = false;
-                        loginButton.classList.remove('disabled');
-                        signUpButton.classList.remove('disabled');
-                        loginButton.innerHTML = '<i class="fab fa-google"></i>';
-                        signUpButton.innerHTML = '<i class="fab fa-google"></i>';
-                    }
-                });
-
-            // Handle redirect result if signInWithRedirect was used
-            firebase.auth().getRedirectResult()
-                .then((result) => {
-                    if (result && result.credential && result.user) {
-                        console.log("Login/criação bem-sucedido via redirecionamento:", result.user.email);
-                        retryCount = 0;
-                        return result.user.getIdToken();
-                    } else {
-                        console.log("Nenhum resultado de redirecionamento disponível.");
-                        return null; // No token to process
-                    }
-                })
-                .then((idToken) => {
-                    if (idToken) {
-                        console.log("Token obtido, enviando para o servidor...");
-                        return fetch('/verify-token', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ idToken: idToken })
-                        });
-                    } else {
-                        console.log("Nenhum token disponível para enviar ao servidor.");
-                        return null; // Skip fetch if no token
-                    }
-                })
-                .then((response) => {
-                    if (response && !response.ok) {
-                        throw new Error(`Erro na requisição: ${response.statusText}`);
-                    }
-                    return response ? response.json() : null;
-                })
-                .then((data) => {
-                    if (data && data.status === 'success') {
-                        showFlashMessage('Login realizado com sucesso!', 'success');
-                        window.location.href = '{{ url_for("telainicial") }}';
-                    } else if (data) {
-                        showFlashMessage('Erro: ' + data.message, 'error');
-                    } else {
-                        console.log("Nenhuma resposta válida do servidor.");
-                    }
-                })
-                .catch((error) => {
-                    console.error('Erro no resultado do redirecionamento:', error);
-                    showFlashMessage('Erro ao processar login via redirecionamento: ' + error.message, 'error');
-                })
-                .finally(() => {
-                    isAuthenticating = false;
-                    loginButton.classList.remove('disabled');
-                    signUpButton.classList.remove('disabled');
-                    loginButton.innerHTML = '<i class="fab fa-google"></i>';
-                    signUpButton.innerHTML = '<i class="fab fa-google"></i>';
+                    showFlashMessage('Erro ao fazer login/criar conta: ' + error.message, 'error');
                 });
         }
 
@@ -321,7 +203,7 @@
             flashMessage.className = `flash-message ${type}`;
             flashMessage.innerHTML = `
                 ${message}
-                <span class="close-btn">×</span>
+                <span class="close-btn">&times;</span>
             `;
             
             flashContainer.appendChild(flashMessage);
@@ -342,9 +224,11 @@
 
         loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
+            // Enviar formulário de login para o backend
             const email = loginForm.querySelector('input[type="email"]').value;
             const password = loginForm.querySelector('input[type="password"]').value;
             
+            // Exemplo usando fetch para enviar dados ao backend
             fetch('/login', {
                 method: 'POST',
                 headers: {
@@ -355,12 +239,7 @@
                     password: password
                 })
             })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`Erro na requisição: ${response.statusText}`);
-                }
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
                     showFlashMessage('Login realizado com sucesso!', 'success');
@@ -370,7 +249,7 @@
                 }
             })
             .catch(error => {
-                showFlashMessage('Erro ao conectar com o servidor. Verifique sua conexão e tente novamente.', 'error');
+                showFlashMessage('Erro ao conectar com o servidor', 'error');
                 console.error('Erro:', error);
             });
         });
@@ -387,6 +266,7 @@
                 return;
             }
             
+            // Enviar dados para o backend
             fetch('/register', {
                 method: 'POST',
                 headers: {
@@ -398,12 +278,7 @@
                     password: password
                 })
             })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`Erro na requisição: ${response.statusText}`);
-                }
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
                     showFlashMessage('Conta criada com sucesso! Você pode fazer login agora.', 'success');
@@ -413,7 +288,7 @@
                 }
             })
             .catch(error => {
-                showFlashMessage('Erro ao conectar com o servidor. Verifique sua conexão e tente novamente.', 'error');
+                showFlashMessage('Erro ao conectar com o servidor', 'error');
                 console.error('Erro:', error);
             });
         });
@@ -422,6 +297,7 @@
         document.querySelector('.logout-btn').addEventListener('click', (e) => {
             e.preventDefault();
             
+            // Fazer logout no servidor
             fetch('/logout', {
                 method: 'GET'
             })
@@ -430,12 +306,14 @@
                 document.getElementById('user-welcome').style.display = 'none';
                 showFlashMessage('Você saiu da sua conta', 'info');
                 
+                // Se está usando Firebase, fazer logout também
                 firebase.auth().signOut().then(() => {
                     console.log('Logout do Firebase realizado com sucesso');
                 }).catch((error) => {
                     console.error('Erro ao fazer logout do Firebase:', error);
                 });
                 
+                // Redirecionar para a página de login
                 window.location.href = '{{ url_for("registroelogin") }}';
             })
             .catch(error => {
@@ -443,17 +321,6 @@
                 showFlashMessage('Erro ao fazer logout', 'error');
             });
         });
-
-        // Add CSS for disabled buttons
-        const style = document.createElement('style');
-        style.innerHTML = `
-            .icon.disabled {
-                pointer-events: none;
-                opacity: 0.5;
-                cursor: not-allowed;
-            }
-        `;
-        document.head.appendChild(style);
     </script>
 </body>
 </html>
