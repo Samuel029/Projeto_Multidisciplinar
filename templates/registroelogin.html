@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TechnoBug - Suporte ao Aprendizado de Desenvolvimento de Sistemas</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/registroelogin.css') }}">
 </head>
 <body>
-    <!-- Header Section - Simplified -->
+    <!-- Header Section -->
     <header id="main-header">
         <div class="header-container">
             <div class="logo">
@@ -31,8 +31,8 @@
                     <a href="#" class="icon"><i class="fab fa-github"></i></a>
                 </div>
                 <span>ou use seu e-mail e senha</span>
-                <input type="email" placeholder="Email" required>
-                <input type="password" placeholder="Senha" required>
+                <input type="email" name="email" placeholder="Email" required>
+                <input type="password" name="password" placeholder="Senha" required>
                 <a href="#">Esqueceu sua senha?</a>
                 <button type="submit" name="login" value="login">Entrar</button>
             </form>
@@ -48,10 +48,10 @@
                     <a href="#" class="icon"><i class="fab fa-github"></i></a>
                 </div>
                 <span>ou use seu email para cadastro</span>
-                <input type="text" placeholder="Nome" required>
-                <input type="email" placeholder="Email" required>
-                <input type="password" placeholder="Senha" required>
-                <input type="password" placeholder="Confirme sua senha" required>
+                <input type="text" name="username" placeholder="Nome" required>
+                <input type="email" name="email" placeholder="Email" required>
+                <input type="password" name="password" placeholder="Senha" required>
+                <input type="password" name="confirm_password" placeholder="Confirme sua senha" required>
                 <button type="submit" name="register" value="register">Cadastrar</button>
             </form>
         </div>
@@ -73,7 +73,18 @@
     </div>
 
     <!-- Flash Messages Container -->
-    <div class="flash-messages" id="flash-messages"></div>
+    <div class="flash-messages" id="flash-messages">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-message {{ category }}">
+                        {{ message }}
+                        <span class="close-btn">×</span>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
 
     <!-- User Welcome Screen (Initially Hidden) -->
     <div class="user-welcome" id="user-welcome" style="display: none;">
@@ -83,7 +94,7 @@
             <p>O TechnoBug funciona como um guia prático, reunindo materiais resumidos, dicas rápidas, exercícios complementares e um espaço para perguntas e respostas entre os alunos.</p>
         </div>
         <a href="#" class="btn-primary">Explorar Conteúdos</a>
-        <a href="#" class="logout-btn">Sair</a>
+        <a href="{{ url_for('logout') }}" class="logout-btn">Sair</a>
     </div>
 
     <!-- Footer Section -->
@@ -106,7 +117,7 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2025 TechnoBug - Todos os direitos reservados</p>
+            <p>© 2025 TechnoBug - Todos os direitos reservados</p>
         </div>
     </footer>
 
@@ -157,7 +168,7 @@
             firebase.auth().signInWithPopup(provider)
                 .then((result) => {
                     console.log("Login/criação bem-sucedido:", result.user.email);
-                    return result.user.getIdToken();
+                    return result.user.getIdToken(true); // Forçar renovação do token
                 })
                 .then((idToken) => {
                     console.log("Token obtido, enviando para o servidor...");
@@ -172,7 +183,6 @@
                     console.log("Resposta do servidor:", data);
                     if (data.status === 'success') {
                         showFlashMessage('Login realizado com sucesso!', 'success');
-                        // Redirecionar para a tela inicial
                         window.location.href = '{{ url_for("telainicial") }}';
                     } else {
                         showFlashMessage('Erro: ' + data.message, 'error');
@@ -203,7 +213,7 @@
             flashMessage.className = `flash-message ${type}`;
             flashMessage.innerHTML = `
                 ${message}
-                <span class="close-btn">&times;</span>
+                <span class="close-btn">×</span>
             `;
             
             flashContainer.appendChild(flashMessage);
@@ -218,109 +228,81 @@
             }, 5000);
         }
 
-        // Example form submission handling
+        // Form submission handling
         const loginForm = document.querySelector('.login form');
         const registerForm = document.querySelector('.criar form');
 
         loginForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            // Enviar formulário de login para o backend
-            const email = loginForm.querySelector('input[type="email"]').value;
-            const password = loginForm.querySelector('input[type="password"]').value;
+            // Deixe o formulário enviar normalmente, pois a rota '/' já lida com isso
+            const email = loginForm.querySelector('input[name="email"]').value;
+            const password = loginForm.querySelector('input[name="password"]').value;
             
-            // Exemplo usando fetch para enviar dados ao backend
-            fetch('/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    email: email,
-                    password: password
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    showFlashMessage('Login realizado com sucesso!', 'success');
-                    window.location.href = '{{ url_for("telainicial") }}';
-                } else {
-                    showFlashMessage(data.message || 'Erro ao fazer login', 'error');
-                }
-            })
-            .catch(error => {
-                showFlashMessage('Erro ao conectar com o servidor', 'error');
-                console.error('Erro:', error);
-            });
+            if (!email || !password) {
+                e.preventDefault();
+                showFlashMessage('Por favor, preencha todos os campos.', 'error');
+            }
         });
 
         registerForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const name = registerForm.querySelector('input[type="text"]').value;
-            const email = registerForm.querySelector('input[type="email"]').value;
-            const password = registerForm.querySelectorAll('input[type="password"]')[0].value;
-            const confirmPassword = registerForm.querySelectorAll('input[type="password"]')[1].value;
+            const username = registerForm.querySelector('input[name="username"]').value;
+            const email = registerForm.querySelector('input[name="email"]').value;
+            const password = registerForm.querySelector('input[name="password"]').value;
+            const confirmPassword = registerForm.querySelector('input[name="confirm_password"]').value;
             
-            if (password !== confirmPassword) {
-                showFlashMessage('As senhas não coincidem!', 'error');
+            if (!username || !email || !password || !confirmPassword) {
+                e.preventDefault();
+                showFlashMessage('Por favor, preencha todos os campos.', 'error');
                 return;
             }
             
-            // Enviar dados para o backend
-            fetch('/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    username: name,
-                    email: email,
-                    password: password
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    showFlashMessage('Conta criada com sucesso! Você pode fazer login agora.', 'success');
-                    container.classList.remove('active');
-                } else {
-                    showFlashMessage(data.message || 'Erro ao criar conta', 'error');
-                }
-            })
-            .catch(error => {
-                showFlashMessage('Erro ao conectar com o servidor', 'error');
-                console.error('Erro:', error);
-            });
+            if (password !== confirmPassword) {
+                e.preventDefault();
+                showFlashMessage('As senhas não coincidem!', 'error');
+                return;
+            }
         });
 
         // Logout handling
         document.querySelector('.logout-btn').addEventListener('click', (e) => {
             e.preventDefault();
             
-            // Fazer logout no servidor
-            fetch('/logout', {
-                method: 'GET'
-            })
-            .then(response => {
-                document.getElementById('login-container').style.display = 'block';
-                document.getElementById('user-welcome').style.display = 'none';
-                showFlashMessage('Você saiu da sua conta', 'info');
-                
-                // Se está usando Firebase, fazer logout também
-                firebase.auth().signOut().then(() => {
-                    console.log('Logout do Firebase realizado com sucesso');
-                }).catch((error) => {
-                    console.error('Erro ao fazer logout do Firebase:', error);
-                });
-                
-                // Redirecionar para a página de login
-                window.location.href = '{{ url_for("registroelogin") }}';
-            })
-            .catch(error => {
-                console.error('Erro ao fazer logout:', error);
+            firebase.auth().signOut().then(() => {
+                console.log('Logout do Firebase realizado com sucesso');
+                window.location.href = '{{ url_for("logout") }}';
+            }).catch((error) => {
+                console.error('Erro ao fazer logout do Firebase:', error);
                 showFlashMessage('Erro ao fazer logout', 'error');
             });
         });
+
+        firebase.auth().currentUser.getIdToken().then(token => {
+            fetch('/verify-token', {
+              method: 'POST',
+              headers: {
+                'Authorization': 'Bearer ' + token
+              }
+            });
+          });
+          
+          firebase.auth().currentUser.getIdToken(true)  // o 'true' força a renovação do token
+          .then((token) => {
+            fetch("http://127.0.0.1:5000/verify-token", {
+              method: "POST",
+              headers: {
+                "Authorization": "Bearer " + token
+              }
+            }).then(res => {
+              if (res.status === 200) {
+                console.log("Token válido!");
+              } else {
+                console.warn("Token inválido ou expirado.");
+              }
+            });
+          }).catch((error) => {
+            console.error("Erro ao obter token:", error);
+          });
+        
+
     </script>
 </body>
 </html>

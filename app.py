@@ -6,14 +6,48 @@ import os
 import firebase_admin
 from firebase_admin import auth, credentials
 from flask_migrate import Migrate
+import logging
+
+# Configurar logging para depuração
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 app.config.from_object('backend.config.Config')
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
-cred = credentials.Certificate('technobug-6daca-firebase-adminsdk-fbsvc-19273e6f57.json')
-firebase_admin.initialize_app(cred)
+# Criar pasta instance se não existir
+instance_dir = app.config['INSTANCE_DIR']
+if not os.path.exists(instance_dir):
+    try:
+        os.makedirs(instance_dir)
+        logger.info(f"Pasta instance criada em: {instance_dir}")
+    except Exception as e:
+        logger.error(f"Erro ao criar pasta instance: {str(e)}")
+        raise
+
+# Log do caminho do banco de dados
+logger.info(f"SQLALCHEMY_DATABASE_URI: {app.config['SQLALCHEMY_DATABASE_URI']}")
+
+# Verificar permissões de escrita no diretório instance
+try:
+    test_file = os.path.join(instance_dir, 'test_write.txt')
+    with open(test_file, 'w') as f:
+        f.write('test')
+    os.remove(test_file)
+    logger.info(f"Permissões de escrita verificadas com sucesso em: {instance_dir}")
+except Exception as e:
+    logger.error(f"Erro de permissão no diretório instance: {str(e)}")
+    raise
+
+# Inicializar Firebase
+try:
+    cred = credentials.Certificate('technobug-6daca-firebase-adminsdk-fbsvc-19273e6f57.json')
+    firebase_admin.initialize_app(cred)
+    logger.info("Firebase inicializado com sucesso")
+except Exception as e:
+    logger.error(f"Erro ao inicializar Firebase: {str(e)}")
 
 class User(db.Model):
     __tablename__ = 'users'
@@ -21,7 +55,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, nullable=False)
     email = db.Column(db.String(120), index=True, unique=True, nullable=False)
-    password = db.Column(db.String(128), nullable=True)
+    password = db.Column(db.String(128), nullable=True)  # Permitir nulo para autenticação Google
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     def __repr__(self):
@@ -42,7 +76,6 @@ class Post(db.Model):
 
 @app.route('/', methods=['GET', 'POST'])
 def registroelogin():
-
     user_id = session.get('user_id')
     if user_id:
         user = db.session.get(User, user_id)
@@ -50,6 +83,7 @@ def registroelogin():
             session.clear()
         else:
             return redirect(url_for('telainicial'))
+    
     if request.method == 'POST':
         if 'login' in request.form:
             email = request.form.get('email')
@@ -93,10 +127,15 @@ def registroelogin():
                 email=email,
                 password=generate_password_hash(password)
             )
-            db.session.add(new_user)
-            db.session.commit()
+            try:
+                db.session.add(new_user)
+                db.session.commit()
+                flash('Conta criada com sucesso! Faça login para continuar.', 'success')
+            except Exception as e:
+                db.session.rollback()
+                logger.error(f"Erro ao criar usuário: {str(e)}")
+                flash('Erro ao criar conta. Tente novamente.', 'error')
             
-            flash('Conta criada com sucesso! Faça login para continuar.', 'success')
             return redirect(url_for('registroelogin'))
     
     return render_template('registroelogin.html')
@@ -105,51 +144,52 @@ def registroelogin():
 def verify_token():
     id_token = request.json.get('idToken')
     try:
-
         decoded_token = auth.verify_id_token(id_token)
         email = decoded_token.get('email')
-
         username = decoded_token.get('name', email.split('@')[0])
         uid = decoded_token['uid']
         
-
         user = User.query.filter_by(email=email).first()
         if not user:
-
             user = User(
                 username=username,
                 email=email,
-                password=''
+                password=''  # Sem senha para autenticação Google
             )
-            db.session.add(user)
-            db.session.commit()
-
+            try:
+                db.session.add(user)
+                db.session.commit()
+                logger.info(f"Usuário {email} criado com sucesso")
+            except Exception as e:
+                db.session.rollback()
+                logger.error(f"Erro ao criar usuário no banco: {str(e)}")
+                return jsonify({'status': 'error', 'message': 'Erro ao criar usuário no banco de dados'}), 500
+        
         session['user_id'] = user.id
         session['username'] = user.username
         
         return jsonify({'status': 'success', 'user': {'id': user.id, 'username': user.username, 'email': user.email}})
+    except auth.ExpiredIdTokenError:
+        logger.warning("Token expirado recebido")
+        return jsonify({'status': 'error', 'message': 'Token expirado. Faça login novamente.'}), 401
     except Exception as e:
-        print(f"Erro ao verificar token: {str(e)}")
-        return jsonify({'status': 'error', 'message': str(e)}), 401
+        logger.error(f"Erro ao verificar token: {str(e)}")
+        return jsonify({'status': 'error', 'message': 'Erro ao verificar token'}), 401
 
 @app.route('/materiais-de-estudo')
 def materiais():
-    """Página de Materiais de Estudo"""
     return render_template('materiaisestudo.html')
 
 @app.route('/pdfs-e-apostilas')
 def pdfs():
-    """Página de PDFs e Apostilas"""
     return render_template('pdfeapostilas.html')
 
 @app.route('/videos-e-tutoriais')
 def videos():
-    """Página de Vídeos e Tutoriais"""
     return render_template('videosetutoriais.html')
 
 @app.route('/codigo')
 def codigo():
-    """Página de Exemplos de Código"""
     return render_template('exemplosdecodigo.html')
 
 @app.route('/telainicial', methods=['GET', 'POST'])
@@ -169,9 +209,14 @@ def telainicial():
         content = request.form.get('content')
         if content:
             new_post = Post(content=content, user_id=user.id)
-            db.session.add(new_post)
-            db.session.commit()
-            flash('Postagem publicada com sucesso!', 'success')
+            try:
+                db.session.add(new_post)
+                db.session.commit()
+                flash('Postagem publicada com sucesso!', 'success')
+            except Exception as e:
+                db.session.rollback()
+                logger.error(f"Erro ao criar postagem: {str(e)}")
+                flash('Erro ao publicar postagem. Tente novamente.', 'error')
             return redirect(url_for('telainicial'))
     
     posts = Post.query.order_by(Post.created_at.desc()).all()
@@ -196,13 +241,34 @@ def delete_post(post_id):
         flash('Você não tem permissão para deletar esta postagem.', 'error')
         return redirect(url_for('telainicial'))
     
-    db.session.delete(post)
-    db.session.commit()
-    flash('Postagem deletada com sucesso!', 'success')
+    try:
+        db.session.delete(post)
+        db.session.commit()
+        flash('Postagem deletada com sucesso!', 'success')
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Erro ao deletar postagem: {str(e)}")
+        flash('Erro ao deletar postagem. Tente novamente.', 'error')
+    
     return redirect(url_for('telainicial'))
 
 with app.app_context():
-    db.create_all()
+    try:
+        # Verificar se o diretório do banco de dados é acessível
+        db_path = os.path.join(instance_dir, 'app.db')
+        if not os.path.exists(instance_dir):
+            logger.error(f"Diretório instance não encontrado: {instance_dir}")
+            raise FileNotFoundError(f"Diretório instance não encontrado: {instance_dir}")
+        
+        # Tentar abrir o arquivo do banco de dados
+        with open(db_path, 'a'):
+            pass  # Apenas verificar se é possível criar/acessar o arquivo
+        
+        db.create_all()
+        logger.info("Tabelas do banco de dados criadas com sucesso")
+    except Exception as e:
+        logger.error(f"Erro ao criar tabelas do banco de dados: {str(e)}")
+        raise
 
 if __name__ == '__main__':
     app.run(debug=True)
