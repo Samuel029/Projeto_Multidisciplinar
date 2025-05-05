@@ -6,22 +6,20 @@
     <title>Videoteca Tech</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/videoseetutoriais.css') }}">
+    <link rel="stylesheet" href="/static/css/videoseetutoriais.css">
 </head>
 <body>
     <header class="app-header">
         <div class="header-content">
-            <div class="logo">
-                <i class="fas fa-graduation-cap"></i>
-                <span>Videoteca Tech</span>
-            </div>
-
             <div class="search-bar">
                 <i class="fas fa-search"></i>
                 <input type="text" placeholder="Pesquisar vídeos, tutoriais, tópicos...">
             </div>
-
-            <button class="btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" aria-controls="offcanvasMenu">
+            <div class="logo">
+                <i class="fas fa-graduation-cap"></i>
+                <span>Videoteca Tech</span>
+            </div>
+            <button class="btn menu-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" aria-controls="offcanvasMenu">
                 <i class="fas fa-bars"></i>
                 <span>Menu</span>
             </button>
@@ -36,15 +34,15 @@
         </div>
         <div class="offcanvas-body">
             <ul class="navbar-nav">
-                <li class="nav-item mb-2"><a class="nav-link active" href="#"><i class="fas fa-home me-2"></i>Página Inicial</a></li>
-                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('materiais') }}"><i class="fas fa-book me-2"></i>Materiais de Estudo</a></li>
-                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('pdfs') }}"><i class="fas fa-file-pdf me-2"></i>PDFs e Apostilas</a></li>
-                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('videos') }}"><i class="fas fa-video me-2"></i>Vídeos e Tutoriais</a></li>
-                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('codigo') }}"><i class="fas fa-code me-2"></i>Exemplos de Código</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="/telainicial"><i class="fas fa-home me-2"></i>Página Inicial</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="/materiais-de-estudo"><i class="fas fa-book me-2"></i>Materiais de Estudo</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="/pdfs-e-apostilas"><i class="fas fa-file-pdf me-2"></i>PDFs e Apostilas</a></li>
+                <li class="nav-item mb-2"><a class="nav-link active" href="/videos-e-tutoriais"><i class="fas fa-video me-2"></i>Vídeos e Tutoriais</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="/codigo"><i class="fas fa-code me-2"></i>Exemplos de Código</a></li>
                 <li class="nav-item mb-2"><a class="nav-link" href="#"><i class="fas fa-question-circle me-2"></i>Perguntas Frequentes</a></li>
                 <li class="nav-item mb-2"><a class="nav-link" href="#"><i class="fas fa-users me-2"></i>Comunidade</a></li>
                 <li class="nav-item mb-2"><a class="nav-link" href="#"><i class="fas fa-cog me-2"></i>Configurações</a></li>
-                <li class="nav-item"><a class="nav-link text-danger" href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt me-2"></i>Sair</a></li>
+                <li class="nav-item"><a class="nav-link text-danger" href="/logout"><i class="fas fa-sign-out-alt me-2"></i>Sair</a></li>
             </ul>
         </div>
     </div>
@@ -88,40 +86,103 @@
             </div>
 
             <div class="video-grid">
-                <!-- Card 1: Versionamento -->
+                <!-- Card 1: Aprenda Git e Github em 5 minutos -->
                 <div class="video-card">
                     <div class="video-thumbnail">
-                        <img src="/api/placeholder/500/320" alt="Thumbnail do vídeo">
+                        <a href="https://youtu.be/-l4Aa8wef8s?si=ziRfdFpMjxiSdThi" target="_blank">
+                            <img src="https://img.youtube.com/vi/-l4Aa8wef8s/hqdefault.jpg" alt="Thumbnail do vídeo">
+                        </a>
                         <div class="video-category-tag">Versionamento</div>
                         <div class="video-play-icon">
                             <i class="fas fa-play"></i>
                         </div>
-                        <div class="video-duration">14:27</div>
+                        <div class="video-duration">4:57</div>
                     </div>
                     <div class="video-info">
-                        <h3 class="video-title">Git Avançado: Branching e Merging Eficiente</h3>
+                        <h3 class="video-title">Aprenda Git e Github em 5 minutos</h3>
                         <div class="video-meta">
                             <div class="instructor">
-                                <div class="instructor-avatar">
-                                    <img src="/api/placeholder/100/100" alt="Instrutor">
-                                </div>
-                                <span class="instructor-name">Equipe DevMasters</span>
+                                <span class="instructor-name">Mucharski</span>
                             </div>
                             <div class="video-stats">
-                                <span><i class="fas fa-eye"></i> 25.7K</span>
-                                <span><i class="fas fa-thumbs-up"></i> 3.8K</span>
+                                <span><i class="fas fa-eye"></i> 11.5K</span>
+                                <span><i class="fas fa-thumbs-up"></i> 6.1K</span>
                             </div>
                         </div>
-                        <p class="video-description">Aprenda técnicas avançadas de Git para gerenciar fluxos de trabalho complexos em equipes de desenvolvimento.</p>
+                        <p class="video-description">Um tutorial rápido e direto para aprender os conceitos básicos de Git e GitHub em apenas 5 minutos.</p>
                         <div class="video-tags">
                             <span class="video-tag">Git</span>
-                            <span class="video-tag">DevOps</span>
                             <span class="video-tag">GitHub</span>
+                            <span class="video-tag">Versionamento</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Card 2: I.A -->
+                <!-- Card 2: Como Instalar Python e Visual Studio Code -->
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <a href="https://youtu.be/R9dLGLVqK9Q?si=t0m91hvDA1PA4JgN" target="_blank">
+                            <img src="https://img.youtube.com/vi/R9dLGLVqK9Q/hqdefault.jpg" alt="Thumbnail do vídeo">
+                        </a>
+                        <div class="video-category-tag">Lógica</div>
+                        <div class="video-play-icon">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="video-duration">17:22</div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">Como Instalar Python e Visual Studio Code no Windows | Python do Jeito Certo 2.0</h3>
+                        <div class="video-meta">
+                            <div class="instructor">
+                                <span class="instructor-name">Programação Dinâmica</span>
+                            </div>
+                            <div class="video-stats">
+                                <span><i class="fas fa-eye"></i> 85K</span>
+                                <span><i class="fas fa-thumbs-up"></i> 4.5K</span>
+                            </div>
+                        </div>
+                        <p class="video-description">Aprenda a instalar o Python e o Visual Studio Code no Windows de forma correta para começar a programar.</p>
+                        <div class="video-tags">
+                            <span class="video-tag">Python</span>
+                            <span class="video-tag">Visual Studio Code</span>
+                            <span class="video-tag">Iniciante</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3: Curso Python #01 - Seja um Programador -->
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <a href="https://www.youtube.com/watch?v=S9uPNppGsGo&list=PLvE-ZAFRgX8hnECDn1v9HNTI71veL3oW0" target="_blank">
+                            <img src="https://img.youtube.com/vi/S9uPNppGsGo/hqdefault.jpg" alt="Thumbnail do vídeo">
+                        </a>
+                        <div class="video-category-tag">Lógica</div>
+                        <div class="video-play-icon">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="video-duration">29:06</div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">Curso Python #01 - Seja um Programador</h3>
+                        <div class="video-meta">
+                            <div class="instructor">
+                                <span class="instructor-name">Curso em Vídeo</span>
+                            </div>
+                            <div class="video-stats">
+                                <span><i class="fas fa-eye"></i> 8.8M</span>
+                                <span><i class="fas fa-thumbs-up"></i> 474K</span>
+                            </div>
+                        </div>
+                        <p class="video-description">Primeira aula de um curso completo de Python para iniciantes, ensinando fundamentos de programação.</p>
+                        <div class="video-tags">
+                            <span class="video-tag">Python</span>
+                            <span class="video-tag">Programação</span>
+                            <span class="video-tag">Iniciante</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4: Machine Learning com TensorFlow -->
                 <div class="video-card">
                     <div class="video-thumbnail">
                         <img src="/api/placeholder/500/320" alt="Thumbnail do vídeo">
@@ -135,9 +196,6 @@
                         <h3 class="video-title">Machine Learning com TensorFlow: Primeiros Passos</h3>
                         <div class="video-meta">
                             <div class="instructor">
-                                <div class="instructor-avatar">
-                                    <img src="/api/placeholder/100/100" alt="Instrutor">
-                                </div>
                                 <span class="instructor-name">Dra. Santos</span>
                             </div>
                             <div class="video-stats">
@@ -154,7 +212,7 @@
                     </div>
                 </div>
 
-                <!-- Card 3: Banco de Dados -->
+                <!-- Card 5: Modelagem de Banco de Dados -->
                 <div class="video-card">
                     <div class="video-thumbnail">
                         <img src="/api/placeholder/500/320" alt="Thumbnail do vídeo">
@@ -168,9 +226,6 @@
                         <h3 class="video-title">Modelagem de Banco de Dados Relacional: Do Zero ao Avançado</h3>
                         <div class="video-meta">
                             <div class="instructor">
-                                <div class="instructor-avatar">
-                                    <img src="/api/placeholder/100/100" alt="Instrutor">
-                                </div>
                                 <span class="instructor-name">Prof. Almeida</span>
                             </div>
                             <div class="video-stats">
@@ -187,7 +242,7 @@
                     </div>
                 </div>
 
-                <!-- Card 4: Lógica -->
+                <!-- Card 6: Algoritmos e Lógica -->
                 <div class="video-card">
                     <div class="video-thumbnail">
                         <img src="/api/placeholder/500/320" alt="Thumbnail do vídeo">
@@ -201,9 +256,6 @@
                         <h3 class="video-title">Algoritmos e Lógica de Programação: Fundamentos Essenciais</h3>
                         <div class="video-meta">
                             <div class="instructor">
-                                <div class="instructor-avatar">
-                                    <img src="/api/placeholder/100/100" alt="Instrutor">
-                                </div>
                                 <span class="instructor-name">Prof. Costa</span>
                             </div>
                             <div class="video-stats">
@@ -220,7 +272,7 @@
                     </div>
                 </div>
 
-                <!-- Card 5: Front-end -->
+                <!-- Card 7: React Hooks -->
                 <div class="video-card">
                     <div class="video-thumbnail">
                         <img src="/api/placeholder/500/320" alt="Thumbnail do vídeo">
@@ -234,9 +286,6 @@
                         <h3 class="video-title">React Hooks: Dominando o Estado e Ciclo de Vida</h3>
                         <div class="video-meta">
                             <div class="instructor">
-                                <div class="instructor-avatar">
-                                    <img src="/api/placeholder/100/100" alt="Instrutor">
-                                </div>
                                 <span class="instructor-name">Profa. Lima</span>
                             </div>
                             <div class="video-stats">
@@ -253,7 +302,7 @@
                     </div>
                 </div>
 
-                <!-- Card 6: Back-end -->
+                <!-- Card 8: API REST -->
                 <div class="video-card">
                     <div class="video-thumbnail">
                         <img src="/api/placeholder/500/320" alt="Thumbnail do vídeo">
@@ -267,9 +316,6 @@
                         <h3 class="video-title">API REST com Node.js e Express: Criando Serviços Robustos</h3>
                         <div class="video-meta">
                             <div class="instructor">
-                                <div class="instructor-avatar">
-                                    <img src="/api/placeholder/100/100" alt="Instrutor">
-                                </div>
                                 <span class="instructor-name">Prof. Silva</span>
                             </div>
                             <div class="video-stats">
@@ -286,7 +332,7 @@
                     </div>
                 </div>
 
-                <!-- Card 7: Android -->
+                <!-- Card 9: Desenvolvimento Android -->
                 <div class="video-card">
                     <div class="video-thumbnail">
                         <img src="/api/placeholder/500/320" alt="Thumbnail do vídeo">
@@ -300,9 +346,6 @@
                         <h3 class="video-title">Desenvolvimento Android com Kotlin e Jetpack Compose</h3>
                         <div class="video-meta">
                             <div class="instructor">
-                                <div class="instructor-avatar">
-                                    <img src="/api/placeholder/100/100" alt="Instrutor">
-                                </div>
                                 <span class="instructor-name">Prof. Mendes</span>
                             </div>
                             <div class="video-stats">
@@ -319,167 +362,130 @@
                     </div>
                 </div>
 
-                <!-- Card 8: Projeto Multidisciplinar -->
+                <!-- Card 10: Git #1 - Conceitos e principais comandos de versionamento -->
                 <div class="video-card">
                     <div class="video-thumbnail">
-                        <img src="/api/placeholder/500/320" alt="Thumbnail do vídeo">
-                        <div class="video-category-tag">Multidisciplinar</div>
+                        <a href="https://www.youtube.com/watch?v=GIEquFr3jcg&list=PLDqnSpzNKDvkfF_ZMfukmOG3MtGKfXlfJ" target="_blank">
+                            <img src="https://img.youtube.com/vi/GIEquFr3jcg/hqdefault.jpg" alt="Thumbnail do vídeo">
+                        </a>
+                        <div class="video-category-tag">Versionamento</div>
                         <div class="video-play-icon">
                             <i class="fas fa-play"></i>
                         </div>
-                        <div class="video-duration">32:09</div>
+                        <div class="video-duration">1:20:10</div>
                     </div>
                     <div class="video-info">
-                        <h3 class="video-title">Projeto Full Stack: Da Concepção ao Deploy</h3>
+                        <h3 class="video-title">Git #1 - Conceitos e principais comandos de versionamento</h3>
                         <div class="video-meta">
                             <div class="instructor">
-                                <div class="instructor-avatar">
-                                    <img src="/api/placeholder/100/100" alt="Instrutor">
-                                </div>
-                                <span class="instructor-name">Equipe DevMasters</span>
+                                <span class="instructor-name">Angelo Luz</span>
                             </div>
                             <div class="video-stats">
-                                <span><i class="fas fa-eye"></i> 25.7K</span>
-                                <span><i class="fas fa-thumbs-up"></i> 3.8K</span>
+                                <span><i class="fas fa-eye"></i> 11K</span>
+                                <span><i class="fas fa-thumbs-up"></i> 559</span>
                             </div>
                         </div>
-                        <p class="video-description">Série completa que aborda todas as etapas de criação de um aplicativo real: do design ao backend, frontend e deploy.</p>
+                        <p class="video-description">Introdução aos conceitos de versionamento com Git, cobrindo comandos essenciais para iniciantes.</p>
                         <div class="video-tags">
-                            <span class="video-tag">MERN Stack</span>
-                            <span class="video-tag">DevOps</span>
-                            <span class="video-tag">UX/UI</span>
+                            <span class="video-tag">Git</span>
+                            <span class="video-tag">Versionamento</span>
+                            <span class="video-tag">Iniciante</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Card 9: Carreiras -->
+                <!-- Card 11: Seu primeiro código HTML - @Curso em Vídeo HTML5 e CSS3 -->
                 <div class="video-card">
                     <div class="video-thumbnail">
-                        <img src="/api/placeholder/500/320" alt="Thumbnail do vídeo">
-                        <div class="video-category-tag">Carreiras</div>
+                        <a href="https://www.youtube.com/watch?v=E6CdIawPTh0&list=PLHz_AreHm4dkZ9-atkcmcBaMZdmLHft8n&index=12" target="_blank">
+                            <img src="https://img.youtube.com/vi/E6CdIawPTh0/hqdefault.jpg" alt="Thumbnail do vídeo">
+                        </a>
+                        <div class="video-category-tag">Front-end</div>
                         <div class="video-play-icon">
                             <i class="fas fa-play"></i>
                         </div>
-                        <div class="video-duration">15:43</div>
+                        <div class="video-duration">17:33</div>
                     </div>
                     <div class="video-info">
-                        <h3 class="video-title">Carreira em Tech: Como se Tornar um Desenvolvedor Full Stack</h3>
+                        <h3 class="video-title">Seu primeiro código HTML - @Curso em Vídeo HTML5 e CSS3</h3>
                         <div class="video-meta">
                             <div class="instructor">
-                                <div class="instructor-avatar">
-                                    <img src="/api/placeholder/100/100" alt="Instrutor">
-                                </div>
-                                <span class="instructor-name">Dra. Cardoso</span>
+                                <span class="instructor-name">Curso em Vídeo</span>
                             </div>
                             <div class="video-stats">
-                                <span><i class="fas fa-eye"></i> 30.2K</span>
-                                <span><i class="fas fa-thumbs-up"></i> 4.5K</span>
+                                <span><i class="fas fa-eye"></i> 962K</span>
+                                <span><i class="fas fa-thumbs-up"></i> 45K</span>
                             </div>
                         </div>
-                        <p class="video-description">Guia completo com dicas práticas sobre formação, portfólio e entrevistas para iniciar ou impulsionar sua carreira como desenvolvedor.</p>
+                        <p class="video-description">Aprenda a criar seu primeiro código HTML com este tutorial prático do curso de HTML5 e CSS3.</p>
                         <div class="video-tags">
+                            <span class="video-tag">HTML</span>
+                            <span class="video-tag">CSS</span>
+                            <span class="video-tag">Iniciante</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 12: Tudo sobre Front-End: salários, o que estudar e dicas para carreira -->
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <a href="https://www.youtube.com/watch?v=8xo1FID4TqU" target="_blank">
+                            <img src="https://img.youtube.com/vi/8xo1FID4TqU/hqdefault.jpg" alt="Thumbnail do vídeo">
+                        </a>
+                        <div class="video-category-tag">Front-end</div>
+                        <div class="video-play-icon">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="video-duration">18:42</div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">Tudo sobre Front-End: 💰 salários, o que estudar e dicas para carreira</h3>
+                        <div class="video-meta">
+                            <div class="instructor">
+                                <span class="instructor-name">Gabriel Rangel</span>
+                            </div>
+                            <div class="video-stats">
+                                <span><i class="fas fa-eye"></i> 122K</span>
+                                <span><i class="fas fa-thumbs-up"></i> 9.8K</span>
+                            </div>
+                        </div>
+                        <p class="video-description">Explore a carreira de Front-End, incluindo salários, habilidades essenciais e dicas para se destacar.</p>
+                        <div class="video-tags">
+                            <span class="video-tag">Front-end</span>
                             <span class="video-tag">Carreira</span>
-                            <span class="video-tag">Emprego</span>
-                            <span class="video-tag">Entrevistas</span>
+                            <span class="video-tag">Programação</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Card 10: Redes -->
+                <!-- Card 13: O que é Front End e Back End? Diferenças que Você Precisa Saber -->
                 <div class="video-card">
                     <div class="video-thumbnail">
-                        <img src="/api/placeholder/500/320" alt="Thumbnail do vídeo">
-                        <div class="video-category-tag">Redes</div>
+                        <a href="https://www.youtube.com/watch?v=LDU4BCSxPp4" target="_blank">
+                            <img src="https://img.youtube.com/vi/LDU4BCSxPp4/hqdefault.jpg" alt="Thumbnail do vídeo">
+                        </a>
+                        <div class="video-category-tag">Front-end</div>
                         <div class="video-play-icon">
                             <i class="fas fa-play"></i>
                         </div>
-                        <div class="video-duration">20:57</div>
+                        <div class="video-duration">8:34</div>
                     </div>
                     <div class="video-info">
-                        <h3 class="video-title">Redes e Segurança: Configuração de Firewall e VPN</h3>
+                        <h3 class="video-title">O que é Front End e Back End? Diferenças que Você Precisa Saber</h3>
                         <div class="video-meta">
                             <div class="instructor">
-                                <div class="instructor-avatar">
-                                    <img src="/api/placeholder/100/100" alt="Instrutor">
-                                </div>
-                                <span class="instructor-name">Prof. Ferreira</span>
+                                <span class="instructor-name">Alura</span>
                             </div>
                             <div class="video-stats">
-                                <span><i class="fas fa-eye"></i> 18.9K</span>
-                                <span><i class="fas fa-thumbs-up"></i> 2.6K</span>
+                                <span><i class="fas fa-eye"></i> 16K</span>
+                                <span><i class="fas fa-thumbs-up"></i> 1K</span>
                             </div>
                         </div>
-                        <p class="video-description">Aprenda a proteger ambientes de rede empresariais através de configurações avançadas de firewall e implementação de VPN segura.</p>
+                        <p class="video-description">Entenda as diferenças entre Front-End e Back-End e como eles funcionam no desenvolvimento web.</p>
                         <div class="video-tags">
-                            <span class="video-tag">Segurança</span>
-                            <span class="video-tag">Networking</span>
-                            <span class="video-tag">VPN</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 11: Processos -->
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <img src="/api/placeholder/500/320" alt="Thumbnail do vídeo">
-                        <div class="video-category-tag">Processos</div>
-                        <div class="video-play-icon">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="video-duration">17:35</div>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">Scrum Master: Gerenciando Projetos Ágeis</h3>
-                        <div class="video-meta">
-                            <div class="instructor">
-                                <div class="instructor-avatar">
-                                    <img src="/api/placeholder/100/100" alt="Instrutor">
-                                </div>
-                                <span class="instructor-name">Profa. Ribeiro</span>
-                            </div>
-                            <div class="video-stats">
-                                <span><i class="fas fa-eye"></i> 21.3K</span>
-                                <span><i class="fas fa-thumbs-up"></i> 3.2K</span>
-                            </div>
-                        </div>
-                        <p class="video-description">Tutorial completo sobre como implementar e gerenciar metodologias ágeis em equipes de desenvolvimento de software.</p>
-                        <div class="video-tags">
-                            <span class="video-tag">Agile</span>
-                            <span class="video-tag">Scrum</span>
-                            <span class="video-tag">Gestão</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 12: I.A Avançado -->
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <img src="/api/placeholder/500/320" alt="Thumbnail do vídeo">
-                        <div class="video-category-tag">I.A</div>
-                        <div class="video-play-icon">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="video-duration">28:13</div>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">Redes Neurais Convolucionais para Visão Computacional</h3>
-                        <div class="video-meta">
-                            <div class="instructor">
-                                <div class="instructor-avatar">
-                                    <img src="/api/placeholder/100/100" alt="Instrutor">
-                                </div>
-                                <span class="instructor-name">Dr. Pereira</span>
-                            </div>
-                            <div class="video-stats">
-                                <span><i class="fas fa-eye"></i> 19.8K</span>
-                                <span><i class="fas fa-thumbs-up"></i> 2.9K</span>
-                            </div>
-                        </div>
-                        <p class="video-description">Aprenda a implementar e treinar CNNs para reconhecimento de imagens e detecção de objetos com PyTorch.</p>
-                        <div class="video-tags">
-                            <span class="video-tag">Deep Learning</span>
-                            <span class="video-tag">PyTorch</span>
-                            <span class="video-tag">CNN</span>
+                            <span class="video-tag">Front-end</span>
+                            <span class="video-tag">Back-end</span>
+                            <span class="video-tag">Programação</span>
                         </div>
                     </div>
                 </div>
@@ -536,117 +542,6 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Funcionalidade para seleção de categorias
-            const categories = document.querySelectorAll('.category');
-
-            categories.forEach(category => {
-                category.addEventListener('click', function() {
-                    categories.forEach(c => c.classList.remove('active'));
-                    this.classList.add('active');
-
-                    const categoryName = this.textContent.trim();
-                    if (categoryName === 'Todos') {
-                        document.querySelectorAll('.video-card').forEach(card => {
-                            card.style.display = 'block';
-                        });
-                    } else {
-                        document.querySelectorAll('.video-card').forEach(card => {
-                            const cardCategory = card.querySelector('.video-category-tag').textContent.trim();
-                            const categoryMap = {
-                                'I.A': ['I.A'],
-                                'Modelagem a Banco de Dados': ['Banco de Dados'],
-                                'Programação Android': ['Android'],
-                                'Projeto Multidisciplinar': ['Multidisciplinar'],
-                                'Versionamento': ['Versionamento']
-                            };
-
-                            const matchedCategories = categoryMap[categoryName] || [categoryName];
-                            if (matchedCategories.includes(cardCategory)) {
-                                card.style.display = 'block';
-                            } else {
-                                card.style.display = 'none';
-                            }
-                        });
-                    }
-                });
-            });
-
-            // Toggle de visualização (grid/lista)
-            const viewToggleButtons = document.querySelectorAll('.view-toggle button');
-            const videoGrid = document.querySelector('.video-grid');
-
-            viewToggleButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    viewToggleButtons.forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-
-                    if (this.querySelector('i').classList.contains('fa-list')) {
-                        videoGrid.style.gridTemplateColumns = '1fr';
-                        videoGrid.querySelectorAll('.video-card').forEach(card => {
-                            card.style.display = 'flex';
-                            card.querySelector('.video-thumbnail').style.width = '280px';
-                            card.querySelector('.video-info').style.flex = '1';
-                        });
-                    } else {
-                        videoGrid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(300px, 1fr))';
-                        videoGrid.querySelectorAll('.video-card').forEach(card => {
-                            card.style.display = 'block';
-                            card.querySelector('.video-thumbnail').style.width = 'auto';
-                        });
-                    }
-                });
-            });
-
-            // Funcionalidade de pesquisa
-            const searchInput = document.querySelector('.search-bar input');
-
-            searchInput.addEventListener('input', function() {
-                const searchTerm = this.value.toLowerCase().trim();
-
-                document.querySelectorAll('.video-card').forEach(card => {
-                    const title = card.querySelector('.video-title').textContent.toLowerCase();
-                    const description = card.querySelector('.video-description').textContent.toLowerCase();
-                    const instructor = card.querySelector('.instructor-name').textContent.toLowerCase();
-                    const category = card.querySelector('.video-category-tag').textContent.toLowerCase();
-                    const tags = Array.from(card.querySelectorAll('.video-tag')).map(tag => tag.textContent.toLowerCase());
-
-                    // Mapear termos de pesquisa para categorias
-                    const searchCategoryMap = {
-                        'versionamento': 'versionamento',
-                        'ia': 'i.a',
-                        'i.a': 'i.a',
-                        'banco de dados': 'banco de dados',
-                        'modelagem a banco de dados': 'banco de dados',
-                        'logica': 'lógica',
-                        'processos': 'processos',
-                        'frontend': 'front-end',
-                        'front-end': 'front-end',
-                        'backend': 'back-end',
-                        'back-end': 'back-end',
-                        'android': 'android',
-                        'programação android': 'android',
-                        'multidisciplinar': 'multidisciplinar',
-                        'projeto multidisciplinar': 'multidisciplinar',
-                        'carreiras': 'carreiras',
-                        'redes': 'redes'
-                    };
-
-                    const matchedCategory = searchCategoryMap[searchTerm] || searchTerm;
-
-                    if (title.includes(searchTerm) ||
-                        description.includes(searchTerm) ||
-                        instructor.includes(searchTerm) ||
-                        category.includes(matchedCategory) ||
-                        tags.some(tag => tag.includes(searchTerm))) {
-                        card.style.display = 'block';
-                    } else {
-                        card.style.display = 'none';
-                    }
-                });
-            });
-        });
-    </script>
+    <script src="/static/js/main.js"></script>
 </body>
 </html>
