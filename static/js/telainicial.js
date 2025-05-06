@@ -1,69 +1,158 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Elementos da interface
-    const preloader = document.querySelector('.preloader');
-    const navbar = document.querySelector('.navbar');
+    const searchBar = document.querySelector('.search-bar');
+    const searchInput = document.querySelector('.search-bar input');
+    const searchIcon = document.querySelector('.search-bar i');
+    const categories = document.querySelectorAll('.category');
     const postForm = document.getElementById('postForm');
     const postTextarea = document.querySelector('textarea[name="content"]');
-    const usernameHighlight = document.querySelector('.username-highlight');
-    const sideMenu = document.getElementById('sideMenu');
+    const charCounter = document.querySelector('.char-counter');
+    const sideMenu = document.getElementById('offcanvasMenu');
+    const deleteButtons = document.querySelectorAll('.delete-post');
+    const likeButtons = document.querySelectorAll('.like-btn');
+    const commentButtons = document.querySelectorAll('.comment-btn');
 
     // Inicializa componentes
     initializeComponents();
 
     // Configura eventos
-    setupScrollEffects();
+    setupSearchBar();
+    setupCategoryFilter();
     setupPostForm();
+    setupDeleteButtons();
+    setupLikeButtons();
+    setupCommentButtons();
     setupThemeSwitch();
     setupDrawer();
 
-    // Função para inicializar componentes
     function initializeComponents() {
-        // Remove preloader
-        setTimeout(() => {
-            preloader.classList.add('loaded');
-            setTimeout(() => preloader.style.display = 'none', 500);
-        }, 800);
-
-        // Efeito de digitação no nome do usuário
-        if (usernameHighlight) {
-            typeWriterEffect(usernameHighlight, usernameHighlight.textContent);
-        }
-    }
-
-    // Efeito de máquina de escrever
-    function typeWriterEffect(element, text) {
-        let i = 0;
-        element.textContent = '';
-        function type() {
-            if (i < text.length) {
-                element.textContent += text.charAt(i);
-                i++;
-                setTimeout(type, 80);
+        // Carrega likes salvos
+        likeButtons.forEach(btn => {
+            const postId = btn.closest('.post-card').dataset.postId;
+            const savedLikes = localStorage.getItem(`likes_${postId}`) || 0;
+            btn.querySelector('.like-count').textContent = savedLikes;
+            if (localStorage.getItem(`liked_${postId}`)) {
+                btn.classList.add('active');
             }
-        }
-        type();
-    }
-
-    // Configura efeitos de scroll com debouncing
-    function setupScrollEffects() {
-        let scrollTimeout;
-        window.addEventListener('scroll', function() {
-            clearTimeout(scrollTimeout);
-            scrollTimeout = setTimeout(() => {
-                if (window.scrollY > 50) {
-                    navbar.classList.add('scrolled');
-                } else {
-                    navbar.classList.remove('scrolled');
-                }
-            }, 80);
         });
     }
 
-    // Configura formulário de postagem
-    function setupPostForm() {
-        if (!postForm || !postTextarea) return;
+    function setupSearchBar() {
+        if (!searchBar || !searchInput || !searchIcon) return;
 
-        const charCounter = postForm.querySelector('.char-counter');
+        // Toggle da barra de pesquisa em dispositivos móveis
+        searchIcon.addEventListener('click', function(event) {
+            if (window.innerWidth <= 992) {
+                searchBar.classList.toggle('search-active');
+                if (searchBar.classList.contains('search-active')) {
+                    searchInput.focus();
+                    searchInput.value = '';
+                    filterPosts('');
+                } else {
+                    searchInput.blur();
+                    searchInput.value = '';
+                    filterPosts('');
+                }
+                event.stopPropagation();
+            }
+        });
+
+        // Fecha a barra de pesquisa ao clicar fora
+        document.addEventListener('click', function(event) {
+            if (window.innerWidth <= 992 && !searchBar.contains(event.target)) {
+                searchBar.classList.remove('search-active');
+                searchInput.value = '';
+                filterPosts('');
+            }
+        });
+
+        searchBar.addEventListener('click', function(event) {
+            event.stopPropagation();
+        });
+
+        // Pesquisa em tempo real
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase().trim();
+            filterPosts(searchTerm);
+        });
+
+        // Pesquisa ao pressionar Enter
+        searchInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                const searchTerm = this.value.toLowerCase().trim();
+                filterPosts(searchTerm);
+                showNotification('Pesquisa realizada!', 'success');
+            }
+        });
+    }
+
+    function filterPosts(searchTerm) {
+        const activeCategory = document.querySelector('.category.active').textContent.trim();
+        document.querySelectorAll('.post-card').forEach(card => {
+            const content = card.querySelector('.post-content p').textContent.toLowerCase();
+            const username = card.querySelector('.username').textContent.toLowerCase();
+            const category = card.dataset.category.toLowerCase();
+
+            const searchCategoryMap = {
+                'ia': 'i.a',
+                'i.a': 'i.a',
+                'banco de dados': 'banco de dados',
+                'frontend': 'front-end',
+                'front-end': 'front-end',
+                'backend': 'back-end',
+                'back-end': 'back-end',
+                'programacao': 'programação',
+                'carreiras': 'carreiras',
+                'duvidas gerais': 'dúvidas gerais'
+            };
+
+            const matchedCategory = searchCategoryMap[searchTerm] || searchTerm;
+
+            const matchesSearch = searchTerm === '' ||
+                content.includes(searchTerm) ||
+                username.includes(searchTerm) ||
+                category.includes(matchedCategory);
+
+            const matchesCategory = activeCategory === 'Todas' || card.dataset.category === activeCategory;
+
+            if (matchesSearch && matchesCategory) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+
+    function setupCategoryFilter() {
+        categories.forEach(category => {
+            category.addEventListener('click', function() {
+                categories.forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+
+                const categoryName = this.textContent.trim();
+                document.querySelectorAll('.post-card').forEach(card => {
+                    const cardCategory = card.dataset.category.trim();
+                    if (categoryName === 'Todas' || cardCategory === categoryName) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+
+                // Limpa a pesquisa ao mudar de categoria
+                if (searchInput) {
+                    searchInput.value = '';
+                    searchBar.classList.remove('search-active');
+                }
+                showNotification(`Filtrando por ${categoryName}`, 'success');
+            });
+        });
+    }
+
+    function setupPostForm() {
+        if (!postForm || !postTextarea || !charCounter) return;
+
         postTextarea.addEventListener('input', function() {
             const maxLength = 500;
             const currentLength = this.value.length;
@@ -79,19 +168,79 @@ document.addEventListener('DOMContentLoaded', function() {
 
         postTextarea.dispatchEvent(new Event('input'));
 
-        const publishButton = postForm.querySelector('.btn-publish');
-        publishButton.addEventListener('click', function(e) {
+        postForm.addEventListener('submit', function(e) {
             if (postTextarea.value.trim() === '') {
                 e.preventDefault();
                 showNotification('Digite algo para publicar', 'error');
                 postTextarea.focus();
             } else {
-                showNotification('Postagem enviada com sucesso!', 'success');
+                showNotification('Postagem publicada com sucesso!', 'success');
             }
         });
     }
 
-    // Configura switch de tema
+    function setupDeleteButtons() {
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const postId = this.dataset.postId;
+                if (confirm('Tem certeza que deseja deletar esta postagem?')) {
+                    fetch(`/delete_post/${postId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            document.querySelector(`.post-card[data-post-id="${postId}"]`).remove();
+                            showNotification('Postagem deletada com sucesso!', 'success');
+                        } else {
+                            showNotification('Erro ao deletar postagem.', 'error');
+                        }
+                    })
+                    .catch(() => {
+                        showNotification('Erro ao conectar com o servidor.', 'error');
+                    });
+                }
+            });
+        });
+    }
+
+    function setupLikeButtons() {
+        likeButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const postId = this.closest('.post-card').dataset.postId;
+                const likeCountSpan = this.querySelector('.like-count');
+                let likeCount = parseInt(likeCountSpan.textContent);
+
+                if (this.classList.contains('active')) {
+                    likeCount--;
+                    this.classList.remove('active');
+                    localStorage.removeItem(`liked_${postId}`);
+                    showNotification('Like removido', 'info');
+                } else {
+                    likeCount++;
+                    this.classList.add('active');
+                    localStorage.setItem(`liked_${postId}`, 'true');
+                    showNotification('Postagem curtida!', 'success');
+                }
+
+                likeCountSpan.textContent = likeCount;
+                localStorage.setItem(`likes_${postId}`, likeCount);
+            });
+        });
+    }
+
+    function setupCommentButtons() {
+        commentButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const postId = this.closest('.post-card').dataset.postId;
+                showNotification('Funcionalidade de comentários em desenvolvimento', 'info');
+            });
+        });
+    }
+
     function setupThemeSwitch() {
         const themeSwitch = document.createElement('div');
         themeSwitch.classList.add('theme-switch');
@@ -112,7 +261,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Configura comportamento do drawer
     function setupDrawer() {
         const drawerLinks = document.querySelectorAll('.offcanvas .nav-link');
         drawerLinks.forEach(link => {
@@ -122,36 +270,30 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
 
-        // Fecha o drawer ao clicar fora
         document.addEventListener('click', function(event) {
             const isClickInsideDrawer = sideMenu.contains(event.target);
-            const isClickOnToggler = event.target.closest('.navbar-toggler');
+            const isClickOnToggler = event.target.closest('.menu-btn');
             const isOffcanvasOpen = sideMenu.classList.contains('show');
-            
+
             if (!isClickInsideDrawer && !isClickOnToggler && isOffcanvasOpen) {
                 const bsOffcanvas = bootstrap.Offcanvas.getInstance(sideMenu) || new bootstrap.Offcanvas(sideMenu);
-                if (bsOffcanvas) {
-                    bsOffcanvas.hide();
-                }
+                if (bsOffcanvas) bsOffcanvas.hide();
             }
         });
 
-        // Gerencia o scroll quando o offcanvas está aberto
         sideMenu.addEventListener('shown.bs.offcanvas', function() {
-            document.body.style.overflow = 'hidden'; // Impede scroll da página
-            document.body.style.paddingRight = '0'; // Evita deslocamento por scrollbar
-            // Força recalcular a posição do offcanvas
+            document.body.style.overflow = 'hidden';
+            document.body.style.paddingRight = '0';
             sideMenu.style.top = '0';
             sideMenu.style.height = '100vh';
         });
 
         sideMenu.addEventListener('hidden.bs.offcanvas', function() {
-            document.body.style.overflow = ''; // Restaura o scroll
-            document.body.style.paddingRight = ''; // Restaura padding
+            document.body.style.overflow = '';
+            document.body.style.paddingRight = '';
         });
     }
 
-    // Função para mostrar notificações
     function showNotification(message, type) {
         const notification = document.createElement('div');
         notification.className = `notification notification-${type}`;

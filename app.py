@@ -66,6 +66,7 @@ class Post(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text, nullable=False)
+    category = db.Column(db.String(50), nullable=False, default='Dúvidas Gerais')
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     
@@ -207,8 +208,9 @@ def telainicial():
     
     if request.method == 'POST':
         content = request.form.get('content')
-        if content:
-            new_post = Post(content=content, user_id=user.id)
+        category = request.form.get('category')
+        if content and category:
+            new_post = Post(content=content, category=category, user_id=user.id)
             try:
                 db.session.add(new_post)
                 db.session.commit()
@@ -232,25 +234,21 @@ def logout():
 @app.route('/delete_post/<int:post_id>', methods=['POST'])
 def delete_post(post_id):
     if 'user_id' not in session:
-        flash('Por favor, faça login para realizar esta ação.', 'error')
-        return redirect(url_for('registroelogin'))
+        return jsonify({'status': 'error', 'message': 'Por favor, faça login para realizar esta ação.'}), 401
     
     post = Post.query.get_or_404(post_id)
     
     if post.user_id != session['user_id']:
-        flash('Você não tem permissão para deletar esta postagem.', 'error')
-        return redirect(url_for('telainicial'))
+        return jsonify({'status': 'error', 'message': 'Você não tem permissão para deletar esta postagem.'}), 403
     
     try:
         db.session.delete(post)
         db.session.commit()
-        flash('Postagem deletada com sucesso!', 'success')
+        return jsonify({'status': 'success', 'message': 'Postagem deletada com sucesso!'})
     except Exception as e:
         db.session.rollback()
         logger.error(f"Erro ao deletar postagem: {str(e)}")
-        flash('Erro ao deletar postagem. Tente novamente.', 'error')
-    
-    return redirect(url_for('telainicial'))
+        return jsonify({'status': 'error', 'message': 'Erro ao deletar postagem. Tente novamente.'}), 500
 
 with app.app_context():
     try:
