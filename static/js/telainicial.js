@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setupDeleteButtons();
     setupLikeButtons();
     setupCommentButtons();
+    setupCommentForms();
     setupThemeSwitch();
     setupDrawer();
 
@@ -107,11 +108,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 'duvidas gerais': 'dúvidas gerais'
             };
 
-            const matchedCategory = searchCategoryMap[searchTerm] || searchTerm;
+            const matchedCategory = searchCategoryMap[searchTerm.toLowerCase()] || searchTerm.toLowerCase();
 
             const matchesSearch = searchTerm === '' ||
-                content.includes(searchTerm) ||
-                username.includes(searchTerm) ||
+                content.includes(searchTerm.toLowerCase()) ||
+                username.includes(searchTerm.toLowerCase()) ||
                 category.includes(matchedCategory);
 
             const matchesCategory = activeCategory === 'Todas' || card.dataset.category === activeCategory;
@@ -235,8 +236,83 @@ document.addEventListener('DOMContentLoaded', function() {
     function setupCommentButtons() {
         commentButtons.forEach(button => {
             button.addEventListener('click', function() {
-                const postId = this.closest('.post-card').dataset.postId;
-                showNotification('Funcionalidade de comentários em desenvolvimento', 'info');
+                const postCard = this.closest('.post-card');
+                const commentSection = postCard.querySelector('.comment-section');
+                commentSection.style.display = commentSection.style.display === 'none' ? 'block' : 'none';
+            });
+        });
+    }
+
+    function setupCommentForms() {
+        const commentForms = document.querySelectorAll('.comment-form');
+        commentForms.forEach(form => {
+            const textarea = form.querySelector('.comment-textarea');
+            const charCounter = form.querySelector('.char-counter');
+
+            textarea.addEventListener('input', function() {
+                const maxLength = 500;
+                const currentLength = this.value.length;
+                charCounter.textContent = `${currentLength}/${maxLength}`;
+                charCounter.classList.toggle('limit', currentLength > maxLength * 0.8);
+
+                if (currentLength > maxLength) {
+                    this.value = this.value.substring(0, maxLength);
+                    charCounter.textContent = `${maxLength}/${maxLength}`;
+                    showNotification('Limite de caracteres atingido', 'error');
+                }
+            });
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const postId = this.dataset.postId;
+                const content = textarea.value.trim();
+
+                if (!content) {
+                    showNotification('O comentário não pode estar vazio', 'error');
+                    return;
+                }
+
+                fetch(`/comment/${postId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: new URLSearchParams({
+                        'comment_content': content
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        const commentsList = form.nextElementSibling;
+                        const newComment = document.createElement('div');
+                        newComment.className = 'comment';
+                        newComment.dataset.commentId = data.comment.id;
+                        newComment.innerHTML = `
+                            <div class="user-info">
+                                <div class="avatar">
+                                    <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center">
+                                        ${data.comment.username[0].toUpperCase()}
+                                    </div>
+                                </div>
+                                <div>
+                                    <h6 class="username">${data.comment.username}</h6>
+                                    <small class="text-muted">${data.comment.created_at}</small>
+                                </div>
+                            </div>
+                            <p>${data.comment.content}</p>
+                        `;
+                        commentsList.appendChild(newComment);
+                        textarea.value = '';
+                        charCounter.textContent = '0/500';
+                        showNotification('Comentário adicionado com sucesso!', 'success');
+                    } else {
+                        showNotification(data.message, 'error');
+                    }
+                })
+                .catch(() => {
+                    showNotification('Erro ao conectar com o servidor.', 'error');
+                });
             });
         });
     }

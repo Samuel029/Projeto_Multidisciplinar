@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
-from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
+from backend.extensions import db
+from backend.models import User, Post, Comment
 from datetime import datetime
 import os
 import firebase_admin
@@ -14,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 app.config.from_object('backend.config.Config')
-db = SQLAlchemy(app)
+db.init_app(app)
 migrate = Migrate(app, db)
 
 # Criar pasta instance se não existir
@@ -48,31 +49,6 @@ try:
     logger.info("Firebase inicializado com sucesso")
 except Exception as e:
     logger.error(f"Erro ao inicializar Firebase: {str(e)}")
-
-class User(db.Model):
-    __tablename__ = 'users'
-    
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(64), index=True, nullable=False)
-    email = db.Column(db.String(120), index=True, unique=True, nullable=False)
-    password = db.Column(db.String(128), nullable=True)  # Permitir nulo para autenticação Google
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    
-    def __repr__(self):
-        return f'<User {self.username}>'
-
-class Post(db.Model):
-    __tablename__ = 'posts'
-    
-    id = db.Column(db.Integer, primary_key=True)
-    content = db.Column(db.Text, nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    
-    author = db.relationship('User', backref=db.backref('posts', lazy=True))
-    
-    def __repr__(self):
-        return f'<Post {self.id} by {self.author.username}>'
 
 @app.route('/', methods=['GET', 'POST'])
 def registroelogin():
@@ -207,8 +183,9 @@ def telainicial():
     
     if request.method == 'POST':
         content = request.form.get('content')
-        if content:
-            new_post = Post(content=content, user_id=user.id)
+        category = request.form.get('category')
+        if content and category:
+            new_post = Post(content=content, user_id=user.id, category=category)
             try:
                 db.session.add(new_post)
                 db.session.commit()
@@ -223,34 +200,64 @@ def telainicial():
     
     return render_template('telainicial.html', user=user, posts=posts)
 
+@app.route('/comment/<int:post_id>', methods=['POST'])
+def add_comment(post_id):
+    if 'user_id' not in session:
+        return jsonify({'status': 'error', 'message': 'Por favor, faça login para comentar.'}), 401
+    
+    post = Post.query.get_or_404(post_id)
+    content = request.form.get('comment_content')
+    
+    if not content:
+        return jsonify({'status': 'error', 'message': 'O comentário não pode estar vazio.'}), 400
+    
+    new_comment = Comment(
+        content=content,
+        user_id=session['user_id'],
+        post_id=post_id
+    )
+    
+    try:
+        db.session.add(new_comment)
+        db.session.commit()
+        return jsonify({
+            'status': 'success',
+            'comment': {
+                'id': new_comment.id,
+                'content': new_comment.content,
+                'username': new_comment.author.username,
+                'created_at': new_comment.created_at.strftime('%d/%m/%Y %H:%M')
+            }
+        })
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Erro ao adicionar comentário: {str(e)}")
+        return jsonify({'status': 'error', 'message': 'Erro ao adicionar comentário.'}), 500
+
+@app.route('/delete_post/<int:post_id>', methods=['POST'])
+def delete_post(post_id):
+    if 'user_id' not in session:
+        return jsonify({'status': 'error', 'message': 'Por favor, faça login para realizar esta ação.'}), 401
+    
+    post = Post.query.get_or_404(post_id)
+    
+    if post.user_id != session['user_id']:
+        return jsonify({'status': 'error', 'message': 'Você não tem permissão para deletar esta postagem.'}), 403
+    
+    try:
+        db.session.delete(post)
+        db.session.commit()
+        return jsonify({'status': 'success', 'message': 'Postagem deletada com sucesso!'})
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Erro ao deletar postagem: {str(e)}")
+        return jsonify({'status': 'error', 'message': 'Erro ao deletar postagem. Tente novamente.'}), 500
+
 @app.route('/logout')
 def logout():
     session.clear()
     flash('Você saiu da sua conta.', 'info')
     return redirect(url_for('registroelogin'))
-
-@app.route('/delete_post/<int:post_id>', methods=['POST'])
-def delete_post(post_id):
-    if 'user_id' not in session:
-        flash('Por favor, faça login para realizar esta ação.', 'error')
-        return redirect(url_for('registroelogin'))
-    
-    post = Post.query.get_or_404(post_id)
-    
-    if post.user_id != session['user_id']:
-        flash('Você não tem permissão para deletar esta postagem.', 'error')
-        return redirect(url_for('telainicial'))
-    
-    try:
-        db.session.delete(post)
-        db.session.commit()
-        flash('Postagem deletada com sucesso!', 'success')
-    except Exception as e:
-        db.session.rollback()
-        logger.error(f"Erro ao deletar postagem: {str(e)}")
-        flash('Erro ao deletar postagem. Tente novamente.', 'error')
-    
-    return redirect(url_for('telainicial'))
 
 with app.app_context():
     try:

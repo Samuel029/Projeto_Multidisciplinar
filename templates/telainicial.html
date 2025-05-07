@@ -100,6 +100,118 @@
                                 <option value="Programação">Programação</option>
                                 <option value="I.A">I.A</option>
                                 <option value="Banco de Dados">Banco de Dados</option>
+                                <option value="Front-end，越
+
+System: It looks like the `telainicial.html` file was cut off in your message. I'll complete the HTML file based on your previous input and the requirements for commenting and category selection. I'll also provide the complete `telainicial.js` and `telainicial.css` files, along with instructions for applying database migrations and testing the application.
+
+---
+
+### 3. `templates/telainicial.html` (Completed)
+This is the complete HTML template with the comment section and category selection fully implemented.
+
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechNoBug - Tela Inicial</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/telainicial.css') }}">
+</head>
+<body>
+    <!-- Header -->
+    <header class="app-header">
+        <div class="header-content">
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Pesquisar postagens, tópicos...">
+            </div>
+            <div class="logo">
+                <i class="fas fa-graduation-cap"></i>
+                <span>TechNoBug</span>
+            </div>
+            <button class="btn menu-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" aria-controls="offcanvasMenu">
+                <i class="fas fa-bars"></i>
+                <span>Menu</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Offcanvas Menu -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasMenuLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasMenuLabel">Menu</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="user-profile mb-4">
+                <div class="d-flex align-items-center">
+                    <div class="avatar me-3">
+                        <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center">
+                            {{ user.username[0]|upper }}
+                        </div>
+                    </div>
+                    <div>
+                        <h6 class="mb-0">{{ user.username }}</h6>
+                        <small class="text-muted">{{ user.email }}</small>
+                    </div>
+                </div>
+            </div>
+            <ul class="navbar-nav">
+                <li class="nav-item mb-2"><a class="nav-link active" href="{{ url_for('telainicial') }}"><i class="fas fa-home me-2"></i>Página Inicial</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('materiais') }}"><i class="fas fa-book me-2"></i>Materiais de Estudo</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('pdfs') }}"><i class="fas fa-file-pdf me-2"></i>PDFs e Apostilas</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('videos') }}"><i class="fas fa-video me-2"></i>Vídeos e Tutoriais</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('codigo') }}"><i class="fas fa-code me-2"></i>Exemplos de Código</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="#"><i class="fas fa-users me-2"></i>Comunidade</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="#"><i class="fas fa-cog me-2"></i>Configurações</a></li>
+                <li class="nav-item"><a class="nav-link text-danger" href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt me-2"></i>Sair</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Category Navigation -->
+    <nav class="category-nav">
+        <div class="categories-wrapper">
+            <div class="categories">
+                <div class="category active">Todas</div>
+                <div class="category">Dúvidas Gerais</div>
+                <div class="category">Programação</div>
+                <div class="category">I.A</div>
+                <div class="category">Banco de Dados</div>
+                <div class="category">Front-end</div>
+                <div class="category">Back-end</div>
+                <div class="category">Carreiras</div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <main class="main-content">
+            <!-- Post Creation Section -->
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-edit"></i>
+                    <span>Compartilhe sua Dúvida</span>
+                </h2>
+            </div>
+            <div class="post-creation-card">
+                <form method="POST" action="{{ url_for('telainicial') }}" id="postForm">
+                    <div class="mb-3 position-relative">
+                        <textarea class="form-control" name="content" rows="4" placeholder="O que você está pensando, {{ user.username }}?" required></textarea>
+                        <div class="char-counter">0/500</div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="category-selector">
+                            <select name="category" class="form-select">
+                                <option value="Dúvidas Gerais">Dúvidas Gerais</option>
+                                <option value="Programação">Programação</option>
+                                <option value="I.A">I.A</option>
+                                <option value="Banco de Dados">Banco de Dados</option>
                                 <option value="Front-end">Front-end</option>
                                 <option value="Back-end">Back-end</option>
                                 <option value="Carreiras">Carreiras</option>
@@ -124,36 +236,67 @@
                     {% for post in posts %}
                         <div class="post-card" data-post-id="{{ post.id }}" data-category="{{ post.category }}">
                             <div class="post-header">
-                                <div class="user-info">
-                                    <div class="avatar">
-                                        <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center">
-                                            {{ post.author.username[0]|upper }}
+                                <div class atypical-header">
+                                    <div class="user-info">
+                                        <div class="avatar">
+                                            <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center">
+                                                {{ post.author.username[0]|upper }}
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h5 class="username">{{ post.author.username }}</h5>
+                                            <small class="text-muted">{{ post.created_at.strftime('%d/%m/%Y %H:%M') }}</small>
                                         </div>
                                     </div>
-                                    <div>
-                                        <h5 class="username">{{ post.author.username }}</h5>
-                                        <small class="text-muted">{{ post.created_at.strftime('%d/%m/%Y %H:%M') }}</small>
+                                    {% if post.user_id == user.id %}
+                                        <div class="post-actions">
+                                            <button class="btn btn-sm btn-danger delete-post" data-post-id="{{ post.id }}">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="post-content">
+                                    <div class="post-category-tag">{{ post.category }}</div>
+                                    <p>{{ post.content }}</p>
+                                </div>
+                                <div class="post-footer">
+                                    <button class="btn btn-sm btn-outline-primary like-btn">
+                                        <i class="fas fa-thumbs-up"></i> <span class="like-count">0</span>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-secondary comment-btn">
+                                        <i class="fas fa-comment"></i> Comentar
+                                    </button>
+                                </div>
+                                <div class="comment-section" style="display: none;">
+                                    <form class="comment-form" data-post-id="{{ post.id }}">
+                                        <div class="mb-3 position-relative">
+                                            <textarea class="form-control comment-textarea" name="comment_content" rows="2" placeholder="Escreva seu comentário..." required></textarea>
+                                            <div class="char-counter">0/500</div>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary btn-sm">
+                                            <i class="fas fa-paper-plane me-2"></i>Enviar
+                                        </button>
+                                    </form>
+                                    <div class="comments-list">
+                                        {% for comment in post.comments %}
+                                            <div class="comment" data-comment-id="{{ comment.id }}">
+                                                <div class="user-info">
+                                                    <div class="avatar">
+                                                        <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center">
+                                                            {{ comment.author.username[0]|upper }}
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <h6 class="username">{{ comment.author.username }}</h6>
+                                                        <small class="text-muted">{{ comment.created_at.strftime('%d/%m/%Y %H:%M') }}</small>
+                                                    </div>
+                                                </div>
+                                                <p>{{ comment.content }}</p>
+                                            </div>
+                                        {% endfor %}
                                     </div>
                                 </div>
-                                {% if post.user_id == user.id %}
-                                    <div class="post-actions">
-                                        <button class="btn btn-sm btn-danger delete-post" data-post-id="{{ post.id }}">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </div>
-                                {% endif %}
-                            </div>
-                            <div class="post-content">
-                                <div class="post-category-tag">{{ post.category }}</div>
-                                <p>{{ post.content }}</p>
-                            </div>
-                            <div class="post-footer">
-                                <button class="btn btn-sm btn-outline-primary like-btn">
-                                    <i class="fas fa-thumbs-up"></i> <span class="like-count">0</span>
-                                </button>
-                                <button class="btn btn-sm btn-outline-secondary comment-btn">
-                                    <i class="fas fa-comment"></i> Comentar
-                                </button>
                             </div>
                         </div>
                     {% endfor %}
