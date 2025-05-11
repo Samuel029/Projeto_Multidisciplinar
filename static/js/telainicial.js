@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const postForm = document.getElementById('postForm');
     const postTextarea = document.querySelector('textarea[name="content"]');
     const charCounter = document.querySelector('.char-counter');
+    const categorySelect = document.querySelector('select[name="category"]');
     const sideMenu = document.getElementById('offcanvasMenu');
     const deleteButtons = document.querySelectorAll('.delete-post');
     const likeButtons = document.querySelectorAll('.like-btn');
@@ -23,7 +24,6 @@ document.addEventListener('DOMContentLoaded', function() {
     setupLikeButtons();
     setupCommentButtons();
     setupCommentForms();
-    setupThemeSwitch();
     setupDrawer();
 
     function initializeComponents() {
@@ -36,6 +36,34 @@ document.addEventListener('DOMContentLoaded', function() {
                 btn.classList.add('active');
             }
         });
+
+        // Inicializa o contador de caracteres para o formulário de postagem
+        if (postTextarea && charCounter) {
+            postTextarea.dispatchEvent(new Event('input'));
+        }
+
+        // Ajusta a categoria ativa ao iniciar a página
+        if (categories && categories.length > 0) {
+            const activeCategory = localStorage.getItem('activeCategory') || 'Todas';
+            categories.forEach(cat => {
+                const catValue = cat.dataset.category;
+                if (catValue === activeCategory) {
+                    cat.classList.add('active');
+                } else {
+                    cat.classList.remove('active');
+                }
+            });
+            filterPosts('');
+        }
+    }
+
+    function normalizeText(text) {
+        return text
+            .toLowerCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/\s+/g, ' ')
+            .trim();
     }
 
     function setupSearchBar() {
@@ -89,33 +117,49 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function filterPosts(searchTerm) {
-        const activeCategory = document.querySelector('.category.active').textContent.trim();
+        const activeCategory = document.querySelector('.category.active')?.dataset.category || 'Todas';
+        const normalizedSearchTerm = normalizeText(searchTerm);
+
         document.querySelectorAll('.post-card').forEach(card => {
-            const content = card.querySelector('.post-content p').textContent.toLowerCase();
-            const username = card.querySelector('.username').textContent.toLowerCase();
-            const category = card.dataset.category.toLowerCase();
+            const content = card.querySelector('.post-content p')?.textContent || '';
+            const username = card.querySelector('.username')?.textContent || '';
+            const category = card.dataset.category || '';
+
+            const normalizedContent = normalizeText(content);
+            const normalizedUsername = normalizeText(username);
+            const normalizedCategory = normalizeText(category);
 
             const searchCategoryMap = {
-                'ia': 'i.a',
-                'i.a': 'i.a',
+                'ia': 'ia',
                 'banco de dados': 'banco de dados',
                 'frontend': 'front-end',
                 'front-end': 'front-end',
                 'backend': 'back-end',
                 'back-end': 'back-end',
-                'programacao': 'programação',
+                'programacao': 'programacao',
                 'carreiras': 'carreiras',
-                'duvidas gerais': 'dúvidas gerais'
+                'duvidas gerais': 'duvidas gerais',
+                'modelagem': 'modelagem a banco de dados',
+                'modelagem de dados': 'modelagem a banco de dados',
+                'modelagem a banco de dados': 'modelagem a banco de dados',
+                'logica': 'logica',
+                'processos': 'processos',
+                'android': 'programacao android',
+                'programacao android': 'programacao android',
+                'multidisciplinar': 'projeto multidisciplinar',
+                'projeto multidisciplinar': 'projeto multidisciplinar',
+                'redes': 'redes',
+                'versionamento': 'versionamento'
             };
 
-            const matchedCategory = searchCategoryMap[searchTerm.toLowerCase()] || searchTerm.toLowerCase();
+            const mappedSearchTerm = searchCategoryMap[normalizedSearchTerm] || normalizedSearchTerm;
 
             const matchesSearch = searchTerm === '' ||
-                content.includes(searchTerm.toLowerCase()) ||
-                username.includes(searchTerm.toLowerCase()) ||
-                category.includes(matchedCategory);
+                normalizedContent.includes(normalizedSearchTerm) ||
+                normalizedUsername.includes(normalizedSearchTerm) ||
+                normalizedCategory.includes(mappedSearchTerm);
 
-            const matchesCategory = activeCategory === 'Todas' || card.dataset.category === activeCategory;
+            const matchesCategory = activeCategory === 'Todas' || normalizedCategory === normalizeText(activeCategory);
 
             if (matchesSearch && matchesCategory) {
                 card.style.display = 'block';
@@ -126,61 +170,115 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function setupCategoryFilter() {
+        if (!categories || categories.length === 0) return;
+
         categories.forEach(category => {
             category.addEventListener('click', function() {
                 categories.forEach(c => c.classList.remove('active'));
                 this.classList.add('active');
 
-                const categoryName = this.textContent.trim();
-                document.querySelectorAll('.post-card').forEach(card => {
-                    const cardCategory = card.dataset.category.trim();
-                    if (categoryName === 'Todas' || cardCategory === categoryName) {
-                        card.style.display = 'block';
-                    } else {
-                        card.style.display = 'none';
-                    }
-                });
+                const categoryName = this.dataset.category;
+                localStorage.setItem('activeCategory', categoryName);
+
+                filterPosts('');
 
                 // Limpa a pesquisa ao mudar de categoria
                 if (searchInput) {
                     searchInput.value = '';
                     searchBar.classList.remove('search-active');
                 }
-                showNotification(`Filtrando por ${categoryName}`, 'success');
+                showNotification(`Filtrando por ${this.textContent.trim()}`, 'success');
             });
         });
     }
 
     function setupPostForm() {
-        if (!postForm || !postTextarea || !charCounter) return;
+    if (!postForm || !postTextarea || !charCounter) return;
 
-        postTextarea.addEventListener('input', function() {
-            const maxLength = 500;
-            const currentLength = this.value.length;
-            charCounter.textContent = `${currentLength}/${maxLength}`;
-            charCounter.classList.toggle('limit', currentLength > maxLength * 0.8);
+    postTextarea.addEventListener('input', function() {
+        const maxLength = 500;
+        const currentLength = this.value.length;
+        charCounter.textContent = `${currentLength}/${maxLength}`;
+        charCounter.classList.toggle('limit', currentLength > maxLength * 0.8);
 
-            if (currentLength > maxLength) {
-                this.value = this.value.substring(0, maxLength);
-                charCounter.textContent = `${maxLength}/${maxLength}`;
-                showNotification('Limite de caracteres atingido', 'error');
-            }
+        if (currentLength > maxLength) {
+            this.value = this.value.substring(0, maxLength);
+            charCounter.textContent = `${maxLength}/${maxLength}`;
+            showNotification('Limite de caracteres atingido', 'error');
+        }
+    });
+
+    if (categorySelect) {
+        categorySelect.addEventListener('focus', function() {
+            this.parentElement.classList.add('active');
         });
 
-        postTextarea.dispatchEvent(new Event('input'));
+        categorySelect.addEventListener('blur', function() {
+            this.parentElement.classList.remove('active');
+        });
 
-        postForm.addEventListener('submit', function(e) {
-            if (postTextarea.value.trim() === '') {
-                e.preventDefault();
-                showNotification('Digite algo para publicar', 'error');
-                postTextarea.focus();
-            } else {
-                showNotification('Postagem publicada com sucesso!', 'success');
-            }
+        categorySelect.addEventListener('change', function() {
+            const selectedCategory = this.options[this.selectedIndex].text;
+            showNotification(`Categoria selecionada: ${selectedCategory}`, 'info');
         });
     }
 
+    postForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const submitButton = postForm.querySelector('button[type="submit"]');
+        if (submitButton) {
+            submitButton.disabled = true;
+            submitButton.textContent = 'Enviando...';
+        }
+
+        if (postTextarea.value.trim() === '') {
+            showNotification('Digite algo para publicar', 'error');
+            postTextarea.focus();
+            if (submitButton) {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Publicar';
+            }
+            return;
+        }
+
+        if (categorySelect && categorySelect.value === '') {
+            showNotification('Selecione uma categoria', 'error');
+            categorySelect.focus();
+            if (submitButton) {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Publicar';
+            }
+            return;
+        }
+
+        fetch('/telainicial', {
+            method: 'POST',
+            body: new FormData(postForm)
+        })
+        .then(response => response.text())
+        .then(() => {
+            showNotification('Postagem publicada com sucesso!', 'success');
+            postForm.reset();
+            charCounter.textContent = '0/500';
+            window.location.reload();
+        })
+        .catch(error => {
+            showNotification('Erro ao publicar postagem. Tente novamente.', 'error');
+            console.error(`Erro ao enviar postagem: ${error}`);
+        })
+        .finally(() => {
+            if (submitButton) {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Publicar';
+            }
+        });
+    });
+}
+
     function setupDeleteButtons() {
+        if (!deleteButtons || deleteButtons.length === 0) return;
+
         deleteButtons.forEach(button => {
             button.addEventListener('click', function() {
                 const postId = this.dataset.postId;
@@ -209,11 +307,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function setupLikeButtons() {
+        if (!likeButtons || likeButtons.length === 0) return;
+
         likeButtons.forEach(button => {
             button.addEventListener('click', function() {
                 const postId = this.closest('.post-card').dataset.postId;
                 const likeCountSpan = this.querySelector('.like-count');
-                let likeCount = parseInt(likeCountSpan.textContent);
+                let likeCount = parseInt(likeCountSpan.textContent || '0');
 
                 if (this.classList.contains('active')) {
                     likeCount--;
@@ -234,41 +334,59 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function setupCommentButtons() {
+        if (!commentButtons || commentButtons.length === 0) return;
+
         commentButtons.forEach(button => {
             button.addEventListener('click', function() {
                 const postCard = this.closest('.post-card');
                 const commentSection = postCard.querySelector('.comment-section');
-                commentSection.style.display = commentSection.style.display === 'none' ? 'block' : 'none';
+                if (commentSection) {
+                    const isVisible = commentSection.style.display === 'block';
+                    commentSection.style.display = isVisible ? 'none' : 'block';
+
+                    if (!isVisible) {
+                        // Foca no textarea quando abre a seção de comentários
+                        const textarea = commentSection.querySelector('.comment-textarea');
+                        if (textarea) {
+                            textarea.focus();
+                        }
+                    }
+                }
             });
         });
     }
 
     function setupCommentForms() {
         const commentForms = document.querySelectorAll('.comment-form');
+        if (!commentForms || commentForms.length === 0) return;
+
         commentForms.forEach(form => {
             const textarea = form.querySelector('.comment-textarea');
             const charCounter = form.querySelector('.char-counter');
 
-            textarea.addEventListener('input', function() {
-                const maxLength = 500;
-                const currentLength = this.value.length;
-                charCounter.textContent = `${currentLength}/${maxLength}`;
-                charCounter.classList.toggle('limit', currentLength > maxLength * 0.8);
+            if (textarea && charCounter) {
+                textarea.addEventListener('input', function() {
+                    const maxLength = 500;
+                    const currentLength = this.value.length;
+                    charCounter.textContent = `${currentLength}/${maxLength}`;
+                    charCounter.classList.toggle('limit', currentLength > maxLength * 0.8);
 
-                if (currentLength > maxLength) {
-                    this.value = this.value.substring(0, maxLength);
-                    charCounter.textContent = `${maxLength}/${maxLength}`;
-                    showNotification('Limite de caracteres atingido', 'error');
-                }
-            });
+                    if (currentLength > maxLength) {
+                        this.value = this.value.substring(0, maxLength);
+                        charCounter.textContent = `${maxLength}/${maxLength}`;
+                        showNotification('Limite de caracteres atingido', 'error');
+                    }
+                });
+            }
 
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
                 const postId = this.dataset.postId;
-                const content = textarea.value.trim();
+                const content = textarea?.value.trim() || '';
 
                 if (!content) {
                     showNotification('O comentário não pode estar vazio', 'error');
+                    if (textarea) textarea.focus();
                     return;
                 }
 
@@ -285,29 +403,33 @@ document.addEventListener('DOMContentLoaded', function() {
                 .then(data => {
                     if (data.status === 'success') {
                         const commentsList = form.nextElementSibling;
-                        const newComment = document.createElement('div');
-                        newComment.className = 'comment';
-                        newComment.dataset.commentId = data.comment.id;
-                        newComment.innerHTML = `
-                            <div class="user-info">
-                                <div class="avatar">
-                                    <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center">
-                                        ${data.comment.username[0].toUpperCase()}
+                        if (commentsList) {
+                            const newComment = document.createElement('div');
+                            newComment.className = 'comment';
+                            newComment.dataset.commentId = data.comment.id;
+                            newComment.innerHTML = `
+                                <div class="user-info">
+                                    <div class="avatar">
+                                        <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center">
+                                            ${data.comment.username[0].toUpperCase()}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h6 class="username">${data.comment.username}</h6>
+                                        <small class="text-muted">${data.comment.created_at}</small>
                                     </div>
                                 </div>
-                                <div>
-                                    <h6 class="username">${data.comment.username}</h6>
-                                    <small class="text-muted">${data.comment.created_at}</small>
-                                </div>
-                            </div>
-                            <p>${data.comment.content}</p>
-                        `;
-                        commentsList.appendChild(newComment);
-                        textarea.value = '';
-                        charCounter.textContent = '0/500';
-                        showNotification('Comentário adicionado com sucesso!', 'success');
+                                <p>${data.comment.content}</p>
+                            `;
+                            commentsList.appendChild(newComment);
+                            if (textarea) {
+                                textarea.value = '';
+                                if (charCounter) charCounter.textContent = '0/500';
+                            }
+                            showNotification('Comentário adicionado com sucesso!', 'success');
+                        }
                     } else {
-                        showNotification(data.message, 'error');
+                        showNotification(data.message || 'Erro ao adicionar comentário', 'error');
                     }
                 })
                 .catch(() => {
@@ -317,34 +439,18 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    function setupThemeSwitch() {
-        const themeSwitch = document.createElement('div');
-        themeSwitch.classList.add('theme-switch');
-        themeSwitch.innerHTML = '<i class="fas fa-moon"></i>';
-        document.body.appendChild(themeSwitch);
-
-        if (localStorage.getItem('theme') === 'dark') {
-            document.body.classList.add('dark-theme');
-            themeSwitch.innerHTML = '<i class="fas fa-sun"></i>';
-        }
-
-        themeSwitch.addEventListener('click', function() {
-            document.body.classList.toggle('dark-theme');
-            const isDark = document.body.classList.contains('dark-theme');
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
-            themeSwitch.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
-            showNotification(isDark ? 'Tema escuro ativado' : 'Tema claro ativado', 'success');
-        });
-    }
-
     function setupDrawer() {
+        if (!sideMenu) return;
+
         const drawerLinks = document.querySelectorAll('.offcanvas .nav-link');
-        drawerLinks.forEach(link => {
-            link.addEventListener('click', function() {
-                const bsOffcanvas = bootstrap.Offcanvas.getInstance(sideMenu) || new bootstrap.Offcanvas(sideMenu);
-                if (bsOffcanvas) bsOffcanvas.hide();
+        if (drawerLinks && drawerLinks.length > 0) {
+            drawerLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    const bsOffcanvas = bootstrap.Offcanvas.getInstance(sideMenu);
+                    if (bsOffcanvas) bsOffcanvas.hide();
+                });
             });
-        });
+        }
 
         document.addEventListener('click', function(event) {
             const isClickInsideDrawer = sideMenu.contains(event.target);
@@ -352,7 +458,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const isOffcanvasOpen = sideMenu.classList.contains('show');
 
             if (!isClickInsideDrawer && !isClickOnToggler && isOffcanvasOpen) {
-                const bsOffcanvas = bootstrap.Offcanvas.getInstance(sideMenu) || new bootstrap.Offcanvas(sideMenu);
+                const bsOffcanvas = bootstrap.Offcanvas.getInstance(sideMenu);
                 if (bsOffcanvas) bsOffcanvas.hide();
             }
         });
@@ -370,7 +476,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    function showNotification(message, type) {
+    // Função global para mostrar notificações
+    window.showNotification = function(message, type) {
         const notification = document.createElement('div');
         notification.className = `notification notification-${type}`;
         notification.innerHTML = `
@@ -394,5 +501,104 @@ document.addEventListener('DOMContentLoaded', function() {
                 setTimeout(() => notification.remove(), 300);
             }
         }, 4000);
-    }
+    };
+
+// Função auxiliar para formatar datas (caso precise no futuro)
+function formatDate(dateStr) {
+    const date = new Date(dateStr);
+    const options = {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+        timeZone: 'America/Sao_Paulo'
+    };
+    return date.toLocaleString('pt-BR', options).replace(',', '');
+}
+
+function setupCommentForms() {
+    const commentForms = document.querySelectorAll('.comment-form');
+    if (!commentForms || commentForms.length === 0) return;
+
+    commentForms.forEach(form => {
+        const textarea = form.querySelector('.comment-textarea');
+        const charCounter = form.querySelector('.char-counter');
+
+        if (textarea && charCounter) {
+            textarea.addEventListener('input', function() {
+                const maxLength = 500;
+                const currentLength = this.value.length;
+                charCounter.textContent = `${currentLength}/${maxLength}`;
+                charCounter.classList.toggle('limit', currentLength > maxLength * 0.8);
+
+                if (currentLength > maxLength) {
+                    this.value = this.value.substring(0, maxLength);
+                    charCounter.textContent = `${maxLength}/${maxLength}`;
+                    showNotification('Limite de caracteres atingido', 'error');
+                }
+            });
+        }
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const postId = this.dataset.postId;
+            const content = textarea?.value.trim() || '';
+
+            if (!content) {
+                showNotification('O comentário não pode estar vazio', 'error');
+                if (textarea) textarea.focus();
+                return;
+            }
+
+            fetch(`/comment/${postId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({
+                    'comment_content': content
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    const commentsList = form.nextElementSibling;
+                    if (commentsList) {
+                        const newComment = document.createElement('div');
+                        newComment.className = 'comment';
+                        newComment.dataset.commentId = data.comment.id;
+                        newComment.innerHTML = `
+                            <div class="user-info">
+                                <div class="avatar">
+                                    <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center">
+                                        ${data.comment.username[0].toUpperCase()}
+                                    </div>
+                                </div>
+                                <div>
+                                    <h6 class="username">${data.comment.username}</h6>
+                                    <small class="text-muted">${data.comment.created_at}</small>
+                                </div>
+                            </div>
+                            <p>${data.comment.content}</p>
+                        `;
+                        commentsList.appendChild(newComment);
+                        if (textarea) {
+                            textarea.value = '';
+                            if (charCounter) charCounter.textContent = '0/500';
+                        }
+                        showNotification('Comentário adicionado com sucesso!', 'success');
+                    }
+                } else {
+                    showNotification(data.message || 'Erro ao adicionar comentário', 'error');
+                }
+            })
+            .catch(() => {
+                showNotification('Erro ao conectar com o servidor.', 'error');
+            });
+        });
+    });
+}
+
 });

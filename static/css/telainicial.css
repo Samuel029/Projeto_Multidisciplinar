@@ -191,6 +191,8 @@ a:hover { color: var(--primary-dark); }
     font-size: var(--font-size-lg);
 }
 
+
+
 .btn-close {
     filter: brightness(0) invert(1);
 }
@@ -210,6 +212,8 @@ a:hover { color: var(--primary-dark); }
     display: flex;
     align-items: center;
 }
+
+
 
 .nav-link:hover {
     background-color: var(--primary-transparent);

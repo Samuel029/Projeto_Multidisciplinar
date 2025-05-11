@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Videoteca Tech</title>
+    <title>TechNoBug</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/static/css/videoseetutoriais.css">
@@ -17,7 +17,7 @@
             </div>
             <div class="logo">
                 <i class="fas fa-graduation-cap"></i>
-                <span>Videoteca Tech</span>
+                <span>TechNoBug</span>
             </div>
             <button class="btn menu-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" aria-controls="offcanvasMenu">
                 <i class="fas fa-bars"></i>
@@ -33,16 +33,28 @@
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body">
+            <div class="user-profile mb-4">
+                <div class="d-flex align-items-center">
+                    <div class="avatar me-3">
+                        <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center">
+                            {{ user.username[0]|upper }}
+                        </div>
+                    </div>
+                    <div>
+                        <h6 class="mb-0">{{ user.username }}</h6>
+                        <small class="text-muted">{{ user.email }}</small>
+                    </div>
+                </div>
+            </div>
             <ul class="navbar-nav">
-                <li class="nav-item mb-2"><a class="nav-link" href="/telainicial"><i class="fas fa-home me-2"></i>Página Inicial</a></li>
-                <li class="nav-item mb-2"><a class="nav-link" href="/materiais-de-estudo"><i class="fas fa-book me-2"></i>Materiais de Estudo</a></li>
-                <li class="nav-item mb-2"><a class="nav-link" href="/pdfs-e-apostilas"><i class="fas fa-file-pdf me-2"></i>PDFs e Apostilas</a></li>
-                <li class="nav-item mb-2"><a class="nav-link active" href="/videos-e-tutoriais"><i class="fas fa-video me-2"></i>Vídeos e Tutoriais</a></li>
-                <li class="nav-item mb-2"><a class="nav-link" href="/codigo"><i class="fas fa-code me-2"></i>Exemplos de Código</a></li>
-                <li class="nav-item mb-2"><a class="nav-link" href="#"><i class="fas fa-question-circle me-2"></i>Perguntas Frequentes</a></li>
+                <li class="nav-item mb-2"><a class="nav-link active" href="{{ url_for('telainicial') }}"><i class="fas fa-home me-2"></i>Página Inicial</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('materiais') }}"><i class="fas fa-book me-2"></i>Materiais de Estudo</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('pdfs') }}"><i class="fas fa-file-pdf me-2"></i>PDFs e Apostilas</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('videos') }}"><i class="fas fa-video me-2"></i>Vídeos e Tutoriais</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('codigo') }}"><i class="fas fa-code me-2"></i>Exemplos de Código</a></li>
                 <li class="nav-item mb-2"><a class="nav-link" href="#"><i class="fas fa-users me-2"></i>Comunidade</a></li>
                 <li class="nav-item mb-2"><a class="nav-link" href="#"><i class="fas fa-cog me-2"></i>Configurações</a></li>
-                <li class="nav-item"><a class="nav-link text-danger" href="/logout"><i class="fas fa-sign-out-alt me-2"></i>Sair</a></li>
+                <li class="nav-item"><a class="nav-link text-danger" href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt me-2"></i>Sair</a></li>
             </ul>
         </div>
     </div>
@@ -99,7 +111,11 @@
                         <div class="video-duration">4:57</div>
                     </div>
                     <div class="video-info">
-                        <h3 class="video-title">Aprenda Git e Github em 5 minutos</h3>
+                        <h3 class="video-title">
+                            <a href="https://youtu.be/-l4Aa8wef8s?si=ziRfdFpMjxiSdThi" target="_blank" style="text-decoration: none; color: inherit;">
+                                Aprenda Git e Github em 5 minutos
+                            </a>
+                        </h3>
                         <div class="video-meta">
                             <div class="instructor">
                                 <span class="instructor-name">Mucharski</span>
@@ -131,7 +147,11 @@
                         <div class="video-duration">17:22</div>
                     </div>
                     <div class="video-info">
-                        <h3 class="video-title">Como Instalar Python e Visual Studio Code no Windows | Python do Jeito Certo 2.0</h3>
+                        <h3 class="video-title">
+                            <a href="https://youtu.be/R9dLGLVqK9Q?si=t0m91hvDA1PA4JgN" target="_blank" style="text-decoration: none; color: inherit;">
+                                Como Instalar Python e Visual Studio Code no Windows | Python do Jeito Certo 2.0
+                            </a>
+                        </h3>
                         <div class="video-meta">
                             <div class="instructor">
                                 <span class="instructor-name">Programação Dinâmica</span>
@@ -163,7 +183,11 @@
                         <div class="video-duration">29:06</div>
                     </div>
                     <div class="video-info">
-                        <h3 class="video-title">Curso Python #01 - Seja um Programador</h3>
+                        <h3 class="video-title">
+                            <a href="https://www.youtube.com/watch?v=S9uPNppGsGo&list=PL vE-ZAFRgX8hnECDn1v9HNTI71veL3oW0" target="_blank" style="text-decoration: none; color: inherit;">
+                                Curso Python #01 - Seja um Programador
+                            </a>
+                        </h3>
                         <div class="video-meta">
                             <div class="instructor">
                                 <span class="instructor-name">Curso em Vídeo</span>
@@ -193,7 +217,11 @@
                         <div class="video-duration">22:15</div>
                     </div>
                     <div class="video-info">
-                        <h3 class="video-title">Machine Learning com TensorFlow: Primeiros Passos</h3>
+                        <h3 class="video-title">
+                            <a href="#" style="text-decoration: none; color: inherit;">
+                                Machine Learning com TensorFlow: Primeiros Passos
+                            </a>
+                        </h3>
                         <div class="video-meta">
                             <div class="instructor">
                                 <span class="instructor-name">Dra. Santos</span>
@@ -223,7 +251,11 @@
                         <div class="video-duration">18:32</div>
                     </div>
                     <div class="video-info">
-                        <h3 class="video-title">Modelagem de Banco de Dados Relacional: Do Zero ao Avançado</h3>
+                        <h3 class="video-title">
+                            <a href="#" style="text-decoration: none; color: inherit;">
+                                Modelagem de Banco de Dados Relacional: Do Zero ao Avançado
+                            </a>
+                        </h3>
                         <div class="video-meta">
                             <div class="instructor">
                                 <span class="instructor-name">Prof. Almeida</span>
@@ -253,7 +285,11 @@
                         <div class="video-duration">12:48</div>
                     </div>
                     <div class="video-info">
-                        <h3 class="video-title">Algoritmos e Lógica de Programação: Fundamentos Essenciais</h3>
+                        <h3 class="video-title">
+                            <a href="#" style="text-decoration: none; color: inherit;">
+                                Algoritmos e Lógica de Programação: Fundamentos Essenciais
+                            </a>
+                        </h3>
                         <div class="video-meta">
                             <div class="instructor">
                                 <span class="instructor-name">Prof. Costa</span>
@@ -283,7 +319,11 @@
                         <div class="video-duration">16:05</div>
                     </div>
                     <div class="video-info">
-                        <h3 class="video-title">React Hooks: Dominando o Estado e Ciclo de Vida</h3>
+                        <h3 class="video-title">
+                            <a href="#" style="text-decoration: none; color: inherit;">
+                                React Hooks: Dominando o Estado e Ciclo de Vida
+                            </a>
+                        </h3>
                         <div class="video-meta">
                             <div class="instructor">
                                 <span class="instructor-name">Profa. Lima</span>
@@ -313,7 +353,11 @@
                         <div class="video-duration">19:42</div>
                     </div>
                     <div class="video-info">
-                        <h3 class="video-title">API REST com Node.js e Express: Criando Serviços Robustos</h3>
+                        <h3 class="video-title">
+                            <a href="#" style="text-decoration: none; color: inherit;">
+                                API REST com Node.js e Express: Criando Serviços Robustos
+                            </a>
+                        </h3>
                         <div class="video-meta">
                             <div class="instructor">
                                 <span class="instructor-name">Prof. Silva</span>
@@ -343,7 +387,11 @@
                         <div class="video-duration">23:18</div>
                     </div>
                     <div class="video-info">
-                        <h3 class="video-title">Desenvolvimento Android com Kotlin e Jetpack Compose</h3>
+                        <h3 class="video-title">
+                            <a href="#" style="text-decoration: none; color: inherit;">
+                                Desenvolvimento Android com Kotlin e Jetpack Compose
+                            </a>
+                        </h3>
                         <div class="video-meta">
                             <div class="instructor">
                                 <span class="instructor-name">Prof. Mendes</span>
@@ -375,7 +423,11 @@
                         <div class="video-duration">1:20:10</div>
                     </div>
                     <div class="video-info">
-                        <h3 class="video-title">Git #1 - Conceitos e principais comandos de versionamento</h3>
+                        <h3 class="video-title">
+                            <a href="https://www.youtube.com/watch?v=GIEquFr3jcg&list=PLDqnSpzNKDvkfF_ZMfukmOG3MtGKfXlfJ" target="_blank" style="text-decoration: none; color: inherit;">
+                                Git #1 - Conceitos e principais comandos de versionamento
+                            </a>
+                        </h3>
                         <div class="video-meta">
                             <div class="instructor">
                                 <span class="instructor-name">Angelo Luz</span>
@@ -407,7 +459,11 @@
                         <div class="video-duration">17:33</div>
                     </div>
                     <div class="video-info">
-                        <h3 class="video-title">Seu primeiro código HTML - @Curso em Vídeo HTML5 e CSS3</h3>
+                        <h3 class="video-title">
+                            <a href="https://www.youtube.com/watch?v=E6CdIawPTh0&list=PLHz_AreHm4dkZ9-atkcmcBaMZdmLHft8n&index=12" target="_blank" style="text-decoration: none; color: inherit;">
+                                Seu primeiro código HTML - @Curso em Vídeo HTML5 e CSS3
+                            </a>
+                        </h3>
                         <div class="video-meta">
                             <div class="instructor">
                                 <span class="instructor-name">Curso em Vídeo</span>
@@ -439,7 +495,11 @@
                         <div class="video-duration">18:42</div>
                     </div>
                     <div class="video-info">
-                        <h3 class="video-title">Tudo sobre Front-End: 💰 salários, o que estudar e dicas para carreira</h3>
+                        <h3 class="video-title">
+                            <a href="https://www.youtube.com/watch?v=8xo1FID4TqU" target="_blank" style="text-decoration: none; color: inherit;">
+                                Tudo sobre Front-End: 💰 salários, o que estudar e dicas para carreira
+                            </a>
+                        </h3>
                         <div class="video-meta">
                             <div class="instructor">
                                 <span class="instructor-name">Gabriel Rangel</span>
@@ -471,7 +531,11 @@
                         <div class="video-duration">8:34</div>
                     </div>
                     <div class="video-info">
-                        <h3 class="video-title">O que é Front End e Back End? Diferenças que Você Precisa Saber</h3>
+                        <h3 class="video-title">
+                            <a href="https://www.youtube.com/watch?v=LDU4BCSxPp4" target="_blank" style="text-decoration: none; color: inherit;">
+                                O que é Front End e Back End? Diferenças que Você Precisa Saber
+                            </a>
+                        </h3>
                         <div class="video-meta">
                             <div class="instructor">
                                 <span class="instructor-name">Alura</span>
@@ -537,7 +601,7 @@
         </div>
 
         <div class="footer-bottom">
-            <p>© 2025 Videoteca Tech. Todos os direitos reservados.</p>
+            <p>© 2025 TechNoBug. Todos os direitos reservados.</p>
         </div>
     </footer>
 

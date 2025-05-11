@@ -1,5 +1,9 @@
 from backend.extensions import db
 from datetime import datetime
+import pytz
+
+# Fuso horário de Brasília
+BRASILIA_TZ = pytz.timezone('America/Sao_Paulo')
 
 class User(db.Model):
     __tablename__ = 'users'
@@ -8,7 +12,7 @@ class User(db.Model):
     username = db.Column(db.String(64), index=True, nullable=False)
     email = db.Column(db.String(120), index=True, unique=True, nullable=False)
     password = db.Column(db.String(128), nullable=True)  # Permitir nulo para autenticação Google
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(BRASILIA_TZ))
     
     def __repr__(self):
         return f'<User {self.username}>'
@@ -19,7 +23,7 @@ class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text, nullable=False)
     category = db.Column(db.String(50), nullable=False, default='Dúvidas Gerais')
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(BRASILIA_TZ))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     
     author = db.relationship('User', backref=db.backref('posts', lazy=True))
@@ -32,7 +36,7 @@ class Comment(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text, nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(BRASILIA_TZ))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     post_id = db.Column(db.Integer, db.ForeignKey('posts.id'), nullable=False)
     

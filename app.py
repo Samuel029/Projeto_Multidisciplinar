@@ -152,21 +152,65 @@ def verify_token():
         logger.error(f"Erro ao verificar token: {str(e)}")
         return jsonify({'status': 'error', 'message': 'Erro ao verificar token'}), 401
 
+@app.route('/videos-e-tutoriais')
+def videos():
+    user_id = session.get('user_id')
+    if not user_id:
+        flash('Por favor, faça login para acessar esta página.', 'error')
+        return redirect(url_for('registroelogin'))
+    
+    user = db.session.get(User, user_id)
+    if not user:
+        session.clear()
+        flash('Sua sessão expirou ou o usuário não existe mais.', 'error')
+        return redirect(url_for('registroelogin'))
+    
+    return render_template('videosetutoriais.html', user=user)
+
 @app.route('/materiais-de-estudo')
 def materiais():
-    return render_template('materiaisestudo.html')
+    user_id = session.get('user_id')
+    if not user_id:
+        flash('Por favor, faça login para acessar esta página.', 'error')
+        return redirect(url_for('registroelogin'))
+    
+    user = db.session.get(User, user_id)
+    if not user:
+        session.clear()
+        flash('Sua sessão expirou ou o usuário não existe mais.', 'error')
+        return redirect(url_for('registroelogin'))
+    
+    return render_template('materiaisestudo.html', user=user)
 
 @app.route('/pdfs-e-apostilas')
 def pdfs():
-    return render_template('pdfeapostilas.html')
-
-@app.route('/videos-e-tutoriais')
-def videos():
-    return render_template('videosetutoriais.html')
+    user_id = session.get('user_id')
+    if not user_id:
+        flash('Por favor, faça login para acessar esta página.', 'error')
+        return redirect(url_for('registroelogin'))
+    
+    user = db.session.get(User, user_id)
+    if not user:
+        session.clear()
+        flash('Sua sessão expirou ou o usuário não existe mais.', 'error')
+        return redirect(url_for('registroelogin'))
+    
+    return render_template('pdfeapostilas.html', user=user)
 
 @app.route('/codigo')
 def codigo():
-    return render_template('exemplosdecodigo.html')
+    user_id = session.get('user_id')
+    if not user_id:
+        flash('Por favor, faça login para acessar esta página.', 'error')
+        return redirect(url_for('registroelogin'))
+    
+    user = db.session.get(User, user_id)
+    if not user:
+        session.clear()
+        flash('Sua sessão expirou ou o usuário não existe mais.', 'error')
+        return redirect(url_for('registroelogin'))
+    
+    return render_template('exemplosdecodigo.html', user=user)
 
 @app.route('/telainicial', methods=['GET', 'POST'])
 def telainicial():
@@ -233,6 +277,8 @@ def add_comment(post_id):
         db.session.rollback()
         logger.error(f"Erro ao adicionar comentário: {str(e)}")
         return jsonify({'status': 'error', 'message': 'Erro ao adicionar comentário.'}), 500
+    
+
 
 @app.route('/delete_post/<int:post_id>', methods=['POST'])
 def delete_post(post_id):
