@@ -159,12 +159,42 @@
                                 <p>{{ post.content }}</p>
                             </div>
                             <div class="post-footer">
-                                <button class="btn btn-sm btn-outline-primary like-btn">
+                                <button class="btn btn-sm btn-outline-primary like-btn" data-post-id="{{ post.id }}">
                                     <i class="fas fa-thumbs-up"></i> <span class="like-count">0</span>
                                 </button>
-                                <button class="btn btn-sm btn-outline-secondary comment-btn">
+                                <button class="btn btn-sm btn-outline-secondary comment-btn" data-bs-toggle="collapse" data-bs-target="#comments-{{ post.id }}">
                                     <i class="fas fa-comment"></i> Comentar
                                 </button>
+                            </div>
+                            <!-- Comment Section -->
+                            <div class="collapse comments-section" id="comments-{{ post.id }}">
+                                <form class="comment-form" data-post-id="{{ post.id }}">
+                                    <div class="mb-3">
+                                        <textarea class="form-control" name="comment_content" rows="2" placeholder="Escreva um comentário..." required></textarea>
+                                    </div>
+                                    <button type="submit" class="btn btn-sm btn-primary">Enviar Comentário</button>
+                                </form>
+                                <div class="comments-list">
+                                    {% for comment in post.comments %}
+                                        <div class="comment" data-comment-id="{{ comment.id }}">
+                                            <div class="d-flex">
+                                                <div class="avatar me-2">
+                                                    <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center">
+                                                        {{ comment.author.username[0]|upper }}
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <h6 class="mb-0">{{ comment.author.username }}</h6>
+                                                    <small class="text-muted">{{ comment.created_at.strftime('%d/%m/%Y %H:%M') }}</small>
+                                                    <p class="mb-1">{{ comment.content }}</p>
+                                                    <button class="btn btn-sm btn-outline-primary comment-like-btn" data-comment-id="{{ comment.id }}">
+                                                        <i class="fas fa-thumbs-up"></i> <span class="like-count">0</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
                             </div>
                         </div>
                     {% endfor %}

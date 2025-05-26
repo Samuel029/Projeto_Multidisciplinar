@@ -12,6 +12,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const deleteButtons = document.querySelectorAll('.delete-post');
     const likeButtons = document.querySelectorAll('.like-btn');
     const commentButtons = document.querySelectorAll('.comment-btn');
+    const commentForms = document.querySelectorAll('.comment-form');
+    const commentLikeButtons = document.querySelectorAll('.comment-like-btn');
 
     // Inicializa componentes
     initializeComponents();
@@ -24,17 +26,50 @@ document.addEventListener('DOMContentLoaded', function() {
     setupLikeButtons();
     setupCommentButtons();
     setupCommentForms();
+    setupCommentLikeButtons();
     setupDrawer();
 
     function initializeComponents() {
-        // Carrega likes salvos
+        // Carrega likes para posts
         likeButtons.forEach(btn => {
             const postId = btn.closest('.post-card').dataset.postId;
-            const savedLikes = localStorage.getItem(`likes_${postId}`) || 0;
-            btn.querySelector('.like-count').textContent = savedLikes;
-            if (localStorage.getItem(`liked_${postId}`)) {
-                btn.classList.add('active');
-            }
+            fetch(`/get_post_likes/${postId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    btn.querySelector('.like-count').textContent = data.like_count;
+                    if (data.user_liked) {
+                        btn.classList.add('active');
+                    }
+                }
+            })
+            .catch(error => console.error('Error fetching post likes:', error));
+        });
+
+        // Carrega likes para comentários
+        commentLikeButtons.forEach(btn => {
+            const commentId = btn.getAttribute('data-comment-id');
+            fetch(`/get_comment_likes/${commentId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    btn.querySelector('.like-count').textContent = data.like_count;
+                    if (data.user_liked) {
+                        btn.classList.add('liked');
+                    }
+                }
+            })
+            .catch(error => console.error('Error fetching comment likes:', error));
         });
 
         // Inicializa o contador de caracteres para o formulário de postagem
@@ -193,88 +228,88 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function setupPostForm() {
-    if (!postForm || !postTextarea || !charCounter) return;
+        if (!postForm || !postTextarea || !charCounter) return;
 
-    postTextarea.addEventListener('input', function() {
-        const maxLength = 500;
-        const currentLength = this.value.length;
-        charCounter.textContent = `${currentLength}/${maxLength}`;
-        charCounter.classList.toggle('limit', currentLength > maxLength * 0.8);
+        postTextarea.addEventListener('input', function() {
+            const maxLength = 500;
+            const currentLength = this.value.length;
+            charCounter.textContent = `${currentLength}/${maxLength}`;
+            charCounter.classList.toggle('limit', currentLength > maxLength * 0.8);
 
-        if (currentLength > maxLength) {
-            this.value = this.value.substring(0, maxLength);
-            charCounter.textContent = `${maxLength}/${maxLength}`;
-            showNotification('Limite de caracteres atingido', 'error');
+            if (currentLength > maxLength) {
+                this.value = this.value.substring(0, maxLength);
+                charCounter.textContent = `${maxLength}/${maxLength}`;
+                showNotification('Limite de caracteres atingido', 'error');
+            }
+        });
+
+        if (categorySelect) {
+            categorySelect.addEventListener('focus', function() {
+                this.parentElement.classList.add('active');
+            });
+
+            categorySelect.addEventListener('blur', function() {
+                this.parentElement.classList.remove('active');
+            });
+
+            categorySelect.addEventListener('change', function() {
+                const selectedCategory = this.options[this.selectedIndex].text;
+                showNotification(`Categoria selecionada: ${selectedCategory}`, 'info');
+            });
         }
-    });
 
-    if (categorySelect) {
-        categorySelect.addEventListener('focus', function() {
-            this.parentElement.classList.add('active');
-        });
+        postForm.addEventListener('submit', function(e) {
+            e.preventDefault();
 
-        categorySelect.addEventListener('blur', function() {
-            this.parentElement.classList.remove('active');
-        });
+            const submitButton = postForm.querySelector('button[type="submit"]');
+            if (submitButton) {
+                submitButton.disabled = true;
+                submitButton.textContent = 'Enviando...';
+            }
 
-        categorySelect.addEventListener('change', function() {
-            const selectedCategory = this.options[this.selectedIndex].text;
-            showNotification(`Categoria selecionada: ${selectedCategory}`, 'info');
+            if (postTextarea.value.trim() === '') {
+                showNotification('Digite algo para publicar', 'error');
+                postTextarea.focus();
+                if (submitButton) {
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Publicar';
+                }
+                return;
+            }
+
+            if (categorySelect && categorySelect.value === '') {
+                showNotification('Selecione uma categoria', 'error');
+                categorySelect.focus();
+                if (submitButton) {
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Publicar';
+                }
+                return;
+            }
+
+            fetch('/telainicial', {
+                method: 'POST',
+                body: new FormData(postForm)
+            })
+            .then(response => response.text())
+            .then(() => {
+                showNotification('Postagem publicada com sucesso!', 'success');
+                postForm.reset();
+                charCounter.textContent = '0/500';
+                window.location.reload();
+            })
+            .catch(error => {
+                showNotification('Erro ao publicar postagem. Tente novamente.', 'error');
+                console.error(`Erro ao enviar postagem: ${error}`);
+            })
+            .finally(() => {
+                if (submitButton) {
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Publicar';
+                }
+            });
         });
     }
-
-    postForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-
-        const submitButton = postForm.querySelector('button[type="submit"]');
-        if (submitButton) {
-            submitButton.disabled = true;
-            submitButton.textContent = 'Enviando...';
-        }
-
-        if (postTextarea.value.trim() === '') {
-            showNotification('Digite algo para publicar', 'error');
-            postTextarea.focus();
-            if (submitButton) {
-                submitButton.disabled = false;
-                submitButton.textContent = 'Publicar';
-            }
-            return;
-        }
-
-        if (categorySelect && categorySelect.value === '') {
-            showNotification('Selecione uma categoria', 'error');
-            categorySelect.focus();
-            if (submitButton) {
-                submitButton.disabled = false;
-                submitButton.textContent = 'Publicar';
-            }
-            return;
-        }
-
-        fetch('/telainicial', {
-            method: 'POST',
-            body: new FormData(postForm)
-        })
-        .then(response => response.text())
-        .then(() => {
-            showNotification('Postagem publicada com sucesso!', 'success');
-            postForm.reset();
-            charCounter.textContent = '0/500';
-            window.location.reload();
-        })
-        .catch(error => {
-            showNotification('Erro ao publicar postagem. Tente novamente.', 'error');
-            console.error(`Erro ao enviar postagem: ${error}`);
-        })
-        .finally(() => {
-            if (submitButton) {
-                submitButton.disabled = false;
-                submitButton.textContent = 'Publicar';
-            }
-        });
-    });
-}
 
     function setupDeleteButtons() {
         if (!deleteButtons || deleteButtons.length === 0) return;
@@ -312,23 +347,30 @@ document.addEventListener('DOMContentLoaded', function() {
         likeButtons.forEach(button => {
             button.addEventListener('click', function() {
                 const postId = this.closest('.post-card').dataset.postId;
-                const likeCountSpan = this.querySelector('.like-count');
-                let likeCount = parseInt(likeCountSpan.textContent || '0');
-
-                if (this.classList.contains('active')) {
-                    likeCount--;
-                    this.classList.remove('active');
-                    localStorage.removeItem(`liked_${postId}`);
-                    showNotification('Like removido', 'info');
-                } else {
-                    likeCount++;
-                    this.classList.add('active');
-                    localStorage.setItem(`liked_${postId}`, 'true');
-                    showNotification('Postagem curtida!', 'success');
-                }
-
-                likeCountSpan.textContent = likeCount;
-                localStorage.setItem(`likes_${postId}`, likeCount);
+                fetch(`/like_post/${postId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        this.querySelector('.like-count').textContent = data.like_count;
+                        if (data.liked) {
+                            this.classList.add('active');
+                            showNotification('Postagem curtida!', 'success');
+                        } else {
+                            this.classList.remove('active');
+                            showNotification('Like removido', 'info');
+                        }
+                    } else {
+                        showNotification(data.message || 'Erro ao curtir postagem.', 'error');
+                    }
+                })
+                .catch(() => {
+                    showNotification('Erro ao conectar com o servidor.', 'error');
+                });
             });
         });
     }
@@ -339,17 +381,11 @@ document.addEventListener('DOMContentLoaded', function() {
         commentButtons.forEach(button => {
             button.addEventListener('click', function() {
                 const postCard = this.closest('.post-card');
-                const commentSection = postCard.querySelector('.comment-section');
+                const commentSection = postCard.querySelector('.comments-section');
                 if (commentSection) {
-                    const isVisible = commentSection.style.display === 'block';
-                    commentSection.style.display = isVisible ? 'none' : 'block';
-
-                    if (!isVisible) {
-                        // Foca no textarea quando abre a seção de comentários
-                        const textarea = commentSection.querySelector('.comment-textarea');
-                        if (textarea) {
-                            textarea.focus();
-                        }
+                    const textarea = commentSection.querySelector('textarea[name="comment_content"]');
+                    if (textarea) {
+                        textarea.focus();
                     }
                 }
             });
@@ -357,31 +393,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function setupCommentForms() {
-        const commentForms = document.querySelectorAll('.comment-form');
         if (!commentForms || commentForms.length === 0) return;
 
         commentForms.forEach(form => {
-            const textarea = form.querySelector('.comment-textarea');
-            const charCounter = form.querySelector('.char-counter');
-
-            if (textarea && charCounter) {
-                textarea.addEventListener('input', function() {
-                    const maxLength = 500;
-                    const currentLength = this.value.length;
-                    charCounter.textContent = `${currentLength}/${maxLength}`;
-                    charCounter.classList.toggle('limit', currentLength > maxLength * 0.8);
-
-                    if (currentLength > maxLength) {
-                        this.value = this.value.substring(0, maxLength);
-                        charCounter.textContent = `${maxLength}/${maxLength}`;
-                        showNotification('Limite de caracteres atingido', 'error');
-                    }
-                });
-            }
+            const textarea = form.querySelector('textarea[name="comment_content"]');
+            const postId = form.dataset.postId;
 
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
-                const postId = this.dataset.postId;
                 const content = textarea?.value.trim() || '';
 
                 if (!content) {
@@ -408,28 +427,93 @@ document.addEventListener('DOMContentLoaded', function() {
                             newComment.className = 'comment';
                             newComment.dataset.commentId = data.comment.id;
                             newComment.innerHTML = `
-                                <div class="user-info">
-                                    <div class="avatar">
+                                <div class="d-flex">
+                                    <div class="avatar me-2">
                                         <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center">
                                             ${data.comment.username[0].toUpperCase()}
                                         </div>
                                     </div>
                                     <div>
-                                        <h6 class="username">${data.comment.username}</h6>
+                                        <h6 class="mb-0">${data.comment.username}</h6>
                                         <small class="text-muted">${data.comment.created_at}</small>
+                                        <p class="mb-1">${data.comment.content}</p>
+                                        <button class="btn btn-sm btn-outline-primary comment-like-btn" data-comment-id="${data.comment.id}">
+                                            <i class="fas fa-thumbs-up"></i> <span class="like-count">0</span>
+                                        </button>
                                     </div>
                                 </div>
-                                <p>${data.comment.content}</p>
                             `;
-                            commentsList.appendChild(newComment);
+                            commentsList.prepend(newComment);
                             if (textarea) {
                                 textarea.value = '';
-                                if (charCounter) charCounter.textContent = '0/500';
                             }
                             showNotification('Comentário adicionado com sucesso!', 'success');
+
+                            // Initialize like button for the new comment
+                            const newButton = newComment.querySelector('.comment-like-btn');
+                            newButton.addEventListener('click', function() {
+                                fetch(`/like_comment/${data.comment.id}`, {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    }
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.status === 'success') {
+                                        newButton.querySelector('.like-count').textContent = data.like_count;
+                                        if (data.liked) {
+                                            newButton.classList.add('liked');
+                                            showNotification('Comentário curtido!', 'success');
+                                        } else {
+                                            newButton.classList.remove('liked');
+                                            showNotification('Like removido', 'info');
+                                        }
+                                    } else {
+                                        showNotification(data.message || 'Erro ao curtir comentário.', 'error');
+                                    }
+                                })
+                                .catch(() => {
+                                    showNotification('Erro ao conectar com o servidor.', 'error');
+                                });
+                            });
                         }
                     } else {
                         showNotification(data.message || 'Erro ao adicionar comentário', 'error');
+                    }
+                })
+                .catch(() => {
+                    showNotification('Erro ao conectar com o servidor.', 'error');
+                });
+            });
+        });
+    }
+
+    function setupCommentLikeButtons() {
+        if (!commentLikeButtons || commentLikeButtons.length === 0) return;
+
+        commentLikeButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const commentId = this.getAttribute('data-comment-id');
+                fetch(`/like_comment/${commentId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        this.querySelector('.like-count').textContent = data.like_count;
+                        if (data.liked) {
+                            this.classList.add('liked');
+                            showNotification('Comentário curtido!', 'success');
+                        } else {
+                            this.classList.remove('liked');
+                            showNotification('Like removido', 'info');
+                        }
+                    } else {
+                        showNotification(data.message || 'Erro ao curtir comentário.', 'error');
                     }
                 })
                 .catch(() => {
@@ -503,102 +587,18 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 4000);
     };
 
-// Função auxiliar para formatar datas (caso precise no futuro)
-function formatDate(dateStr) {
-    const date = new Date(dateStr);
-    const options = {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false,
-        timeZone: 'America/Sao_Paulo'
-    };
-    return date.toLocaleString('pt-BR', options).replace(',', '');
-}
-
-function setupCommentForms() {
-    const commentForms = document.querySelectorAll('.comment-form');
-    if (!commentForms || commentForms.length === 0) return;
-
-    commentForms.forEach(form => {
-        const textarea = form.querySelector('.comment-textarea');
-        const charCounter = form.querySelector('.char-counter');
-
-        if (textarea && charCounter) {
-            textarea.addEventListener('input', function() {
-                const maxLength = 500;
-                const currentLength = this.value.length;
-                charCounter.textContent = `${currentLength}/${maxLength}`;
-                charCounter.classList.toggle('limit', currentLength > maxLength * 0.8);
-
-                if (currentLength > maxLength) {
-                    this.value = this.value.substring(0, maxLength);
-                    charCounter.textContent = `${maxLength}/${maxLength}`;
-                    showNotification('Limite de caracteres atingido', 'error');
-                }
-            });
-        }
-
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const postId = this.dataset.postId;
-            const content = textarea?.value.trim() || '';
-
-            if (!content) {
-                showNotification('O comentário não pode estar vazio', 'error');
-                if (textarea) textarea.focus();
-                return;
-            }
-
-            fetch(`/comment/${postId}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: new URLSearchParams({
-                    'comment_content': content
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    const commentsList = form.nextElementSibling;
-                    if (commentsList) {
-                        const newComment = document.createElement('div');
-                        newComment.className = 'comment';
-                        newComment.dataset.commentId = data.comment.id;
-                        newComment.innerHTML = `
-                            <div class="user-info">
-                                <div class="avatar">
-                                    <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center">
-                                        ${data.comment.username[0].toUpperCase()}
-                                    </div>
-                                </div>
-                                <div>
-                                    <h6 class="username">${data.comment.username}</h6>
-                                    <small class="text-muted">${data.comment.created_at}</small>
-                                </div>
-                            </div>
-                            <p>${data.comment.content}</p>
-                        `;
-                        commentsList.appendChild(newComment);
-                        if (textarea) {
-                            textarea.value = '';
-                            if (charCounter) charCounter.textContent = '0/500';
-                        }
-                        showNotification('Comentário adicionado com sucesso!', 'success');
-                    }
-                } else {
-                    showNotification(data.message || 'Erro ao adicionar comentário', 'error');
-                }
-            })
-            .catch(() => {
-                showNotification('Erro ao conectar com o servidor.', 'error');
-            });
-        });
-    });
-}
-
+    // Função auxiliar para formatar datas (caso precise no futuro)
+    function formatDate(dateStr) {
+        const date = new Date(dateStr);
+        const options = {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false,
+            timeZone: 'America/Sao_Paulo'
+        };
+        return date.toLocaleString('pt-BR', options).replace(',', '');
+    }
 });

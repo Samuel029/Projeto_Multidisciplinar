@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 from backend.extensions import db
-from backend.models import User, Post, Comment
+from backend.models import User, Post, Comment, Like
 from datetime import datetime
 import os
 import firebase_admin
@@ -240,7 +240,8 @@ def telainicial():
                 flash('Erro ao publicar postagem. Tente novamente.', 'error')
             return redirect(url_for('telainicial'))
     
-    posts = Post.query.order_by(Post.created_at.desc()).all()
+    # Eager load comments and authors to avoid N+1 queries
+    posts = Post.query.options(db.joinedload(Post.comments).joinedload(Comment.author)).order_by(Post.created_at.desc()).all()
     
     return render_template('telainicial.html', user=user, posts=posts)
 
@@ -277,8 +278,122 @@ def add_comment(post_id):
         db.session.rollback()
         logger.error(f"Erro ao adicionar comentário: {str(e)}")
         return jsonify({'status': 'error', 'message': 'Erro ao adicionar comentário.'}), 500
-    
 
+@app.route('/like_post/<int:post_id>', methods=['POST'])
+def like_post(post_id):
+    if 'user_id' not in session:
+        return jsonify({'status': 'error', 'message': 'Por favor, faça login para curtir.'}), 401
+    
+    post = Post.query.get_or_404(post_id)
+    user_id = session['user_id']
+    
+    # Check if the user already liked the post
+    existing_like = Like.query.filter_by(user_id=user_id, post_id=post_id).first()
+    
+    if existing_like:
+        # Unlike: remove the like
+        try:
+            db.session.delete(existing_like)
+            db.session.commit()
+            like_count = Like.query.filter_by(post_id=post_id).count()
+            return jsonify({
+                'status': 'success',
+                'message': 'Curtida removida com sucesso!',
+                'liked': False,
+                'like_count': like_count
+            })
+        except Exception as e:
+            db.session.rollback()
+            logger.error(f"Erro ao remover curtida: {str(e)}")
+            return jsonify({'status': 'error', 'message': 'Erro ao remover curtida.'}), 500
+    else:
+        # Like: add a new like
+        new_like = Like(user_id=user_id, post_id=post_id)
+        try:
+            db.session.add(new_like)
+            db.session.commit()
+            like_count = Like.query.filter_by(post_id=post_id).count()
+            return jsonify({
+                'status': 'success',
+                'message': 'Postagem curtida com sucesso!',
+                'liked': True,
+                'like_count': like_count
+            })
+        except Exception as e:
+            db.session.rollback()
+            logger.error(f"Erro ao adicionar curtida: {str(e)}")
+            return jsonify({'status': 'error', 'message': 'Erro ao curtir postagem.'}), 500
+
+@app.route('/get_post_likes/<int:post_id>', methods=['GET'])
+def get_post_likes(post_id):
+    post = Post.query.get_or_404(post_id)
+    like_count = Like.query.filter_by(post_id=post_id).count()
+    user_liked = False
+    if 'user_id' in session:
+        user_liked = Like.query.filter_by(user_id=session['user_id'], post_id=post_id).first() is not None
+    return jsonify({
+        'status': 'success',
+        'like_count': like_count,
+        'user_liked': user_liked
+    })
+
+@app.route('/like_comment/<int:comment_id>', methods=['POST'])
+def like_comment(comment_id):
+    if 'user_id' not in session:
+        return jsonify({'status': 'error', 'message': 'Por favor, faça login para curtir.'}), 401
+    
+    comment = Comment.query.get_or_404(comment_id)
+    user_id = session['user_id']
+    
+    # Check if the user already liked the comment
+    existing_like = Like.query.filter_by(user_id=user_id, comment_id=comment_id).first()
+    
+    if existing_like:
+        # Unlike: remove the like
+        try:
+            db.session.delete(existing_like)
+            db.session.commit()
+            like_count = Like.query.filter_by(comment_id=comment_id).count()
+            return jsonify({
+                'status': 'success',
+                'message': 'Curtida removida com sucesso!',
+                'liked': False,
+                'like_count': like_count
+            })
+        except Exception as e:
+            db.session.rollback()
+            logger.error(f"Erro ao remover curtida: {str(e)}")
+            return jsonify({'status': 'error', 'message': 'Erro ao remover curtida.'}), 500
+    else:
+        # Like: add a new like
+        new_like = Like(user_id=user_id, comment_id=comment_id)
+        try:
+            db.session.add(new_like)
+            db.session.commit()
+            like_count = Like.query.filter_by(comment_id=comment_id).count()
+            return jsonify({
+                'status': 'success',
+                'message': 'Comentário curtido com sucesso!',
+                'liked': True,
+                'like_count': like_count
+            })
+        except Exception as e:
+            db.session.rollback()
+            logger.error(f"Erro ao adicionar curtida: {str(e)}")
+            return jsonify({'status': 'error', 'message': 'Erro ao curtir comentário.'}), 500
+
+@app.route('/get_comment_likes/<int:comment_id>', methods=['GET'])
+def get_comment_likes(comment_id):
+    comment = Comment.query.get_or_404(comment_id)
+    like_count = Like.query.filter_by(comment_id=comment_id).count()
+    user_liked = False
+    if 'user_id' in session:
+        user_liked = Like.query.filter_by(user_id=session['user_id'], comment_id=comment_id).first() is not None
+    return jsonify({
+        'status': 'success',
+        'like_count': like_count,
+        'user_liked': user_liked
+    })
 
 @app.route('/delete_post/<int:post_id>', methods=['POST'])
 def delete_post(post_id):

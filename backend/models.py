@@ -45,3 +45,19 @@ class Comment(db.Model):
     
     def __repr__(self):
         return f'<Comment {self.id} by {self.author.username} on Post {self.post_id}>'
+
+class Like(db.Model):
+    __tablename__ = 'likes'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    comment_id = db.Column(db.Integer, db.ForeignKey('comments.id'), nullable=True)
+    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'), nullable=True)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(BRASILIA_TZ))
+    
+    user = db.relationship('User', backref=db.backref('likes', lazy=True))
+    comment = db.relationship('Comment', backref=db.backref('likes', lazy=True))
+    post = db.relationship('Post', backref=db.backref('likes', lazy=True))
+    
+    def __repr__(self):
+        return f'<Like by User {self.user_id} on Comment {self.comment_id or "N/A"} or Post {self.post_id or "N/A"}>'
