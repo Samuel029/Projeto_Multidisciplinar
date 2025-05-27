@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TechNoBug - Página Inicial</title>
+    <title>TechNoBug - Comentários</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/telainicial.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/post_comments.css') }}">
 </head>
 <body>
     <!-- Header -->
@@ -64,119 +64,84 @@
     <!-- Main Content -->
     <div class="container">
         <main class="main-content">
-            <!-- Post Creation Form -->
+            <!-- Post Details -->
+            <div class="post-card" data-post-id="{{ post.id }}" data-category="{{ post.category }}">
+                <div class="post-header">
+                    <div class="user-info">
+                        <div class="avatar">
+                            <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center">
+                                {{ post.author.username[0]|upper }}
+                            </div>
+                        </div>
+                        <div>
+                            <h5 class="username">{{ post.author.username }}</h5>
+                            <small class="text-muted">{{ post.created_at.strftime('%d/%m/%Y %H:%M') }}</small>
+                        </div>
+                    </div>
+                    {% if post.user_id == user.id %}
+                        <div class="post-actions">
+                            <button class="btn btn-sm btn-danger delete-post" data-post-id="{{ post.id }}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="post-content">
+                    <div class="post-category-tag">{{ post.category }}</div>
+                    <p>{{ post.content }}</p>
+                </div>
+                <div class="post-footer">
+                    <button class="btn btn-sm btn-outline-primary like-btn" data-post-id="{{ post.id }}">
+                        <i class="fas fa-thumbs-up"></i> <span class="like-count">0</span>
+                    </button>
+                    <a href="{{ url_for('telainicial') }}" class="btn btn-sm btn-outline-secondary close-comments">
+                        <i class="fas fa-times"></i> Fechar
+                    </a>
+                </div>
+            </div>
+
+            <!-- Comment Section -->
             <div class="section-header">
                 <h2 class="section-title">
-                    <i class="fas fa-pen"></i>
-                    <span>Crie uma Postagem</span>
+                    <i class="fas fa-comments"></i>
+                    <span>Comentários</span>
                 </h2>
             </div>
             <div class="post-creation-card">
-                <form class="post-form">
+                <form class="comment-form" data-post-id="{{ post.id }}">
                     <div class="mb-3 position-relative">
-                        <textarea class="form-control" name="post_content" rows="4" placeholder="No que você está pensando?" required></textarea>
+                        <textarea class="form-control" name="comment_content" rows="3" placeholder="Escreva seu comentário..." required></textarea>
                         <div class="char-counter">0/500</div>
                     </div>
-                    <div class="row align-items-center">
-                        <div class="col-md-6 mb-3 mb-md-0">
-                            <select class="form-select" name="category" required>
-                                <option value="" disabled selected>Selecione uma categoria</option>
-                                <option value="IA">IA</option>
-                                <option value="Banco de Dados">Banco de Dados</option>
-                                <option value="Front-end">Front-end</option>
-                                <option value="Back-end">Back-end</option>
-                                <option value="Programação">Programação</option>
-                                <option value="Carreiras">Carreiras</option>
-                                <option value="Dúvidas Gerais">Dúvidas Gerais</option>
-                                <option value="Modelagem a Banco de Dados">Modelagem a Banco de Dados</option>
-                                <option value="Lógica">Lógica</option>
-                                <option value="Processos">Processos</option>
-                                <option value="Programação Android">Programação Android</option>
-                                <option value="Projeto Multidisciplinar">Projeto Multidisciplinar</option>
-                                <option value="Redes">Redes</option>
-                                <option value="Versionamento">Versionamento</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6 text-md-end">
-                            <button type="submit" class="btn btn-primary">Publicar</button>
-                        </div>
-                    </div>
+                    <button type="submit" class="btn btn-sm btn-primary">Enviar Comentário</button>
                 </form>
             </div>
-
-            <!-- Category Navigation -->
-            <nav class="category-nav">
-                <div class="categories-wrapper">
-                    <div class="categories">
-                        <span class="category active" data-category="Todas">Todas</span>
-                        <span class="category" data-category="IA">IA</span>
-                        <span class="category" data-category="Banco de Dados">Banco de Dados</span>
-                        <span class="category" data-category="Front-end">Front-end</span>
-                        <span class="category" data-category="Back-end">Back-end</span>
-                        <span class="category" data-category="Programação">Programação</span>
-                        <span class="category" data-category="Carreiras">Carreiras</span>
-                        <span class="category" data-category="Dúvidas Gerais">Dúvidas Gerais</span>
-                        <span class="category" data-category="Modelagem a Banco de Dados">Modelagem a Banco de Dados</span>
-                        <span class="category" data-category="Lógica">Lógica</span>
-                        <span class="category" data-category="Processos">Processos</span>
-                        <span class="category" data-category="Programação Android">Programação Android</span>
-                        <span class="category" data-category="Projeto Multidisciplinar">Projeto Multidisciplinar</span>
-                        <span class="category" data-category="Redes">Redes</span>
-                        <span class="category" data-category="Versionamento">Versionamento</span>
-                    </div>
-                </div>
-            </nav>
-
-            <!-- Post List -->
-            <div class="section-header">
-                <h2 class="section-title">
-                    <i class="fas fa-list"></i>
-                    <span>Postagens</span>
-                </h2>
-            </div>
-            <div class="post-list">
-                {% if posts %}
-                    {% for post in posts %}
-                        <div class="post-card" data-post-id="{{ post.id }}" data-category="{{ post.category }}">
-                            <div class="post-header">
-                                <div class="user-info">
-                                    <div class="avatar">
-                                        <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center">
-                                            {{ post.author.username[0]|upper }}
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <h5 class="username">{{ post.author.username }}</h5>
-                                        <small class="text-muted">{{ post.created_at.strftime('%d/%m/%Y %H:%M') }}</small>
+            <div class="comments-list">
+                {% if post.comments %}
+                    {% for comment in post.comments %}
+                        <div class="comment" data-comment-id="{{ comment.id }}">
+                            <div class="d-flex">
+                                <div class="avatar me-2">
+                                    <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center">
+                                        {{ comment.author.username[0]|upper }}
                                     </div>
                                 </div>
-                                {% if post.user_id == user.id %}
-                                    <div class="post-actions">
-                                        <button class="btn btn-sm btn-danger delete-post" data-post-id="{{ post.id }}">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </div>
-                                {% endif %}
-                            </div>
-                            <div class="post-content">
-                                <div class="post-category-tag">{{ post.category }}</div>
-                                <p>{{ post.content }}</p>
-                            </div>
-                            <div class="post-footer">
-                                <button class="btn btn-sm btn-outline-primary like-btn" data-post-id="{{ post.id }}">
-                                    <i class="fas fa-thumbs-up"></i> <span class="like-count">0</span>
-                                </button>
-                                <a href="{{ url_for('post_comments', post_id=post.id) }}" class="btn btn-sm btn-outline-secondary comment-btn">
-                                    <i class="fas fa-comment"></i> Comentar
-                                </a>
+                                <div>
+                                    <h6 class="mb-0">{{ comment.author.username }}</h6>
+                                    <small class="text-muted">{{ comment.created_at.strftime('%d/%m/%Y %H:%M') }}</small>
+                                    <p class="mb-1">{{ comment.content }}</p>
+                                    <button class="btn btn-sm btn-outline-primary comment-like-btn" data-comment-id="{{ comment.id }}">
+                                        <i class="fas fa-thumbs-up"></i> <span class="like-count">0</span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     {% endfor %}
                 {% else %}
                     <div class="empty-state-card">
                         <div class="text-center py-3">
-                            <i class="fas fa-file-alt fa-2x mb-2 text-muted"></i>
-                            <p class="text-muted">Nenhuma postagem encontrada.</p>
+                            <i class="fas fa-comment-slash fa-2x mb-2 text-muted"></i>
+                            <p class="text-muted">Nenhum comentário ainda. Seja o primeiro a comentar!</p>
                         </div>
                     </div>
                 {% endif %}
@@ -231,6 +196,6 @@
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{{ url_for('static', filename='js/telainicial.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/post_comments.js') }}"></script>
 </body>
 </html>

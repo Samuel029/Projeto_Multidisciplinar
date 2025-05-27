@@ -3,30 +3,23 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchBar = document.querySelector('.search-bar');
     const searchInput = document.querySelector('.search-bar input');
     const searchIcon = document.querySelector('.search-bar i');
-    const categories = document.querySelectorAll('.category');
-    const postForm = document.getElementById('postForm');
-    const postTextarea = document.querySelector('textarea[name="content"]');
+    const postForm = document.querySelector('.post-form');
+    const postTextarea = document.querySelector('textarea[name="post_content"]');
     const charCounter = document.querySelector('.char-counter');
-    const categorySelect = document.querySelector('select[name="category"]');
-    const sideMenu = document.getElementById('offcanvasMenu');
-    const deleteButtons = document.querySelectorAll('.delete-post');
     const likeButtons = document.querySelectorAll('.like-btn');
-    const commentButtons = document.querySelectorAll('.comment-btn');
-    const commentForms = document.querySelectorAll('.comment-form');
-    const commentLikeButtons = document.querySelectorAll('.comment-like-btn');
+    const deleteButtons = document.querySelectorAll('.delete-post');
+    const categories = document.querySelectorAll('.category');
+    const sideMenu = document.getElementById('offcanvasMenu');
 
     // Inicializa componentes
     initializeComponents();
 
     // Configura eventos
     setupSearchBar();
-    setupCategoryFilter();
     setupPostForm();
-    setupDeleteButtons();
     setupLikeButtons();
-    setupCommentButtons();
-    setupCommentForms();
-    setupCommentLikeButtons();
+    setupDeleteButtons();
+    setupCategoryFilter();
     setupDrawer();
 
     function initializeComponents() {
@@ -49,27 +42,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             })
             .catch(error => console.error('Error fetching post likes:', error));
-        });
-
-        // Carrega likes para comentários
-        commentLikeButtons.forEach(btn => {
-            const commentId = btn.getAttribute('data-comment-id');
-            fetch(`/get_comment_likes/${commentId}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    btn.querySelector('.like-count').textContent = data.like_count;
-                    if (data.user_liked) {
-                        btn.classList.add('liked');
-                    }
-                }
-            })
-            .catch(error => console.error('Error fetching comment likes:', error));
         });
 
         // Inicializa o contador de caracteres para o formulário de postagem
@@ -110,12 +82,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 searchBar.classList.toggle('search-active');
                 if (searchBar.classList.contains('search-active')) {
                     searchInput.focus();
-                    searchInput.value = '';
-                    filterPosts('');
+                    const urlParams = new URLSearchParams(window.location.search);
+                    searchInput.value = urlParams.get('search') || '';
                 } else {
                     searchInput.blur();
                     searchInput.value = '';
-                    filterPosts('');
                 }
                 event.stopPropagation();
             }
@@ -126,7 +97,6 @@ document.addEventListener('DOMContentLoaded', function() {
             if (window.innerWidth <= 992 && !searchBar.contains(event.target)) {
                 searchBar.classList.remove('search-active');
                 searchInput.value = '';
-                filterPosts('');
             }
         });
 
@@ -134,97 +104,22 @@ document.addEventListener('DOMContentLoaded', function() {
             event.stopPropagation();
         });
 
-        // Pesquisa em tempo real
+        // Filtra posts ao digitar
         searchInput.addEventListener('input', function() {
-            const searchTerm = this.value.toLowerCase().trim();
+            const searchTerm = normalizeText(this.value);
             filterPosts(searchTerm);
         });
 
-        // Pesquisa ao pressionar Enter
-        searchInput.addEventListener('keypress', function(event) {
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                const searchTerm = this.value.toLowerCase().trim();
-                filterPosts(searchTerm);
-                showNotification('Pesquisa realizada!', 'success');
+        // Carrega o termo de busca da URL, se existir
+        const urlParams = new URLSearchParams(window.location.search);
+        const searchTerm = urlParams.get('search') || '';
+        searchInput.value = searchTerm;
+        if (searchTerm) {
+            filterPosts(normalizeText(searchTerm));
+            if (window.innerWidth <= 992) {
+                searchBar.classList.add('search-active');
             }
-        });
-    }
-
-    function filterPosts(searchTerm) {
-        const activeCategory = document.querySelector('.category.active')?.dataset.category || 'Todas';
-        const normalizedSearchTerm = normalizeText(searchTerm);
-
-        document.querySelectorAll('.post-card').forEach(card => {
-            const content = card.querySelector('.post-content p')?.textContent || '';
-            const username = card.querySelector('.username')?.textContent || '';
-            const category = card.dataset.category || '';
-
-            const normalizedContent = normalizeText(content);
-            const normalizedUsername = normalizeText(username);
-            const normalizedCategory = normalizeText(category);
-
-            const searchCategoryMap = {
-                'ia': 'ia',
-                'banco de dados': 'banco de dados',
-                'frontend': 'front-end',
-                'front-end': 'front-end',
-                'backend': 'back-end',
-                'back-end': 'back-end',
-                'programacao': 'programacao',
-                'carreiras': 'carreiras',
-                'duvidas gerais': 'duvidas gerais',
-                'modelagem': 'modelagem a banco de dados',
-                'modelagem de dados': 'modelagem a banco de dados',
-                'modelagem a banco de dados': 'modelagem a banco de dados',
-                'logica': 'logica',
-                'processos': 'processos',
-                'android': 'programacao android',
-                'programacao android': 'programacao android',
-                'multidisciplinar': 'projeto multidisciplinar',
-                'projeto multidisciplinar': 'projeto multidisciplinar',
-                'redes': 'redes',
-                'versionamento': 'versionamento'
-            };
-
-            const mappedSearchTerm = searchCategoryMap[normalizedSearchTerm] || normalizedSearchTerm;
-
-            const matchesSearch = searchTerm === '' ||
-                normalizedContent.includes(normalizedSearchTerm) ||
-                normalizedUsername.includes(normalizedSearchTerm) ||
-                normalizedCategory.includes(mappedSearchTerm);
-
-            const matchesCategory = activeCategory === 'Todas' || normalizedCategory === normalizeText(activeCategory);
-
-            if (matchesSearch && matchesCategory) {
-                card.style.display = 'block';
-            } else {
-                card.style.display = 'none';
-            }
-        });
-    }
-
-    function setupCategoryFilter() {
-        if (!categories || categories.length === 0) return;
-
-        categories.forEach(category => {
-            category.addEventListener('click', function() {
-                categories.forEach(c => c.classList.remove('active'));
-                this.classList.add('active');
-
-                const categoryName = this.dataset.category;
-                localStorage.setItem('activeCategory', categoryName);
-
-                filterPosts('');
-
-                // Limpa a pesquisa ao mudar de categoria
-                if (searchInput) {
-                    searchInput.value = '';
-                    searchBar.classList.remove('search-active');
-                }
-                showNotification(`Filtrando por ${this.textContent.trim()}`, 'success');
-            });
-        });
+        }
     }
 
     function setupPostForm() {
@@ -243,64 +138,162 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        if (categorySelect) {
-            categorySelect.addEventListener('focus', function() {
-                this.parentElement.classList.add('active');
-            });
-
-            categorySelect.addEventListener('blur', function() {
-                this.parentElement.classList.remove('active');
-            });
-
-            categorySelect.addEventListener('change', function() {
-                const selectedCategory = this.options[this.selectedIndex].text;
-                showNotification(`Categoria selecionada: ${selectedCategory}`, 'info');
-            });
-        }
-
         postForm.addEventListener('submit', function(e) {
             e.preventDefault();
+            const content = postTextarea.value.trim();
+            const category = postForm.querySelector('select[name="category"]').value;
+
+            if (!content) {
+                showNotification('O conteúdo da postagem não pode estar vazio', 'error');
+                postTextarea.focus();
+                return;
+            }
+
+            if (!category) {
+                showNotification('Por favor, selecione uma categoria', 'error');
+                postForm.querySelector('select[name="category"]').focus();
+                return;
+            }
 
             const submitButton = postForm.querySelector('button[type="submit"]');
             if (submitButton) {
                 submitButton.disabled = true;
-                submitButton.textContent = 'Enviando...';
+                submitButton.textContent = 'Publicando...';
             }
 
-            if (postTextarea.value.trim() === '') {
-                showNotification('Digite algo para publicar', 'error');
-                postTextarea.focus();
-                if (submitButton) {
-                    submitButton.disabled = false;
-                    submitButton.textContent = 'Publicar';
-                }
-                return;
-            }
-
-            if (categorySelect && categorySelect.value === '') {
-                showNotification('Selecione uma categoria', 'error');
-                categorySelect.focus();
-                if (submitButton) {
-                    submitButton.disabled = false;
-                    submitButton.textContent = 'Publicar';
-                }
-                return;
-            }
-
-            fetch('/telainicial', {
+            fetch('/create_post', {
                 method: 'POST',
-                body: new FormData(postForm)
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({
+                    'post_content': content,
+                    'category': category
+                })
             })
-            .then(response => response.text())
-            .then(() => {
-                showNotification('Postagem publicada com sucesso!', 'success');
-                postForm.reset();
-                charCounter.textContent = '0/500';
-                window.location.reload();
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    const postList = document.querySelector('.post-list');
+                    const emptyState = postList.querySelector('.empty-state-card');
+                    if (emptyState) {
+                        emptyState.remove();
+                    }
+
+                    const newPost = document.createElement('div');
+                    newPost.className = 'post-card';
+                    newPost.dataset.postId = data.post.id;
+                    newPost.dataset.category = data.post.category;
+                    newPost.innerHTML = `
+                        <div class="post-header">
+                            <div class="user-info">
+                                <div class="avatar">
+                                    <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center">
+                                        ${data.post.username[0].toUpperCase()}
+                                    </div>
+                                </div>
+                                <div>
+                                    <h5 class="username">${data.post.username}</h5>
+                                    <small class="text-muted">${data.post.created_at}</small>
+                                </div>
+                            </div>
+                            <div class="post-actions">
+                                <button class="btn btn-sm btn-danger delete-post" data-post-id="${data.post.id}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="post-content">
+                            <div class="post-category-tag">${data.post.category}</div>
+                            <p>${data.post.content}</p>
+                        </div>
+                        <div class="post-footer">
+                            <button class="btn btn-sm btn-outline-primary like-btn" data-post-id="${data.post.id}">
+                                <i class="fas fa-thumbs-up"></i> <span class="like-count">0</span>
+                            </button>
+                            <a href="/post/${data.post.id}" class="btn btn-sm btn-outline-secondary comment-btn">
+                                <i class="fas fa-comment"></i> Comentar
+                            </a>
+                        </div>
+                    `;
+                    postList.prepend(newPost);
+                    postTextarea.value = '';
+                    postForm.querySelector('select[name="category"]').value = '';
+                    charCounter.textContent = '0/500';
+                    showNotification('Postagem criada com sucesso!', 'success');
+
+                    // Inicializa o botão de like para o novo post
+                    const newLikeButton = newPost.querySelector('.like-btn');
+                    newLikeButton.addEventListener('click', function() {
+                        fetch(`/like_post/${data.post.id}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === 'success') {
+                                newLikeButton.querySelector('.like-count').textContent = data.like_count;
+                                if (data.liked) {
+                                    newLikeButton.classList.add('active');
+                                    showNotification('Postagem curtida!', 'success');
+                                } else {
+                                    newLikeButton.classList.remove('active');
+                                    showNotification('Like removido', 'info');
+                                }
+                            } else {
+                                showNotification(data.message || 'Erro ao curtir postagem.', 'error');
+                            }
+                        })
+                        .catch(() => {
+                            showNotification('Erro ao conectar com o servidor.', 'error');
+                        });
+                    });
+
+                    // Inicializa o botão de deletar para o novo post
+                    const newDeleteButton = newPost.querySelector('.delete-post');
+                    newDeleteButton.addEventListener('click', function() {
+                        if (confirm('Tem certeza que deseja deletar esta postagem?')) {
+                            fetch(`/delete_post/${data.post.id}`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                }
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.status === 'success') {
+                                    newPost.remove();
+                                    showNotification('Postagem deletada com sucesso!', 'success');
+                                    if (!postList.querySelector('.post-card')) {
+                                        postList.innerHTML = `
+                                            <div class="empty-state-card">
+                                                <div class="text-center py-3">
+                                                    <i class="fas fa-file-alt fa-2x mb-2 text-muted"></i>
+                                                    <p class="text-muted">Nenhuma postagem encontrada.</p>
+                                                </div>
+                                            </div>
+                                        `;
+                                    }
+                                } else {
+                                    showNotification('Erro ao deletar postagem.', 'error');
+                                }
+                            })
+                            .catch(() => {
+                                showNotification('Erro ao conectar com o servidor.', 'error');
+                            });
+                        }
+                    });
+
+                    // Aplica o filtro atual
+                    filterPosts(normalizeText(searchInput.value));
+                } else {
+                    showNotification(data.message || 'Erro ao criar postagem', 'error');
+                }
             })
-            .catch(error => {
-                showNotification('Erro ao publicar postagem. Tente novamente.', 'error');
-                console.error(`Erro ao enviar postagem: ${error}`);
+            .catch(() => {
+                showNotification('Erro ao conectar com o servidor.', 'error');
             })
             .finally(() => {
                 if (submitButton) {
@@ -311,42 +304,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    function setupDeleteButtons() {
-        if (!deleteButtons || deleteButtons.length === 0) return;
-
-        deleteButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const postId = this.dataset.postId;
-                if (confirm('Tem certeza que deseja deletar esta postagem?')) {
-                    fetch(`/delete_post/${postId}`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        }
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.status === 'success') {
-                            document.querySelector(`.post-card[data-post-id="${postId}"]`).remove();
-                            showNotification('Postagem deletada com sucesso!', 'success');
-                        } else {
-                            showNotification('Erro ao deletar postagem.', 'error');
-                        }
-                    })
-                    .catch(() => {
-                        showNotification('Erro ao conectar com o servidor.', 'error');
-                    });
-                }
-            });
-        });
-    }
-
     function setupLikeButtons() {
         if (!likeButtons || likeButtons.length === 0) return;
 
         likeButtons.forEach(button => {
             button.addEventListener('click', function() {
-                const postId = this.closest('.post-card').dataset.postId;
+                const postId = this.dataset.postId;
                 fetch(`/like_post/${postId}`, {
                     method: 'POST',
                     headers: {
@@ -375,152 +338,130 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    function setupCommentButtons() {
-        if (!commentButtons || commentButtons.length === 0) return;
+    function setupDeleteButtons() {
+        if (!deleteButtons || deleteButtons.length === 0) return;
 
-        commentButtons.forEach(button => {
+        deleteButtons.forEach(button => {
             button.addEventListener('click', function() {
+                const postId = this.dataset.postId;
                 const postCard = this.closest('.post-card');
-                const commentSection = postCard.querySelector('.comments-section');
-                if (commentSection) {
-                    const textarea = commentSection.querySelector('textarea[name="comment_content"]');
-                    if (textarea) {
-                        textarea.focus();
-                    }
-                }
-            });
-        });
-    }
-
-    function setupCommentForms() {
-        if (!commentForms || commentForms.length === 0) return;
-
-        commentForms.forEach(form => {
-            const textarea = form.querySelector('textarea[name="comment_content"]');
-            const postId = form.dataset.postId;
-
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                const content = textarea?.value.trim() || '';
-
-                if (!content) {
-                    showNotification('O comentário não pode estar vazio', 'error');
-                    if (textarea) textarea.focus();
-                    return;
-                }
-
-                fetch(`/comment/${postId}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    body: new URLSearchParams({
-                        'comment_content': content
+                if (confirm('Tem certeza que deseja deletar esta postagem?')) {
+                    fetch(`/delete_post/${postId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
                     })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        const commentsList = form.nextElementSibling;
-                        if (commentsList) {
-                            const newComment = document.createElement('div');
-                            newComment.className = 'comment';
-                            newComment.dataset.commentId = data.comment.id;
-                            newComment.innerHTML = `
-                                <div class="d-flex">
-                                    <div class="avatar me-2">
-                                        <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center">
-                                            ${data.comment.username[0].toUpperCase()}
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            postCard.remove();
+                            showNotification('Postagem deletada com sucesso!', 'success');
+                            const postList = document.querySelector('.post-list');
+                            if (!postList.querySelector('.post-card')) {
+                                postList.innerHTML = `
+                                    <div class="empty-state-card">
+                                        <div class="text-center py-3">
+                                            <i class="fas fa-file-alt fa-2x mb-2 text-muted"></i>
+                                            <p class="text-muted">Nenhuma postagem encontrada.</p>
                                         </div>
                                     </div>
-                                    <div>
-                                        <h6 class="mb-0">${data.comment.username}</h6>
-                                        <small class="text-muted">${data.comment.created_at}</small>
-                                        <p class="mb-1">${data.comment.content}</p>
-                                        <button class="btn btn-sm btn-outline-primary comment-like-btn" data-comment-id="${data.comment.id}">
-                                            <i class="fas fa-thumbs-up"></i> <span class="like-count">0</span>
-                                        </button>
-                                    </div>
-                                </div>
-                            `;
-                            commentsList.prepend(newComment);
-                            if (textarea) {
-                                textarea.value = '';
+                                `;
                             }
-                            showNotification('Comentário adicionado com sucesso!', 'success');
-
-                            // Initialize like button for the new comment
-                            const newButton = newComment.querySelector('.comment-like-btn');
-                            newButton.addEventListener('click', function() {
-                                fetch(`/like_comment/${data.comment.id}`, {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json'
-                                    }
-                                })
-                                .then(response => response.json())
-                                .then(data => {
-                                    if (data.status === 'success') {
-                                        newButton.querySelector('.like-count').textContent = data.like_count;
-                                        if (data.liked) {
-                                            newButton.classList.add('liked');
-                                            showNotification('Comentário curtido!', 'success');
-                                        } else {
-                                            newButton.classList.remove('liked');
-                                            showNotification('Like removido', 'info');
-                                        }
-                                    } else {
-                                        showNotification(data.message || 'Erro ao curtir comentário.', 'error');
-                                    }
-                                })
-                                .catch(() => {
-                                    showNotification('Erro ao conectar com o servidor.', 'error');
-                                });
-                            });
+                        } else {
+                            showNotification('Erro ao deletar postagem.', 'error');
                         }
-                    } else {
-                        showNotification(data.message || 'Erro ao adicionar comentário', 'error');
-                    }
-                })
-                .catch(() => {
-                    showNotification('Erro ao conectar com o servidor.', 'error');
-                });
+                    })
+                    .catch(() => {
+                        showNotification('Erro ao conectar com o servidor.', 'error');
+                    });
+                }
             });
         });
     }
 
-    function setupCommentLikeButtons() {
-        if (!commentLikeButtons || commentLikeButtons.length === 0) return;
+    function setupCategoryFilter() {
+        if (!categories || categories.length === 0) return;
 
-        commentLikeButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const commentId = this.getAttribute('data-comment-id');
-                fetch(`/like_comment/${commentId}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        this.querySelector('.like-count').textContent = data.like_count;
-                        if (data.liked) {
-                            this.classList.add('liked');
-                            showNotification('Comentário curtido!', 'success');
-                        } else {
-                            this.classList.remove('liked');
-                            showNotification('Like removido', 'info');
-                        }
-                    } else {
-                        showNotification(data.message || 'Erro ao curtir comentário.', 'error');
-                    }
-                })
-                .catch(() => {
-                    showNotification('Erro ao conectar com o servidor.', 'error');
-                });
+        categories.forEach(category => {
+            category.addEventListener('click', function() {
+                categories.forEach(cat => cat.classList.remove('active'));
+                this.classList.add('active');
+                const categoryName = this.dataset.category;
+                localStorage.setItem('activeCategory', categoryName);
+                filterPosts(normalizeText(searchInput.value));
+                showNotification(`Filtrando por ${this.textContent.trim()}`, 'success');
             });
         });
+    }
+
+    function filterPosts(searchTerm) {
+        const posts = document.querySelectorAll('.post-card');
+        const activeCategory = document.querySelector('.category.active').dataset.category;
+        let visiblePosts = 0;
+
+        if (!posts || posts.length === 0) return;
+
+        const searchCategoryMap = {
+            'ia': 'ia',
+            'banco de dados': 'banco de dados',
+            'frontend': 'front-end',
+            'front-end': 'front-end',
+            'backend': 'back-end',
+            'back-end': 'back-end',
+            'programacao': 'programacao',
+            'carreiras': 'carreiras',
+            'duvidas gerais': 'duvidas gerais',
+            'modelagem': 'modelagem a banco de dados',
+            'modelagem de dados': 'modelagem a banco de dados',
+            'modelagem a banco de dados': 'modelagem a banco de dados',
+            'logica': 'logica',
+            'processos': 'processos',
+            'android': 'programacao android',
+            'programacao android': 'programacao android',
+            'multidisciplinar': 'projeto multidisciplinar',
+            'projeto multidisciplinar': 'projeto multidisciplinar',
+            'redes': 'redes',
+            'versionamento': 'versionamento'
+        };
+
+        const normalizedSearchTerm = normalizeText(searchTerm);
+        const mappedSearchTerm = searchCategoryMap[normalizedSearchTerm] || normalizedSearchTerm;
+
+        posts.forEach(post => {
+            const postContent = normalizeText(post.querySelector('.post-content p').textContent);
+            const postCategory = normalizeText(post.dataset.category);
+            const postUsername = normalizeText(post.querySelector('.username').textContent);
+            const matchesSearch = searchTerm === '' ||
+                postContent.includes(mappedSearchTerm) ||
+                postUsername.includes(mappedSearchTerm) ||
+                postCategory.includes(mappedSearchTerm);
+            const matchesCategory = activeCategory === 'Todas' || postCategory === normalizeText(activeCategory);
+
+            if (matchesSearch && matchesCategory) {
+                post.style.display = '';
+                visiblePosts++;
+            } else {
+                post.style.display = 'none';
+            }
+        });
+
+        const postList = document.querySelector('.post-list');
+        const emptyState = postList.querySelector('.empty-state-card');
+
+        if (visiblePosts === 0 && !emptyState) {
+            const emptyStateDiv = document.createElement('div');
+            emptyStateDiv.className = 'empty-state-card';
+            emptyStateDiv.innerHTML = `
+                <div class="text-center py-3">
+                    <i class="fas fa-file-alt fa-2x mb-2 text-muted"></i>
+                    <p class="text-muted">Nenhuma postagem encontrada.</p>
+                </div>
+            `;
+            postList.appendChild(emptyStateDiv);
+        } else if (visiblePosts > 0 && emptyState) {
+            emptyState.remove();
+        }
     }
 
     function setupDrawer() {
@@ -586,19 +527,4 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }, 4000);
     };
-
-    // Função auxiliar para formatar datas (caso precise no futuro)
-    function formatDate(dateStr) {
-        const date = new Date(dateStr);
-        const options = {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: false,
-            timeZone: 'America/Sao_Paulo'
-        };
-        return date.toLocaleString('pt-BR', options).replace(',', '');
-    }
 });

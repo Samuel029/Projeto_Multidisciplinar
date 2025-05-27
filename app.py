@@ -49,6 +49,24 @@ try:
     logger.info("Firebase inicializado com sucesso")
 except Exception as e:
     logger.error(f"Erro ao inicializar Firebase: {str(e)}")
+    
+    
+@app.route('/post/<int:post_id>', methods=['GET'])
+def post_comments(post_id):
+    user_id = session.get('user_id')
+    if not user_id:
+        flash('Por favor, faça login para acessar esta página.', 'error')
+        return redirect(url_for('registroelogin'))
+    
+    user = db.session.get(User, user_id)
+    if not user:
+        session.clear()
+        flash('Sua sessão expirou ou o usuário não existe mais.', 'error')
+        return redirect(url_for('registroelogin'))
+    
+    post = Post.query.options(db.joinedload(Post.comments).joinedload(Comment.author)).get_or_404(post_id)
+    
+    return render_template('post_comments.html', user=user, post=post)
 
 @app.route('/', methods=['GET', 'POST'])
 def registroelogin():
