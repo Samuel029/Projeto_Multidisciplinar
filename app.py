@@ -63,7 +63,11 @@ def post_comments(post_id):
         flash('Sua sessão expirou ou o usuário não existe mais.', 'error')
         return redirect(url_for('registroelogin'))
     
-    post = Post.query.options(db.joinedload(Post.comments).joinedload(Comment.author)).get_or_404(post_id)
+    # Eager load comments, replies, and authors
+    post = Post.query.options(
+        db.joinedload(Post.comments).joinedload(Comment.author),
+        db.joinedload(Post.comments).joinedload(Comment.replies).joinedload(Comment.author)
+    ).get_or_404(post_id)
     
     return render_template('post_comments.html', user=user, post=post)
 
@@ -259,8 +263,11 @@ def telainicial():
         else:
             flash('Por favor, preencha todos os campos.', 'error')
     
-    # Eager load comments and authors to avoid N+1 queries
-    posts = Post.query.options(db.joinedload(Post.comments).joinedload(Comment.author)).order_by(Post.created_at.desc()).all()
+    # Eager load comments, replies, and authors
+    posts = Post.query.options(
+        db.joinedload(Post.comments).joinedload(Comment.author),
+        db.joinedload(Post.comments).joinedload(Comment.replies).joinedload(Comment.author)
+    ).order_by(Post.created_at.desc()).all()
     
     return render_template('telainicial.html', user=user, posts=posts)
 
@@ -329,13 +336,148 @@ def add_comment(post_id):
                 'id': new_comment.id,
                 'content': new_comment.content,
                 'username': new_comment.author.username,
-                'created_at': new_comment.created_at.strftime('%d/%m/%Y %H:%M')
+                'created_at': new_comment.created_at.strftime('%d/%m/%Y %H:%M'),
+                'is_admin': new_comment.author.is_admin,
+                'is_moderator': new_comment.author.is_moderator
             }
         })
     except Exception as e:
         db.session.rollback()
         logger.error(f"Erro ao adicionar comentário: {str(e)}")
         return jsonify({'status': 'error', 'message': 'Erro ao adicionar comentário.'}), 500
+
+@app.route('/reply/<int:comment_id>', methods=['POST'])
+def add_reply(comment_id):
+    if 'user_id' not in session:
+        return jsonify({'status': 'error', 'message': 'Por favor, faça login para responder.'}), 401
+    
+    parent_comment = Comment.query.get_or_404(comment_id)
+    content = request.form.get('reply_content')
+    
+    if not content:
+        return jsonify({'status': 'error', 'message': 'A resposta não pode estar vazia.'}), 400
+    
+    new_reply = Comment(
+        content=content,
+        user_id=session['user_id'],
+        post_id=parent_comment.post_id,
+        parent_id=comment_id
+    )
+    
+    try:
+        db.session.add(new_reply)
+        db.session.commit()
+        return jsonify({
+            'status': 'success',
+            'reply': {
+                'id': new_reply.id,
+                'content': new_reply.content,
+                'username': new_reply.author.username,
+                'created_at': new_reply.created_at.strftime('%d/%m/%Y %H:%M'),
+                'is_admin': new_reply.author.is_admin,
+                'is_moderator': new_reply.author.is_moderator
+            }
+        })
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Erro ao adicionar resposta: {str(e)}")
+        return jsonify({'status': 'error', 'message': 'Erro ao adicionar resposta.'}), 500
+
+@app.route('/edit_comment/<int:comment_id>', methods=['POST'])
+def edit_comment(comment_id):
+    if 'user_id' not in session:
+        return jsonify({'status': 'error', 'message': 'Por favor, faça login para editar.'}), 401
+    
+    comment = Comment.query.get_or_404(comment_id)
+    
+    if comment.user_id != session['user_id']:
+        return jsonify({'status': 'error', 'message': 'Você não tem permissão para editar este comentário.'}), 403
+    
+    content = request.form.get('edit_comment_content')
+    
+    if not content:
+        return jsonify({'status': 'error', 'message': 'O comentário não pode estar vazio.'}), 400
+    
+    try:
+        comment.content = content
+        db.session.commit()
+        return jsonify({
+            'status': 'success',
+            'message': 'Comentário editado com sucesso!',
+            'content': comment.content
+        })
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Erro ao editar comentário: {str(e)}")
+        return jsonify({'status': 'error', 'message': 'Erro ao editar comentário.'}), 500
+
+@app.route('/edit_reply/<int:reply_id>', methods=['POST'])
+def edit_reply(reply_id):
+    if 'user_id' not in session:
+        return jsonify({'status': 'error', 'message': 'Por favor, faça login para editar.'}), 401
+    
+    reply = Comment.query.get_or_404(reply_id)
+    
+    if reply.user_id != session['user_id']:
+        return jsonify({'status': 'error', 'message': 'Você não tem permissão para editar esta resposta.'}), 403
+    
+    content = request.form.get('edit_reply_content')
+    
+    if not content:
+        return jsonify({'status': 'error', 'message': 'A resposta não pode estar vazia.'}), 400
+    
+    try:
+        reply.content = content
+        db.session.commit()
+        return jsonify({
+            'status': 'success',
+            'message': 'Resposta editada com sucesso!',
+            'content': reply.content
+        })
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Erro ao editar resposta: {str(e)}")
+        return jsonify({'status': 'error', 'message': 'Erro ao editar resposta.'}), 500
+
+@app.route('/delete_comment/<int:comment_id>', methods=['POST'])
+def delete_comment(comment_id):
+    if 'user_id' not in session:
+        return jsonify({'status': 'error', 'message': 'Por favor, faça login para deletar.'}), 401
+    
+    comment = Comment.query.get_or_404(comment_id)
+    
+    if comment.user_id != session['user_id']:
+        return jsonify({'status': 'error', 'message': 'Você não tem permissão para deletar este comentário.'}), 403
+    
+    try:
+        # Deletar respostas associadas
+        Comment.query.filter_by(parent_id=comment_id).delete()
+        db.session.delete(comment)
+        db.session.commit()
+        return jsonify({'status': 'success', 'message': 'Comentário deletado com sucesso!'})
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Erro ao deletar comentário: {str(e)}")
+        return jsonify({'status': 'error', 'message': 'Erro ao deletar comentário.'}), 500
+
+@app.route('/delete_reply/<int:reply_id>', methods=['POST'])
+def delete_reply(reply_id):
+    if 'user_id' not in session:
+        return jsonify({'status': 'error', 'message': 'Por favor, faça login para deletar.'}), 401
+    
+    reply = Comment.query.get_or_404(reply_id)
+    
+    if reply.user_id != session['user_id']:
+        return jsonify({'status': 'error', 'message': 'Você não tem permissão para deletar esta resposta.'}), 403
+    
+    try:
+        db.session.delete(reply)
+        db.session.commit()
+        return jsonify({'status': 'success', 'message': 'Resposta deletada com sucesso!'})
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Erro ao deletar resposta: {str(e)}")
+        return jsonify({'status': 'error', 'message': 'Erro ao deletar resposta.'}), 500
 
 @app.route('/like_post/<int:post_id>', methods=['POST'])
 def like_post(post_id):
@@ -345,11 +487,9 @@ def like_post(post_id):
     post = Post.query.get_or_404(post_id)
     user_id = session['user_id']
     
-    # Check if the user already liked the post
     existing_like = Like.query.filter_by(user_id=user_id, post_id=post_id).first()
     
     if existing_like:
-        # Unlike: remove the like
         try:
             db.session.delete(existing_like)
             db.session.commit()
@@ -365,7 +505,6 @@ def like_post(post_id):
             logger.error(f"Erro ao remover curtida: {str(e)}")
             return jsonify({'status': 'error', 'message': 'Erro ao remover curtida.'}), 500
     else:
-        # Like: add a new like
         new_like = Like(user_id=user_id, post_id=post_id)
         try:
             db.session.add(new_like)
@@ -403,11 +542,9 @@ def like_comment(comment_id):
     comment = Comment.query.get_or_404(comment_id)
     user_id = session['user_id']
     
-    # Check if the user already liked the comment
     existing_like = Like.query.filter_by(user_id=user_id, comment_id=comment_id).first()
     
     if existing_like:
-        # Unlike: remove the like
         try:
             db.session.delete(existing_like)
             db.session.commit()
@@ -423,7 +560,6 @@ def like_comment(comment_id):
             logger.error(f"Erro ao remover curtida: {str(e)}")
             return jsonify({'status': 'error', 'message': 'Erro ao remover curtida.'}), 500
     else:
-        # Like: add a new like
         new_like = Like(user_id=user_id, comment_id=comment_id)
         try:
             db.session.add(new_like)
@@ -480,15 +616,13 @@ def logout():
 
 with app.app_context():
     try:
-        # Verificar se o diretório do banco de dados é acessível
         db_path = os.path.join(instance_dir, 'app.db')
         if not os.path.exists(instance_dir):
             logger.error(f"Diretório instance não encontrado: {instance_dir}")
             raise FileNotFoundError(f"Diretório instance não encontrado: {instance_dir}")
         
-        # Tentar abrir o arquivo do banco de dados
         with open(db_path, 'a'):
-            pass  # Apenas verificar se é possível criar/acessar o arquivo
+            pass
         
         db.create_all()
         logger.info("Tabelas do banco de dados criadas com sucesso")

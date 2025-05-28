@@ -13,6 +13,8 @@ class User(db.Model):
     email = db.Column(db.String(120), index=True, unique=True, nullable=False)
     password = db.Column(db.String(128), nullable=True)  # Permitir nulo para autenticação Google
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(BRASILIA_TZ))
+    is_admin = db.Column(db.Boolean, default=False)  # Adicionado para suportar badges de admin
+    is_moderator = db.Column(db.Boolean, default=False)  # Adicionado para suportar badges de moderador
     
     def __repr__(self):
         return f'<User {self.username}>'
@@ -39,9 +41,11 @@ class Comment(db.Model):
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(BRASILIA_TZ))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     post_id = db.Column(db.Integer, db.ForeignKey('posts.id'), nullable=False)
+    parent_id = db.Column(db.Integer, db.ForeignKey('comments.id'), nullable=True)  # Para respostas
     
     author = db.relationship('User', backref=db.backref('comments', lazy=True))
     post = db.relationship('Post', backref=db.backref('comments', lazy=True))
+    replies = db.relationship('Comment', backref=db.backref('parent', remote_side=[id]), lazy=True)
     
     def __repr__(self):
         return f'<Comment {self.id} by {self.author.username} on Post {self.post_id}>'
@@ -51,7 +55,7 @@ class Like(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    comment_id = db.Column(db.Integer, db.ForeignKey('comments.id'), nullable=True)
+    comment_id = db.Column(db.Integer, db.ForeignKey('comments.id'), nullable=True)  # Suporta likes em comentários e respostas
     post_id = db.Column(db.Integer, db.ForeignKey('posts.id'), nullable=True)
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(BRASILIA_TZ))
     

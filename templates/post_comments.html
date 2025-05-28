@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Emoji Picker CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/emoji-picker-element@1.15.0/dist/style.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/post_comments.css') }}">
 </head>
 <body>
@@ -100,48 +102,169 @@
                 </div>
             </div>
 
-            <!-- Comment Section -->
-            <div class="section-header">
+            
+            <div class="post-creation-card comment-creation-card">
                 <h2 class="section-title">
                     <i class="fas fa-comments"></i>
-                    <span>Comentários</span>
+                    <span>Comentários <span class="comment-count">({{ post.comments|length }})</span></span>
                 </h2>
-            </div>
-            <div class="post-creation-card">
                 <form class="comment-form" data-post-id="{{ post.id }}">
                     <div class="mb-3 position-relative">
-                        <textarea class="form-control" name="comment_content" rows="3" placeholder="Escreva seu comentário..." required></textarea>
+                        <textarea class="form-control comment-input" name="comment_content" rows="4" placeholder="Escreva seu comentário..." required></textarea>
                         <div class="char-counter">0/500</div>
+                        <button type="button" class="emoji-btn" title="Adicionar Emoji"><i class="fas fa-smile"></i></button>
                     </div>
-                    <button type="submit" class="btn btn-sm btn-primary">Enviar Comentário</button>
+                    <div class="comment-form-footer">
+                        <button type="submit" class="btn btn-sm btn-primary btn-publish">Enviar Comentário</button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary btn-cancel">Cancelar</button>
+                    </div>
+                    <emoji-picker class="emoji-picker" style="display: none;"></emoji-picker>
                 </form>
             </div>
             <div class="comments-list">
                 {% if post.comments %}
                     {% for comment in post.comments %}
                         <div class="comment" data-comment-id="{{ comment.id }}">
-                            <div class="d-flex">
-                                <div class="avatar me-2">
-                                    <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center">
-                                        {{ comment.author.username[0]|upper }}
+                            <div class="comment-wrapper">
+                                <div class="comment-header d-flex align-items-center">
+                                    <div class="avatar me-3">
+                                        <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center">
+                                            {{ comment.author.username[0]|upper }}
+                                        </div>
                                     </div>
+                                    <div class="comment-meta">
+                                        <h6 class="mb-0">
+                                            {{ comment.author.username }}
+                                            {% if comment.author.is_admin %}
+                                                <span class="badge bg-danger ms-2">Admin</span>
+                                            {% elif comment.author.is_moderator %}
+                                                <span class="badge bg-success ms-2">Moderador</span>
+                                            {% endif %}
+                                        </h6>
+                                        <small class="text-muted time-ago">{{ comment.created_at.strftime('%d/%m/%Y %H:%M') }}</small>
+                                    </div>
+                                    {% if comment.user_id == user.id %}
+                                        <div class="comment-actions ms-auto">
+                                            <button class="btn btn-sm btn-outline-primary edit-comment" data-comment-id="{{ comment.id }}">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-danger delete-comment" data-comment-id="{{ comment.id }}">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    {% endif %}
                                 </div>
-                                <div>
-                                    <h6 class="mb-0">{{ comment.author.username }}</h6>
-                                    <small class="text-muted">{{ comment.created_at.strftime('%d/%m/%Y %H:%M') }}</small>
-                                    <p class="mb-1">{{ comment.content }}</p>
+                                <div class="comment-body">
+                                    <p class="mb-2 comment-content">{{ comment.content }}</p>
+                                </div>
+                                <div class="comment-footer d-flex align-items-center gap-2">
                                     <button class="btn btn-sm btn-outline-primary comment-like-btn" data-comment-id="{{ comment.id }}">
                                         <i class="fas fa-thumbs-up"></i> <span class="like-count">0</span>
                                     </button>
+                                    <button class="btn btn-sm btn-outline-secondary reply-btn" data-comment-id="{{ comment.id }}">
+                                        <i class="fas fa-reply"></i> Responder
+                                    </button>
+                                </div>
+                                <!-- Edit Comment Form (Hidden by Default) -->
+                                <div class="edit-comment-form" style="display: none;">
+                                    <form class="edit-comment-form-inner" data-comment-id="{{ comment.id }}">
+                                        <div class="mb-3 position-relative">
+                                            <textarea class="form-control edit-comment-input" name="edit_comment_content" rows="3" required>{{ comment.content }}</textarea>
+                                            <div class="char-counter">0/500</div>
+                                            <button type="button" class="emoji-btn" title="Adicionar Emoji"><i class="fas fa-smile"></i></button>
+                                        </div>
+                                        <div class="edit-comment-footer">
+                                            <button type="submit" class="btn btn-sm btn-primary btn-save-edit">Salvar</button>
+                                            <button type="button" class="btn btn-sm btn-outline-secondary btn-cancel-edit">Cancelar</button>
+                                        </div>
+                                        <emoji-picker class="emoji-picker" style="display: none;"></emoji-picker>
+                                    </form>
+                                </div>
+                                <!-- Reply Form (Hidden by Default) -->
+                                <div class="reply-form-container" style="display: none;">
+                                    <form class="reply-form" data-comment-id="{{ comment.id }}">
+                                        <div class="mb-3 position-relative">
+                                            <textarea class="form-control reply-input" name="reply_content" rows="3" placeholder="Escreva sua resposta..." required></textarea>
+                                            <div class="char-counter">0/500</div>
+                                            <button type="button" class="emoji-btn" title="Adicionar Emoji"><i class="fas fa-smile"></i></button>
+                                        </div>
+                                        <div class="reply-form-footer">
+                                            <button type="submit" class="btn btn-sm btn-primary btn-publish">Enviar Resposta</button>
+                                            <button type="button" class="btn btn-sm btn-outline-secondary btn-cancel-reply">Cancelar</button>
+                                        </div>
+                                        <emoji-picker class="emoji-picker" style="display: none;"></emoji-picker>
+                                    </form>
+                                </div>
+                                <!-- Replies List -->
+                                <div class="replies-list ms-5">
+                                    {% if comment.replies %}
+                                        {% for reply in comment.replies %}
+                                            <div class="comment reply" data-reply-id="{{ reply.id }}">
+                                                <div class="comment-wrapper">
+                                                    <div class="comment-header d-flex align-items-center">
+                                                        <div class="avatar me-3">
+                                                            <div class="avatar-initials bg-secondary text-white rounded-circle d-flex justify-content-center align-items-center">
+                                                                {{ reply.author.username[0]|upper }}
+                                                            </div>
+                                                        </div>
+                                                        <div class="comment-meta">
+                                                            <h6 class="mb-0">
+                                                                {{ reply.author.username }}
+                                                                {% if reply.author.is_admin %}
+                                                                    <span class="badge bg-danger ms-2">Admin</span>
+                                                                {% elif reply.author.is_moderator %}
+                                                                    <span class="badge bg-success ms-2">Moderador</span>
+                                                                {% endif %}
+                                                            </h6>
+                                                            <small class="text-muted time-ago">{{ reply.created_at.strftime('%d/%m/%Y %H:%M') }}</small>
+                                                        </div>
+                                                        {% if reply.user_id == user.id %}
+                                                            <div class="comment-actions ms-auto">
+                                                                <button class="btn btn-sm btn-outline-primary edit-reply" data-reply-id="{{ reply.id }}">
+                                                                    <i class="fas fa-edit"></i>
+                                                                </button>
+                                                                <button class="btn btn-sm btn-outline-danger delete-reply" data-reply-id="{{ reply.id }}">
+                                                                    <i class="fas fa-trash"></i>
+                                                                </button>
+                                                            </div>
+                                                        {% endif %}
+                                                    </div>
+                                                    <div class="comment-body">
+                                                        <p class="mb-2 comment-content">{{ reply.content }}</p>
+                                                    </div>
+                                                    <div class="comment-footer d-flex align-items-center gap-2">
+                                                        <button class="btn btn-sm btn-outline-primary comment-like-btn" data-reply-id="{{ reply.id }}">
+                                                            <i class="fas fa-thumbs-up"></i> <span class="like-count">0</span>
+                                                        </button>
+                                                    </div>
+                                                    <!-- Edit Reply Form (Hidden by Default) -->
+                                                    <div class="edit-reply-form" style="display: none;">
+                                                        <form class="edit-reply-form-inner" data-reply-id="{{ reply.id }}">
+                                                            <div class="mb-3 position-relative">
+                                                                <textarea class="form-control edit-reply-input" name="edit_reply_content" rows="3" required>{{ reply.content }}</textarea>
+                                                                <div class="char-counter">0/500</div>
+                                                                <button type="button" class="emoji-btn" title="Adicionar Emoji"><i class="fas fa-smile"></i></button>
+                                                            </div>
+                                                            <div class="edit-reply-footer">
+                                                                <button type="submit" class="btn btn-sm btn-primary btn-save-edit">Salvar</button>
+                                                                <button type="button" class="btn btn-sm btn-outline-secondary btn-cancel-edit">Cancelar</button>
+                                                            </div>
+                                                            <emoji-picker class="emoji-picker" style="display: none;"></emoji-picker>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
                     {% endfor %}
                 {% else %}
                     <div class="empty-state-card">
-                        <div class="text-center py-3">
-                            <i class="fas fa-comment-slash fa-2x mb-2 text-muted"></i>
-                            <p class="text-muted">Nenhum comentário ainda. Seja o primeiro a comentar!</p>
+                        <div class="text-center py-4">
+                            <i class="fas fa-comment-slash fa-3x mb-3 text-muted"></i>
+                            <p class="text-muted fs-5">Nenhum comentário ainda. Seja o primeiro a comentar!</p>
                         </div>
                     </div>
                 {% endif %}
@@ -196,6 +319,7 @@
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/emoji-picker-element@1.15.0/dist/index.js" type="module"></script>
     <script src="{{ url_for('static', filename='js/post_comments.js') }}"></script>
 </body>
 </html>
