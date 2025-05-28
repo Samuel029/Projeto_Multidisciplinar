@@ -277,7 +277,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                         `;
                                     }
                                 } else {
-                                    showNotification('Erro ao deletar postagem.', 'error');
+                                    showNotification(data.message || 'Erro ao deletar postagem.', 'error');
                                 }
                             })
                             .catch(() => {
@@ -292,8 +292,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     showNotification(data.message || 'Erro ao criar postagem', 'error');
                 }
             })
-            .catch(() => {
+            .catch(error => {
                 showNotification('Erro ao conectar com o servidor.', 'error');
+                console.error('Error creating post:', error);
             })
             .finally(() => {
                 if (submitButton) {
@@ -369,7 +370,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 `;
                             }
                         } else {
-                            showNotification('Erro ao deletar postagem.', 'error');
+                            showNotification(data.message || 'Erro ao deletar postagem.', 'error');
                         }
                     })
                     .catch(() => {

@@ -49,8 +49,7 @@ try:
     logger.info("Firebase inicializado com sucesso")
 except Exception as e:
     logger.error(f"Erro ao inicializar Firebase: {str(e)}")
-    
-    
+
 @app.route('/post/<int:post_id>', methods=['GET'])
 def post_comments(post_id):
     user_id = session.get('user_id')
@@ -244,7 +243,7 @@ def telainicial():
         return redirect(url_for('registroelogin'))
     
     if request.method == 'POST':
-        content = request.form.get('content')
+        content = request.form.get('content') or request.form.get('post_content')
         category = request.form.get('category')
         if content and category:
             new_post = Post(content=content, user_id=user.id, category=category)
@@ -257,11 +256,52 @@ def telainicial():
                 logger.error(f"Erro ao criar postagem: {str(e)}")
                 flash('Erro ao publicar postagem. Tente novamente.', 'error')
             return redirect(url_for('telainicial'))
+        else:
+            flash('Por favor, preencha todos os campos.', 'error')
     
     # Eager load comments and authors to avoid N+1 queries
     posts = Post.query.options(db.joinedload(Post.comments).joinedload(Comment.author)).order_by(Post.created_at.desc()).all()
     
     return render_template('telainicial.html', user=user, posts=posts)
+
+@app.route('/create_post', methods=['POST'])
+def create_post():
+    if 'user_id' not in session:
+        return jsonify({'status': 'error', 'message': 'Por favor, faça login para realizar esta ação.'}), 401
+    
+    user_id = session['user_id']
+    user = db.session.get(User, user_id)
+    if not user:
+        session.clear()
+        return jsonify({'status': 'error', 'message': 'Sua sessão expirou ou o usuário não existe mais.'}), 401
+    
+    content = request.form.get('post_content')
+    category = request.form.get('category')
+    
+    if not content:
+        return jsonify({'status': 'error', 'message': 'O conteúdo da postagem não pode estar vazio.'}), 400
+    
+    if not category:
+        return jsonify({'status': 'error', 'message': 'Por favor, selecione uma categoria.'}), 400
+    
+    new_post = Post(content=content, user_id=user.id, category=category)
+    try:
+        db.session.add(new_post)
+        db.session.commit()
+        return jsonify({
+            'status': 'success',
+            'post': {
+                'id': new_post.id,
+                'content': new_post.content,
+                'category': new_post.category,
+                'username': user.username,
+                'created_at': new_post.created_at.strftime('%d/%m/%Y %H:%M')
+            }
+        })
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Erro ao criar postagem: {str(e)}")
+        return jsonify({'status': 'error', 'message': 'Erro ao criar postagem. Tente novamente.'}), 500
 
 @app.route('/comment/<int:post_id>', methods=['POST'])
 def add_comment(post_id):
