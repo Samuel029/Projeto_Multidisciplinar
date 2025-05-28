@@ -269,9 +269,41 @@ a:hover { color: var(--primary-dark); }
     scrollbar-width: none;
     max-width: 100%;
 }
+/* Adicione este trecho AO FINAL do seu CSS existente */
 
+.categories {
+    /* Mantém o overflow-x para o scroll lateral */
+    overflow-x: auto;
+    /* Garante que o scroll não fique escondido pelo gap */
+    padding-bottom: 10px;
+    scroll-behavior: smooth;
+    scrollbar-width: thin; /* Firefox: "auto" ou "thin" */
+    scrollbar-color: #1a73e8 #e3e8ef; /* Cor do thumb e da track */
+}
+
+/* Webkit (Chrome, Edge, Safari) */
 .categories::-webkit-scrollbar {
-    display: none;
+    height: 8px; /* Altura da barra */
+}
+
+.categories::-webkit-scrollbar-thumb {
+    background: #1a73e8; /* Azul principal */
+    border-radius: 6px;
+}
+
+.categories::-webkit-scrollbar-track {
+    background: #e3e8ef; /* Cor de fundo da track */
+    border-radius: 6px;
+}
+
+.categories::-webkit-scrollbar-thumb:hover {
+    background: #1357b9; /* Azul um pouco mais escuro no hover */
+}
+
+/* Para garantir que a barra fique visível em todos os navegadores */
+.categories {
+    scrollbar-width: thin;
+    scrollbar-color: #1a73e8 #e3e8ef;
 }
 
 .category {
