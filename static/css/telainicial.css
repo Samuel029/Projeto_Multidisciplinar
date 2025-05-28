@@ -464,6 +464,7 @@ a:focus {
     transition: var(--transition);
     position: relative;
     animation: fadeIn 0.5s ease-out;
+    margin-bottom: 1.5rem; /* ou ajuste o valor como preferir */
 }
 
 .post-card:hover {
@@ -477,6 +478,7 @@ a:focus {
     align-items: center;
     padding: 1.25rem;
     border-bottom: 1px solid var(--medium-gray);
+    
 }
 
 .user-info {
