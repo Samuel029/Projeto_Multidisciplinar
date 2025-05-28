@@ -216,7 +216,7 @@
                                                                     <span class="badge bg-success ms-2">Moderador</span>
                                                                 {% endif %}
                                                             </h6>
-                                                            <small class="text-muted time-ago">{{ reply.created_at.strftime('%d/%m/%Y %H:%M') }}</small>
+                                                            <small class="text-muted time-ago">{{ comment.created_at.strftime('%d/%m/%Y %H:%M') }}</small>
                                                         </div>
                                                         {% if reply.user_id == user.id %}
                                                             <div class="comment-actions ms-auto">

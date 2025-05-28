@@ -646,35 +646,62 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    function updateTimeAgo() {
-        const timeElements = document.querySelectorAll('.time-ago');
-        timeElements.forEach(el => {
-            const date = new Date(el.dataset.original || el.textContent);
-            el.dataset.original = el.textContent;
-            el.textContent = timeAgo(date);
-        });
-    }
-
     function timeAgo(date) {
-        const now = new Date();
-        const seconds = Math.floor((now - date) / 1000);
-        const intervals = [
-            { label: 'ano', seconds: 31536000 },
-            { label: 'mês', seconds: 2592000 },
-            { label: 'dia', seconds: 86400 },
-            { label: 'hora', seconds: 3600 },
-            { label: 'minuto', seconds: 60 },
-            { label: 'segundo', seconds: 1 }
-        ];
-
-        for (const interval of intervals) {
-            const count = Math.floor(seconds / interval.seconds);
-            if (count >= 1) {
-                return `há ${count} ${interval.label}${count > 1 ? 's' : ''}`;
-            }
+    // Se for uma string, converte para Date
+    if (typeof date === 'string') {
+        // Verifica se já está no formato ISO (com T)
+        if (date.includes('T')) {
+            date = new Date(date);
+        } else {
+            // Assume formato 'YYYY-MM-DD HH:MM:SS'
+            const parts = date.split(/[- :]/);
+            date = new Date(parts[0], parts[1]-1, parts[2], parts[3], parts[4], parts[5]);
         }
-        return 'agora';
     }
+    
+    const now = new Date();
+    const seconds = Math.floor((now - date) / 1000);
+    
+    const intervals = {
+        ano: 31536000,
+        mês: 2592000,
+        dia: 86400,
+        hora: 3600,
+        minuto: 60,
+        segundo: 1
+    };
+    
+    for (const [unit, secondsInUnit] of Object.entries(intervals)) {
+        const interval = Math.floor(seconds / secondsInUnit);
+        if (interval >= 1) {
+            return `há ${interval} ${unit}${interval > 1 ? 's' : ''}`;
+        }
+    }
+    return 'agora';
+}
+
+function updateTimeAgo() {
+    const timeElements = document.querySelectorAll('.time-ago');
+    timeElements.forEach(el => {
+        // Pega o timestamp original do atributo data-original ou do texto
+        const originalDate = el.dataset.original || el.textContent;
+        
+        // Converte para objeto Date
+        let date;
+        if (originalDate.includes('-')) {
+            // Formato ISO ou similar (YYYY-MM-DD)
+            const parts = originalDate.split(/[- :/]/);
+            date = new Date(parts[0], parts[1]-1, parts[2], parts[3] || 0, parts[4] || 0, parts[5] || 0);
+        } else {
+            // Formato DD/MM/YYYY
+            const parts = originalDate.split(/[/ :]/);
+            date = new Date(parts[2], parts[1]-1, parts[0], parts[3] || 0, parts[4] || 0);
+        }
+        
+        // Atualiza o texto
+        el.textContent = timeAgo(date);
+    });
+}
 
     function setupDrawer() {
         if (!sideMenu) return;
