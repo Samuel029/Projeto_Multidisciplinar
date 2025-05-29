@@ -3,227 +3,1347 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exemplos de Código</title>
-    <style>
-        /* Estilos comuns */
-        :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #3498db;
-            --accent-color: #e74c3c;
-            --text-color: #333;
-            --background-color: #f9f9f9;
-            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s ease;
-            --code-background: #2d2d2d;
-            --tag-color: #61dafb;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: var(--background-color);
-            color: var(--text-color);
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        h1 {
-            color: var(--primary-color);
-            text-align: center;
-            margin-bottom: 40px;
-            font-size: 2.5rem;
-        }
-
-        /* Exemplos de Código - Estrutura de abas/tabs */
-        .code-section {
-            margin-bottom: 40px;
-        }
-
-        .code-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 25px;
-        }
-
-        .code-icon {
-            font-size: 26px;
-            margin-right: 15px;
-            color: var(--primary-color);
-        }
-
-        .code-title {
-            font-size: 1.8rem;
-            color: var(--primary-color);
-            margin: 0;
-        }
-
-        .code-tabs {
-            display: flex;
-            border-bottom: 1px solid #ddd;
-            margin-bottom: 20px;
-        }
-
-        .code-tab {
-            padding: 12px 24px;
-            cursor: pointer;
-            border: 1px solid transparent;
-            border-bottom: none;
-            border-radius: 5px 5px 0 0;
-            background-color: #eee;
-            margin-right: 5px;
-            transition: var(--transition);
-        }
-
-        .code-tab.active {
-            background-color: var(--code-background);
-            color: white;
-            border-color: #ddd;
-        }
-
-        .code-tab:hover:not(.active) {
-            background-color: #ddd;
-        }
-
-        .code-content {
-            background-color: var(--code-background);
-            border-radius: 0 5px 5px 5px;
-            padding: 5px;
-            margin-bottom: 30px;
-            box-shadow: var(--card-shadow);
-        }
-
-        .code-block {
-            position: relative;
-            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-            color: #f8f8f2;
-            padding: 15px;
-            border-radius: 4px;
-            overflow-x: auto;
-            line-height: 1.5;
-        }
-
-        .code-language {
-            position: absolute;
-            top: 5px;
-            right: 10px;
-            background-color: rgba(255, 255, 255, 0.1);
-            padding: 3px 8px;
-            border-radius: 3px;
-            font-size: 0.8rem;
-            color: #aaa;
-        }
-
-        .code-actions {
-            display: flex;
-            justify-content: flex-end;
-            padding: 10px;
-            background-color: #222;
-            border-radius: 0 0 5px 5px;
-        }
-
-        .code-action-btn {
-            background-color: var(--secondary-color);
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 4px;
-            margin-left: 10px;
-            cursor: pointer;
-            transition: var(--transition);
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-        }
-
-        .code-action-btn:hover {
-            background-color: #2980b9;
-        }
-
-        .code-action-icon {
-            margin-right: 5px;
-        }
-
-        /* Syntax highlighting simulated */
-        .token-keyword {
-            color: #ff79c6;
-        }
-        .token-function {
-            color: #50fa7b;
-        }
-        .token-string {
-            color: #f1fa8c;
-        }
-        .token-comment {
-            color: #6272a4;
-        }
-        .token-punctuation {
-            color: #bd93f9;
-        }
-        .token-tag {
-            color: var(--tag-color);
-        }
-        .token-attr-name {
-            color: #50fa7b;
-        }
-        .token-attr-value {
-            color: #f1fa8c;
-        }
-    </style>
+    <title>Exemplos de Código - CodeLearn</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/exemplosdecodigo.css') }}">
 </head>
 <body>
+    <!-- Header -->
+    <header class="app-header">
+        <div class="header-content">
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Pesquisar postagens, tópicos...">
+            </div>
+            <div class="logo">
+                <i class="fas fa-graduation-cap"></i>
+                <span>TechNoBug</span>
+            </div>
+            <button class="btn menu-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" aria-controls="offcanvasMenu">
+                <i class="fas fa-bars"></i>
+                <span>Menu</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Offcanvas Menu -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasMenuLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasMenuLabel">Menu</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="user-profile mb-4">
+                <div class="d-flex align-items-center">
+                    <div class="avatar me-3">
+                        <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center">
+                            {{ user.username[0]|upper }}
+                        </div>
+                    </div>
+                    <div>
+                        <h6 class="mb-0">{{ user.username }}</h6>
+                        <small class="text-muted">{{ user.email }}</small>
+                    </div>
+                </div>
+            </div>
+            <ul class="navbar-nav">
+    <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('telainicial') }}"><i class="fas fa-home me-2"></i>Página Inicial</a></li>
+    <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('materiais') }}"><i class="fas fa-book me-2"></i>Materiais de Estudo</a></li>
+    <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('pdfs') }}"><i class="fas fa-file-pdf me-2"></i>PDFs e Apostilas</a></li>
+    <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('videos') }}"><i class="fas fa-video me-2"></i>Vídeos e Tutoriais</a></li>
+    <li class="nav-item mb-2"><a class="nav-link active" href="{{ url_for('codigo') }}"><i class="fas fa-code me-2"></i>Exemplos de Código</a></li>
+    <li class="nav-item mb-2"><a class="nav-link" href="#"><i class="fas fa-users me-2"></i>Comunidade</a></li>
+    <li class="nav-item mb-2"><a class="nav-link" href="#"><i class="fas fa-cog me-2"></i>Configurações</a></li>
+    <li class="nav-item"><a class="nav-link text-danger" href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt me-2"></i>Sair</a></li>
+</ul>
+        </div>
+    </div>
+
+    <!-- Main Content -->
     <div class="container">
-        <h1>Repositório de Código</h1>
-        
-        <section class="code-section">
-            <div class="code-header">
-                <div class="code-icon">📝</div>
-                <h2 class="code-title">Exemplos de Código</h2>
+        <main class="main-content">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-code"></i>
+                    <span>Exemplos de Código para Iniciantes</span>
+                </h2>
             </div>
-            
-            <div class="code-tabs">
-                <div class="code-tab active">HTML</div>
-                <div class="code-tab">CSS</div>
-                <div class="code-tab">JavaScript</div>
-                <div class="code-tab">Python</div>
-            </div>
-            
-            <div class="code-content">
-                <div class="code-block">
-                    <div class="code-language">HTML</div>
-                    <pre><span class="token-punctuation">&lt;!</span><span class="token-tag">DOCTYPE</span> <span class="token-attr-name">html</span><span class="token-punctuation">&gt;</span>
-<span class="token-punctuation">&lt;</span><span class="token-tag">html</span> <span class="token-attr-name">lang</span><span class="token-punctuation">=</span><span class="token-attr-value">"pt-BR"</span><span class="token-punctuation">&gt;</span>
-<span class="token-punctuation">&lt;</span><span class="token-tag">head</span><span class="token-punctuation">&gt;</span>
-    <span class="token-punctuation">&lt;</span><span class="token-tag">meta</span> <span class="token-attr-name">charset</span><span class="token-punctuation">=</span><span class="token-attr-value">"UTF-8"</span><span class="token-punctuation">&gt;</span>
-    <span class="token-punctuation">&lt;</span><span class="token-tag">meta</span> <span class="token-attr-name">name</span><span class="token-punctuation">=</span><span class="token-attr-value">"viewport"</span> <span class="token-attr-name">content</span><span class="token-punctuation">=</span><span class="token-attr-value">"width=device-width, initial-scale=1.0"</span><span class="token-punctuation">&gt;</span>
-    <span class="token-punctuation">&lt;</span><span class="token-tag">title</span><span class="token-punctuation">&gt;</span>Meu Site<span class="token-punctuation">&lt;/</span><span class="token-tag">title</span><span class="token-punctuation">&gt;</span>
-    <span class="token-punctuation">&lt;</span><span class="token-tag">link</span> <span class="token-attr-name">rel</span><span class="token-punctuation">=</span><span class="token-attr-value">"stylesheet"</span> <span class="token-attr-name">href</span><span class="token-punctuation">=</span><span class="token-attr-value">"style.css"</span><span class="token-punctuation">&gt;</span>
-<span class="token-punctuation">&lt;/</span><span class="token-tag">head</span><span class="token-punctuation">&gt;</span>
-<span class="token-punctuation">&lt;</span><span class="token-tag">body</span><span class="token-punctuation">&gt;</span>
-    <span class="token-punctuation">&lt;</span><span class="token-tag">header</span><span class="token-punctuation">&gt;</span>
-        <span class="token-punctuation">&lt;</span><span class="token-tag">h1</span><span class="token-punctuation">&gt;</span>Bem-vindo ao Meu Site<span class="token-punctuation">&lt;/</span><span class="token-tag">h1</span><span class="token-punctuation">&gt;</span>
-        <span class="token-punctuation">&lt;</span><span class="token-tag">nav</span><span class="token-punctuation">&gt;</span>
-            <span class="token-punctuation">&lt;</span><span class="token-tag">ul</span><span class="token-punctuation">&gt;</span>
-                <span class="token-punctuation">&lt;</span><span class="token-tag">li</span><span class="token-punctuation">&gt;&lt;</span><span class="token-tag">a</span> <span class="token-attr-name">href</span><span class="token-punctuation">=</span><span class="token-attr-value">"#"</span><span class="token-punctuation">&gt;</span>Início<span class="token-punctuation">&lt;/</span><span class="token-tag">a</span><span class="token-punctuation">&gt;&lt;/</span><span class="token-tag">li</span><span class="token-punctuation">&gt;</span>
-                <span class="token-punctuation">&lt;</span><span class="token-tag">li</span><span class="token-punctuation">&gt;&lt;</span><span class="token-tag">a</span> <span class="token-attr-name">href</span><span class="token-punctuation">=</span><span class="token-attr-value">"#"</span><span class="token-punctuation">&gt;</span>Sobre<span class="token-punctuation">&lt;/</span><span class="token-tag">a</span><span class="token-punctuation">&gt;&lt;/</span><span class="token-tag">li</span><span class="token-punctuation">&gt;</span>
-                <span class="token-punctuation">&lt;</span><span class="token-tag">li</span><span class="token-punctuation">&gt;&lt;</span><span class="token-tag">a</span> <span class="token-attr-name">href</span><span class="token-punctuation">=</span><span class="token-attr-value">"#"</span><span class="token-punctuation">&gt;</span>Contato<span class="token-punctuation">&lt;/</span><span class="token-tag">a</span><span class="token-punctuation">&gt;&lt;/</span><span class="token-tag">li</span><span class="token-punctuation">&gt;</span>
-            <span class="token-punctuation">&lt;/</span><span class="token-tag">ul</span><span class="token-punctuation">&gt;</span>
-        <span class="token-punctuation">&lt;/</span><span class="token-tag">nav</span><span class="token-punctuation">&gt;</span>
-    <span class="token-punctuation">&lt;/</span><span class="token-tag">header</span><span class="token-punctuation">&gt;</span>
-    
-    <span class="token-punctuation">&lt;</span><span class="token-tag">main</span><span class="token-punctuation">&gt;</span>
-        <span class="token-punctuation">&lt;</span><span class="token-tag">section</span><span class="token-punctuation">&gt;</span>
-            <span class="token-punctuation">&lt;</span><span class="token-tag">h2</span><span class="token-punctuation">&gt;</span>Seção Principal<span class="token-punctuation">&lt;/</span><span class="token-tag">h2</span><span class="token-punctuation">&gt;</span>
-            <span class="token-punctuation">&lt;</span><span class="token-tag">p</span><span class="token-punctuation">&gt;</span>Este é um exemplo de código HTML.<span class="token-punctuation">&lt;/</span><span class="token-tag">p</span><span class="token-punctuation">&gt;</span>
-        <span class="token-punctuation">&lt;/</span><span class="token-tag">section</span><span class="token-punctuation">&gt;</span>
-    <span class="token-punctuation">&lt;/</span><span class="token-tag">main</span><span class="token-punctuation">&gt;</span>
-    
-    <span class="token-punctuation">&lt;</span><span class="token-tag">footer</span><span class="token-punctuation">&gt;</span>
-        <span class="token-punctuation">&lt;</span><span class="token-tag">p</span><span class="token-punctuation">&gt;</span>&copy; 2025 Meu Site. Todos os direitos reservados.<span class="token-punctuation">&lt;/</span><span class="token-tag">p</span><span class="token-punctuation">&gt;</span>
-    <span class="token-punctuation">&lt;/</span><span class="token-tag">footer</span><span class="token-punctuation">&gt;</span>
-<span class="token-punctuation">&lt;/</span><span class="token-tag">body</span><span class="token-punctuation">&gt;</span>
-<span class="token-punctuation">&lt;/</span><span class="token-tag">html</span><span class="token-punctuation">&gt;</span>
+
+            <!-- Fundamentos -->
+            <section class="code-section" id="fundamentals">
+                <div class="code-header">
+                    <div class="code-icon">🔰</div>
+                    <h3 class="code-title">Fundamentos da Programação</h3>
+                </div>
+                <div class="code-tabs">
+                    <div class="code-tab active" data-lang="python">Python</div>
+                    <div class="code-tab" data-lang="javascript">JavaScript</div>
+                    <div class="code-tab" data-lang="java">Java</div>
+                    <div class="code-tab" data-lang="csharp">C#</div>
+                    <div class="code-tab" data-lang="cpp">C++</div>
+                    <div class="code-tab" data-lang="ruby">Ruby</div>
+                </div>
+                <div class="code-content">
+                    <div class="code-block" data-lang="python">
+                        <div class="code-language">Python</div>
+                        <pre>
+# Exemplo básico de variáveis e operações
+nome = "Ana"
+idade = 20
+altura = 1.65
+estudante = True
+
+print("Olá,", nome)
+print("Você tem", idade, "anos")
+
+cidade = input("Digite sua cidade: ")
+print("Você mora em", cidade)
+
+soma = 15 + 5
+subtracao = 15 - 5
+multiplicacao = 15 * 5
+divisao = 15 / 3
+resto = 15 % 4
+potencia = 2 ** 3
+print("Soma:", soma, "Potência:", potencia)
+                        </pre>
+                        <div class="code-actions">
+                            <button class="code-action-btn" onclick="copyCode(this)">
+                                <i class="code-action-icon fas fa-copy"></i> Copiar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="code-block" data-lang="javascript" style="display: none;">
+                        <div class="code-language">JavaScript</div>
+                        <pre>
+let nome = "Ana";
+const idade = 20;
+let altura = 1.65;
+let estudante = true;
+
+console.log("Olá,", nome);
+console.log(`Você tem ${idade} anos`);
+
+let cidade = prompt("Digite sua cidade:");
+console.log("Você mora em", cidade);
+
+let soma = 15 + 5;
+let subtracao = 15 - 5;
+let multiplicacao = 15 * 5;
+let divisao = 15 / 3;
+let resto = 15 % 4;
+let potencia = 2 ** 3;
+console.log("Soma:", soma, "Potência:", potencia);
+                        </pre>
+                        <div class="code-actions">
+                            <button class="code-action-btn" onclick="copyCode(this)">
+                                <i class="code-action-icon fas fa-copy"></i> Copiar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="code-block" data-lang="java" style="display: none;">
+                        <div class="code-language">Java</div>
+                        <pre>
+public class Main {
+    public static void main(String[] args) {
+        String nome = "Ana";
+        int idade = 20;
+        double altura = 1.65;
+        boolean estudante = true;
+
+        System.out.println("Olá, " + nome);
+        System.out.println("Você tem " + idade + " anos");
+
+        java.util.Scanner scanner = new java.util.Scanner(System.in);
+        System.out.print("Digite sua cidade: ");
+        String cidade = scanner.nextLine();
+        System.out.println("Você mora em " + cidade);
+
+        int soma = 15 + 5;
+        int subtracao = 15 - 5;
+        int multiplicacao = 15 * 5;
+        double divisao = 15 / 3.0;
+        int resto = 15 % 4;
+        double potencia = Math.pow(2, 3);
+        System.out.println("Soma: " + soma + " Potência: " + potencia);
+    }
+}
+                        </pre>
+                        <div class="code-actions">
+                            <button class="code-action-btn" onclick="copyCode(this)">
+                                <i class="code-action-icon fas fa-copy"></i> Copiar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="code-block" data-lang="csharp" style="display: none;">
+                        <div class="code-language">C#</div>
+                        <pre>
+using System;
+
+class Program {
+    static void Main(string[] args) {
+        string nome = "Ana";
+        int idade = 20;
+        double altura = 1.65;
+        bool estudante = true;
+
+        Console.WriteLine("Olá, " + nome);
+        Console.WriteLine($"Você tem {idade} anos");
+
+        Console.Write("Digite sua cidade: ");
+        string cidade = Console.ReadLine();
+        Console.WriteLine("Você mora em " + cidade);
+
+        int soma = 15 + 5;
+        int subtracao = 15 - 5;
+        int multiplicacao = 15 * 5;
+        double divisao = 15 / 3.0;
+        int resto = 15 % 4;
+        double potencia = Math.Pow(2, 3);
+        Console.WriteLine("Soma: " + soma + " Potência: " + potencia);
+    }
+}
+                        </pre>
+                        <div class="code-actions">
+                            <button class="code-action-btn" onclick="copyCode(this)">
+                                <i class="code-action-icon fas fa-copy"></i> Copiar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="code-block" data-lang="cpp" style="display: none;">
+                        <div class="code-language">C++</div>
+                        <pre>
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main() {
+    string nome = "Ana";
+    int idade = 20;
+    double altura = 1.65;
+    bool estudante = true;
+
+    cout << "Olá, " << nome << endl;
+    cout << "Você tem " << idade << " anos" << endl;
+
+    string cidade;
+    cout << "Digite sua cidade: ";
+    getline(cin, cidade);
+    cout << "Você mora em " << cidade << endl;
+
+    int soma = 15 + 5;
+    int subtracao = 15 - 5;
+    int multiplicacao = 15 * 5;
+    double divisao = 15.0 / 3;
+    int resto = 15 % 4;
+    double potencia = pow(2, 3);
+    cout << "Soma: " << soma << " Potência: " << potencia << endl;
+    return 0;
+}
+                        </pre>
+                        <div class="code-actions">
+                            <button class="code-action-btn" onclick="copyCode(this)">
+                                <i class="code-action-icon fas fa-copy"></i> Copiar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="code-block" data-lang="ruby" style="display: none;">
+                        <div class="code-language">Ruby</div>
+                        <pre>
+# Exemplo básico de variáveis e operações
+nome = "Ana"
+idade = 20
+altura = 1.65
+estudante = true
+
+puts "Olá, #{nome}"
+puts "Você tem #{idade} anos"
+
+print "Digite sua cidade: "
+cidade = gets.chomp
+puts "Você mora em #{cidade}"
+
+soma = 15 + 5
+subtracao = 15 - 5
+multiplicacao = 15 * 5
+divisao = 15.0 / 3
+resto = 15 % 4
+potencia = 2 ** 3
+puts "Soma: #{soma}, Potência: #{potencia}"
+                        </pre>
+                        <div class="code-actions">
+                            <button class="code-action-btn" onclick="copyCode(this)">
+                                <i class="code-action-icon fas fa-copy"></i> Copiar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Estruturas Condicionais -->
+            <section class="code-section" id="conditionals">
+                <div class="code-header">
+                    <div class="code-icon">🔀</div>
+                    <h3 class="code-title">Estruturas Condicionais</h3>
+                </div>
+                <div class="code-tabs">
+                    <div class="code-tab active" data-lang="python">Python</div>
+                    <div class="code-tab" data-lang="javascript">JavaScript</div>
+                    <div class="code-tab" data-lang="java">Java</div>
+                    <div class="code-tab" data-lang="csharp">C#</div>
+                    <div class="code-tab" data-lang="cpp">C++</div>
+                    <div class="code-tab" data-lang="ruby">Ruby</div>
+                </div>
+                <div class="code-content">
+                    <div class="code-block" data-lang="python">
+                        <div class="code-language">Python</div>
+                        <pre>
+# Exemplo de estruturas condicionais
+idade = 18
+if idade >= 18:
+    print("Você é maior de idade")
+else:
+    print("Você é menor de idade")
+
+nota = 7.5
+if nota >= 9:
+    print("Conceito A")
+elif nota >= 7:
+    print("Conceito B")
+elif nota >= 5:
+    print("Conceito C")
+else:
+    print("Conceito D")
+
+status = "Aprovado" if nota >= 6 else "Reprovado"
+print("Status:", status)
+                        </pre>
+                        <div class="code-actions">
+                            <button class="code-action-btn" onclick="copyCode(this)">
+                                <i class="code-action-icon fas fa-copy"></i> Copiar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="code-block" data-lang="javascript" style="display: none;">
+                        <div class="code-language">JavaScript</div>
+                        <pre>
+// Exemplo de estruturas condicionais
+let idade = 18;
+if (idade >= 18) {
+    console.log("Você é maior de idade");
+} else {
+    console.log("Você é menor de idade");
+}
+
+let nota = 7.5;
+if (nota >= 9) {
+    console.log("Conceito A");
+} else if (nota >= 7) {
+    console.log("Conceito B");
+} else if (nota >= 5) {
+    console.log("Conceito C");
+} else {
+    console.log("Conceito D");
+}
+
+let status = nota >= 6 ? "Aprovado" : "Reprovado";
+console.log("Status:", status);
+                        </pre>
+                        <div class="code-actions">
+                            <button class="code-action-btn" onclick="copyCode(this)">
+                                <i class="code-action-icon fas fa-copy"></i> Copiar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="code-block" data-lang="java" style="display: none;">
+                        <div class="code-language">Java</div>
+                        <pre>
+public class Main {
+    public static void main(String[] args) {
+        int idade = 18;
+        if (idade >= 18) {
+            System.out.println("Você é maior de idade");
+        } else {
+            System.out.println("Você é menor de idade");
+        }
+
+        double nota = 7.5;
+        if (nota >= 9) {
+            System.out.println("Conceito A");
+        } else if (nota >= 7) {
+            System.out.println("Conceito B");
+        } else if (nota >= 5) {
+            System.out.println("Conceito C");
+        } else {
+            System.out.println("Conceito D");
+        }
+
+        String status = nota >= 6 ? "Aprovado" : "Reprovado";
+        System.out.println("Status: " + status);
+    }
+}
+                        </pre>
+                        <div class="code-actions">
+                            <button class="code-action-btn" onclick="copyCode(this)">
+                                <i class="code-action-icon fas fa-copy"></i> Copiar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="code-block" data-lang="csharp" style="display: none;">
+                        <div class="code-language">C#</div>
+                        <pre>
+using System;
+
+class Program {
+    static void Main(string[] args) {
+        int idade = 18;
+        if (idade >= 18) {
+            Console.WriteLine("Você é maior de idade");
+        } else {
+            Console.WriteLine("Você é menor de idade");
+        }
+
+        double nota = 7.5;
+        if (nota >= 9) {
+            Console.WriteLine("Conceito A");
+        } else if (nota >= 7) {
+            Console.WriteLine("Conceito B");
+        } else if (nota >= 5) {
+            Console.WriteLine("Conceito C");
+        } else {
+            Console.WriteLine("Conceito D");
+        }
+
+        string status = nota >= 6 ? "Aprovado" : "Reprovado";
+        Console.WriteLine("Status: " + status);
+    }
+}
+                        </pre>
+                        <div class="code-actions">
+                            <button class="code-action-btn" onclick="copyCode(this)">
+                                <i class="code-action-icon fas fa-copy"></i> Copiar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="code-block" data-lang="cpp" style="display: none;">
+                        <div class="code-language">C++</div>
+                        <pre>
+#include <iostream>
+using namespace std;
+
+int main() {
+    int idade = 18;
+    if (idade >= 18) {
+        cout << "Você é maior de idade" << endl;
+    } else {
+        cout << "Você é menor de idade" << endl;
+    }
+
+    double nota = 7.5;
+    if (nota >= 9) {
+        cout << "Conceito A" << endl;
+    } else if (nota >= 7) {
+        cout << "Conceito B" << endl;
+    } else if (nota >= 5) {
+        cout << "Conceito C" << endl;
+    } else {
+        cout << "Conceito D" << endl;
+    }
+
+    string status = nota >= 6 ? "Aprovado" : "Reprovado";
+    cout << "Status: " << status << endl;
+    return 0;
+}
+                        </pre>
+                        <div class="code-actions">
+                            <button class="code-action-btn" onclick="copyCode(this)">
+                                <i class="code-action-icon fas fa-copy"></i> Copiar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="code-block" data-lang="ruby" style="display: none;">
+                        <div class="code-language">Ruby</div>
+                        <pre>
+# Exemplo de estruturas condicionais
+idade = 18
+if idade >= 18
+    puts "Você é maior de idade"
+else
+    puts "Você é menor de idade"
+end
+
+nota = 7.5
+if nota >= 9
+    puts "Conceito A"
+elsif nota >= 7
+    puts "Conceito B"
+elsif nota >= 5
+    puts "Conceito C"
+else
+    puts "Conceito D"
+end
+
+status = nota >= 6 ? "Aprovado" : "Reprovado"
+puts "Status: #{status}"
+                        </pre>
+                        <div class="code-actions">
+                            <button class="code-action-btn" onclick="copyCode(this)">
+                                <i class="code-action-icon fas fa-copy"></i> Copiar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Laços de Repetição -->
+            <section class="code-section" id="loops">
+                <div class="code-header">
+                    <div class="code-icon">🔄</div>
+                    <h3 class="code-title">Laços de Repetição</h3>
+                </div>
+                <div class="code-tabs">
+                    <div class="code-tab active" data-lang="python">Python</div>
+                    <div class="code-tab" data-lang="javascript">JavaScript</div>
+                    <div class="code-tab" data-lang="java">Java</div>
+                    <div class="code-tab" data-lang="csharp">C#</div>
+                    <div class="code-tab" data-lang="cpp">C++</div>
+                    <div class="code-tab" data-lang="ruby">Ruby</div>
+                </div>
+                <div class="code-content">
+                    <div class="code-block" data-lang="python">
+                        <div class="code-language">Python</div>
+                        <pre>
+# Exemplo de laços de repetição
+for i in range(5):
+    print("Número:", i)
+
+frutas = ["maçã", "banana", "laranja"]
+for fruta in frutas:
+    print("Fruta:", fruta)
+
+contador = 0
+while contador < 5:
+    print("Contador:", contador)
+    contador += 1
+                        </pre>
+                        <div class="code-actions">
+                            <button class="code-action-btn" onclick="copyCode(this)">
+                                <i class="code-action-icon fas fa-copy"></i> Copiar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="code-block" data-lang="javascript" style="display: none;">
+                        <div class="code-language">JavaScript</div>
+                        <pre>
+for (let i = 0; i < 5; i++) {
+    console.log("Número:", i);
+}
+
+let frutas = ["maçã", "banana", "laranja"];
+for (let fruta of frutas) {
+    console.log("Fruta:", fruta);
+}
+
+let contador = 0;
+while (contador < 5) {
+    console.log("Contador:", contador);
+    contador++;
+}
+                        </pre>
+                        <div class="code-actions">
+                            <button class="code-action-btn" onclick="copyCode(this)">
+                                <i class="code-action-icon fas fa-copy"></i> Copiar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="code-block" data-lang="java" style="display: none;">
+                        <div class="code-language">Java</div>
+                        <pre>
+public class Main {
+    public static void main(String[] args) {
+        for (int i = 0; i < 5; i++) {
+            System.out.println("Número: " + i);
+        }
+
+        String[] frutas = {"maçã", "banana", "laranja"};
+        for (String fruta : frutas) {
+            System.out.println("Fruta: " + fruta);
+        }
+
+        int contador = 0;
+        while (contador < 5) {
+            System.out.println("Contador: " + contador);
+            contador++;
+        }
+    }
+}
+                        </pre>
+                        <div class="code-actions">
+                            <button class="code-action-btn" onclick="copyCode(this)">
+                                <i class="code-action-icon fas fa-copy"></i> Copiar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="code-block" data-lang="csharp" style="display: none;">
+                        <div class="code-language">C#</div>
+                        <pre>
+using System;
+
+class Program {
+    static void Main(string[] args) {
+        for (int i = 0; i < 5; i++) {
+            Console.WriteLine("Número: " + i);
+        }
+
+        string[] frutas = {"maçã", "banana", "laranja"};
+        foreach (string fruta in frutas) {
+            Console.WriteLine("Fruta: " + fruta);
+        }
+
+        int contador = 0;
+        while (contador < 5) {
+            Console.WriteLine("Contador: " + contador);
+            contador++;
+        }
+    }
+}
+                        </pre>
+                        <div class="code-actions">
+                            <button class="code-action-btn" onclick="copyCode(this)">
+                                <i class="code-action-icon fas fa-copy"></i> Copiar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="code-block" data-lang="cpp" style="display: none;">
+                        <div class="code-language">C++</div>
+                        <pre>
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int main() {
+    for (int i = 0; i < 5; i++) {
+        cout << "Número: " << i << endl;
+    }
+
+    vector<string> frutas = {"maçã", "banana", "laranja"};
+    for (string fruta : frutas) {
+        cout << "Fruta: " << fruta << endl;
+    }
+
+    int contador = 0;
+    while (contador < 5) {
+        cout << "Contador: " << contador << endl;
+        contador++;
+    }
+    return 0;
+}
+                        </pre>
+                        <div class="code-actions">
+                            <button class="code-action-btn" onclick="copyCode(this)">
+                                <i class="code-action-icon fas fa-copy"></i> Copiar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="code-block" data-lang="ruby" style="display: none;">
+                        <div class="code-language">Ruby</div>
+                        <pre>
+# Exemplo de laços de repetição
+(0..4).each do |i|
+    puts "Número: #{i}"
+end
+
+frutas = ["maçã", "banana", "laranja"]
+frutas.each do |fruta|
+    puts "Fruta: #{fruta}"
+end
+
+contador = 0
+while contador < 5
+    puts "Contador: #{contador}"
+    contador += 1
+end
+                        </pre>
+                        <div class="code-actions">
+                            <button class="code-action-btn" onclick="copyCode(this)">
+                                <i class="code-action-icon fas fa-copy"></i> Copiar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Funções -->
+            <section class="code-section" id="functions">
+                <div class="code-header">
+                    <div class="code-icon">⚙️</div>
+                    <h3 class="code-title">Funções</h3>
+                </div>
+                <div class="code-tabs">
+                    <div class="code-tab active" data-lang="python">Python</div>
+                    <div class="code-tab" data-lang="javascript">JavaScript</div>
+                    <div class="code-tab" data-lang="java">Java</div>
+                    <div class="code-tab" data-lang="csharp">C#</div>
+                    <div class="code-tab" data-lang="cpp">C++</div>
+                    <div class="code-tab" data-lang="ruby">Ruby</div>
+                </div>
+                <div class="code-content">
+                    <div class="code-block" data-lang="python">
+                        <div class="code-language">Python</div>
+                        <pre>
+# Exemplo de funções
+def saudacao(nome):
+    return f"Olá, {nome}!"
+
+def calcular_area_retangulo(largura, altura):
+    return largura * altura
+
+def eh_par(numero):
+    return numero % 2 == 0
+
+# Uso das funções
+print(saudacao("Maria"))
+area = calcular_area_retangulo(5, 3)
+print("Área do retângulo:", area)
+print("6 é par?", eh_par(6))
+                        </pre>
+                        <div class="code-actions">
+                            <button class="code-action-btn" onclick="copyCode(this)">
+                                <i class="code-action-icon fas fa-copy"></i> Copiar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="code-block" data-lang="javascript" style="display: none;">
+                        <div class="code-language">JavaScript</div>
+                        <pre>
+function saudacao(nome) {
+    return `Olá, ${nome}!`;
+}
+
+function calcularAreaRetangulo(largura, altura) {
+    return largura * altura;
+}
+
+function ehPar(numero) {
+    return numero % 2 === 0;
+}
+
+console.log(saudacao("Maria"));
+const area = calcularAreaRetangulo(5, 3);
+console.log("Área do retângulo:", area);
+console.log("6 é par?", ehPar(6));
+                        </pre>
+                        <div class="code-actions">
+                            <button class="code-action-btn" onclick="copyCode(this)">
+                                <i class="code-action-icon fas fa-copy"></i> Copiar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="code-block" data-lang="java" style="display: none;">
+                        <div class="code-language">Java</div>
+                        <pre>
+public class Main {
+    public static String saudacao(String nome) {
+        return "Olá, " + nome + "!";
+    }
+
+    public static double calcularAreaRetangulo(double largura, double altura) {
+        return largura * altura;
+    }
+
+    public static boolean ehPar(int numero) {
+        return numero % 2 == 0;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(saudacao("Maria"));
+        double area = calcularAreaRetangulo(5, 3);
+        System.out.println("Área do retângulo: " + area);
+        System.out.println("6 é par? " + ehPar(6));
+    }
+}
+                        </pre>
+                        <div class="code-actions">
+                            <button class="code-action-btn" onclick="copyCode(this)">
+                                <i class="code-action-icon fas fa-copy"></i> Copiar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="code-block" data-lang="csharp" style="display: none;">
+                        <div class="code-language">C#</div>
+                        <pre>
+using System;
+
+class Program {
+    static string Saudacao(string nome) {
+        return $"Olá, {nome}!";
+    }
+
+    static double CalcularAreaRetangulo(double largura, double altura) {
+        return largura * altura;
+    }
+
+    static bool EhPar(int numero) {
+        return numero % 2 == 0;
+    }
+
+    static void Main(string[] args) {
+        Console.WriteLine(Saudacao("Maria"));
+        double area = CalcularAreaRetangulo(5, 3);
+        Console.WriteLine("Área do retângulo: " + area);
+        Console.WriteLine("6 é par? " + EhPar(6));
+    }
+}
+                        </pre>
+                        <div class="code-actions">
+                            <button class="code-action-btn" onclick="copyCode(this)">
+                                <i class="code-action-icon fas fa-copy"></i> Copiar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="code-block" data-lang="cpp" style="display: none;">
+                        <div class="code-language">C++</div>
+                        <pre>
+#include <iostream>
+#include <string>
+using namespace std;
+
+string saudacao(string nome) {
+    return "Olá, " + nome + "!";
+}
+
+double calcularAreaRetangulo(double largura, double altura) {
+    return largura * altura;
+}
+
+bool ehPar(int numero) {
+    return numero % 2 == 0;
+}
+
+int main() {
+    cout << saudacao("Maria") << endl;
+    double area = calcularAreaRetangulo(5, 3);
+    cout << "Área do retângulo: " << area << endl;
+    cout << "6 é par? " << (ehPar(6) ? "true" : "false") << endl;
+    return 0;
+}
+                        </pre>
+                        <div class="code-actions">
+                            <button class="code-action-btn" onclick="copyCode(this)">
+                                <i class="code-action-icon fas fa-copy"></i> Copiar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="code-block" data-lang="ruby" style="display: none;">
+                        <div class="code-language">Ruby</div>
+                        <pre>
+def saudacao(nome)
+    "Olá, #{nome}!"
+end
+
+def calcular_area_retangulo(largura, altura)
+    largura * altura
+end
+
+def eh_par(numero)
+    numero % 2 == 0
+end
+
+puts saudacao("Maria")
+area = calcular_area_retangulo(5, 3)
+puts "Área do retângulo: #{area}"
+puts "6 é par? #{eh_par(6)}"
+                        </pre>
+                        <div class="code-actions">
+                            <button class="code-action-btn" onclick="copyCode(this)">
+                                <i class="code-action-icon fas fa-copy"></i> Copiar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Arrays -->
+            <section class="code-section" id="arrays">
+                <div class="code-header">
+                    <div class="code-icon">📋</div>
+                    <h3 class="code-title">Arrays e Listas</h3>
+                </div>
+                <div class="code-tabs">
+                    <div class="code-tab active" data-lang="python">Python</div>
+                    <div class="code-tab" data-lang="javascript">JavaScript</div>
+                    <div class="code-tab" data-lang="java">Java</div>
+                    <div class="code-tab" data-lang="csharp">C#</div>
+                    <div class="code-tab" data-lang="cpp">C++</div>
+                    <div class="code-tab" data-lang="ruby">Ruby</div>
+                </div>
+                <div class="code-content">
+                    <div class="code-block" data-lang="python">
+                        <div class="code-language">Python</div>
+                        <pre>
+# Exemplo de listas
+numeros = [1, 2, 3, 4, 5]
+nomes = ["Ana", "João", "Maria"]
+
+print("Primeiro número:", numeros[0])
+numeros.append(6)
+print("Após adicionar 6:", numeros)
+
+nomes[1] = "Pedro"
+print("Após alterar:", nomes)
+
+for numero in numeros:
+    print("Número:", numero)
+
+print("Tamanho da lista:", len(numeros))
+                        </pre>
+                        <div class="code-actions">
+                            <button class="code-action-btn" onclick="copyCode(this)">
+                                <i class="code-action-icon fas fa-copy"></i> Copiar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="code-block" data-lang="javascript" style="display: none;">
+                        <div class="code-language">JavaScript</div>
+                        <pre>
+let numeros = [1, 2, 3, 4, 5];
+let nomes = ["Ana", "João", "Maria"];
+
+console.log("Primeiro número:", numeros[0]);
+numeros.push(6);
+console.log("Após adicionar 6:", numeros);
+
+nomes[1] = "Pedro";
+console.log("Após alterar:", nomes);
+
+for (let numero of numeros) {
+    console.log("Número:", numero);
+}
+
+console.log("Tamanho do array:", numeros.length);
+                        </pre>
+                        <div class="code-actions">
+                            <button class="code-action-btn" onclick="copyCode(this)">
+                                <i class="code-action-icon fas fa-copy"></i> Copiar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="code-block" data-lang="java" style="display: none;">
+                        <div class="code-language">Java</div>
+                        <pre>
+import java.util.ArrayList;
+
+public class Main {
+    public static void main(String[] args) {
+        ArrayList<Integer> numeros = new ArrayList<>();
+        numeros.add(1);
+        numeros.add(2);
+        numeros.add(3);
+        numeros.add(4);
+        numeros.add(5);
+
+        String[] nomes = {"Ana", "João", "Maria"};
+
+        System.out.println("Primeiro número: " + numeros.get(0));
+        numeros.add(6);
+        System.out.println("Após adicionar 6: " + numeros);
+
+        nomes[1] = "Pedro";
+        System.out.println("Após alterar: ");
+        for (String nome : nomes) {
+            System.out.println("Nome: " + nome);
+        }
+
+        for (int numero : numeros) {
+            System.out.println("Número: " + numero);
+        }
+
+        System.out.println("Tamanho da lista: " + numeros.size());
+    }
+}
+                        </pre>
+                        <div class="code-actions">
+                            <button class="code-action-btn" onclick="copyCode(this)">
+                                <i class="code-action-icon fas fa-copy"></i> Copiar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="code-block" data-lang="csharp" style="display: none;">
+                        <div class="code-language">C#</div>
+                        <pre>
+using System;
+using System.Collections.Generic;
+
+class Program {
+    static void Main(string[] args) {
+        List<int> numeros = new List<int> {1, 2, 3, 4, 5};
+        string[] nomes = {"Ana", "João", "Maria"};
+
+        Console.WriteLine("Primeiro número: " + numeros[0]);
+        numeros.Add(6);
+        Console.WriteLine("Após adicionar 6: " + string.Join(", ", numeros));
+
+        nomes[1] = "Pedro";
+        Console.WriteLine("Após alterar: " + string.Join(", ", nomes));
+
+        foreach (int numero in numeros) {
+            Console.WriteLine("Número: " + numero);
+        }
+
+        Console.WriteLine("Tamanho da lista: " + numeros.Count);
+    }
+}
+                        </pre>
+                        <div class="code-actions">
+                            <button class="code-action-btn" onclick="copyCode(this)">
+                                <i class="code-action-icon fas fa-copy"></i> Copiar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="code-block" data-lang="cpp" style="display: none;">
+                        <div class="code-language">C++</div>
+                        <pre>
+#include <iostream>
+#include <vector>
+#include <string>
+using namespace std;
+
+int main() {
+    vector<int> numeros = {1, 2, 3, 4, 5};
+    string nomes[] = {"Ana", "João", "Maria"};
+
+    cout << "Primeiro número: " << numeros[0] << endl;
+    numeros.push_back(6);
+    cout << "Após adicionar 6: ";
+    for (int num : numeros) cout << num << " ";
+    cout << endl;
+
+    nomes[1] = "Pedro";
+    cout << "Após alterar: ";
+    for (string nome : nomes) cout << nome << " ";
+    cout << endl;
+
+    for (int numero : numeros) {
+        cout << "Número: " << numero << endl;
+    }
+
+    cout << "Tamanho da lista: " << numeros.size() << endl;
+    return 0;
+}
+                        </pre>
+                        <div class="code-actions">
+                            <button class="code-action-btn" onclick="copyCode(this)">
+                                <i class="code-action-icon fas fa-copy"></i> Copiar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="code-block" data-lang="ruby" style="display: none;">
+                        <div class="code-language">Ruby</div>
+                        <pre>
+# Exemplo de arrays
+numeros = [1, 2, 3, 4, 5]
+nomes = ["Ana", "João", "Maria"]
+
+puts "Primeiro número: #{numeros[0]}"
+numeros << 6
+puts "Após adicionar 6: #{numeros}"
+
+nomes[1] = "Pedro"
+puts "Após alterar: #{nomes}"
+
+numeros.each do |numero|
+    puts "Número: #{numero}"
+end
+
+puts "Tamanho do array: #{numeros.length}"
+                        </pre>
+                        <div class="code-actions">
+                            <button class="code-action-btn" onclick="copyCode(this)">
+                                <i class="code-action-icon fas fa-copy"></i> Copiar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Jogos Simples -->
+            <section class="code-section" id="games">
+                <div class="code-header">
+                    <div class="code-icon">🎮</div>
+                    <h3 class="code-title">Jogos Simples</h3>
+                </div>
+                <div class="code-tabs">
+                    <div class="code-tab active" data-lang="python">Python</div>
+                    <div class="code-tab" data-lang="javascript">JavaScript</div>
+                    <div class="code-tab" data-lang="java">Java</div>
+                    <div class="code-tab" data-lang="csharp">C#</div>
+                    <div class="code-tab" data-lang="cpp">C++</div>
+                    <div class="code-tab" data-lang="ruby">Ruby</div>
+                </div>
+                <div class="code-content">
+                    <div class="code-block" data-lang="python">
+                        <div class="code-language">Python</div>
+                        <pre>
+# Jogo de Adivinhação
+import random
+
+def jogo_adivinhacao():
+    numero_secreto = random.randint(1, 100)
+    tentativas = 0
+    print("Bem-vindo ao Jogo de Adivinhação!")
+    print("Tente adivinhar o número entre 1 e 100.")
+
+    while True:
+        palpite = int(input("Digite seu palpite: "))
+        tentativas += 1
+        if palpite < numero_secreto:
+            print("Muito baixo! Tente novamente.")
+        elif palpite > numero_secreto:
+            print("Muito alto! Tente novamente.")
+        else:
+            print(f"Parabéns! Você acertou em {tentativas} tentativas!")
+            break
+
+jogo_adivinhacao()
+                        </pre>
+                        <div class="code-actions">
+                            <button class="code-action-btn" onclick="copyCode(this)">
+                                <i class="code-action-icon fas fa-copy"></i> Copiar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="code-block" data-lang="javascript" style="display: none;">
+                        <div class="code-language">JavaScript</div>
+                        <pre>
+// Jogo de Adivinhação
+function jogoAdivinhacao() {
+    const numeroSecreto = Math.floor(Math.random() * 100) + 1;
+    let tentativas = 0;
+    console.log("Bem-vindo ao Jogo de Adivinhação!");
+    console.log("Tente adivinhar o número entre 1 e 100.");
+
+    function tentar() {
+        let palpite = prompt("Digite seu palpite:");
+        palpite = parseInt(palpite);
+        tentativas++;
+        if (palpite < numeroSecreto) {
+            console.log("Muito baixo! Tente novamente.");
+            tentar();
+        } else if (palpite > numeroSecreto) {
+            console.log("Muito alto! Tente novamente.");
+            tentar();
+        } else {
+            console.log(`Parabéns! Você acertou em ${tentativas} tentativas!`);
+        }
+    }
+    tentar();
+}
+
+jogoAdivinhacao();
+                        </pre>
+                        <div class="code-actions">
+                            <button class="code-action-btn" onclick="copyCode(this)">
+                                <i class="code-action-icon fas fa-copy"></i> Copiar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="code-block" data-lang="java" style="display: none;">
+                        <div class="code-language">Java</div>
+                        <pre>
+import java.util.Random;
+import java.util.Scanner;
+
+public class Main {
+    public static void jogoAdivinhacao() {
+        Random random = new Random();
+        int numeroSecreto = random.nextInt(100) + 1;
+        int tentativas = 0;
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Bem-vindo ao Jogo de Adivinhação!");
+        System.out.println("Tente adivinhar o número entre 1 e 100.");
+
+        while (true) {
+            System.out.print("Digite seu palpite: ");
+            int palpite = scanner.nextInt();
+            tentativas++;
+            if (palpite < numeroSecreto) {
+                System.out.println("Muito baixo! Tente novamente.");
+            } else if (palpite > numeroSecreto) {
+                System.out.println("Muito alto! Tente novamente.");
+            } else {
+                System.out.println("Parabéns! Você acertou em " + tentativas + " tentativas!");
+                break;
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        jogoAdivinhacao();
+    }
+}
+                        </pre>
+                        <div class="code-actions">
+                            <button class="code-action-btn" onclick="copyCode(this)">
+                                <i class="code-action-icon fas fa-copy"></i> Copiar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="code-block" data-lang="csharp" style="display: none;">
+                        <div class="code-language">C#</div>
+                        <pre>
+using System;
+
+class Program {
+    static void JogoAdivinhacao() {
+        Random random = new Random();
+        int numeroSecreto = random.Next(1, 101);
+        int tentativas = 0;
+        Console.WriteLine("Bem-vindo ao Jogo de Adivinhação!");
+        Console.WriteLine("Tente adivinhar o número entre 1 e 100.");
+
+        while (true) {
+            Console.Write("Digite seu palpite: ");
+            int palpite = int.Parse(Console.ReadLine());
+            tentativas++;
+            if (palpite < numeroSecreto) {
+                Console.WriteLine("Muito baixo! Tente novamente.");
+            } else if (palpite > numeroSecreto) {
+                Console.WriteLine("Muito alto! Tente novamente.");
+            } else {
+                Console.WriteLine($"Parabéns! Você acertou em {tentativas} tentativas!");
+                break;
+            }
+        }
+    }
+
+    static void Main(string[] args) {
+        JogoAdivinhacao();
+    }
+}
+                        </pre>
+                        <div class="code-actions">
+                            <button class="code-action-btn" onclick="copyCode(this)">
+                                <i class="code-action-icon fas fa-copy"></i> Copiar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="code-block" data-lang="cpp" style="display: none;">
+                        <div class="code-language">C++</div>
+                        <pre>
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+
+void jogoAdivinhacao() {
+    srand(time(0));
+    int numeroSecreto = rand() % 100 + 1;
+    int tentativas = 0;
+    int palpite;
+
+    cout << "Bem-vindo ao Jogo de Adivinhação!" << endl;
+    cout << "Tente adivinhar o número entre 1 e 100." << endl;
+
+    while (true) {
+        cout << "Digite seu palpite: ";
+        cin >> palpite;
+        tentativas++;
+        if (palpite < numeroSecreto) {
+            cout << "Muito baixo! Tente novamente." << endl;
+        } else if (palpite > numeroSecreto) {
+            cout << "Muito alto! Tente novamente." << endl;
+        } else {
+            cout << "Parabéns! Você acertou em " << tentativas << " tentativas!" << endl;
+            break;
+        }
+    }
+}
+
+int main() {
+    jogoAdivinhacao();
+    return 0;
+}
+                        </pre>
+                        <div class="code-actions">
+                            <button class="code-action-btn" onclick="copyCode(this)">
+                                <i class="code-action-icon fas fa-copy"></i> Copiar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="code-block" data-lang="ruby" style="display: none;">
+                        <div class="code-language">Ruby</div>
+                        <pre>
+# Jogo de Adivinhação
+def jogo_adivinhacao
+    numero_secreto = rand(1..100)
+    tentativas = 0
+    puts "Bem-vindo ao Jogo de Adivinhação!"
+    puts "Tente adivinhar o número entre 1 e 100."
+
+    loop do
+        print "Digite seu palpite: "
+        palpite = gets.chomp.to_i
+        tentativas += 1
+        if palpite < numero_secreto
+            puts "Muito baixo! Tente novamente."
+        elsif palpite > numero_secreto
+            puts "Muito alto! Tente novamente."
+        else
+            puts "Parabéns! Você acertou em #{tentativas} tentativas!"
+            break
+        end
+    end
+end
+
+jogo_adivinhacao
+                        </pre>
+                        <div class="code-actions">
+                            <button class="code-action-btn" onclick="copyCode(this)">
+                                <i class="code-action-icon fas fa-copy"></i> Copiar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Footer -->
+            <footer class="app-footer">
+                <div class="footer-content">
+                    <div class="footer-section">
+                        <h4>Sobre a CodeLearn</h4>
+                        <p>CodeLearn é uma plataforma dedicada a ensinar programação de forma prática e acessível para iniciantes e aprendizes de todas as idades.</p>
+                    </div>
+                    <div class="footer-section">
+                        <h4>Links Úteis</h4>
+                        <ul>
+                            <li><a href="#">Documentação</a></li>
+                            <li><a href="#">Comunidade</a></li>
+                            <li><a href="#">FAQ</a></li>
+                            <li><a href="#">Suporte</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h4>Contato</h4>
+                        <p>Email: suporte@codelearn.com</p>
+                        <p>Redes Sociais:</p>
+                        <div class="social-links">
+                            <a href="#"><i class="fab fa-github"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-linkedin"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p>&copy; 2025 CodeLearn. Todos os direitos reservados.</p>
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/exemplosdecodigo.js') }}"></script>
+</body>
+</html>
