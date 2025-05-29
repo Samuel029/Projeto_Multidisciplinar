@@ -320,6 +320,21 @@ a:hover { color: var(--primary-dark); }
     border-color: var(--primary-color);
 }
 
+.menu-btn {
+    color: var(--light);
+    font-size: var(--font-size-base);
+    background: var(--primary-dark);
+    border: none;
+    padding: 8px 16px;
+    border-radius: var(--border-radius-sm);
+    transition: var(--transition-normal);
+}
+
+.menu-btn:hover {
+    background: var(--primary);
+    transform: scale(1.05);
+}
+
 .category:hover:not(.active) {
     background-color: #f8fafc;
     transform: translateY(-2px);

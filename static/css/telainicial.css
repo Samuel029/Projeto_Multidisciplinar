@@ -194,21 +194,15 @@ a:focus {
 .theme-toggle {
     font-size: 1.2rem;
 }
-
-/* Offcanvas Menu */
+/* Offcanvas */
 .offcanvas {
     width: clamp(280px, 20vw, 320px);
-    box-shadow: var(--shadow-lg);
     background-color: var(--card-bg);
-    transition: transform var(--transition-normal);
-    z-index: 1200;
-    position: fixed;
-    top: 0;
-    height: 100vh;
+    box-shadow: var(--shadow-lg);
 }
 
 .offcanvas-header {
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    background: var(--gradient-bg);
     color: var(--light);
     padding: var(--space-lg);
 }
@@ -218,13 +212,8 @@ a:focus {
     font-size: var(--font-size-lg);
 }
 
-.btn-close {
-    filter: brightness(0) invert(1);
-}
-
 .offcanvas-body {
     padding: var(--space-lg);
-    overflow-y: auto;
 }
 
 .nav-link {
@@ -352,6 +341,21 @@ a:focus {
     background-color: var(--light-gray);
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.menu-btn {
+    color: var(--light);
+    font-size: var(--font-size-base);
+    background: var(--primary-dark);
+    border: none;
+    padding: 8px 16px;
+    border-radius: var(--border-radius-sm);
+    transition: var(--transition-normal);
+}
+
+.menu-btn:hover {
+    background: var(--primary);
+    transform: scale(1.05);
 }
 
 .category:focus {
