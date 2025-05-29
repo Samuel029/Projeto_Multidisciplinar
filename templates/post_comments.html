@@ -6,9 +6,12 @@
     <title>TechNoBug - Comentários</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
     <!-- Emoji Picker CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/emoji-picker-element@1.15.0/dist/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/emoji-picker-element@1.11.1/index.css}">
+    <link rel="https://cdn.jsdelivr.net/npm/emoji-picker-element@1/dist/style.css">
+    <link rel="https://cdn.jsdelivr.net/npm/emoji-picker-element@1.21.3/dist/picker.css">
+    <link rel="https://cdn.jsdelivr.net/npm/emoji-picker-element@1.21.3/dist/pickers.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/post_comments.css') }}">
 </head>
 <body>
@@ -17,7 +20,7 @@
         <div class="header-content">
             <div class="search-bar">
                 <i class="fas fa-search"></i>
-                <input type="text" placeholder="Pesquisar postagens, tópicos...">
+                <input type="text" placeholder="search-bar">
             </div>
             <div class="logo">
                 <i class="fas fa-graduation-cap"></i>
@@ -31,10 +34,10 @@
     </header>
 
     <!-- Offcanvas Menu -->
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasMenuLabel">
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvas">
         <div class="offcanvas-header">
             <h5 class="offcanvas-title" id="offcanvasMenuLabel">Menu</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            <button type="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body">
             <div class="user-profile mb-4">
@@ -52,13 +55,13 @@
             </div>
             <ul class="navbar-nav">
                 <li class="nav-item mb-2"><a class="nav-link active" href="{{ url_for('telainicial') }}"><i class="fas fa-home me-2"></i>Página Inicial</a></li>
-                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('materiais') }}"><i class="fas fa-book me-2"></i>Materiais de Estudo</a></li>
-                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('pdfs') }}"><i class="fas fa-file-pdf me-2"></i>PDFs e Apostilas</a></li>
-                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('videos') }}"><i class="fas fa-video me-2"></i>Vídeos e Tutoriais</a></li>
-                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('codigo') }}"><i class="fas fa-code me-2"></i>Exemplos de Código</a></li>
-                <li class="nav-item mb-2"><a class="nav-link" href="#"><i class="fas fa-users me-2"></i>Comunidade</a></li>
-                <li class="nav-item mb-2"><a class="nav-link" href="#"><i class="fas fa-cog me-2"></i>Configurações</a></li>
-                <li class="nav-item"><a class="nav-link text-danger" href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt me-2"></i>Sair</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('materiais') }}"><i class="fas fa-book me-2"></i>"></i>Materiais de Estudo</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('pdfs') }}"><i class="fas fa-file-pdf me-2"></i>"></i>PDFs e Apostilas</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('videos') }}"><i class="fas fa-video me-2"></i>"></i>Vídeos e Tutoriais</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('codigo') }}"><i class="fas fa-code me-2"></i>"></i>Exemplos de Código</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="#"><i class="fas fa-users me-2"></i>"></i>Comunidade</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="#"><i class="fas fa-cog me-2"></i>"></i>Configurações</a></li>
+                <li class="nav-item"><a class="nav-link text-danger" href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt me-2"></i>"></i>Sair</a></li>
             </ul>
         </div>
     </div>
@@ -102,7 +105,7 @@
                 </div>
             </div>
 
-            
+            <!-- Comment Form -->
             <div class="post-creation-card comment-creation-card">
                 <h2 class="section-title">
                     <i class="fas fa-comments"></i>
@@ -113,14 +116,16 @@
                         <textarea class="form-control comment-input" name="comment_content" rows="4" placeholder="Escreva seu comentário..." required></textarea>
                         <div class="char-counter">0/500</div>
                         <button type="button" class="emoji-btn" title="Adicionar Emoji"><i class="fas fa-smile"></i></button>
+                        <emoji-picker class="emoji-picker" style="display: none;"></emoji-picker>
                     </div>
                     <div class="comment-form-footer">
                         <button type="submit" class="btn btn-sm btn-primary btn-publish">Enviar Comentário</button>
                         <button type="button" class="btn btn-sm btn-outline-secondary btn-cancel">Cancelar</button>
                     </div>
-                    <emoji-picker class="emoji-picker" style="display: none;"></emoji-picker>
                 </form>
             </div>
+
+            <!-- Comments List -->
             <div class="comments-list">
                 {% if post.comments %}
                     {% for comment in post.comments %}
@@ -141,7 +146,7 @@
                                                 <span class="badge bg-success ms-2">Moderador</span>
                                             {% endif %}
                                         </h6>
-                                        <small class="text-muted time-ago">{{ comment.created_at.strftime('%d/%m/%Y %H:%M') }}</small>
+                                        <small class="text-muted time-ago" data-original="{{ comment.created_at.strftime('%d/%m/%Y %H:%M') }}">{{ comment.created_at.strftime('%d/%m/%Y %H:%M') }}</small>
                                     </div>
                                     {% if comment.user_id == user.id %}
                                         <div class="comment-actions ms-auto">
@@ -172,12 +177,12 @@
                                             <textarea class="form-control edit-comment-input" name="edit_comment_content" rows="3" required>{{ comment.content }}</textarea>
                                             <div class="char-counter">0/500</div>
                                             <button type="button" class="emoji-btn" title="Adicionar Emoji"><i class="fas fa-smile"></i></button>
+                                            <emoji-picker class="emoji-picker" style="display: none;"></emoji-picker>
                                         </div>
                                         <div class="edit-comment-footer">
                                             <button type="submit" class="btn btn-sm btn-primary btn-save-edit">Salvar</button>
                                             <button type="button" class="btn btn-sm btn-outline-secondary btn-cancel-edit">Cancelar</button>
                                         </div>
-                                        <emoji-picker class="emoji-picker" style="display: none;"></emoji-picker>
                                     </form>
                                 </div>
                                 <!-- Reply Form (Hidden by Default) -->
@@ -187,12 +192,12 @@
                                             <textarea class="form-control reply-input" name="reply_content" rows="3" placeholder="Escreva sua resposta..." required></textarea>
                                             <div class="char-counter">0/500</div>
                                             <button type="button" class="emoji-btn" title="Adicionar Emoji"><i class="fas fa-smile"></i></button>
+                                            <emoji-picker class="emoji-picker" style="display: none;"></emoji-picker>
                                         </div>
                                         <div class="reply-form-footer">
                                             <button type="submit" class="btn btn-sm btn-primary btn-publish">Enviar Resposta</button>
                                             <button type="button" class="btn btn-sm btn-outline-secondary btn-cancel-reply">Cancelar</button>
                                         </div>
-                                        <emoji-picker class="emoji-picker" style="display: none;"></emoji-picker>
                                     </form>
                                 </div>
                                 <!-- Replies List -->
@@ -216,7 +221,7 @@
                                                                     <span class="badge bg-success ms-2">Moderador</span>
                                                                 {% endif %}
                                                             </h6>
-                                                            <small class="text-muted time-ago">{{ comment.created_at.strftime('%d/%m/%Y %H:%M') }}</small>
+                                                            <small class="text-muted time-ago" data-original="{{ reply.created_at.strftime('%d/%m/%Y %H:%M') }}">{{ reply.created_at.strftime('%d/%m/%Y %H:%M') }}</small>
                                                         </div>
                                                         {% if reply.user_id == user.id %}
                                                             <div class="comment-actions ms-auto">
@@ -244,12 +249,12 @@
                                                                 <textarea class="form-control edit-reply-input" name="edit_reply_content" rows="3" required>{{ reply.content }}</textarea>
                                                                 <div class="char-counter">0/500</div>
                                                                 <button type="button" class="emoji-btn" title="Adicionar Emoji"><i class="fas fa-smile"></i></button>
+                                                                <emoji-picker class="emoji-picker" style="display: none;"></emoji-picker>
                                                             </div>
                                                             <div class="edit-reply-footer">
                                                                 <button type="submit" class="btn btn-sm btn-primary btn-save-edit">Salvar</button>
                                                                 <button type="button" class="btn btn-sm btn-outline-secondary btn-cancel-edit">Cancelar</button>
                                                             </div>
-                                                            <emoji-picker class="emoji-picker" style="display: none;"></emoji-picker>
                                                         </form>
                                                     </div>
                                                 </div>
@@ -319,7 +324,7 @@
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/emoji-picker-element@1.15.0/dist/index.js" type="module"></script>
+    <script src="https://cdn.jsdelivr.net/npm/emoji-picker-element@1.21.3/index.js" type="module"></script>
     <script src="{{ url_for('static', filename='js/post_comments.js') }}"></script>
 </body>
 </html>

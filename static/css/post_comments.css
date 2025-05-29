@@ -488,14 +488,187 @@ a:focus {
 
 emoji-picker {
     position: absolute;
-    bottom: 60px;
-    right: 15px;
-    width: 300px;
-    max-height: 400px;
+    bottom: clamp(50px, 5vw, 60px);
+    right: var(--space-md);
+    width: clamp(250px, 20vw, 300px);
+    height: clamp(300px, 40vh, 360px);
     z-index: 1000;
+    border: 1px solid var(--medium-gray);
     border-radius: var(--border-radius-md);
     box-shadow: var(--shadow-lg);
     background: var(--card-bg);
+    transition: opacity var(--transition-fast), transform var(--transition-fast);
+    opacity: 0;
+    transform: scale(0.95);
+    overflow-y: auto; /* Permite scroll vertical */
+    overflow-x: hidden; /* Impede scroll horizontal */
+    overscroll-behavior: contain; /* Evita que o scroll do picker afete a página */
+    -webkit-overflow-scrolling: touch; /* Melhora o scroll em dispositivos iOS */
+    box-sizing: border-box; /* Garante que padding e border não afetem o tamanho */
+}
+
+/* Garante visibilidade ao abrir */
+emoji-picker[style*="display: block"] {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Estiliza a barra de scroll */
+emoji-picker::-webkit-scrollbar {
+    width: 8px; /* Largura da barra de scroll vertical */
+}
+
+emoji-picker::-webkit-scrollbar-track {
+    background: var(--light-gray);
+    border-radius: 4px;
+}
+
+emoji-picker::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: 4px;
+    transition: background var(--transition-fast);
+}
+
+emoji-picker::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-dark);
+}
+
+/* Estiliza o contêiner interno de emojis */
+emoji-picker::part(wrapper) {
+    width: 100%; /* Garante que o wrapper ocupe todo o espaço disponível */
+    height: 100%;
+    overflow-y: auto; /* Garante que o wrapper interno também tenha scroll vertical */
+    overflow-x: hidden; /* Impede scroll horizontal no wrapper */
+    padding: var(--space-sm);
+    box-sizing: border-box;
+}
+
+/* Estiliza os emojis */
+emoji-picker::part(emoji) {
+    color: var(--text-color);
+    font-size: var(--font-size-base);
+    padding: 4px;
+    transition: background-color var(--transition-fast);
+    display: inline-block; /* Garante que os emojis não quebrem o layout */
+}
+
+emoji-picker::part(emoji):hover {
+    background-color: var(--primary-transparent);
+}
+
+/* Estiliza a barra de pesquisa */
+emoji-picker::part(search) {
+    background: var(--light);
+    border: 1px solid var(--medium-gray);
+    border-radius: var(--border-radius-sm);
+    color: var(--text-color);
+    padding: var(--space-sm);
+    font-family: var(--font-primary);
+    width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden; /* Evita qualquer scroll horizontal na barra de pesquisa */
+}
+
+emoji-picker::part(search):focus {
+    border-color: var(--primary);
+    outline: 2px solid var(--primary-transparent);
+}
+
+/* Estiliza as categorias */
+emoji-picker::part(category) {
+    color: var(--primary);
+    font-weight: 600;
+    font-size: var(--font-size-sm);
+    padding: var(--space-sm) var(--space-md);
+    background: var(--card-bg);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    width: 100%;
+    overflow-x: hidden; /* Impede scroll horizontal nas categorias */
+}
+
+/* Tema escuro */
+[data-theme="dark"] emoji-picker {
+    border-color: var(--dark-gray);
+    background: var(--card-bg);
+}
+
+[data-theme="dark"] emoji-picker::-webkit-scrollbar-track {
+    background: var(--medium-gray);
+}
+
+[data-theme="dark"] emoji-picker::-webkit-scrollbar-thumb {
+    background: var(--primary-light);
+}
+
+[data-theme="dark"] emoji-picker::-webkit-scrollbar-thumb:hover {
+    background: var(--primary);
+}
+
+[data-theme="dark"] emoji-picker::part(search) {
+    background: var(--medium-gray);
+    color: var(--text-color);
+    border-color: var(--dark-gray);
+}
+
+[data-theme="dark"] emoji-picker::part(emoji):hover {
+    background-color: rgba(74, 145, 255, 0.2);
+}
+
+[data-theme="dark"] emoji-picker::part(category) {
+    color: var(--primary-light);
+    background: var(--card-bg);
+}
+
+/* Responsividade */
+@media (max-width: 576px) {
+    emoji-picker {
+        width: clamp(200px, 80vw, 250px);
+        height: clamp(250px, 35vh, 300px);
+        right: var(--space-sm);
+        bottom: clamp(40px, 5vw, 50px);
+        overflow-x: hidden; /* Reforça a ausência de scroll horizontal */
+    }
+}
+
+/* Ensure the comment-creation-card is positioned above the post-card */
+.comment-creation-card {
+    position: relative;
+    z-index: 10; /* Higher z-index to ensure it appears above post-card */
+    margin-top: var(--space-xxl); /* Increase top margin for clear separation */
+    margin-bottom: var(--space-xl);
+}
+
+.comments-list,
+.comment,
+.post-creation-card,
+.comment-creation-card,
+.comment-form,
+.position-relative {
+    overflow: visible !important;
+    position: relative; /* para posicionamento absoluto do picker funcionar */
+}
+
+/* Ensure post-card doesn't overlap */
+.post-card {
+    position: relative;
+    z-index: 5; /* Lower z-index than comment-creation-card */
+    margin-bottom: var(--space-xxl); /* Increase bottom margin to avoid overlap */
+}
+
+/* Adjust container to prevent size-related bugs */
+.container {
+    max-width: 1400px;
+    padding: clamp(1.5rem, 3vw, 2rem);
+    overflow: visible; /* Prevent clipping of content */
+}
+
+/* Ensure main-content doesn't cause stacking issues */
+.main-content {
+    position: relative;
+    z-index: 1;
+    margin-top: var(--space-xl);
 }
 
 .comment-form-footer, .reply-form-footer, .edit-comment-footer, .edit-reply-footer {
@@ -802,6 +975,21 @@ emoji-picker {
     display: flex;
     align-items: center;
     gap: 8px;
+}
+
+.menu-btn {
+    color: var(--light);
+    font-size: var(--font-size-base);
+    background: var(--primary-dark);
+    border: none;
+    padding: 8px 16px;
+    border-radius: var(--border-radius-sm);
+    transition: var(--transition-normal);
+}
+
+.menu-btn:hover {
+    background: var(--primary);
+    transform: scale(1.05);
 }
 
 .footer-links a:hover, .footer-links a:focus {

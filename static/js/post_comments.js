@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const likeButton = document.querySelector('.like-btn');
     const deleteButton = document.querySelector('.delete-post');
     const sideMenu = document.getElementById('offcanvasMenu');
-    const closeCommentsButton = document.querySelector('.close-comments');
 
     // Inicializa componentes
     initializeComponents();
@@ -31,6 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setInterval(updateTimeAgo, 60000);
 
     function initializeComponents() {
+        console.log('Inicializando componentes...');
         // Carrega likes para o post
         if (likeButton) {
             const postId = likeButton.dataset.postId;
@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         if (data.user_liked) likeButton.classList.add('active');
                     }
                 })
-                .catch(error => console.error('Error fetching post likes:', error));
+                .catch(error => console.error('Erro ao carregar likes do post:', error));
         }
 
         // Carrega likes para comentários e respostas
@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         if (data.user_liked) btn.classList.add('liked');
                     }
                 })
-                .catch(error => console.error('Error fetching comment likes:', error));
+                .catch(error => console.error('Erro ao carregar likes do comentário:', error));
         });
 
         // Inicializa contadores de caracteres
@@ -171,6 +171,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         setupReplyForms();
                         setupEditForms();
                         setupDeleteComments();
+                        setupEmojiPickers(); // Reconfigura emoji pickers para o novo comentário
                     } else {
                         showNotification(data.message || 'Erro ao adicionar comentário', 'error');
                     }
@@ -321,6 +322,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             setupCommentLikeButtons();
                             setupEditForms();
                             setupDeleteComments();
+                            setupEmojiPickers(); // Reconfigura emoji pickers para a nova resposta
                         } else {
                             showNotification(data.message || 'Erro ao adicionar resposta', 'error');
                         }
@@ -441,7 +443,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 this.closest('.comment').remove();
                                 showNotification(`${type === 'comment' ? 'Comentário' : 'Resposta'} deletado com sucesso!`, 'success');
                                 updateCommentCount();
-                                if (type === 'comment' && !document.querySelector('.comments-list .comment')) {
+                                if (type === 'comment' && !document.querySelector('.comments-list .comment:not(.reply)')) {
                                     const commentsList = document.querySelector('.comments-list');
                                     commentsList.innerHTML = `
                                         <div class="empty-state-card">
@@ -463,30 +465,43 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function setupEmojiPickers() {
+        console.log('Inicializando emoji pickers...');
         document.querySelectorAll('.emoji-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const emojiPicker = this.parentElement.querySelector('emoji-picker');
+            const emojiPicker = btn.parentElement.querySelector('emoji-picker');
+            if (!emojiPicker) {
+                console.warn('Emoji picker não encontrado para o botão:', btn);
+                return;
+            }
+
+            console.log('Configurando botão de emoji:', btn);
+            btn.addEventListener('click', function(event) {
+                console.log('Botão de emoji clicado:', btn);
                 emojiPicker.style.display = emojiPicker.style.display === 'none' ? 'block' : 'none';
+                event.stopPropagation();
             });
 
-            const emojiPicker = btn.parentElement.querySelector('emoji-picker');
-            if (emojiPicker) {
-                emojiPicker.addEventListener('emoji-click', event => {
-                    const textarea = btn.parentElement.querySelector('textarea');
-                    const cursorPos = textarea.selectionStart;
-                    const textBefore = textarea.value.substring(0, cursorPos);
-                    const textAfter = textarea.value.substring(cursorPos);
-                    textarea.value = textBefore + event.detail.unicode + textAfter;
-                    textarea.dispatchEvent(new Event('input'));
-                    textarea.focus();
-                    textarea.selectionStart = textarea.selectionEnd = cursorPos + event.detail.unicode.length;
-                    emojiPicker.style.display = 'none';
-                });
-            }
+            emojiPicker.addEventListener('emoji-click', event => {
+                console.log('Emoji selecionado:', event.detail.unicode);
+                const textarea = btn.parentElement.querySelector('textarea');
+                if (!textarea) {
+                    console.warn('Textarea não encontrada para o emoji picker:', emojiPicker);
+                    return;
+                }
+
+                const cursorPos = textarea.selectionStart;
+                const textBefore = textarea.value.substring(0, cursorPos);
+                const textAfter = textarea.value.substring(cursorPos);
+                textarea.value = textBefore + event.detail.unicode + textAfter;
+                textarea.dispatchEvent(new Event('input'));
+                textarea.focus();
+                textarea.selectionStart = textarea.selectionEnd = cursorPos + event.detail.unicode.length;
+                emojiPicker.style.display = 'none';
+            });
         });
 
         document.addEventListener('click', function(event) {
             if (!event.target.closest('.emoji-btn') && !event.target.closest('emoji-picker')) {
+                console.log('Fechando todos os emoji pickers');
                 document.querySelectorAll('emoji-picker').forEach(picker => {
                     picker.style.display = 'none';
                 });
@@ -525,7 +540,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             ${comment.username}
                             ${comment.is_admin ? '<span class="badge bg-danger ms-2">Admin</span>' : comment.is_moderator ? '<span class="badge bg-success ms-2">Moderador</span>' : ''}
                         </h6>
-                        <small class="text-muted time-ago">${comment.created_at}</small>
+                        <small class="text-muted time-ago" data-original="${comment.created_at}">${comment.created_at}</small>
                     </div>
                     ${isOwnComment ? `
                     <div class="comment-actions ms-auto">
@@ -554,12 +569,12 @@ document.addEventListener('DOMContentLoaded', function() {
                             <textarea class="form-control edit-comment-input" name="edit_comment_content" rows="3" required>${comment.content}</textarea>
                             <div class="char-counter">0/500</div>
                             <button type="button" class="emoji-btn" title="Adicionar Emoji"><i class="fas fa-smile"></i></button>
+                            <emoji-picker class="emoji-picker" style="display: none;"></emoji-picker>
                         </div>
                         <div class="edit-comment-footer">
                             <button type="submit" class="btn btn-sm btn-primary btn-save-edit">Salvar</button>
                             <button type="button" class="btn btn-sm btn-outline-secondary btn-cancel-edit">Cancelar</button>
                         </div>
-                        <emoji-picker class="emoji-picker" style="display: none;"></emoji-picker>
                     </form>
                 </div>
                 <div class="reply-form-container" style="display: none;">
@@ -567,19 +582,18 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="mb-3 position-relative">
                             <textarea class="form-control reply-input" name="reply_content" rows="3" placeholder="Escreva sua resposta..." required></textarea>
                             <div class="char-counter">0/500</div>
-                            <button type="btn" class="btn-cancel" title="return false">Cancelar</button>
                             <button type="button" class="emoji-btn" title="Adicionar Emoji"><i class="fas fa-smile"></i></button>
+                            <emoji-picker class="emoji-picker" style="display: none;"></emoji-picker>
                         </div>
                         <div class="reply-form-footer">
                             <button type="submit" class="btn btn-sm btn-primary btn-publish">Enviar Resposta</button>
-                            <button type="button" class="btn-cancel-reply">Cancel</button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary btn-cancel-reply">Cancelar</button>
                         </div>
-                        <emoji-picker class="emoji-picker" style="display: none;"></emoji-picker>
-                    </div>
-                <div class="replies-list ms-5">
-                    </div>
+                    </form>
                 </div>
-            `;
+                <div class="replies-list ms-5"></div>
+            </div>
+        `;
         return div;
     }
 
@@ -590,17 +604,17 @@ document.addEventListener('DOMContentLoaded', function() {
         div.innerHTML = `
             <div class="comment-wrapper">
                 <div class="comment-header d-flex align-items-center">
-                    <div class="avatar"></div>
-                        <div class="avatar-initials bg-primary ms-3 text-white rounded-circle d-flex justify-content-center align-items-center">
+                    <div class="avatar me-3">
+                        <div class="avatar-initials bg-secondary text-white rounded-circle d-flex justify-content-center align-items-center">
                             ${reply.username[0].toUpperCase()}
                         </div>
                     </div>
                     <div class="comment-meta">
-                        <h6 class="ms-auto">
+                        <h6 class="mb-0">
                             ${reply.username}
-                            ${reply.is_admin ? ' <span class="badge bg-danger ms-2">Admin</span>' : reply.is_moderator ? ' <span class="badge bg-success ms-2">Moderador</span>' : ''}
+                            ${reply.is_admin ? '<span class="badge bg-danger ms-2">Admin</span>' : reply.is_moderator ? '<span class="badge bg-success ms-2">Moderador</span>' : ''}
                         </h6>
-                        <small class="text-muted time-ago">${reply.created_at}</small>
+                        <small class="text-muted time-ago" data-original="${reply.created_at}">${reply.created_at}</small>
                     </div>
                     <div class="comment-actions ms-auto">
                         <button class="btn btn-sm btn-outline-primary edit-reply" data-reply-id="${reply.id}">
@@ -625,12 +639,12 @@ document.addEventListener('DOMContentLoaded', function() {
                             <textarea class="form-control edit-reply-input" name="edit_reply_content" rows="3" required>${reply.content}</textarea>
                             <div class="char-counter">0/500</div>
                             <button type="button" class="emoji-btn" title="Adicionar Emoji"><i class="fas fa-smile"></i></button>
+                            <emoji-picker class="emoji-picker" style="display: none;"></emoji-picker>
                         </div>
                         <div class="edit-reply-footer">
                             <button type="submit" class="btn btn-sm btn-primary btn-save-edit">Salvar</button>
                             <button type="button" class="btn btn-sm btn-outline-secondary btn-cancel-edit">Cancelar</button>
                         </div>
-                        <emoji-picker class="emoji-picker" style="display: none;"></emoji-picker>
                     </form>
                 </div>
             </div>
@@ -647,93 +661,78 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function timeAgo(date) {
-    // Se for uma string, converte para Date
-    if (typeof date === 'string') {
-        // Verifica se já está no formato ISO (com T)
-        if (date.includes('T')) {
-            date = new Date(date);
-        } else {
-            // Assume formato 'YYYY-MM-DD HH:MM:SS'
-            const parts = date.split(/[- :]/);
-            date = new Date(parts[0], parts[1]-1, parts[2], parts[3], parts[4], parts[5]);
+        if (typeof date === 'string') {
+            if (date.includes('T')) {
+                date = new Date(date);
+            } else {
+                const parts = date.split(/[- :/]/);
+                date = new Date(parts[2], parts[1] - 1, parts[0], parts[3] || 0, parts[4] || 0, parts[5] || 0);
+            }
         }
-    }
-    
-    const now = new Date();
-    const seconds = Math.floor((now - date) / 1000);
-    
-    const intervals = {
-        ano: 31536000,
-        mês: 2592000,
-        dia: 86400,
-        hora: 3600,
-        minuto: 60,
-        segundo: 1
-    };
-    
-    for (const [unit, secondsInUnit] of Object.entries(intervals)) {
-        const interval = Math.floor(seconds / secondsInUnit);
-        if (interval >= 1) {
-            return `há ${interval} ${unit}${interval > 1 ? 's' : ''}`;
-        }
-    }
-    return 'agora';
-}
 
-function updateTimeAgo() {
-    const timeElements = document.querySelectorAll('.time-ago');
-    timeElements.forEach(el => {
-        // Pega o timestamp original do atributo data-original ou do texto
-        const originalDate = el.dataset.original || el.textContent;
-        
-        // Converte para objeto Date
-        let date;
-        if (originalDate.includes('-')) {
-            // Formato ISO ou similar (YYYY-MM-DD)
-            const parts = originalDate.split(/[- :/]/);
-            date = new Date(parts[0], parts[1]-1, parts[2], parts[3] || 0, parts[4] || 0, parts[5] || 0);
-        } else {
-            // Formato DD/MM/YYYY
-            const parts = originalDate.split(/[/ :]/);
-            date = new Date(parts[2], parts[1]-1, parts[0], parts[3] || 0, parts[4] || 0);
+        const now = new Date();
+        const seconds = Math.floor((now - date) / 1000);
+
+        const intervals = {
+            ano: 31536000,
+            mês: 2592000,
+            dia: 86400,
+            hora: 3600,
+            minuto: 60,
+            segundo: 1
+        };
+
+        for (const [unit, secondsInUnit] of Object.entries(intervals)) {
+            const interval = Math.floor(seconds / secondsInUnit);
+            if (interval >= 1) {
+                return `há ${interval} ${unit}${interval > 1 ? 's' : ''}`;
+            }
         }
-        
-        // Atualiza o texto
-        el.textContent = timeAgo(date);
-    });
-}
+        return 'agora';
+    }
+
+    function updateTimeAgo() {
+        document.querySelectorAll('.time-ago').forEach(el => {
+            const originalDate = el.dataset.original || el.textContent;
+            el.textContent = timeAgo(originalDate);
+        });
+    }
 
     function setupDrawer() {
         if (!sideMenu) return;
 
-        document.querySelectorAll('.offcanvas .nav-link').forEach(link => {
-            link.addEventListener('click', () => {
+        document.querySelectorAll('.offcanvas .nav-link').forEach(btn => {
+            btn.addEventListener('click', () => {
                 const bsOffcanvas = bootstrap.Offcanvas.getInstance(sideMenu);
-                if (bsOffcanvas) bsOffcanvas.hide();
+                if (bsOffcanvas) {
+                    bsOffcanvas.hide();
+                }
             });
         });
 
         document.addEventListener('click', function(event) {
             const isClickInsideDrawer = sideMenu.contains(event.target);
-            const isClickOnToggler = event.target.closest('.menu-btn');
+            const isClickOnToggler = event.target.closest('button');
             const isOffcanvasOpen = sideMenu.classList.contains('show');
 
             if (!isClickInsideDrawer && !isClickOnToggler && isOffcanvasOpen) {
                 const bsOffcanvas = bootstrap.Offcanvas.getInstance(sideMenu);
-                if (bsOffcanvas) bsOffcanvas.hide();
+                if (bsOffcanvas) {
+                    bsOffcanvas.hide();
+                }
             }
         });
 
         sideMenu.addEventListener('shown.bs.offcanvas', () => {
-            document.body.style.overflow = 'hidden';
+            document.body.style.overflow='hidden';
             document.body.style.paddingRight = '0';
             sideMenu.style.top = '0';
             sideMenu.style.height = '100vh';
         });
 
         sideMenu.addEventListener('hidden.bs.offcanvas', () => {
-            document.body.style.overflow = '';
-            document.body.style.paddingRight = '';
+            document.body.style.overflow = 'auto';
+            document.body.style.paddingRight = '0';
         });
     }
 
@@ -746,7 +745,7 @@ function updateTimeAgo() {
             </div>
             <button class="notification-close"><i class="fas fa-times"></i></button>
         `;
-        document.body.appendChild(notification);
+        document.querySelector('.body').appendChild(notification);
 
         setTimeout(() => notification.classList.add('show'), 100);
 
@@ -762,4 +761,4 @@ function updateTimeAgo() {
             }
         }, 4000);
     };
-});
+})();
