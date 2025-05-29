@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="{{ url_for('static', filename='js/footer.js') }}"></script>
+</head>
+<body>
+    <footer class="site-footer">
+        <div class="container footer-container">
+            <div class="footer-logo">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>TechNoBug</span>
+                </div>
+                <p class="footer-description">Aprenda, compartilhe e cresça na tecnologia.</p>
+            </div>
+            <div class="footer-nav">
+                <h5>Links Rápidos</h5>
+                <ul class="nav flex-column">
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('telainicial') }}"><i class="fas fa-home me-2"></i>Página Inicial</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('materiais') }}"><i class="fas fa-book me-2"></i>Materiais de Estudo</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('pdfs') }}"><i class="fas fa-file-pdf me-2"></i>PDFs e Apostilas</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('videos') }}"><i class="fas fa-video me-2"></i>Vídeos e Tutoriais</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('codigo') }}"><i class="fas fa-code me-2"></i>Exemplos de Código</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#"><i class="fas fa-users me-2"></i>Comunidade</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#"><i class="fas fa-cog me-2"></i>Configurações</a></li>
+                    <li class="nav-item"><a class="nav-link text-danger" href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt me-2"></i>Sair</a></li>
+                </ul>
+            </div>
+            <div class="footer-socials">
+                <h5>Siga-nos</h5>
+                <div class="social-icons">
+                    <a href="https://www.instagram.com" target="_blank" aria-label="Instagram">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://www.github.com" target="_blank" aria-label="GitHub">
+                        <i class="fab fa-github"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-copyright">
+            <p>© 2025 TechNoBug. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+</body>
+</html>
