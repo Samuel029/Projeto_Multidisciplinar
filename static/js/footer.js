@@ -6,13 +6,15 @@ document.addEventListener('DOMContentLoaded', function() {
         
         navLinks.forEach(link => {
             link.addEventListener('mouseenter', function() {
-                this.style.background = 'rgba(255, 255, 255, 0.1)';
-                this.style.transform = 'translateX(10px) scale(1.05)';
-                
-                const icon = this.querySelector('i');
-                if (icon) {
-                    icon.style.transform = 'rotate(360deg) scale(1.2)';
-                    icon.style.transition = 'transform 0.5s ease';
+                if (window.innerWidth > 768) { // Disable heavy hover effects on mobile
+                    this.style.background = 'rgba(255, 255, 255, 0.1)';
+                    this.style.transform = 'scale(1.05)';
+                    
+                    const icon = this.querySelector('i');
+                    if (icon) {
+                        icon.style.transform = 'rotate(360deg) scale(1.2)';
+                        icon.style.transition = 'transform 0.5s ease';
+                    }
                 }
             });
             
@@ -30,6 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Efeito de digitação para descrição
     function typeWriterEffect() {
+        if (window.innerWidth <= 768) return; // Disable typewriter effect on mobile
         const description = document.querySelector('.footer-description');
         if (!description) return;
         
@@ -64,24 +67,26 @@ document.addEventListener('DOMContentLoaded', function() {
         const socialIcons = document.querySelectorAll('.social-icons a');
         
         socialIcons.forEach((icon, index) => {
-            const floatAnimation = `
-                @keyframes float-${index} {
-                    0%, 100% { transform: translateY(0px); }
-                    50% { transform: translateY(-10px); }
+            if (window.innerWidth > 768) { // Disable floating animation on mobile
+                const floatAnimation = `
+                    @keyframes float-${index} {
+                        0%, 100% { transform: translateY(0px); }
+                        50% { transform: translateY(-10px); }
+                    }
+                `;
+                
+                if (!document.querySelector('#social-animations')) {
+                    const style = document.createElement('style');
+                    style.id = 'social-animations';
+                    document.head.appendChild(style);
                 }
-            `;
-            
-            if (!document.querySelector('#social-animations')) {
-                const style = document.createElement('style');
-                style.id = 'social-animations';
-                document.head.appendChild(style);
+                
+                const styleSheet = document.querySelector('#social-animations');
+                styleSheet.textContent += floatAnimation;
+                
+                icon.style.animation = `float-${index} 3s ease-in-out infinite`;
+                icon.style.animationDelay = `${index * 0.5}s`;
             }
-            
-            const styleSheet = document.querySelector('#social-animations');
-            styleSheet.textContent += floatAnimation;
-            
-            icon.style.animation = `float-${index} 3s ease-in-out infinite`;
-            icon.style.animationDelay = `${index * 0.5}s`;
             
             icon.addEventListener('click', function(e) {
                 this.style.animation = 'none';
@@ -91,8 +96,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     this.style.transform = 'scale(1.1)';
                     setTimeout(() => {
                         this.style.transform = '';
-                        this.style.animation = `float-${index} 3s ease-in-out infinite`;
-                        this.style.animationDelay = `${index * 0.5}s`;
+                        if (window.innerWidth > 768) {
+                            this.style.animation = `float-${index} 3s ease-in-out infinite`;
+                            this.style.animationDelay = `${index * 0.5}s`;
+                        }
                     }, 150);
                 }, 100);
             });
@@ -101,6 +108,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Efeito de partículas interativas
     function initInteractiveParticles() {
+        if (window.innerWidth <= 768) return; // Disable particles on mobile
         const footer = document.querySelector('.site-footer');
         if (!footer) return;
         
@@ -135,14 +143,8 @@ document.addEventListener('DOMContentLoaded', function() {
             style.id = 'particle-animations';
             style.textContent = `
                 @keyframes particle-fade {
-                    0% {
-                        opacity: 1;
-                        transform: scale(1);
-                    }
-                    100% {
-                        opacity: 0;
-                        transform: scale(0) translateY(-20px);
-                    }
+                    0% { opacity: 1; transform: scale(1); }
+                    100% { opacity: 0; transform: scale(0) translateY(-20px); }
                 }
             `;
             document.head.appendChild(style);
@@ -169,7 +171,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         footerSections.forEach((section, index) => {
             section.style.opacity = '0';
-            section.style.transform = 'translateY(30px)';
+            section.style.transform = 'translateY(20px)';
             section.style.transition = `opacity 0.6s ease ${index * 0.2}s, transform 0.6s ease ${index * 0.2}s`;
             observer.observe(section);
         });
@@ -181,8 +183,10 @@ document.addEventListener('DOMContentLoaded', function() {
         
         links.forEach(link => {
             link.addEventListener('mouseenter', function() {
-                this.style.textShadow = '0 0 10px rgba(255, 255, 255, 0.8)';
-                this.style.transition = 'text-shadow 0.3s ease';
+                if (window.innerWidth > 768) { // Disable glow effect on mobile
+                    this.style.textShadow = '0 0 10px rgba(255, 255, 255, 0.8)';
+                    this.style.transition = 'text-shadow 0.3s ease';
+                }
             });
             
             link.addEventListener('mouseleave', function() {
@@ -197,6 +201,7 @@ document.addEventListener('DOMContentLoaded', function() {
         let userSequence = [];
         
         document.addEventListener('keydown', function(e) {
+            if (window.innerWidth <= 768) return; // Disable easter egg on mobile
             userSequence.push(e.key.toLowerCase());
             
             if (userSequence.length > sequence.length) {
