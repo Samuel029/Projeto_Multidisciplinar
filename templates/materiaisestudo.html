@@ -4,100 +4,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Materiais de Estudo</title>
-    <style>
-        /* Estilos comuns */
-        :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #3498db;
-            --accent-color: #e74c3c;
-            --text-color: #333;
-            --background-color: #f9f9f9;
-            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s ease;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: var(--background-color);
-            color: var(--text-color);
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        h1 {
-            color: var(--primary-color);
-            text-align: center;
-            margin-bottom: 40px;
-            font-size: 2.5rem;
-        }
-
-        /* Materiais de Estudo - Estrutura de Cards */
-        .study-materials {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-            margin-bottom: 40px;
-        }
-
-        .study-card {
-            background-color: white;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: var(--card-shadow);
-            transition: var(--transition);
-            cursor: pointer;
-        }
-
-        .study-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .study-card-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .study-card-header i {
-            font-size: 24px;
-            margin-right: 10px;
-            color: var(--primary-color);
-        }
-
-        .study-card-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: var(--primary-color);
-            margin: 0;
-        }
-
-        .study-card-content {
-            color: #666;
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/materiaisestudo.css') }}">
 </head>
 <body>
     <div class="container">
         <h1>Portal de Aprendizagem</h1>
-        
-        <div class="study-materials">
-            <div class="study-card">
-                <div class="study-card-header">
-                    <i>📚</i>
-                    <h2 class="study-card-title">Materiais de Estudo</h2>
-                </div>
-                <div class="study-card-content">
-                    <p>Acesse nossa biblioteca de materiais organizados por disciplina e nível de dificuldade.</p>
-                </div>
-            </div>
+
+        <div class="filter-section">
+            <select class="form-select" name="category" id="category-filter">
+                <option value="" disabled selected>Selecione a categoria</option>
+                <option value="IA">IA</option>
+                <option value="Banco de Dados">Banco de Dados</option>
+                <option value="Front-end">Front-end</option>
+                <option value="Back-end">Back-end</option>
+                <option value="Dúvidas Gerais">Dúvidas Gerais</option>
+                <option value="Carreiras">Carreiras</option>
+                <option value="Modelagem a Banco de Dados">Modelagem a Banco de Dados</option>
+                <option value="Lógica">Lógica</option>
+                <option value="Processos">Processos</option>
+                <option value="Programação Android">Programação Android</option>
+                <option value="Projeto Multidisciplinar">Projeto Multidisciplinar</option>
+                <option value="Redes">Redes</option>
+                <option value="Versionamento">Versionamento</option>
+            </select>
+        </div>
+
+        <div class="study-materials" id="study-materials">
+            <!-- Study materials will be dynamically added here -->
         </div>
     </div>
+
+    <div class="modal" id="material-modal">
+        <div class="modal-content">
+            <span class="close-btn" id="close-modal">×</span>
+            <h2 id="modal-title"></h2>
+            <p id="modal-description"></p>
+            <p><strong>Nível:</strong> <span id="modal-level"></span></p>
+            <p><strong>Categoria:</strong> <span id="modal-category"></span></p>
+            <a id="modal-download" class="download-btn" href="#" target="_blank">Baixar Apostila</a>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/materiaisestudo.js') }}"></script>
 </body>
 </html>
