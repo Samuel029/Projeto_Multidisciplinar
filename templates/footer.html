@@ -4,46 +4,119 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <script src="{{ url_for('static', filename='js/footer.js') }}"></script>
+    <link rel="stylesheet" href="footer.css">
+    <title>TechNoBug</title>
 </head>
 <body>
     <footer class="site-footer">
+        <div class="footer-background-effects">
+            <div class="floating-particle"></div>
+            <div class="floating-particle"></div>
+            <div class="floating-particle"></div>
+            <div class="floating-particle"></div>
+            <div class="floating-particle"></div>
+        </div>
+        
         <div class="container footer-container">
             <div class="footer-logo">
                 <div class="logo" onclick="window.location.href = '{{ url_for('telainicial') }}';" style="cursor: pointer;">
-                    <i class="fas fa-graduation-cap"></i>
-                    <span>TechNoBug</span>
+                    <div class="logo-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <span class="logo-text">TechNoBug</span>
                 </div>
-                <p class="footer-description">Aprenda, compartilhe e cresça na tecnologia.</p>
+                <p class="footer-description">O TechnoBug é um projeto desenvolvido para apoiar estudantes do curso técnico em Desenvolvimento de Sistemas, oferecendo recursos complementares ao AVA oficial.</p>
             </div>
+            
             <div class="footer-nav">
-                <h5>Links Rápidos</h5>
+                <h5><i class="fas fa-compass"></i> Links Rápidos</h5>
                 <ul class="nav flex-column">
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('telainicial') }}"><i class="fas fa-home me-2"></i>Página Inicial</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('materiais') }}"><i class="fas fa-book me-2"></i>Materiais de Estudo</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('pdfs') }}"><i class="fas fa-file-pdf me-2"></i>PDFs e Apostilas</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('videos') }}"><i class="fas fa-video me-2"></i>Vídeos e Tutoriais</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('codigo') }}"><i class="fas fa-code me-2"></i>Exemplos de Código</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#"><i class="fas fa-users me-2"></i>Comunidade</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#"><i class="fas fa-cog me-2"></i>Configurações</a></li>
-                    <li class="nav-item"><a class="nav-link text-danger" href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt me-2"></i>Sair</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('telainicial') }}">
+                            <i class="fas fa-home"></i>
+                            <span>Página Inicial</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('materiais') }}">
+                            <i class="fas fa-book"></i>
+                            <span>Materiais de Estudo</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('pdfs') }}">
+                            <i class="fas fa-file-pdf"></i>
+                            <span>PDFs e Apostilas</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('videos') }}">
+                            <i class="fas fa-video"></i>
+                            <span>Vídeos e Tutoriais</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('codigo') }}">
+                            <i class="fas fa-code"></i>
+                            <span>Exemplos de Código</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-users"></i>
+                            <span>Comunidade</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-cog"></i>
+                            <span>Configurações</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link logout-link" href="{{ url_for('logout') }}">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Sair</span>
+                        </a>
+                    </li>
                 </ul>
             </div>
+            
             <div class="footer-socials">
-                <h5>Siga-nos</h5>
+                <h5><i class="fas fa-share-alt"></i> Siga-nos</h5>
                 <div class="social-icons">
-                    <a href="https://www.instagram.com" target="_blank" aria-label="Instagram">
+                    <a href="https://www.instagram.com" target="_blank" aria-label="Instagram" class="social-instagram">
                         <i class="fab fa-instagram"></i>
+                        <span class="social-tooltip">Instagram</span>
                     </a>
-                    <a href="https://www.github.com" target="_blank" aria-label="GitHub">
+                    <a href="https://www.github.com" target="_blank" aria-label="GitHub" class="social-github">
                         <i class="fab fa-github"></i>
+                        <span class="social-tooltip">GitHub</span>
                     </a>
                 </div>
             </div>
         </div>
+        
+        <div class="footer-wave">
+            <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25"></path>
+                <path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5"></path>
+                <path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z"></path>
+            </svg>
+        </div>
+        
         <div class="footer-copyright">
-            <p>© 2025 TechNoBug. Todos os direitos reservados.</p>
+            <div class="copyright-content">
+                <p>© 2025 TechnoBug - Todos os direitos reservados</p>
+                <div class="footer-links">
+                    <a href="#">Política de Privacidade</a>
+                    <a href="#">Termos de Uso</a>
+                    <a href="#">Suporte</a>
+                </div>
+            </div>
         </div>
     </footer>
+
+    <script src="{{ url_for('static', filename='js/footer.js') }}"></script>
 </body>
 </html>

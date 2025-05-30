@@ -8,6 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/exemplosdecodigo.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
 </head>
 <body>
     <!-- Header -->
@@ -1309,39 +1310,10 @@ jogo_adivinhacao
             </section>
 
             <!-- Footer -->
-            <footer class="app-footer">
-                <div class="footer-content">
-                    <div class="footer-section">
-                        <h4>Sobre a CodeLearn</h4>
-                        <p>CodeLearn é uma plataforma dedicada a ensinar programação de forma prática e acessível para iniciantes e aprendizes de todas as idades.</p>
-                    </div>
-                    <div class="footer-section">
-                        <h4>Links Úteis</h4>
-                        <ul>
-                            <li><a href="#">Documentação</a></li>
-                            <li><a href="#">Comunidade</a></li>
-                            <li><a href="#">FAQ</a></li>
-                            <li><a href="#">Suporte</a></li>
-                        </ul>
-                    </div>
-                    <div class="footer-section">
-                        <h4>Contato</h4>
-                        <p>Email: suporte@codelearn.com</p>
-                        <p>Redes Sociais:</p>
-                        <div class="social-links">
-                            <a href="#"><i class="fab fa-github"></i></a>
-                            <a href="#"><i class="fab fa-twitter"></i></a>
-                            <a href="#"><i class="fab fa-linkedin"></i></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="footer-bottom">
-                    <p>&copy; 2025 CodeLearn. Todos os direitos reservados.</p>
-                </div>
-            </footer>
+            
         </main>
     </div>
-
+    {% include 'footer.html' %}
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ url_for('static', filename='js/exemplosdecodigo.js') }}"></script>
