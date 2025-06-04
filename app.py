@@ -50,6 +50,10 @@ try:
 except Exception as e:
     logger.error(f"Erro ao inicializar Firebase: {str(e)}")
 
+@app.route('/')
+def index():
+    return render_template('index.html')
+
 @app.route('/post/<int:post_id>', methods=['GET'])
 def post_comments(post_id):
     user_id = session.get('user_id')
@@ -71,7 +75,7 @@ def post_comments(post_id):
     
     return render_template('post_comments.html', user=user, post=post)
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/registroelogin', methods=['GET', 'POST'])
 def registroelogin():
     user_id = session.get('user_id')
     if user_id:
