@@ -7,8 +7,15 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --primary-dark: #1357b9;
+            --gradient-bg: linear-gradient(135deg, #0ea5e9, #3b82f6);
+        }
+        .fas.fa-graduation-cap {
+            font-size:16px;
+        }
         .gradient-bg {
-            background: linear-gradient(135deg, #1a73e8 0%, #4a91ff 100%);
+            background: var(--gradient-bg);
         }
         .hover-scale {
             transition: transform 0.3s ease;
@@ -68,14 +75,14 @@
         .section-delay-3 { animation-delay: 0.6s; }
     </style>
 </head>
-<body class="font-sans bg-gray-50 text-gray-800">
+<body class="font-sans bg-gray-50 text-gray-800" style="background-color: #1357b9;">
     <!-- Header/Navigation -->
-    <header class="gradient-bg text-white shadow-lg fade-in">
+    <header class="text-white shadow-lg fade-in" style="background-color: var(--primary-dark);">
         <div class="container mx-auto px-4 py-6">
             <div class="flex justify-between items-center">
                 <div class="flex items-center space-x-2">
-                    <img src="{{ url_for('static', filename='images/logo.webp') }}" alt="TechnoBug Logo" class="w-10 h-10 bug-icon">
-                    <h1 class="text-2xl md:text-3xl font-bold glow-text">TechnoBug</h1>
+                    <i class="fas fa-graduation-cap" style="font-size: 16px;"></i>
+                    <h1 class="text-2xl md:text-3xl font-bold glow-text">TechNoBug</h1>
                 </div>
                 <nav class="hidden md:flex space-x-8">
                     <a href="#sobre" class="hover:text-white transition duration-300">Sobre</a>
@@ -83,7 +90,7 @@
                     <a href="{{ url_for('registroelogin') }}" class="bg-white hover:bg-gray-100 text-blue-600 font-bold py-2 px-6 rounded-full hover-scale transition duration-300 bounce">Entrar</a>
                 </nav>
                 <div class="md:hidden">
-                    <button id="menu-toggle" class="text-white focus:outline-none">
+                    <button id="menu-toggle" class="text-white focus:outline-none" style="background-color: var(--primary-dark);">
                         <i class="fas fa-bars text-2xl"></i>
                     </button>
                 </div>
@@ -124,7 +131,7 @@
             </div>
             
             <div class="flex flex-col md:flex-row items-center mb-12">
-                <div class="md:w-1/2 mb-8 md:mb-0 md:pr-8 slide-in-left">
+                <div class="md:w-1/20 mb-8 md:mb-0 md:pr-8 slide-in-left">
                     <p class="text-lg mb-6 text-gray-700 leading-relaxed">
                         O <span class="font-bold text-blue-700">TechnoBug</span> surge como uma ferramenta complementar ao AVA (Ambiente Virtual de Aprendizagem) já utilizado pelos alunos do 2º e 3º ano do curso técnico em Desenvolvimento de Sistemas.
                     </p>
