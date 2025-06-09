@@ -192,6 +192,10 @@ def videos():
     
     return render_template('videosetutoriais.html', user=user)
 
+@app.route('/politica-de-privacidade')
+def politica_privacidade():
+    return render_template('politicadeprivacidade.html')
+
 @app.route('/materiais-de-estudo')
 def materiais():
     user_id = session.get('user_id')

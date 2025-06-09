@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Política de Privacidade - TechnoBug</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-dark: #1357b9;
+            --gradient-bg: linear-gradient(135deg, #0ea5e9, #3b82f6);
+        }
+        .gradient-bg {
+            background: var(--gradient-bg);
+        }
+        .hover-scale {
+            transition: transform 0.3s ease;
+        }
+        .hover-scale:hover {
+            transform: scale(1.05);
+        }
+        .glow-text {
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            transform: translateY(-5px);
+        }
+        .bug-icon {
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 1s ease-in forwards;
+        }
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+        .slide-in-left {
+            transform: translateX(-50px);
+            opacity: 0;
+            animation: slideInLeft 0.8s ease-out forwards;
+        }
+        @keyframes slideInLeft {
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .slide-in-right {
+            transform: translateX(50px);
+            opacity: 0;
+            animation: slideInRight 0.8s ease-out forwards;
+        }
+        @keyframes slideInRight {
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .bounce {
+            animation: bounce 0.5s ease;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .rotate {
+            animation: rotate 10s linear infinite;
+        }
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .typing {
+            border-right: 3px solid;
+            white-space: nowrap;
+            overflow: hidden;
+            animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+        }
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: var(--primary-dark); }
+        }
+        .section-delay-1 { animation-delay: 0.2s; }
+        .section-delay-2 { animation-delay: 0.4s; }
+        .section-delay-3 { animation-delay: 0.6s; }
+        .section-delay-4 { animation-delay: 0.8s; }
+        .section-delay-5 { animation-delay: 1s; }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-dark);
+            border-radius: 5px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #0d4b99;
+        }
+        
+        .highlight-box {
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        .highlight-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to bottom right,
+                rgba(13, 71, 161, 0.2),
+                rgba(14, 165, 233, 0.2),
+                rgba(13, 71, 161, 0.2)
+            );
+            transform: rotate(45deg);
+            z-index: -1;
+            animation: shine 3s infinite;
+        }
+        @keyframes shine {
+            0% {
+                left: -50%;
+                opacity: 1;
+            }
+            100% {
+                left: 150%;
+                opacity: 0;
+            }
+        }
+        
+        .flying-element {
+            position: absolute;
+            opacity: 0.1;
+            animation: fly 15s linear infinite;
+            z-index: -1;
+        }
+        @keyframes fly {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            100% {
+                transform: translate(100vw, -100vh) rotate(360deg);
+            }
+        }
+        
+        .parallax-bg {
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            position: relative;
+        }
+        
+        .toggle-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+        
+        .toggle-content.active {
+            max-height: 1000px;
+        }
+    </style>
+</head>
+<body class="font-sans bg-gray-50 text-gray-800">
+    <!-- Floating decorative elements -->
+    <div class="flying-element text-blue-400 top-1/4 left-1/4 text-4xl"><i class="fas fa-shield-alt rotate"></i></div>
+    <div class="flying-element text-blue-300 top-1/3 left-1/2 text-5xl" style="animation-delay: 2s; animation-duration: 18s;"><i class="fas fa-lock"></i></div>
+    <div class="flying-element text-blue-200 top-2/3 left-1/3 text-3xl" style="animation-delay: 5s; animation-duration: 20s;"><i class="fas fa-key"></i></div>
+    <div class="flying-element text-blue-100 top-3/4 left-3/4 text-5xl" style="animation-delay: 8s; animation-duration: 22s;"><i class="fas fa-user-secret rotate"></i></div>
+    
+    <!-- Header/Navigation -->
+    <header class="text-white shadow-lg fade-in" style="background-color: var(--primary-dark);">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-4">
+                    <button onclick="history.back()" class="bg-blue-700 hover:bg-blue-600 text-white px-4 py-2 rounded hover-scale transition flex items-center">
+                        <i class="fas fa-arrow-left mr-2"></i> Voltar
+                    </button>
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-user-shield text-xl"></i>
+                        <h1 class="text-2xl md:text-3xl font-bold glow-text">Política de Privacidade</h1>
+                    </div>
+                </div>
+                <nav class="hidden md:flex space-x-8">
+                    <a href="#introducao" class="hover:text-white transition duration-300 hover-scale">Introdução</a>
+                    <a href="#dados" class="hover:text-white transition duration-300 hover-scale">Dados Coletados</a>
+                    <a href="#uso" class="hover:text-white transition duration-300 hover-scale">Uso dos Dados</a>
+                    <a href="#protecao" class="hover:text-white transition duration-300 hover-scale">Proteção</a>
+                </nav>
+                <div class="md:hidden">
+                    <button id="menu-toggle" class="text-white focus:outline-none" style="background-color: var(--primary-dark);">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden gradient-bg px-4 pb-4">
+            <div class="flex flex-col space-y-3">
+                <a href="#introducao" class="text-white hover:text-white py-2 border-b border-blue-300">Introdução</a>
+                <a href="#dados" class="text-white hover:text-white py-2 border-b border-blue-300">Dados Coletados</a>
+                <a href="#uso" class="text-white hover:text-white py-2 border-b border-blue-300">Uso dos Dados</a>
+                <a href="#protecao" class="text-white hover:text-white py-2">Proteção</a>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-20 md:py-28 px-4 text-center fade-in section-delay-1 relative overflow-hidden">
+        <div class="absolute inset-0 bg-black opacity-20 z-0"></div>
+        <div class="container mx-auto relative z-10">
+            <div class="max-w-4xl mx-auto">
+                <h1 class="text-4xl md:text-6xl font-bold mb-6 glow-text">Política de Privacidade</h1>
+                <p class="text-xl md:text-2xl text-blue-100 mb-8">Transparência e segurança no tratamento dos seus dados</p>
+                
+                <div class="flex flex-wrap justify-center gap-4 mt-12">
+                    <div class="bg-white bg-opacity-10 backdrop-blur-sm rounded-lg p-4 w-full sm:w-auto hover-scale card-hover slide-in-left">
+                        <i class="fas fa-lock text-3xl mb-2"></i>
+                        <p class="font-semibold">Segurança</p>
+                    </div>
+                    <div class="bg-white bg-opacity-10 backdrop-blur-sm rounded-lg p-4 w-full sm:w-auto hover-scale card-hover slide-in-left section-delay-1">
+                        <i class="fas fa-shield-alt text-3xl mb-2"></i>
+                        <p class="font-semibold">Proteção</p>
+                    </div>
+                    <div class="bg-white bg-opacity-10 backdrop-blur-sm rounded-lg p-4 w-full sm:w-auto hover-scale card-hover slide-in-left section-delay-2">
+                        <i class="fas fa-user-secret text-3xl mb-2"></i>
+                        <p class="font-semibold">Privacidade</p>
+                    </div>
+                    <div class="bg-white bg-opacity-10 backdrop-blur-sm rounded-lg p-4 w-full sm:w-auto hover-scale card-hover slide-in-left section-delay-3">
+                        <i class="fas fa-key text-3xl mb-2"></i>
+                        <p class="font-semibold">Controle</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Last Updated -->
+    <div class="bg-gray-100 py-4 fade-in section-delay-2">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center">
+                <p class="text-gray-600"><i class="fas fa-calendar-alt mr-2"></i> Última atualização: <span class="font-semibold">25 de Outubro de 2025</span></p>
+                <button id="print-btn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded hover-scale transition">
+                    <i class="fas fa-print mr-2"></i> Imprimir
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Privacy Content -->
+    <section class="py-16 bg-white fade-in section-delay-2">
+        <div class="container mx-auto px-4">
+            <div class="max-w-5xl mx-auto">
+                <!-- Introduction -->
+                <div id="introducao" class="mb-20 scroll-mt-24">
+                    <div class="flex items-center mb-8">
+                        <div class="bg-blue-600 text-white p-3 rounded-full mr-4">
+                            <i class="fas fa-info-circle text-2xl"></i>
+                        </div>
+                        <h2 class="text-3xl font-bold text-blue-900 mb-2">Introdução</h2>
+                    </div>
+                    
+                    <div class="bg-blue-50 rounded-xl p-6 mb-8 relative highlight-box">
+                        <p class="text-lg text-gray-800 leading-relaxed">
+                            Na <span class="font-bold text-blue-700">TechnoBug</span>, levamos a privacidade dos nossos usuários muito a sério. Esta Política de Privacidade explica como coletamos, usamos, compartilhamos e protegemos suas informações quando você utiliza nossos serviços. Ao acessar ou utilizar nosso site e serviços, você concorda com os termos desta política.
+                        </p>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-2 gap-8 mb-8">
+                        <div class="bg-gray-50 p-6 rounded-xl shadow-sm border border-gray-200 slide-in-left">
+                            <h3 class="text-xl font-semibold text-blue-800 mb-3 flex items-center">
+                                <i class="fas fa-eye mr-3 text-blue-600"></i> Transparência
+                            </h3>
+                            <p class="text-gray-700">
+                                Acreditamos na transparência sobre quais dados coletamos e como são utilizados para fornecer nossos serviços.
+                            </p>
+                        </div>
+                        <div class="bg-gray-50 p-6 rounded-xl shadow-sm border border-gray-200 slide-in-right">
+                            <h3 class="text-xl font-semibold text-blue-800 mb-3 flex items-center">
+                                <i class="fas fa-balance-scale mr-3 text-blue-600"></i> Conformidade
+                            </h3>
+                            <p class="text-gray-700">
+                                Seguimos todas as leis e regulamentações aplicáveis, incluindo a LGPD (Lei Geral de Proteção de Dados).
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-8 rounded-r">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-exclamation-circle text-yellow-500 text-xl"></i>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm text-yellow-700">
+                                    Por favor, leia esta política com atenção para entender nossas práticas em relação aos seus dados. Se você não concordar com nossos termos, não deve utilizar nossos serviços.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Data Collected -->
+                <div id="dados" class="mb-20 scroll-mt-24">
+                    <div class="flex items-center mb-8">
+                        <div class="bg-blue-600 text-white p-3 rounded-full mr-4">
+                            <i class="fas fa-database text-2xl"></i>
+                        </div>
+                        <h2 class="text-3xl font-bold text-blue-900 mb-2">Dados Que Coletamos</h2>
+                    </div>
+                    
+                    <div class="bg-blue-50 rounded-xl p-6 mb-8 relative highlight-box">
+                        <p class="text-lg text-gray-800 leading-relaxed">
+                            Coletamos diferentes tipos de informações para fornecer e melhorar nossos serviços para você. Esses dados podem ser fornecidos diretamente por você ou coletados automaticamente quando você utiliza nossos serviços.
+                        </p>
+                    </div>
+                    
+                    <div class="mb-8">
+                        <button class="toggle-btn w-full text-left bg-gray-100 hover:bg-gray-200 px-6 py-4 rounded-lg flex justify-between items-center transition" data-target="personal-data">
+                            <h3 class="text-xl font-semibold text-blue-800">
+                                <i class="fas fa-user-circle mr-3 text-blue-600"></i>
+                                Dados Pessoais
+                            </h3>
+                            <i class="fas fa-chevron-down transition-transform duration-300"></i>
+                        </button>
+                        <div id="personal-data" class="toggle-content">
+                            <div class="p-6 bg-white rounded-b-lg shadow-sm border border-gray-200">
+                                <p class="mb-4 text-gray-700">Informações que você fornece voluntariamente ao criar uma conta ou utilizar nossos serviços:</p>
+                                <ul class="list-disc pl-6 space-y-2 text-gray-700">
+                                    <li><strong>Nome completo</strong> - Para identificação e personalização</li>
+                                    <li><strong>Endereço de e-mail</strong> - Para comunicação e recuperação de conta</li>
+                                    <li><strong>Data de nascimento</strong> - Para verificação de idade quando necessário</li>
+                                    <li><strong>Fotografia</strong> - Opcional para personalização do perfil</li>
+                                    <li><strong>Informações acadêmicas</strong> - Como instituição de ensino e curso matriculado</li>
+                                    <li><strong>Dados de contato</strong> - Como número de telefone para autenticação em duas etapas</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-8">
+                        <button class="toggle-btn w-full text-left bg-gray-100 hover:bg-gray-200 px-6 py-4 rounded-lg flex justify-between items-center transition" data-target="usage-data">
+                            <h3 class="text-xl font-semibold text-blue-800">
+                                <i class="fas fa-chart-line mr-3 text-blue-600"></i>
+                                Dados de Uso
+                            </h3>
+                            <i class="fas fa-chevron-down transition-transform duration-300"></i>
+                        </button>
+                        <div id="usage-data" class="toggle-content">
+                            <div class="p-6 bg-white rounded-b-lg shadow-sm border border-gray-200">
+                                <p class="mb-4 text-gray-700">Informações coletadas automaticamente quando você acessa ou utiliza nossos serviços:</p>
+                                <ul class="list-disc pl-6 space-y-2 text-gray-700">
+                                    <li><strong>Dados de navegação</strong> - Páginas visitadas, tempo gasto, cliques</li>
+                                    <li><strong>Informações do dispositivo</strong> - Tipo de dispositivo, sistema operacional, navegador</li>
+                                    <li><strong>Endereço IP</strong> - Para segurança e análise geográfica</li>
+                                    <li><strong>Identificadores únicos</strong> - Cookies e tecnologias similares</li>
+                                    <li><strong>Interações com o serviço</strong> - Métodos de aprendizagem preferidos e áreas de dificuldade</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <button class="toggle-btn w-full text-left bg-gray-100 hover:bg-gray-200 px-6 py-4 rounded-lg flex justify-between items-center transition" data-target="sensitive-data">
+                            <h3 class="text-xl font-semibold text-blue-800">
+                                <i class="fas fa-exclamation-triangle mr-3 text-blue-600"></i>
+                                Dados Sensíveis
+                            </h3>
+                            <i class="fas fa-chevron-down transition-transform duration-300"></i>
+                        </button>
+                        <div id="sensitive-data" class="toggle-content">
+                            <div class="p-6 bg-white rounded-b-lg shadow-sm border border-gray-200">
+                                <p class="mb-4 text-gray-700">Não coletamos intencionalmente dados considerados sensíveis pela LGPD, tais como:</p>
+                                <ul class="list-disc pl-6 space-y-2 text-gray-700">
+                                    <li>Origem racial ou étnica</li>
+                                    <li>Convicções religiosas ou filosóficas</li>
+                                    <li>Opinião política</li>
+                                    <li>Filiação sindical</li>
+                                    <li>Dados genéticos ou biométricos</li>
+                                    <li>Dados de saúde</li>
+                                    <li>Vida sexual ou orientação sexual</li>
+                                </ul>
+                                <div class="mt-4 p-4 bg-yellow-50 rounded border border-yellow-200">
+                                    <p class="text-yellow-800"><i class="fas fa-exclamation-circle mr-2"></i> Caso precisemos coletar qualquer informação sensível para fins específicos, solicitaremos seu consentimento explícito antes.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- How We Use Data -->
+                <div id="uso" class="mb-20 scroll-mt-24">
+                    <div class="flex items-center mb-8">
+                        <div class="bg-blue-600 text-white p-3 rounded-full mr-4">
+                            <i class="fas fa-cogs text-2xl"></i>
+                        </div>
+                        <h2 class="text-3xl font-bold text-blue-900 mb-2">Como Utilizamos Seus Dados</h2>
+                    </div>
+                    
+                    <div class="bg-blue-50 rounded-xl p-6 mb-8 relative highlight-box">
+                        <p class="text-lg text-gray-800 leading-relaxed">
+                            Utilizamos as informações coletadas para diversos fins relacionados ao funcionamento e melhoria de nossos serviços, sempre respeitando seus direitos e com base em fundamentos legais adequados.
+                        </p>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-2 gap-8 mb-8">
+                        <div class="bg-gray-50 p-6 rounded-xl shadow-sm border border-gray-200 slide-in-left hover-scale">
+                            <div class="flex items-center mb-3">
+                                <div class="bg-blue-100 p-2 rounded-full mr-3">
+                                    <i class="fas fa-rocket text-blue-600"></i>
+                                </div>
+                                <h3 class="text-xl font-semibold text-blue-800">Fornecimento de Serviços</h3>
+                            </div>
+                            <p class="text-gray-700">
+                                Criar e gerenciar sua conta, fornecer recursos personalizados de aprendizado, responder a solicitações de suporte e facilitar a comunicação com outros usuários.
+                            </p>
+                        </div>
+                        <div class="bg-gray-50 p-6 rounded-xl shadow-sm border border-gray-200 slide-in-right hover-scale">
+                            <div class="flex items-center mb-3">
+                                <div class="bg-blue-100 p-2 rounded-full mr-3">
+                                    <i class="fas fa-chart-pie text-blue-600"></i>
+                                </div>
+                                <h3 class="text-xl font-semibold text-blue-800">Análise e Melhoria</h3>
+                            </div>
+                            <p class="text-gray-700">
+                                Entender como os usuários interagem com nossa plataforma, identificar áreas problemáticas e desenvolver novos recursos e funcionalidades.
+                            </p>
+                        </div>
+                        <div class="bg-gray-50 p-6 rounded-xl shadow-sm border border-gray-200 slide-in-left hover-scale">
+                            <div class="flex items-center mb-3">
+                                <div class="bg-blue-100 p-2 rounded-full mr-3">
+                                    <i class="fas fa-bullhorn text-blue-600"></i>
+                                </div>
+                                <h3 class="text-xl font-semibold text-blue-800">Comunicação</h3>
+                            </div>
+                            <p class="text-gray-700">
+                                Enviar notificações importantes sobre o serviço, atualizações, materiais educacionais relevantes e respostas a solicitações.
+                            </p>
+                        </div>
+                        <div class="bg-gray-50 p-6 rounded-xl shadow-sm border border-gray-200 slide-in-right hover-scale">
+                            <div class="flex items-center mb-3">
+                                <div class="bg-blue-100 p-2 rounded-full mr-3">
+                                    <i class="fas fa-shield-alt text-blue-600"></i>
+                                </div>
+                                <h3 class="text-xl font-semibold text-blue-800">Segurança e Conformidade</h3>
+                            </div>
+                            <p class="text-gray-700">
+                                Detectar, investigar e prevenir atividades fraudulentas, garantir conformidade com políticas e regulamentos, e proteger direitos e segurança.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-purple-50 border-l-4 border-purple-400 p-4 rounded-r mb-8">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 pt-1">
+                                <i class="fas fa-info-circle text-purple-600 text-xl"></i>
+                            </div>
+                            <div class="ml-3">
+                                <h3 class="text-lg font-semibold text-purple-800">Legal Basis for Processing (GDPR)</h3>
+                                <p class="text-sm text-purple-700 mt-1">
+                                    Para usuários na União Europeia, o processamento de dados pessoais é baseado em: consentimento (artigo 6(1)(a) do GDPR), necessidade contratual (artigo 6(1)(b)), obrigação legal (artigo 6(1)(c)) e interesses legítimos (artigo 6(1)(f)).
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-8">
+                        <h3 class="text-2xl font-bold text-blue-800 mb-4 flex items-center">
+                            <i class="fas fa-cookie-bite mr-3 text-blue-600"></i>
+                            Cookies e Tecnologias Similares
+                        </h3>
+                        <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                            <p class="mb-4 text-gray-700">Utilizamos cookies e tecnologias similares para:</p>
+                            <ul class="list-disc pl-6 space-y-2 text-gray-700 mb-4">
+                                <li>Autenticação e segurança</li>
+                                <li>Preferências do usuário</li>
+                                <li>Análise e desempenho</li>
+                                <li>Publicidade e marketing</li>
+                            </ul>
+                            <p class="text-gray-700">
+                                Você pode controlar o uso de cookies nas configurações do seu navegador, mas alguns recursos podem não funcionar corretamente sem eles.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Data Protection -->
+                <div id="protecao" class="mb-20 scroll-mt-24">
+                    <div class="flex items-center mb-8">
+                        <div class="bg-blue-600 text-white p-3 rounded-full mr-4">
+                            <i class="fas fa-lock text-2xl"></i>
+                        </div>
+                        <h2 class="text-3xl font-bold text-blue-900 mb-2">Proteção de Dados</h2>
+                    </div>
+                    
+                    <div class="bg-blue-50 rounded-xl p-6 mb-8 relative highlight-box">
+                        <p class="text-lg text-gray-800 leading-relaxed">
+                            Implementamos medidas técnicas e organizacionais robustas para proteger seus dados contra acesso não autorizado, alteração, divulgação ou destruição.
+                        </p>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-2 gap-8 mb-8">
+                        <div class="bg-white p-6 rounded-xl shadow-md border border-blue-100 slide-in-left card-hover">
+                            <div class="flex items-center mb-3">
+                                <div class="bg-green-100 p-3 rounded-full mr-4 text-green-600">
+                                    <i class="fas fa-shield-virus text-xl"></i>
+                                </div>
+                                <h3 class="text-xl font-semibold text-gray-800">Medidas de Segurança</h3>
+                            </div>
+                            <ul class="space-y-3 text-gray-700">
+                                <li class="flex items-start"><i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i> Criptografia de dados em trânsito (TLS/SSL) e em repouso</li>
+                                <li class="flex items-start"><i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i> Controles de acesso baseados em função</li>
+                                <li class="flex items-start"><i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i> Monitoramento contínuo de segurança</li>
+                                <li class="flex items-start"><i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i> Firewalls e sistemas de detecção de intrusão</li>
+                                <li class="flex items-start"><i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i> Testes periódicos de vulnerabilidade</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bg-white p-6 rounded-xl shadow-md border border-blue-100 slide-in-right card-hover">
+                            <div class="flex items-center mb-3">
+                                <div class="bg-blue-100 p-3 rounded-full mr-4 text-blue-600">
+                                    <i class="fas fa-user-lock text-xl"></i>
+                                </div>
+                                <h3 class="text-xl font-semibold text-gray-800">Privacidade</h3>
+                            </div>
+                            <ul class="space-y-3 text-gray-700">
+                                <li class="flex items-start"><i class="fas fa-check-circle text-blue-500 mt-1 mr-2"></i> Política de retenção de dados limitada</li>
+                                <li class="flex items-start"><i class="fas fa-check-circle text-blue-500 mt-1 mr-2"></i> Contratos de confidencialidade com funcionários</li>
+                                <li class="flex items-start"><i class="fas fa-check-circle text-blue-500 mt-1 mr-2"></i> Minimização de dados coletados</li>
+                                <li class="flex items-start"><i class="fas fa-check-circle text-blue-500 mt-1 mr-2"></i> Anonimização de dados para análises</li>
+                                <li class="flex items-start"><i class="fas fa-check-circle text-blue-500 mt-1 mr-2"></i> Capacitação regular em proteção de dados</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-8">
+                        <h3 class="text-2xl font-bold text-blue-800 mb-4 flex items-center">
+                            <i class="fas fa-exchange-alt mr-3 text-blue-600"></i>
+                            Compartilhamento de Dados
+                        </h3>
+                        <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                            <p class="mb-4 text-gray-700">Não vendemos seus dados pessoais. Podemos compartilhar informações com:</p>
+                            <ul class="list-disc pl-6 space-y-2 text-gray-700 mb-4">
+                                <li><strong>Prestadores de serviço:</strong> Empresas que nos auxiliam na operação (hospedagem, análise, suporte), sujeitos a acordos de confidencialidade</li>
+                                <li><strong>Autoridades legais:</strong> Quando necessário para cumprir obrigações legais ou proteger direitos</li>
+                                <li><strong>Reorganização empresarial:</strong> Em caso de fusão, aquisição ou venda de ativos</li>
+                                <li><strong>Com seu consentimento:</strong> Para outros fins, quando você autorizar expressamente</li>
+                            </ul>
+                            <div class="mt-4">
+                                <h4 class="font-semibold text-gray-800 mb-2">Transferência Internacional:</h4>
+                                <p class="text-gray-700">
+                                    Seus dados podem ser transferidos e processados em países fora do Brasil. Garantimos que essas transferências serão protegidas por mecanismos adequados, como cláusulas contratuais padrão ou decisões de adequação.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-8">
+                        <h3 class="text-2xl font-bold text-blue-800 mb-4 flex items-center">
+                            <i class="fas fa-clock mr-3 text-blue-600"></i>
+                            Retenção de Dados
+                        </h3>
+                        <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                            <p class="mb-4 text-gray-700">Mantemos seus dados pessoais apenas pelo tempo necessário para:</p>
+                            <ul class="list-disc pl-6 space-y-2 text-gray-700 mb-4">
+                                <li>Fornecer os serviços solicitados</li>
+                                <li>Cumprir obrigações legais</li>
+                                <li>Resolver disputas</li>
+                                <li>Realizar análises para melhorias</li>
+                                <li>Executar os demais fins descritos nesta política</li>
+                            </ul>
+                            <p class="text-gray-700">
+                                Quando não houver mais uma base legal para o tratamento, seus dados serão apagados ou anonimizados de forma segura e irreversível.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- User Rights -->
+                <div class="mb-20">
+                    <div class="flex items-center mb-8">
+                        <div class="bg-blue-600 text-white p-3 rounded-full mr-4">
+                            <i class="fas fa-user-cog text-2xl"></i>
+                        </div>
+                        <h2 class="text-3xl font-bold text-blue-900 mb-2">Seus Direitos</h2>
+                    </div>
+                    
+                    <div class="bg-blue-50 rounded-xl p-6 mb-8 relative highlight-box">
+                        <p class="text-lg text-gray-800 leading-relaxed">
+                            De acordo com a LGPD e demais regulamentações aplicáveis, você possui direitos específicos em relação aos seus dados pessoais. Estamos comprometidos em respeitar e facilitar o exercício desses direitos.
+                        </p>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-3 gap-6 mb-8">
+                        <div class="bg-white p-6 rounded-xl shadow-md border border-purple-100 hover:border-purple-300 transition slide-in-left card-hover">
+                            <div class="text-purple-600 mb-3">
+                                <i class="fas fa-search text-3xl"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-gray-800 mb-2">Acesso</h3>
+                            <p class="text-gray-700">
+                                Solicitar cópia dos dados pessoais que mantemos sobre você e informações sobre como são processados.
+                            </p>
+                        </div>
+                        
+                        <div class="bg-white p-6 rounded-xl shadow-md border border-blue-100 hover:border-blue-300 transition slide-in-left card-hover">
+                            <div class="text-blue-600 mb-3">
+                                <i class="fas fa-edit text-3xl"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-gray-800 mb-2">Correção</h3>
+                            <p class="text-gray-700">
+                                Solicitar correção de dados incompletos, inexatos ou desatualizados que mantenhamos sobre você.
+                            </p>
+                        </div>
+                        
+                        <div class="bg-white p-6 rounded-xl shadow-md border border-green-100 hover:border-green-300 transition slide-in-right card-hover">
+                            <div class="text-green-600 mb-3">
+                                <i class="fas fa-trash-alt text-3xl"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-gray-800 mb-2">Exclusão</h3>
+                            <p class="text-gray-700">
+                                Solicitar a exclusão de seus dados pessoais quando não houver mais base legal para seu tratamento.
+                            </p>
+                        </div>
+                        
+                        <div class="bg-white p-6 rounded-xl shadow-md border border-yellow-100 hover:border-yellow-300 transition slide-in-left card-hover">
+                            <div class="text-yellow-600 mb-3">
+                                <i class="fas fa-pause-circle text-3xl"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-gray-800 mb-2">Oposição</h3>
+                            <p class="text-gray-700">
+                                Opor-se ao tratamento de dados pessoais em determinadas circunstâncias, como marketing direto.
+                            </p>
+                        </div>
+                        
+                        <div class="bg-white p-6 rounded-xl shadow-md border border-red-100 hover:border-red-300 transition slide-in-right card-hover">
+                            <div class="text-red-600 mb-3">
+                                <i class="fas fa-file-export text-3xl"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-gray-800 mb-2">Portabilidade</h3>
+                            <p class="text-gray-700">
+                                Receber seus dados em formato estruturado e de uso comum para transmiti-los a outro controlador.
+                            </p>
+                        </div>
+                        
+                        <div class="bg-white p-6 rounded-xl shadow-md border border-indigo-100 hover:border-indigo-300 transition slide-in-right card-hover">
+                            <div class="text-indigo-600 mb-3">
+                                <i class="fas fa-comment-slash text-3xl"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-gray-800 mb-2">Revogação</h3>
+                            <p class="text-gray-700">
+                                Revogar consentimento dado anteriormente, sem afetar a legalidade do tratamento anterior.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 mb-8">
+                        <h3 class="text-2xl font-semibold text-gray-800 mb-4">Como Exercer Seus Direitos</h3>
+                        <p class="mb-4 text-gray-700">Para exercer qualquer um desses direitos, entre em contato conosco por:</p>
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div class="bg-blue-50 p-4 rounded-lg">
+                                <div class="flex items-center mb-2">
+                                    <i class="fas fa-envelope text-blue-600 mr-3"></i>
+                                    <h4 class="font-medium text-gray-800">E-mail</h4>
+                                </div>
+                                <p class="text-gray-700">protecaodedados@technobug.com</p>
+                            </div>
+                            <div class="bg-blue-50 p-4 rounded-lg">
+                                <div class="flex items-center mb-2">
+                                    <i class="fas fa-phone-alt text-blue-600 mr-3"></i>
+                                    <h4 class="font-medium text-gray-800">Telefone</h4>
+                                </div>
+                                <p class="text-gray-700">+55 (11) 4002-8922 (segunda a sexta, 9h às 18h)</p>
+                            </div>
+                        </div>
+                        <div class="mt-6">
+                            <p class="text-gray-700 mb-2"><strong>Importante:</strong> Para sua segurança, podemos solicitar informações para verificar sua identidade antes de processar sua solicitação.</p>
+                            <p class="text-gray-700">Responderemos a todas as solicitações dentro do prazo exigido por lei (geralmente 15 dias para a LGPD).</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Children's Privacy -->
+                <div class="mb-20">
+                    <div class="flex items-center mb-8">
+                        <div class="bg-blue-600 text-white p-3 rounded-full mr-4">
+                            <i class="fas fa-child text-2xl"></i>
+                        </div>
+                        <h2 class="text-3xl font-bold text-blue-900 mb-2">Privacidade de Crianças</h2>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <p class="mb-4 text-gray-700">
+                            Nossos serviços não são direcionados a crianças menores de 13 anos (ou 16 anos em algumas jurisdições). Não coletamos intencionalmente informações pessoais de crianças nessas faixas etárias.
+                        </p>
+                        <p class="text-gray-700">
+                            Se um pai ou responsável descobrir que seu filho nos forneceu informações pessoais sem consentimento, entre em contato conosco imediatamente. Caso tomemos conhecimento de termos coletado dados pessoais de crianças sem verificação de consentimento dos pais, tomaremos medidas para remover essas informações de nossos sistemas.
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- Policy Changes -->
+                <div class="mb-20">
+                    <div class="flex items-center mb-8">
+                        <div class="bg-blue-600 text-white p-3 rounded-full mr-4">
+                            <i class="fas fa-calendar-plus text-2xl"></i>
+                        </div>
+                        <h2 class="text-3xl font-bold text-blue-900 mb-2">Alterações na Política</h2>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <p class="mb-4 text-gray-700">
+                            Esta Política de Privacidade pode ser atualizada periodicamente para refletir mudanças em nossas práticas ou requisitos legais. A versão mais recente estará sempre disponível em nosso site.
+                        </p>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 my-4 rounded-r">
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-exclamation-triangle text-yellow-600 text-xl"></i>
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm text-yellow-800">
+                                        <strong>Avisaremos você</strong> sobre alterações significativas desta política por e-mail (se fornecido) ou por meio de um aviso em nosso site antes que as mudanças entrem em vigor.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-gray-700">
+                            Recomendamos que você revise esta página periodicamente para se manter informado sobre como protegemos suas informações. O uso contínuo de nossos serviços após tais alterações constitui sua concordância com a política revisada.
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- Contact -->
+                <div class="mb-10">
+                    <div class="flex items-center mb-8">
+                        <div class="bg-blue-600 text-white p-3 rounded-full mr-4">
+                            <i class="fas fa-question-circle text-2xl"></i>
+                        </div>
+                        <h2 class="text-3xl font-bold text-blue-900 mb-2">Dúvidas e Contato</h2>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div class="bg-blue-50 p-6 rounded-xl shadow-sm border border-blue-100 slide-in-left">
+                            <h3 class="text-xl font-semibold text-blue-800 mb-4">Encarregado de Proteção de Dados (DPO)</h3>
+                            <p class="text-gray-700 mb-4">
+                                Nome: Dra. Juliana Martins<br>
+                                E-mail: dpo@technobug.com<br>
+                                Telefone: +55 (11) 4002-8923
+                            </p>
+                            <p class="text-gray-700">
+                                Você também pode entrar em contato com nossa equipe de suporte através do e-mail suporte@technobug.com ou pelo formulário em nosso site.
+                            </p>
+                        </div>
+                        
+                        <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200 slide-in-right">
+                            <h3 class="text-xl font-semibold text-blue-800 mb-4">Autoridade Competente</h3>
+                            <p class="text-gray-700 mb-4">
+                                Caso você considere que nosso tratamento de seus dados pessoais infringe as leis de proteção de dados, você tem o direito de apresentar uma reclamação junto à autoridade de proteção de dados competente.
+                            </p>
+                            <div class="bg-gray-100 px-4 py-3 rounded">
+                                <h4 class="font-medium text-gray-800 mb-1">No Brasil:</h4>
+                                <p class="text-gray-700">Autoridade Nacional de Proteção de Dados (ANPD)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="gradient-bg text-white py-12 fade-in">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-3 gap-8 mb-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-user-shield mr-2"></i> TechnoBug
+                    </h3>
+                    <p class="text-blue-200">
+                        Seu companheiro digital de estudos, comprometido com a segurança e privacidade de seus dados.
+                    </p>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Links Rápidos</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#introducao" class="text-blue-200 hover:text-white transition">Introdução</a></li>
+                        <li><a href="#dados" class="text-blue-200 hover:text-white transition">Dados Coletados</a></li>
+                        <li><a href="#uso" class="text-blue-200 hover:text-white transition">Uso dos Dados</a></li>
+                        <li><a href="#protecao" class="text-blue-200 hover:text-white transition">Proteção</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Conecte-se</h3>
+                    <div class="flex space-x-4">
+                        <a href="https://instagram.com/technobug" class="w-10 h-10 rounded-full bg-blue-700 hover:bg-blue-600 flex items-center justify-center hover-scale transition bounce">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://github.com/technobug" class="w-10 h-10 rounded-full bg-blue-700 hover:bg-blue-600 flex items-center justify-center hover-scale transition bounce">
+                            <i class="fab fa-github"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-blue-400 pt-6 flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <p class="text-blue-200">
+                        © 2025 TechnoBug. Todos os direitos reservados.
+                    </p>
+                </div>
+                
+                <div class="flex space-x-6">
+                    <a href="#" class="text-blue-200 hover:text-white">Termos de Serviço</a>
+                    <a href="#" class="text-blue-200 hover:text-white">Política de Cookies</a>
+                </div>
+            </div>
+            
+            <div class="mt-6">
+                <p class="text-center text-blue-300 text-sm">
+                    <i class="fas fa-heart text-red-300"></i> Desenvolvido com cuidado e respeito à sua privacidade
+                </p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Back to Top Button -->
+    <button id="back-to-top" class="hidden fixed bottom-8 right-8 bg-blue-600 hover:bg-blue-700 text-white w-12 h-12 rounded-full shadow-lg flex items-center justify-center transition-all duration-300 hover-scale">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('menu-toggle').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+            this.querySelector('i').classList.toggle('fa-times');
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    // Close mobile menu if open
+                    const mobileMenu = document.getElementById('mobile-menu');
+                    if (!mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.add('hidden');
+                        document.getElementById('menu-toggle').querySelector('i').classList.toggle('fa-times');
+                    }
+                    
+                    // Scroll to target
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                    
+                    // Add active class to section
+                    targetElement.classList.add('highlight-box');
+                    setTimeout(() => {
+                        targetElement.classList.remove('highlight-box');
+                    }, 2000);
+                }
+            });
+        });
+
+        // Toggle content sections
+        document.querySelectorAll('.toggle-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const target = this.getAttribute('data-target');
+                const content = document.getElementById(target);
+                const icon = this.querySelector('i.fa-chevron-down');
+                
+                content.classList.toggle('active');
+                icon.classList.toggle('rotate-180');
+            });
+        });
+
+        // Back to top button
+        const backToTopButton = document.getElementById('back-to-top');
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                backToTopButton.classList.remove('hidden');
+                backToTopButton.classList.add('opacity-100');
+            } else {
+                backToTopButton.classList.add('opacity-0');
+                setTimeout(() => backToTopButton.classList.add('hidden'), 300);
+            }
+        });
+        
+        backToTopButton.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Print button
+        document.getElementById('print-btn').addEventListener('click', () => {
+            window.print();
+        });
+
+        // Intersection Observer for animations on scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                    entry.target.classList.add('slide-in-left');
+                    entry.target.classList.add('slide-in-right');
+                    
+                    // Add pulse animation once
+                    if (entry.target.classList.contains('highlight-box')) {
+                        entry.target.classList.add('pulse');
+                        setTimeout(() => {
+                            entry.target.classList.remove('pulse');
+                        }, 1000);
+                    }
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.fade-in, .slide-in-left, .slide-in-right').forEach(element => {
+            observer.observe(element);
+        });
+
+        // Automatic typing effect
+        const typingElements = document.querySelectorAll('.typing');
+        typingElements.forEach(el => {
+            const text = el.textContent;
+            el.textContent = '';
+            el.style.width = '0';
+            
+            setTimeout(() => {
+                el.style.width = text.length + 'ch';
+                el.textContent = text;
+                el.style.borderRight = 'none';
+            }, 100);
+        });
+    </script>
+</body>
+</html>
