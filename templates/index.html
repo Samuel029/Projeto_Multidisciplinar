@@ -12,7 +12,7 @@
             --gradient-bg: linear-gradient(135deg, #0ea5e9, #3b82f6);
         }
         .fas.fa-graduation-cap {
-            font-size:16px;
+            font-size: 16px;
         }
         .gradient-bg {
             background: var(--gradient-bg);
@@ -73,21 +73,27 @@
         .section-delay-1 { animation-delay: 0.2s; }
         .section-delay-2 { animation-delay: 0.4s; }
         .section-delay-3 { animation-delay: 0.6s; }
+        /* Ensure nav links align properly */
+        .nav-link {
+            display: flex;
+            align-items: center;
+            height: 100%;
+        }
     </style>
 </head>
-<body class="font-sans bg-gray-50 text-gray-800" style="background-color: #1357b9;">
+<body class="font-sans bg-gray-50 text-gray-800">
     <!-- Header/Navigation -->
     <header class="text-white shadow-lg fade-in" style="background-color: var(--primary-dark);">
         <div class="container mx-auto px-4 py-6">
             <div class="flex justify-between items-center">
                 <div class="flex items-center space-x-2">
-                    <i class="fas fa-graduation-cap" style="font-size: 16px;"></i>
+                    <i class="fas fa-graduation-cap"></i>
                     <h1 class="text-2xl md:text-3xl font-bold glow-text">TechNoBug</h1>
                 </div>
-                <nav class="hidden md:flex space-x-8">
-                    <a href="#sobre" class="hover:text-white transition duration-300">Sobre</a>
-                    <a href="/politica-de-privacidade" class="hover:text-white transition duration-300">Privacidade</a>
-                    <a href="{{ url_for('registroelogin') }}" class="bg-white hover:bg-gray-100 text-blue-600 font-bold py-2 px-6 rounded-full hover-scale transition duration-300 bounce">Entrar</a>
+                <nav class="hidden md:flex items-center space-x-6">
+                    <a href="#sobre" class="nav-link text-lg hover:text-white transition duration-300">Sobre</a>
+                    <a href="#privacidade" class="nav-link text-lg hover:text-white transition duration-300">Privacidade</a>
+                    <a href="/registroelogin" class="nav-link bg-white hover:bg-gray-100 text-blue-600 font-bold py-2 px-6 rounded-full hover-scale transition duration-300 bounce">Entrar</a>
                 </nav>
                 <div class="md:hidden">
                     <button id="menu-toggle" class="text-white focus:outline-none" style="background-color: var(--primary-dark);">
@@ -101,7 +107,7 @@
             <div class="flex flex-col space-y-3">
                 <a href="#sobre" class="text-white hover:text-white py-2 border-b border-blue-300">Sobre</a>
                 <a href="#privacidade" class="text-white hover:text-white py-2">Privacidade</a>
-                <a href="{{ url_for('registroelogin') }}" class="bg-white hover:bg-gray-100 text-blue-600 font-bold py-2 px-4 rounded-full text-center mt-2 hover-scale transition duration-300 bounce">Entrar</a>
+                <a href="/registroelogin" class="bg-white hover:bg-gray-100 text-blue-600 font-bold py-2 px-4 rounded-full text-center mt-2 hover-scale transition duration-300 bounce">Entrar</a>
             </div>
         </div>
     </header>
@@ -113,7 +119,7 @@
                 <h2 class="text-4xl md:text-5xl font-bold mb-6 glow-text">Seu Companheiro Digital de Estudos</h2>
                 <p class="text-xl mb-8 text-blue-100">O apoio extra que você precisa para dominar o conteúdo do curso técnico em Desenvolvimento de Sistemas.</p>
                 <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-                    <a href="{{ url_for('registroelogin') }}" class="bg-white hover:bg-gray-100 text-blue-600 font-bold py-3 px-8 rounded-full text-center hover-scale transition duration-300 bounce">Comece Agora <i class="fas fa-arrow-right ml-2"></i></a>
+                    <a href="/registroelogin" class="bg-white hover:bg-gray-100 text-blue-600 font-bold py-3 px-8 rounded-full text-center hover-scale transition duration-300 bounce">Comece Agora <i class="fas fa-arrow-right ml-2"></i></a>
                     <a href="#sobre" class="bg-transparent border-2 border-white hover:bg-white hover:text-blue-600 text-white font-bold py-3 px-8 rounded-full text-center hover-scale transition duration-300 bounce">Saiba Mais</a>
                 </div>
             </div>
@@ -131,7 +137,7 @@
             </div>
             
             <div class="flex flex-col md:flex-row items-center mb-12">
-                <div class="md:w-1/20 mb-8 md:mb-0 md:pr-8 slide-in-left">
+                <div class="md:w-1/2 mb-8 md:mb-0 md:pr-8 slide-in-left">
                     <p class="text-lg mb-6 text-gray-700 leading-relaxed">
                         O <span class="font-bold text-blue-700">TechnoBug</span> surge como uma ferramenta complementar ao AVA (Ambiente Virtual de Aprendizagem) já utilizado pelos alunos do 2º e 3º ano do curso técnico em Desenvolvimento de Sistemas.
                     </p>
@@ -220,7 +226,7 @@
                 <p class="text-lg text-gray-700 mb-8">
                     Queremos que a plataforma seja <span class="font-bold text-blue-700">interativa e colaborativa</span>, incentivando os estudantes a compartilhar conhecimentos, indicar recursos úteis e até mesmo sugerir melhorias para o projeto.
                 </p>
-                <a href="{{ url_for('registroelogin') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full inline-flex items-center hover-scale transition duration-300 bounce">Junte-se a Nós <i class="fas fa-user-plus ml-2"></i></a>
+                <a href="/registroelogin" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full inline-flex items-center hover-scale transition duration-300 bounce">Junte-se a Nós <i class="fas fa-user-plus ml-2"></i></a>
             </div>
         </div>
     </section>
@@ -287,7 +293,7 @@
                     Junte-se à comunidade TechnoBug e tenha acesso a todos os recursos que vão ajudar você a dominar o conteúdo do curso técnico.
                 </p>
                 <div class="flex justify-center">
-                    <a href="{{ url_for('registroelogin') }}" class="bg-white hover:bg-gray-100 text-blue-600 font-bold py-3 px-8 rounded-full hover-scale transition duration-300 bounce">Acessar Plataforma <i class="fas fa-sign-in-alt ml-2"></i></a>
+                    <a href="/registroelogin" class="bg-white hover:bg-gray-100 text-blue-600 font-bold py-3 px-8 rounded-full hover-scale transition duration-300 bounce">Acessar Plataforma <i class="fas fa-sign-in-alt ml-2"></i></a>
                 </div>
             </div>
         </div>
@@ -325,7 +331,7 @@
                 
                 <div class="mt-8 text-center">
                     <p class="text-gray-600">
-                        Dúvidas sobre nossa política? <a href="/politica-de-privacidade" class="text-blue-600 hover:underline">Clique Aqui!</a>
+                        Dúvidas sobre nossa política? <a href="#privacidade" class="text-blue-600 hover:underline">Clique Aqui!</a>
                     </p>
                 </div>
             </div>
@@ -337,13 +343,13 @@
         <div class="container mx-auto px-4">
             <div class="flex flex-col md:flex-row justify-between items-center">
                 <div class="flex items-center space-x-2 mb-4 md:mb-0">
-                    <i class="fas fa-graduation-cap" style="font-size: 16px;"></i>
+                    <i class="fas fa-graduation-cap"></i>
                     <span class="text-xl font-bold">TechNoBug</span>
                 </div>
                 
                 <div class="flex space-x-6 mb-4 md:mb-0">
                     <a href="#sobre" class="hover:text-white transition duration-300">Sobre</a>
-                    <a href="/politica-de-privacidade" class="hover:text-white transition duration-300">Privacidade</a>
+                    <a href="#privacidade" class="hover:text-white transition duration-300">Privacidade</a>
                 </div>
                 
                 <div class="flex space-x-4">
@@ -367,27 +373,26 @@
     </footer>
 
     <script>
+        // Toggle mobile menu
         document.getElementById('menu-toggle').addEventListener('click', function() {
             const menu = document.getElementById('mobile-menu');
             menu.classList.toggle('hidden');
         });
 
+        // Smooth scrolling and close mobile menu on link click
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
-                
                 const targetId = this.getAttribute('href');
                 if (targetId === '#') return;
                 
                 const targetElement = document.querySelector(targetId);
                 if (targetElement) {
-                    // Close mobile menu if open
                     const mobileMenu = document.getElementById('mobile-menu');
                     if (!mobileMenu.classList.contains('hidden')) {
                         mobileMenu.classList.add('hidden');
                     }
                     
-                    // Scroll to target
                     targetElement.scrollIntoView({
                         behavior: 'smooth'
                     });
@@ -404,13 +409,19 @@
             });
         });
 
-        // Intersection Observer for triggering animations on scroll
+        // Intersection Observer for animations
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    entry.target.classList.add('fade-in');
-                    entry.target.classList.add('slide-in-left');
-                    entry.target.classList.add('slide-in-right');
+                    if (entry.target.classList.contains('fade-in')) {
+                        entry.target.classList.add('fade-in');
+                    }
+                    if (entry.target.classList.contains('slide-in-left')) {
+                        entry.target.classList.add('slide-in-left');
+                    }
+                    if (entry.target.classList.contains('slide-in-right')) {
+                        entry.target.classList.add('slide-in-right');
+                    }
                 }
             });
         }, { threshold: 0.1 });
