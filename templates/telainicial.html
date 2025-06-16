@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TechNoBug - Página Inicial</title>
+    <title>TechNoBug - Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/telainicial.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
 </head>
 <body>
@@ -16,7 +17,7 @@
         <div class="header-content">
             <div class="search-bar">
                 <i class="fas fa-search"></i>
-                <input type="text" placeholder="Pesquisar postagens, tópicos...">
+                <input type="text" id="searchInput" placeholder="Pesquisar postagens, tópicos...">
             </div>
             <div class="logo" onclick="window.location.href = '{{ url_for('telainicial') }}';" style="cursor: pointer;">
                 <i class="fas fa-graduation-cap"></i>
@@ -50,13 +51,13 @@
                 </div>
             </div>
             <ul class="navbar-nav">
-                <li class="nav-item mb-2"><a class="nav-link active" href="{{ url_for('telainicial') }}"><i class="fas fa-home me-2"></i>Página Inicial</a></li>
+                <li class="nav-item mb-2"><a class="nav-link active" href="{{ url_for('telainicial') }}"><i class="fas fa-home me-2"></i>Dashboard</a></li>
                 <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('materiais') }}"><i class="fas fa-book me-2"></i>Materiais de Estudo</a></li>
                 <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('pdfs') }}"><i class="fas fa-file-pdf me-2"></i>PDFs e Apostilas</a></li>
                 <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('videos') }}"><i class="fas fa-video me-2"></i>Vídeos e Tutoriais</a></li>
                 <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('codigo') }}"><i class="fas fa-code me-2"></i>Exemplos de Código</a></li>
-                <li class="nav-item mb-2"><a class="nav-link" href="#"><i class="fas fa-users me-2"></i>Comunidade</a></li>
-                <li class="nav-item mb-2"><a class="nav-link" href="#"><i class="fas fa-cog me-2"></i>Configurações</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('comunidade') }}"><i class="fas fa-users me-2"></i>Comunidade</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('configuracoes') }}"><i class="fas fa-cog me-2"></i>Configurações</a></li>
                 <li class="nav-item"><a class="nav-link text-danger" href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt me-2"></i>Sair</a></li>
             </ul>
         </div>
@@ -65,128 +66,378 @@
     <!-- Main Content -->
     <div class="container">
         <main class="main-content">
-            <!-- Post Creation Form -->
-            <div class="section-header">
-                <h2 class="section-title">
-                    <i class="fas fa-pen"></i>
-                    <span>Qual Sua Dúvida?</span>
-                </h2>
-            </div>
-            <div class="post-creation-card">
-                <form class="post-form">
-                    <div class="mb-3 position-relative">
-                        <textarea class="form-control" name="post_content" rows="4" placeholder="No que você está pensando?" required></textarea>
-                        <div class="char-counter">0/500</div>
-                    </div>
-                    <div class="row align-items-center">
-                        <div class="col-md-6 mb-3 mb-md-0">
-                            <select class="form-select" name="category" required>
-                                <option value="" disabled selected>Selecione a categoria</option>
-                                <option value="IA">IA</option>
-                                <option value="Banco de Dados">Banco de Dados</option>
-                                <option value="Front-end">Front-end</option>
-                                <option value="Back-end">Back-end</option>
-                                <option value="Dúvidas Gerais">Dúvidas Gerais</option>
-                                <option value="Carreiras">Carreiras</option>
-                                <option value="Dúvidas Gerais">Dúvidas Gerais</option>
-                                <option value="Modelagem a Banco de Dados">Modelagem a Banco de Dados</option>
-                                <option value="Lógica">Lógica</option>
-                                <option value="Processos">Processos</option>
-                                <option value="Programação Android">Programação Android</option>
-                                <option value="Projeto Multidisciplinar">Projeto Multidisciplinar</option>
-                                <option value="Redes">Redes</option>
-                                <option value="Versionamento">Versionamento</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6 text-md-end">
-                            <button type="submit" class="btn btn-primary">Publicar</button>
+            <!-- Welcome Section -->
+            <section class="dashboard-section">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="dashboard-card">
+                            <h2 class="mb-4">Bem-vindo de volta, {{ user.username }}! 👋</h2>
+                            <p class="mb-4">O que você gostaria de aprender hoje? Aqui estão seus recursos personalizados com base em suas atividades recentes.</p>
                         </div>
                     </div>
-                </form>
-            </div>
-
-            <!-- Category Navigation -->
-            <nav class="category-nav">
-                <div class="categories-wrapper">
-                    <div class="categories">
-                        <span class="category active" data-category="Todas">Todas</span>
-                        <span class="category" data-category="IA">IA</span>
-                        <span class="category" data-category="Banco de Dados">Banco de Dados</span>
-                        <span class="category" data-category="Front-end">Front-end</span>
-                        <span class="category" data-category="Back-end">Back-end</span>
-                        <span class="category" data-category="Carreiras">Carreiras</span>
-                        <span class="category" data-category="Dúvidas Gerais">Dúvidas Gerais</span>
-                        <span class="category" data-category="Modelagem a Banco de Dados">Modelagem a Banco de Dados</span>
-                        <span class="category" data-category="Lógica">Lógica</span>
-                        <span class="category" data-category="Processos">Processos</span>
-                        <span class="category" data-category="Programação Android">Programação Android</span>
-                        <span class="category" data-category="Redes">Redes</span>
-                        <span class="category" data-category="Versionamento">Versionamento</span>
+                    <div class="col-md-4">
+                        <div class="dashboard-card stats-card">
+                            <div class="stats-number" id="resources-count">0</div>
+                            <div class="stats-label">Recursos estudados</div>
+                            <div class="progress-container">
+                                <div class="progress-label">
+                                    <span>Seu progresso</span>
+                                    <span>65%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-bar-fill"></div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </nav>
+            </section>
 
-            <!-- Post List -->
-            <div class="section-header">
-                <h2 class="section-title">
-                    <i class="fas fa-list"></i>
-                    <span>Postagens</span>
-                </h2>
-            </div>
-            <div class="post-list">
-                {% if posts %}
-                    {% for post in posts %}
-                        <div class="post-card" data-post-id="{{ post.id }}" data-category="{{ post.category }}">
-                            <div class="post-header">
-                                <div class="user-info">
-                                    <div class="avatar">
-                                        <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center">
-                                            {{ post.author.username[0]|upper }}
+            <!-- Quick Actions -->
+            <section class="dashboard-section">
+                <h3 class="section-title mb-4">
+                    <i class="fas fa-bolt"></i>
+                    <span>Ações Rápidas</span>
+                </h3>
+                <div class="row">
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <a href="{{ url_for('create_post') }}" class="dashboard-card quick-action-card text-center text-decoration-none">
+                            <i class="fas fa-pen fa-2x mb-3"></i>
+                            <h4>Criar Postagem</h4>
+                            <p class="small text-muted">Compartilhe sua dúvida com a comunidade</p>
+                        </a>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <a href="{{ url_for('materiais') }}" class="dashboard-card quick-action-card text-center text-decoration-none">
+                            <i class="fas fa-book fa-2x mb-3"></i>
+                            <h4>Materiais</h4>
+                            <p class="small text-muted">Acesse materiais de estudo</p>
+                        </a>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <a href="{{ url_for('videos') }}" class="dashboard-card quick-action-card text-center text-decoration-none">
+                            <i class="fas fa-video fa-2x mb-3"></i>
+                            <h4>Tutoriais</h4>
+                            <p class="small text-muted">Assista vídeos explicativos</p>
+                        </a>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <a href="{{ url_for('codigo') }}" class="dashboard-card quick-action-card text-center text-decoration-none">
+                            <i class="fas fa-code fa-2x mb-3"></i>
+                            <h4>Códigos</h4>
+                            <p class="small text-muted">Explore exemplos práticos</p>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Recent Posts and Community Activity -->
+            <section class="dashboard-section">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="dashboard-card">
+                            <div class="dashboard-card-header">
+                                <h3 class="dashboard-card-title"><i class="fas fa-comments"></i> Atividade Recente</h3>
+                                <a href="{{ url_for('comunidade') }}" class="see-all-link">Ver tudo</a>
+                            </div>
+                            <div class="post-list">
+                                {% if posts %}
+                                    {% for post in posts %}
+                                        <div class="post-card" data-post-id="{{ post.id }}" data-category="{{ post.category }}">
+                                            <div class="post-header">
+                                                <div class="user-info">
+                                                    <div class="avatar">
+                                                        <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center">
+                                                            {{ post.author.username[0]|upper }}
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <h5 class="username">{{ post.author.username }}</h5>
+                                                        <small class="text-muted">{{ post.created_at.strftime('%d/%m/%Y %H:%M') }}</small>
+                                                    </div>
+                                                </div>
+                                                {% if post.user_id == user.id %}
+                                                    <div class="post-actions">
+                                                        <button class="btn btn-sm btn-danger delete-post" data-post-id="{{ post.id }}">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                            <div class="post-content">
+                                                <div class="post-category-tag">{{ post.category }}</div>
+                                                <p>{{ post.content }}</p>
+                                            </div>
+                                            <div class="post-footer">
+                                                <button class="btn btn-sm btn-outline-primary like-btn" data-post-id="{{ post.id }}">
+                                                    <i class="fas fa-thumbs-up"></i> <span class="like-count">{{ post.likes|length }}</span>
+                                                </button>
+                                                <a href="{{ url_for('post_comments', post_id=post.id) }}" class="btn btn-sm btn-outline-secondary comment-btn">
+                                                    <i class="fas fa-comment"></i> Comentar
+                                                </a>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div>
-                                        <h5 class="username">{{ post.author.username }}</h5>
-                                        <small class="text-muted">{{ post.created_at.strftime('%d/%m/%Y %H:%M') }}</small>
-                                    </div>
-                                </div>
-                                {% if post.user_id == user.id %}
-                                    <div class="post-actions">
-                                        <button class="btn btn-sm btn-danger delete-post" data-post-id="{{ post.id }}">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
+                                    {% endfor %}
+                                {% else %}
+                                    <div class="empty-state-card">
+                                        <div class="text-center py-3">
+                                            <i class="fas fa-file-alt fa-2x mb-2 text-muted"></i>
+                                            <p class="text-muted">Nenhuma postagem encontrada.</p>
+                                        </div>
                                     </div>
                                 {% endif %}
                             </div>
-                            <div class="post-content">
-                                <div class="post-category-tag">{{ post.category }}</div>
-                                <p>{{ post.content }}</p>
-                            </div>
-                            <div class="post-footer">
-                                <button class="btn btn-sm btn-outline-primary like-btn" data-post-id="{{ post.id }}">
-                                    <i class="fas fa-thumbs-up"></i> <span class="like-count">0</span>
-                                </button>
-                                <a href="{{ url_for('post_comments', post_id=post.id) }}" class="btn btn-sm btn-outline-secondary comment-btn">
-                                    <i class="fas fa-comment"></i> Comentar
-                                </a>
-                            </div>
-                        </div>
-                    {% endfor %}
-                {% else %}
-                    <div class="empty-state-card">
-                        <div class="text-center py-3">
-                            <i class="fas fa-file-alt fa-2x mb-2 text-muted"></i>
-                            <p class="text-muted">Nenhuma postagem encontrada.</p>
                         </div>
                     </div>
-                {% endif %}
-            </div>
+                    
+                    <div class="col-lg-4">
+                        <div class="dashboard-card">
+                            <div class="dashboard-card-header">
+                                <h3 class="dashboard-card-title"><i class="fas fa-star"></i> Recomendados</h3>
+                                <a href="{{ url_for('materiais') }}" class="see-all-link">Ver tudo</a>
+                            </div>
+                            <div class="resource-item">
+                                <h4 class="resource-title">Introdução a Python</h4>
+                                <div class="resource-meta">
+                                    <span><i class="fas fa-book"></i> Material</span>
+                                    <span><i class="fas fa-clock"></i> 15 min</span>
+                                </div>
+                                <span class="resource-category">Lógica</span>
+                            </div>
+                            <div class="resource-item">
+                                <h4 class="resource-title">Modelagem de Banco de Dados</h4>
+                                <div class="resource-meta">
+                                    <span><i class="fas fa-video"></i> Vídeo</span>
+                                    <span><i class="fas fa-clock"></i> 22 min</span>
+                                </div>
+                                <span class="resource-category">Banco de Dados</span>
+                            </div>
+                            <div class="resource-item">
+                                <h4 class="resource-title">Git e GitHub para Iniciantes</h4>
+                                <div class="resource-meta">
+                                    <span><i class="fas fa-file-pdf"></i> PDF</span>
+                                    <span><i class="fas fa-clock"></i> 30 min</span>
+                                </div>
+                                <span class="resource-category">Versionamento</span>
+                            </div>
+                        </div>
+                        
+                        <div class="dashboard-card">
+                            <div class="dashboard-card-header">
+                                <h3 class="dashboard-card-title"><i class="fas fa-code"></i> Exemplo de Código</h3>
+                                <a href="{{ url_for('codigo') }}" class="see-all-link">Ver mais</a>
+                            </div>
+                            <div class="code-preview">
+                                <pre># Função em Python
+def saudacao(nome):
+    return f"Olá, {nome}!"
+
+# List comprehension
+quadrados = [x**2 for x in range(10)]
+
+# Condicional
+idade = 18
+status = "Maior" if idade >= 18 else "Menor"</pre>
+                            </div>
+                            <div class="text-end">
+                                <a href="{{ url_for('codigo') }}" class="btn btn-sm btn-outline-primary">Ver mais exemplos</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Learning Resources -->
+            <section class="dashboard-section">
+                <h3 class="section-title mb-4">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Recursos de Aprendizado</span>
+                </h3>
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="dashboard-card">
+                            <div class="dashboard-card-header">
+                                <h3 class="dashboard-card-title"><i class="fas fa-video"></i> Vídeos em Destaque</h3>
+                                <a href="{{ url_for('videos') }}" class="see-all-link">Ver todos</a>
+                            </div>
+                            <div class="video-thumbnail">
+                                <img src="https://img.youtube.com/vi/-l4Aa8wef8s/hqdefault.jpg" alt="Thumbnail do vídeo">
+                                <div class="video-play-icon">
+                                    <i class="fas fa-play"></i>
+                                </div>
+                            </div>
+                            <h4 class="resource-title">Aprenda Git e Github em 5 minutos</h4>
+                            <div class="resource-meta">
+                                <span><i class="fas fa-clock"></i> 4:57</span>
+                                <span><i class="fas fa-eye"></i> 11.5K</span>
+                            </div>
+                            <span class="resource-category">Versionamento</span>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 mb-4">
+                        <div class="dashboard-card">
+                            <div class="dashboard-card-header">
+                                <h3 class="dashboard-card-title"><i class="fas fa-book"></i> Materiais Recentes</h3>
+                                <a href="{{ url_for('materiais') }}" class="see-all-link">Ver todos</a>
+                            </div>
+                            <div class="resource-item">
+                                <h4 class="resource-title">Guia Completo de HTML5 e CSS3</h4>
+                                <div class="resource-meta">
+                                    <span><i class="fas fa-file-pdf"></i> PDF</span>
+                                    <span><i class="fas fa-clock"></i> 45 min</span>
+                                </div>
+                                <span class="resource-category">Front-end</span>
+                            </div>
+                            <div class="resource-item">
+                                <h4 class="resource-title">Exercícios de Lógica de Programação</h4>
+                                <div class="resource-meta">
+                                    <span><i class="fas fa-file-alt"></i> Apostila</span>
+                                    <span><i class="fas fa-clock"></i> 30 min</span>
+                                </div>
+                                <span class="resource-category">Lógica</span>
+                            </div>
+                            <div class="resource-item">
+                                <h4 class="resource-title">Introdução à Inteligência Artificial</h4>
+                                <div class="resource-meta">
+                                    <span><i class="fas fa-file-pdf"></i> PDF</span>
+                                    <span><i class="fas fa-clock"></i> 25 min</span>
+                                </div>
+                                <span class="resource-category">IA</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Community Highlights -->
+            <section class="dashboard-section">
+                <h3 class="section-title mb-4">
+                    <i class="fas fa-users"></i>
+                    <span>Destaques da Comunidade</span>
+                </h3>
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <div class="dashboard-card">
+                            <div class="dashboard-card-header">
+                                <h3 class="dashboard-card-title"><i class="fas fa-trophy"></i> Top Contribuidores</h3>
+                            </div>
+                            <div class="resource-item">
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar me-3">
+                                        <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center">
+                                            J
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h5 class="mb-0">João Silva</h5>
+                                        <small class="text-muted">15 contribuições</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="resource-item">
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar me-3">
+                                        <div class="avatar-initials bg-success text-white rounded-circle d-flex justify-content-center align-items-center">
+                                            M
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h5 class="mb-0">Maria Oliveira</h5>
+                                        <small class="text-muted">12 contribuições</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="resource-item">
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar me-3">
+                                        <div class="avatar-initials bg-warning text-white rounded-circle d-flex justify-content-center align-items-center">
+                                            P
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h5 class="mb-0">Pedro Santos</h5>
+                                        <small class="text-muted">10 contribuições</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4 mb-4">
+                        <div class="dashboard-card">
+                            <div class="dashboard-card-header">
+                                <h3 class="dashboard-card-title"><i class="fas fa-fire"></i> Tópicos Populares</h3>
+                            </div>
+                            <div class="resource-item">
+                                <h4 class="resource-title">Como resolver problemas de lógica?</h4>
+                                <div class="resource-meta">
+                                    <span><i class="fas fa-comment"></i> 24 respostas</span>
+                                    <span><i class="fas fa-heart"></i> 45</span>
+                                </div>
+                                <span class="resource-category">Lógica</span>
+                            </div>
+                            <div class="resource-item">
+                                <h4 class="resource-title">Dúvida sobre modelagem de banco</h4>
+                                <div class="resource-meta">
+                                    <span><i class="fas fa-comment"></i> 15 respostas</span>
+                                    <span><i class="fas fa-heart"></i> 32</span>
+                                </div>
+                                <span class="resource-category">Banco de Dados</span>
+                            </div>
+                            <div class="resource-item">
+                                <h4 class="resource-title">Melhor linguagem para iniciantes</h4>
+                                <div class="resource-meta">
+                                    <span><i class="fas fa-comment"></i> 38 respostas</span>
+                                    <span><i class="fas fa-heart"></i> 56</span>
+                                </div>
+                                <span class="resource-category">Dúvidas Gerais</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4 mb-4">
+                        <div class="dashboard-card">
+                            <div class="dashboard-card-header">
+                                <h3 class="dashboard-card-title"><i class="fas fa-calendar"></i> Eventos</h3>
+                            </div>
+                            <div class="resource-item">
+                                <h4 class="resource-title">Workshop de Git e GitHub</h4>
+                                <div class="resource-meta">
+                                    <span><i class="fas fa-clock"></i> 15/06 - 19h</span>
+                                    <span><i class="fas fa-user"></i> 45 participantes</span>
+                                </div>
+                                <span class="resource-category">Versionamento</span>
+                            </div>
+                            <div class="resource-item">
+                                <h4 class="resource-title">Live: Carreira em TI</h4>
+                                <div class="resource-meta">
+                                    <span><i class="fas fa-clock"></i> 20/06 - 20h</span>
+                                    <span><i class="fas fa-user"></i> 82 participantes</span>
+                                </div>
+                                <span class="resource-category">Carreiras</span>
+                            </div>
+                            <div class="resource-item">
+                                <h4 class="resource-title">Desafio de Lógica Semanal</h4>
+                                <div class="resource-meta">
+                                    <span><i class="fas fa-clock"></i> Todo domingo</span>
+                                    <span><i class="fas fa-user"></i> 120 participantes</span>
+                                </div>
+                                <span class="resource-category">Lógica</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </main>
     </div>
 
+    <!-- Footer -->
     {% include 'footer.html' %}
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ url_for('static', filename='js/telainicial.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
 </body>
 </html>

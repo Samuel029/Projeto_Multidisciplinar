@@ -1,13 +1,37 @@
+<div class="search-bar">
+  <!-- ...input da pesquisa... -->
+</div>
+<div class="search-results-container">
+  <!-- Resultados da pesquisa são inseridos aqui -->
+  <div class="search-result">
+    <span class="result-title">oi</span>
+    <span class="result-meta">Postagem | Dúvidas Gerais</span>
+  </div>
+  <!-- repita para outros resultados -->
+</div>
+
+
+Pronto! Agora você tem o HTML completo com a estrutura limpa. Para adicionar cada resultado da pesquisa, você insere dentro da .search-results-container assim:
+html<div class="search-result-row">
+    <div class="result-title">{{ titulo_do_resultado }}</div>
+    <div class="result-meta">{{ tipo }} | {{ categoria }}</div>
+</div>
+
+
+
+coloque no html abaixo e me mande completo 
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TechNoBug - Página Inicial</title>
+    <title>TechNoBug - Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/telainicial.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
 </head>
 <body>
@@ -16,7 +40,7 @@
         <div class="header-content">
             <div class="search-bar">
                 <i class="fas fa-search"></i>
-                <input type="text" placeholder="Pesquisar postagens, tópicos...">
+                <input type="text" id="searchInput" placeholder="Pesquisar postagens, tópicos...">
             </div>
             <div class="logo" onclick="window.location.href = '{{ url_for('telainicial') }}';" style="cursor: pointer;">
                 <i class="fas fa-graduation-cap"></i>
@@ -50,13 +74,13 @@
                 </div>
             </div>
             <ul class="navbar-nav">
-                <li class="nav-item mb-2"><a class="nav-link active" href="{{ url_for('telainicial') }}"><i class="fas fa-home me-2"></i>Página Inicial</a></li>
+                <li class="nav-item mb-2"><a class="nav-link active" href="{{ url_for('telainicial') }}"><i class="fas fa-home me-2"></i>Dashboard</a></li>
                 <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('materiais') }}"><i class="fas fa-book me-2"></i>Materiais de Estudo</a></li>
                 <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('pdfs') }}"><i class="fas fa-file-pdf me-2"></i>PDFs e Apostilas</a></li>
                 <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('videos') }}"><i class="fas fa-video me-2"></i>Vídeos e Tutoriais</a></li>
                 <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('codigo') }}"><i class="fas fa-code me-2"></i>Exemplos de Código</a></li>
-                <li class="nav-item mb-2"><a class="nav-link" href="#"><i class="fas fa-users me-2"></i>Comunidade</a></li>
-                <li class="nav-item mb-2"><a class="nav-link" href="#"><i class="fas fa-cog me-2"></i>Configurações</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('comunidade') }}"><i class="fas fa-users me-2"></i>Comunidade</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('configuracoes') }}"><i class="fas fa-cog me-2"></i>Configurações</a></li>
                 <li class="nav-item"><a class="nav-link text-danger" href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt me-2"></i>Sair</a></li>
             </ul>
         </div>
@@ -65,3933 +89,378 @@
     <!-- Main Content -->
     <div class="container">
         <main class="main-content">
-            <!-- Post Creation Form -->
-            <div class="section-header">
-                <h2 class="section-title">
-                    <i class="fas fa-pen"></i>
-                    <span>Qual Sua Dúvida?</span>
-                </h2>
-            </div>
-            <div class="post-creation-card">
-                <form class="post-form">
-                    <div class="mb-3 position-relative">
-                        <textarea class="form-control" name="post_content" rows="4" placeholder="No que você está pensando?" required></textarea>
-                        <div class="char-counter">0/500</div>
-                    </div>
-                    <div class="row align-items-center">
-                        <div class="col-md-6 mb-3 mb-md-0">
-                            <select class="form-select" name="category" required>
-                                <option value="" disabled selected>Selecione a categoria</option>
-                                <option value="IA">IA</option>
-                                <option value="Banco de Dados">Banco de Dados</option>
-                                <option value="Front-end">Front-end</option>
-                                <option value="Back-end">Back-end</option>
-                                <option value="Dúvidas Gerais">Dúvidas Gerais</option>
-                                <option value="Carreiras">Carreiras</option>
-                                <option value="Dúvidas Gerais">Dúvidas Gerais</option>
-                                <option value="Modelagem a Banco de Dados">Modelagem a Banco de Dados</option>
-                                <option value="Lógica">Lógica</option>
-                                <option value="Processos">Processos</option>
-                                <option value="Programação Android">Programação Android</option>
-                                <option value="Projeto Multidisciplinar">Projeto Multidisciplinar</option>
-                                <option value="Redes">Redes</option>
-                                <option value="Versionamento">Versionamento</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6 text-md-end">
-                            <button type="submit" class="btn btn-primary">Publicar</button>
+            <!-- Welcome Section -->
+            <section class="dashboard-section">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="dashboard-card">
+                            <h2 class="mb-4">Bem-vindo de volta, {{ user.username }}! 👋</h2>
+                            <p class="mb-4">O que você gostaria de aprender hoje? Aqui estão seus recursos personalizados com base em suas atividades recentes.</p>
                         </div>
                     </div>
-                </form>
-            </div>
-
-            <!-- Category Navigation -->
-            <nav class="category-nav">
-                <div class="categories-wrapper">
-                    <div class="categories">
-                        <span class="category active" data-category="Todas">Todas</span>
-                        <span class="category" data-category="IA">IA</span>
-                        <span class="category" data-category="Banco de Dados">Banco de Dados</span>
-                        <span class="category" data-category="Front-end">Front-end</span>
-                        <span class="category" data-category="Back-end">Back-end</span>
-                        <span class="category" data-category="Carreiras">Carreiras</span>
-                        <span class="category" data-category="Dúvidas Gerais">Dúvidas Gerais</span>
-                        <span class="category" data-category="Modelagem a Banco de Dados">Modelagem a Banco de Dados</span>
-                        <span class="category" data-category="Lógica">Lógica</span>
-                        <span class="category" data-category="Processos">Processos</span>
-                        <span class="category" data-category="Programação Android">Programação Android</span>
-                        <span class="category" data-category="Redes">Redes</span>
-                        <span class="category" data-category="Versionamento">Versionamento</span>
+                    <div class="col-md-4">
+                        <div class="dashboard-card stats-card">
+                            <div class="stats-number" id="resources-count">0</div>
+                            <div class="stats-label">Recursos estudados</div>
+                            <div class="progress-container">
+                                <div class="progress-label">
+                                    <span>Seu progresso</span>
+                                    <span>65%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-bar-fill"></div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </nav>
+            </section>
 
-            <!-- Post List -->
-            <div class="section-header">
-                <h2 class="section-title">
-                    <i class="fas fa-list"></i>
-                    <span>Postagens</span>
-                </h2>
-            </div>
-            <div class="post-list">
-                {% if posts %}
-                    {% for post in posts %}
-                        <div class="post-card" data-post-id="{{ post.id }}" data-category="{{ post.category }}">
-                            <div class="post-header">
-                                <div class="user-info">
-                                    <div class="avatar">
-                                        <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center">
-                                            {{ post.author.username[0]|upper }}
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <h5 class="username">{{ post.author.username }}</h5>
-                                        <small class="text-muted">{{ post.created_at.strftime('%d/%m/%Y %H:%M') }}</small>
-                                    </div>
-                                </div>
-                                {% if post.user_id == user.id %}
-                                    <div class="post-actions">
-                                        <button class="btn btn-sm btn-danger delete-post" data-post-id="{{ post.id }}">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </div>
-                                {% endif %}
-                            </div>
-                            <div class="post-content">
-                                <div class="post-category-tag">{{ post.category }}</div>
-                                <p>{{ post.content }}</p>
-                            </div>
-                            <div class="post-footer">
-                                <button class="btn btn-sm btn-outline-primary like-btn" data-post-id="{{ post.id }}">
-                                    <i class="fas fa-thumbs-up"></i> <span class="like-count">0</span>
-                                </button>
-                                <a href="{{ url_for('post_comments', post_id=post.id) }}" class="btn btn-sm btn-outline-secondary comment-btn">
-                                    <i class="fas fa-comment"></i> Comentar
-                                </a>
-                            </div>
-                        </div>
-                    {% endfor %}
-                {% else %}
-                    <div class="empty-state-card">
-                        <div class="text-center py-3">
-                            <i class="fas fa-file-alt fa-2x mb-2 text-muted"></i>
-                            <p class="text-muted">Nenhuma postagem encontrada.</p>
-                        </div>
+            <!-- Quick Actions -->
+            <section class="dashboard-section">
+                <h3 class="section-title mb-4">
+                    <i class="fas fa-bolt"></i>
+                    <span>Ações Rápidas</span>
+                </h3>
+                <div class="row">
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <a href="{{ url_for('create_post') }}" class="dashboard-card quick-action-card text-center text-decoration-none">
+                            <i class="fas fa-pen fa-2x mb-3"></i>
+                            <h4>Criar Postagem</h4>
+                            <p class="small text-muted">Compartilhe sua dúvida com a comunidade</p>
+                        </a>
                     </div>
-                {% endif %}
-            </div>
-        </main>
-    </div>
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <a href="{{ url_for('materiais') }}" class="dashboard-card quick-action-card text-center text-decoration-none">
+                            <i class="fas fa-book fa-2x mb-3"></i>
+                            <h4>Materiais</h4>
+                            <p class="small text-muted">Acesse materiais de estudo</p>
+                        </a>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <a href="{{ url_for('videos') }}" class="dashboard-card quick-action-card text-center text-decoration-none">
+                            <i class="fas fa-video fa-2x mb-3"></i>
+                            <h4>Tutoriais</h4>
+                            <p class="small text-muted">Assista vídeos explicativos</p>
+                        </a>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <a href="{{ url_for('codigo') }}" class="dashboard-card quick-action-card text-center text-decoration-none">
+                            <i class="fas fa-code fa-2x mb-3"></i>
+                            <h4>Códigos</h4>
+                            <p class="small text-muted">Explore exemplos práticos</p>
+                        </a>
+                    </div>
+                </div>
+            </section>
 
-    {% include 'footer.html' %}
-
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{{ url_for('static', filename='js/telainicial.js') }}"></script>
-</body>
-</html>
-
-
-
-
-essse é meu telainiical.html
-
-telainicial.js
-document.addEventListener('DOMContentLoaded', function() {
-    // Elementos da interface
-    const searchBar = document.querySelector('.search-bar');
-    const searchInput = document.querySelector('.search-bar input');
-    const searchIcon = document.querySelector('.search-bar i');
-    const postForm = document.querySelector('.post-form');
-    const postTextarea = document.querySelector('textarea[name="post_content"]');
-    const charCounter = document.querySelector('.char-counter');
-    const likeButtons = document.querySelectorAll('.like-btn');
-    const deleteButtons = document.querySelectorAll('.delete-post');
-    const categories = document.querySelectorAll('.category');
-    const sideMenu = document.getElementById('offcanvasMenu');
-
-    // Inicializa componentes
-    initializeComponents();
-
-    // Configura eventos
-    setupSearchBar();
-    setupPostForm();
-    setupLikeButtons();
-    setupDeleteButtons();
-    setupCategoryFilter();
-    setupDrawer();
-
-    function initializeComponents() {
-        // Carrega likes para posts
-        likeButtons.forEach(btn => {
-            const postId = btn.closest('.post-card').dataset.postId;
-            fetch(`/get_post_likes/${postId}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    btn.querySelector('.like-count').textContent = data.like_count;
-                    if (data.user_liked) {
-                        btn.classList.add('active');
-                    }
-                }
-            })
-            .catch(error => console.error('Error fetching post likes:', error));
-        });
-
-        // Inicializa o contador de caracteres para o formulário de postagem
-        if (postTextarea && charCounter) {
-            postTextarea.dispatchEvent(new Event('input'));
-        }
-
-        // Ajusta a categoria ativa ao iniciar a página
-        if (categories && categories.length > 0) {
-            const activeCategory = localStorage.getItem('activeCategory') || 'Todas';
-            categories.forEach(cat => {
-                const catValue = cat.dataset.category;
-                if (catValue === activeCategory) {
-                    cat.classList.add('active');
-                } else {
-                    cat.classList.remove('active');
-                }
-            });
-            filterPosts('');
-        }
-    }
-
-    function normalizeText(text) {
-        return text
-            .toLowerCase()
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g, '')
-            .replace(/\s+/g, ' ')
-            .trim();
-    }
-
-    function setupSearchBar() {
-        if (!searchBar || !searchInput || !searchIcon) return;
-
-        // Toggle da barra de pesquisa em dispositivos móveis
-        searchIcon.addEventListener('click', function(event) {
-            if (window.innerWidth <= 992) {
-                searchBar.classList.toggle('search-active');
-                if (searchBar.classList.contains('search-active')) {
-                    searchInput.focus();
-                    const urlParams = new URLSearchParams(window.location.search);
-                    searchInput.value = urlParams.get('search') || '';
-                } else {
-                    searchInput.blur();
-                    searchInput.value = '';
-                }
-                event.stopPropagation();
-            }
-        });
-
-        // Fecha a barra de pesquisa ao clicar fora
-        document.addEventListener('click', function(event) {
-            if (window.innerWidth <= 992 && !searchBar.contains(event.target)) {
-                searchBar.classList.remove('search-active');
-                searchInput.value = '';
-            }
-        });
-
-        searchBar.addEventListener('click', function(event) {
-            event.stopPropagation();
-        });
-
-        // Filtra posts ao digitar
-        searchInput.addEventListener('input', function() {
-            const searchTerm = normalizeText(this.value);
-            filterPosts(searchTerm);
-        });
-
-        // Carrega o termo de busca da URL, se existir
-        const urlParams = new URLSearchParams(window.location.search);
-        const searchTerm = urlParams.get('search') || '';
-        searchInput.value = searchTerm;
-        if (searchTerm) {
-            filterPosts(normalizeText(searchTerm));
-            if (window.innerWidth <= 992) {
-                searchBar.classList.add('search-active');
-            }
-        }
-    }
-
-    function setupPostForm() {
-        if (!postForm || !postTextarea || !charCounter) return;
-
-        postTextarea.addEventListener('input', function() {
-            const maxLength = 500;
-            const currentLength = this.value.length;
-            charCounter.textContent = `${currentLength}/${maxLength}`;
-            charCounter.classList.toggle('limit', currentLength > maxLength * 0.8);
-
-            if (currentLength > maxLength) {
-                this.value = this.value.substring(0, maxLength);
-                charCounter.textContent = `${maxLength}/${maxLength}`;
-                showNotification('Limite de caracteres atingido', 'error');
-            }
-        });
-
-        postForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const content = postTextarea.value.trim();
-            const category = postForm.querySelector('select[name="category"]').value;
-
-            if (!content) {
-                showNotification('O conteúdo da postagem não pode estar vazio', 'error');
-                postTextarea.focus();
-                return;
-            }
-
-            if (!category) {
-                showNotification('Por favor, selecione uma categoria', 'error');
-                postForm.querySelector('select[name="category"]').focus();
-                return;
-            }
-
-            const submitButton = postForm.querySelector('button[type="submit"]');
-            if (submitButton) {
-                submitButton.disabled = true;
-                submitButton.textContent = 'Publicando...';
-            }
-
-            fetch('/create_post', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: new URLSearchParams({
-                    'post_content': content,
-                    'category': category
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    const postList = document.querySelector('.post-list');
-                    const emptyState = postList.querySelector('.empty-state-card');
-                    if (emptyState) {
-                        emptyState.remove();
-                    }
-
-                    const newPost = document.createElement('div');
-                    newPost.className = 'post-card';
-                    newPost.dataset.postId = data.post.id;
-                    newPost.dataset.category = data.post.category;
-                    newPost.innerHTML = `
-                        <div class="post-header">
-                            <div class="user-info">
-                                <div class="avatar">
-                                    <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center">
-                                        ${data.post.username[0].toUpperCase()}
-                                    </div>
-                                </div>
-                                <div>
-                                    <h5 class="username">${data.post.username}</h5>
-                                    <small class="text-muted">${data.post.created_at}</small>
-                                </div>
+            <!-- Recent Posts and Community Activity -->
+            <section class="dashboard-section">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="dashboard-card">
+                            <div class="dashboard-card-header">
+                                <h3 class="dashboard-card-title"><i class="fas fa-comments"></i> Atividade Recente</h3>
+                                <a href="{{ url_for('comunidade') }}" class="see-all-link">Ver tudo</a>
                             </div>
-                            <div class="post-actions">
-                                <button class="btn btn-sm btn-danger delete-post" data-post-id="${data.post.id}">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="post-content">
-                            <div class="post-category-tag">${data.post.category}</div>
-                            <p>${data.post.content}</p>
-                        </div>
-                        <div class="post-footer">
-                            <button class="btn btn-sm btn-outline-primary like-btn" data-post-id="${data.post.id}">
-                                <i class="fas fa-thumbs-up"></i> <span class="like-count">0</span>
-                            </button>
-                            <a href="/post/${data.post.id}" class="btn btn-sm btn-outline-secondary comment-btn">
-                                <i class="fas fa-comment"></i> Comentar
-                            </a>
-                        </div>
-                    `;
-                    postList.prepend(newPost);
-                    postTextarea.value = '';
-                    postForm.querySelector('select[name="category"]').value = '';
-                    charCounter.textContent = '0/500';
-                    showNotification('Postagem criada com sucesso!', 'success');
-
-                    // Inicializa o botão de like para o novo post
-                    const newLikeButton = newPost.querySelector('.like-btn');
-                    newLikeButton.addEventListener('click', function() {
-                        fetch(`/like_post/${data.post.id}`, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            }
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.status === 'success') {
-                                newLikeButton.querySelector('.like-count').textContent = data.like_count;
-                                if (data.liked) {
-                                    newLikeButton.classList.add('active');
-                                    showNotification('Postagem curtida!', 'success');
-                                } else {
-                                    newLikeButton.classList.remove('active');
-                                    showNotification('Like removido', 'info');
-                                }
-                            } else {
-                                showNotification(data.message || 'Erro ao curtir postagem.', 'error');
-                            }
-                        })
-                        .catch(() => {
-                            showNotification('Erro ao conectar com o servidor.', 'error');
-                        });
-                    });
-
-                    // Inicializa o botão de deletar para o novo post
-                    const newDeleteButton = newPost.querySelector('.delete-post');
-                    newDeleteButton.addEventListener('click', function() {
-                        if (confirm('Tem certeza que deseja deletar esta postagem?')) {
-                            fetch(`/delete_post/${data.post.id}`, {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                }
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.status === 'success') {
-                                    newPost.remove();
-                                    showNotification('Postagem deletada com sucesso!', 'success');
-                                    if (!postList.querySelector('.post-card')) {
-                                        postList.innerHTML = `
-                                            <div class="empty-state-card">
-                                                <div class="text-center py-3">
-                                                    <i class="fas fa-file-alt fa-2x mb-2 text-muted"></i>
-                                                    <p class="text-muted">Nenhuma postagem encontrada.</p>
+                            <div class="post-list">
+                                {% if posts %}
+                                    {% for post in posts %}
+                                        <div class="post-card" data-post-id="{{ post.id }}" data-category="{{ post.category }}">
+                                            <div class="post-header">
+                                                <div class="user-info">
+                                                    <div class="avatar">
+                                                        <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center">
+                                                            {{ post.author.username[0]|upper }}
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <h5 class="username">{{ post.author.username }}</h5>
+                                                        <small class="text-muted">{{ post.created_at.strftime('%d/%m/%Y %H:%M') }}</small>
+                                                    </div>
                                                 </div>
+                                                {% if post.user_id == user.id %}
+                                                    <div class="post-actions">
+                                                        <button class="btn btn-sm btn-danger delete-post" data-post-id="{{ post.id }}">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    </div>
+                                                {% endif %}
                                             </div>
-                                        `;
-                                    }
-                                } else {
-                                    showNotification(data.message || 'Erro ao deletar postagem.', 'error');
-                                }
-                            })
-                            .catch(() => {
-                                showNotification('Erro ao conectar com o servidor.', 'error');
-                            });
-                        }
-                    });
-
-                    // Aplica o filtro atual
-                    filterPosts(normalizeText(searchInput.value));
-                } else {
-                    showNotification(data.message || 'Erro ao criar postagem', 'error');
-                }
-            })
-            .catch(error => {
-                showNotification('Erro ao conectar com o servidor.', 'error');
-                console.error('Error creating post:', error);
-            })
-            .finally(() => {
-                if (submitButton) {
-                    submitButton.disabled = false;
-                    submitButton.textContent = 'Publicar';
-                }
-            });
-        });
-    }
-
-    function setupLikeButtons() {
-        if (!likeButtons || likeButtons.length === 0) return;
-
-        likeButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const postId = this.dataset.postId;
-                fetch(`/like_post/${postId}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        this.querySelector('.like-count').textContent = data.like_count;
-                        if (data.liked) {
-                            this.classList.add('active');
-                            showNotification('Postagem curtida!', 'success');
-                        } else {
-                            this.classList.remove('active');
-                            showNotification('Like removido', 'info');
-                        }
-                    } else {
-                        showNotification(data.message || 'Erro ao curtir postagem.', 'error');
-                    }
-                })
-                .catch(() => {
-                    showNotification('Erro ao conectar com o servidor.', 'error');
-                });
-            });
-        });
-    }
-
-    function setupDeleteButtons() {
-        if (!deleteButtons || deleteButtons.length === 0) return;
-
-        deleteButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const postId = this.dataset.postId;
-                const postCard = this.closest('.post-card');
-                if (confirm('Tem certeza que deseja deletar esta postagem?')) {
-                    fetch(`/delete_post/${postId}`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        }
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.status === 'success') {
-                            postCard.remove();
-                            showNotification('Postagem deletada com sucesso!', 'success');
-                            const postList = document.querySelector('.post-list');
-                            if (!postList.querySelector('.post-card')) {
-                                postList.innerHTML = `
+                                            <div class="post-content">
+                                                <div class="post-category-tag">{{ post.category }}</div>
+                                                <p>{{ post.content }}</p>
+                                            </div>
+                                            <div class="post-footer">
+                                                <button class="btn btn-sm btn-outline-primary like-btn" data-post-id="{{ post.id }}">
+                                                    <i class="fas fa-thumbs-up"></i> <span class="like-count">{{ post.likes|length }}</span>
+                                                </button>
+                                                <a href="{{ url_for('post_comments', post_id=post.id) }}" class="btn btn-sm btn-outline-secondary comment-btn">
+                                                    <i class="fas fa-comment"></i> Comentar
+                                                </a>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                {% else %}
                                     <div class="empty-state-card">
                                         <div class="text-center py-3">
                                             <i class="fas fa-file-alt fa-2x mb-2 text-muted"></i>
                                             <p class="text-muted">Nenhuma postagem encontrada.</p>
                                         </div>
                                     </div>
-                                `;
-                            }
-                        } else {
-                            showNotification(data.message || 'Erro ao deletar postagem.', 'error');
-                        }
-                    })
-                    .catch(() => {
-                        showNotification('Erro ao conectar com o servidor.', 'error');
-                    });
-                }
-            });
-        });
-    }
-
-    function setupCategoryFilter() {
-        if (!categories || categories.length === 0) return;
-
-        categories.forEach(category => {
-            category.addEventListener('click', function() {
-                categories.forEach(cat => cat.classList.remove('active'));
-                this.classList.add('active');
-                const categoryName = this.dataset.category;
-                localStorage.setItem('activeCategory', categoryName);
-                filterPosts(normalizeText(searchInput.value));
-                showNotification(`Filtrando por ${this.textContent.trim()}`, 'success');
-            });
-        });
-    }
-
-    function filterPosts(searchTerm) {
-        const posts = document.querySelectorAll('.post-card');
-        const activeCategory = document.querySelector('.category.active').dataset.category;
-        let visiblePosts = 0;
-
-        if (!posts || posts.length === 0) return;
-
-        const searchCategoryMap = {
-            'ia': 'ia',
-            'banco de dados': 'banco de dados',
-            'frontend': 'front-end',
-            'front-end': 'front-end',
-            'backend': 'back-end',
-            'back-end': 'back-end',
-            'programacao': 'programacao',
-            'carreiras': 'carreiras',
-            'duvidas gerais': 'duvidas gerais',
-            'modelagem': 'modelagem a banco de dados',
-            'modelagem de dados': 'modelagem a banco de dados',
-            'modelagem a banco de dados': 'modelagem a banco de dados',
-            'logica': 'logica',
-            'processos': 'processos',
-            'android': 'programacao android',
-            'programacao android': 'programacao android',
-            'multidisciplinar': 'projeto multidisciplinar',
-            'projeto multidisciplinar': 'projeto multidisciplinar',
-            'redes': 'redes',
-            'versionamento': 'versionamento'
-        };
-
-        const normalizedSearchTerm = normalizeText(searchTerm);
-        const mappedSearchTerm = searchCategoryMap[normalizedSearchTerm] || normalizedSearchTerm;
-
-        posts.forEach(post => {
-            const postContent = normalizeText(post.querySelector('.post-content p').textContent);
-            const postCategory = normalizeText(post.dataset.category);
-            const postUsername = normalizeText(post.querySelector('.username').textContent);
-            const matchesSearch = searchTerm === '' ||
-                postContent.includes(mappedSearchTerm) ||
-                postUsername.includes(mappedSearchTerm) ||
-                postCategory.includes(mappedSearchTerm);
-            const matchesCategory = activeCategory === 'Todas' || postCategory === normalizeText(activeCategory);
-
-            if (matchesSearch && matchesCategory) {
-                post.style.display = '';
-                visiblePosts++;
-            } else {
-                post.style.display = 'none';
-            }
-        });
-
-        const postList = document.querySelector('.post-list');
-        const emptyState = postList.querySelector('.empty-state-card');
-
-        if (visiblePosts === 0 && !emptyState) {
-            const emptyStateDiv = document.createElement('div');
-            emptyStateDiv.className = 'empty-state-card';
-            emptyStateDiv.innerHTML = `
-                <div class="text-center py-3">
-                    <i class="fas fa-file-alt fa-2x mb-2 text-muted"></i>
-                    <p class="text-muted">Nenhuma postagem encontrada.</p>
-                </div>
-            `;
-            postList.appendChild(emptyStateDiv);
-        } else if (visiblePosts > 0 && emptyState) {
-            emptyState.remove();
-        }
-    }
-
-    function setupDrawer() {
-        if (!sideMenu) return;
-
-        const drawerLinks = document.querySelectorAll('.offcanvas .nav-link');
-        if (drawerLinks && drawerLinks.length > 0) {
-            drawerLinks.forEach(link => {
-                link.addEventListener('click', function() {
-                    const bsOffcanvas = bootstrap.Offcanvas.getInstance(sideMenu);
-                    if (bsOffcanvas) bsOffcanvas.hide();
-                });
-            });
-        }
-
-        document.addEventListener('click', function(event) {
-            const isClickInsideDrawer = sideMenu.contains(event.target);
-            const isClickOnToggler = event.target.closest('.menu-btn');
-            const isOffcanvasOpen = sideMenu.classList.contains('show');
-
-            if (!isClickInsideDrawer && !isClickOnToggler && isOffcanvasOpen) {
-                const bsOffcanvas = bootstrap.Offcanvas.getInstance(sideMenu);
-                if (bsOffcanvas) bsOffcanvas.hide();
-            }
-        });
-
-        sideMenu.addEventListener('shown.bs.offcanvas', function() {
-            document.body.style.overflow = 'hidden';
-            document.body.style.paddingRight = '0';
-            sideMenu.style.top = '0';
-            sideMenu.style.height = '100vh';
-        });
-
-        sideMenu.addEventListener('hidden.bs.offcanvas', function() {
-            document.body.style.overflow = '';
-            document.body.style.paddingRight = '';
-        });
-    }
-
-    // Função global para mostrar notificações
-    window.showNotification = function(message, type) {
-        const notification = document.createElement('div');
-        notification.className = `notification notification-${type}`;
-        notification.innerHTML = `
-            <div class="notification-content">
-                <div class="notification-message">${message}</div>
-            </div>
-            <button class="notification-close"><i class="fas fa-times"></i></button>
-        `;
-        document.body.appendChild(notification);
-
-        setTimeout(() => notification.classList.add('show'), 100);
-
-        notification.querySelector('.notification-close').addEventListener('click', () => {
-            notification.classList.remove('show');
-            setTimeout(() => notification.remove(), 300);
-        });
-
-        setTimeout(() => {
-            if (notification.parentNode) {
-                notification.classList.remove('show');
-                setTimeout(() => notification.remove(), 300);
-            }
-        }, 4000);
-    };
-});
-
-
-:root {
-    --primary: #1a73e8;
-    --primary-light: #4a91ff;
-    --primary-dark: #1357b9;
-    --primary-transparent: rgba(26, 115, 232, 0.1);
-    --secondary: #202124;
-    --secondary-light: #3c4043;
-    --secondary-dark: #141517;
-    --accent: #ff4444;
-    --light: #ffffff;
-    --light-gray: #f1f3f4;
-    --medium-gray: #dadce0;
-    --dark-gray: #80868b;
-    --dark: #202124;
-    --success: #34c759;
-    --warning: #fbbc05;
-    --danger: #ff4444;
-    --font-primary: 'Inter', system-ui, -apple-system, sans-serif;
-    --font-secondary: 'Inter', system-ui, -apple-system, sans-serif;
-    --font-size-base: 1rem;
-    --font-size-sm: 0.875rem;
-    --font-size-lg: 1.25rem;
-    --font-size-xl: 1.5rem;
-    --font-size-xxl: 2rem;
-    --font-size-hero: 3rem;
-    --space-xs: 0.25rem;
-    --space-sm: 0.5rem;
-    --space-md: 1rem;
-    --space-lg: 1.5rem;
-    --space-xl: 2rem;
-    --space-xxl: 3rem;
-    --border-radius-sm: 0.375rem;
-    --border-radius-md: 0.75rem;
-    --border-radius-lg: 1rem;
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
-    --shadow-md: 0 3px 8px rgba(0, 0, 0, 0.12);
-    --shadow-lg: 0 5px 15px rgba(0, 0, 0, 0.15);
-    --transition-fast: 0.2s ease;
-    --transition-normal: 0.3s ease;
-    --primary-color: #1e293b;
-    --secondary-color: #0ea5e9;
-    --accent-color: #f97316;
-    --text-color: #1e293b;
-    --background-color: #f1f5f9;
-    --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    --card-bg: #ffffff;
-    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --gradient-bg: linear-gradient(135deg, #0ea5e9, #3b82f6);
-}
-
-[data-theme="dark"] {
-    --primary: #4a91ff;
-    --primary-light: #6ab0ff;
-    --primary-dark: #2a6acc;
-    --secondary: #e0e0e0;
-    --secondary-light: #f0f0f0;
-    --secondary-dark: #c0c0c0;
-    --light: #1e293b;
-    --light-gray: #2d3748;
-    --medium-gray: #4a5568;
-    --dark-gray: #a0aec0;
-    --dark: #ffffff;
-    --background-color: #1a202c;
-    --card-bg: #2d3748;
-    --text-color: #e2e8f0;
-    --gradient-bg: linear-gradient(135deg, #2b6cb0, #4c51bf);
-}
-
-*, *::before, *::after {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-html {
-    font-size: 16px;
-    scroll-behavior: smooth;
-    overflow-x: hidden;
-}
-
-body {
-    font-family: var(--font-primary);
-    color: var(--text-color);
-    background-color: var(--background-color);
-    line-height: 1.7;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden;
-}
-
-h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-secondary);
-    font-weight: 700;
-    color: var(--secondary);
-}
-
-h1 { font-size: clamp(2.5rem, 5vw, var(--font-size-hero)); }
-h2 { font-size: clamp(1.8rem, 4vw, var(--font-size-xxl)); }
-h3 { font-size: clamp(1.3rem, 3vw, var(--font-size-xl)); }
-h4 { font-size: clamp(1.1rem, 2.5vw, var(--font-size-lg)); }
-h5 { font-size: clamp(0.9rem, 2vw, var(--font-size-base)); }
-h6 { font-size: clamp(0.8rem, 1.8vw, var(--font-size-sm)); }
-
-a {
-    color: var(--primary);
-    text-decoration: none;
-    transition: color var(--transition-fast), transform var(--transition-fast);
-}
-
-a:hover, a:focus {
-    color: var(--primary-dark);
-    transform: translateY(-1px);
-}
-
-a:focus {
-    outline: 2px solid var(--primary);
-    outline-offset: 2px;
-}
-
-/* Header Styles */
-.app-header {
-    background: var(--gradient-bg);
-    color: var(--light);
-    padding: clamp(1rem, 2vw, 1.5rem) 0;
-    box-shadow: var(--shadow-md);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    contain: layout;
-}
-
-.header-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 0 clamp(1rem, 2vw, 2rem);
-}
-
-.logo {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-weight: 700;
-    font-size: clamp(1.4rem, 3vw, 1.8rem);
-    transition: opacity var(--transition-fast);
-}
-
-.logo i {
-    font-size: clamp(1.2rem, 2.5vw, 1.6rem);
-}
-
-.search-bar {
-    position: relative;
-    flex-grow: 1;
-    max-width: 600px;
-    margin: 0 clamp(1rem, 2vw, 2rem);
-}
-
-.search-bar input {
-    width: 100%;
-    padding: 12px 20px 12px 45px;
-    border-radius: 50px;
-    border: none;
-    background-color: rgba(255, 255, 255, 0.2);
-    color: var(--light);
-    font-size: var(--font-size-base);
-    transition: var(--transition);
-}
-
-.search-bar input:focus {
-    background-color: rgba(255, 255, 255, 0.3);
-    outline: 2px solid var(--primary-light);
-}
-
-.search-bar input::placeholder {
-    color: rgba(255, 255, 255, 0.7);
-}
-
-.search-bar i {
-    position: absolute;
-    left: 16px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--light);
-    font-size: 1.2rem;
-    cursor: pointer;
-}
-
-.theme-toggle {
-    font-size: 1.2rem;
-}
-/* Offcanvas */
-.offcanvas {
-    width: clamp(280px, 20vw, 320px);
-    background-color: var(--card-bg);
-    box-shadow: var(--shadow-lg);
-}
-
-.offcanvas-header {
-    background: var(--gradient-bg);
-    color: var(--light);
-    padding: var(--space-lg);
-}
-
-.offcanvas-title {
-    font-weight: 700;
-    font-size: var(--font-size-lg);
-}
-
-.offcanvas-body {
-    padding: var(--space-lg);
-}
-
-.nav-link {
-    padding: var(--space-md) var(--space-lg);
-    color: var(--secondary);
-    border-radius: var(--border-radius-sm);
-    font-size: var(--font-size-base);
-    font-weight: 500;
-    transition: background-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
-    display: flex;
-    align-items: center;
-}
-
-.nav-link:hover, .nav-link:focus {
-    background-color: var(--primary-transparent);
-    color: var(--primary);
-    transform: translateX(5px);
-}
-
-.nav-link.active {
-    background-color: var(--primary);
-    color: var(--light);
-    transform: translateX(5px);
-}
-
-.nav-link i {
-    margin-right: var(--space-md);
-}
-
-.navbar-nav .nav-item {
-    margin-bottom: var(--space-sm);
-}
-
-.user-profile .avatar-initials {
-    width: 50px;
-    height: 50px;
-    font-size: var(--font-size-lg);
-    font-weight: 600;
-}
-
-/* Category Navigation */
-.category-nav {
-    padding: var(--space-lg) 0;
-    position: sticky;
-    top: 80px;
-    background-color: var(--background-color);
-    z-index: 900;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    contain: layout;
-    margin-bottom: 2rem;
-}
-
-.categories-wrapper {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 0 clamp(1rem, 2vw, 2rem);
-}
-
-.categories {
-    display: flex;
-    gap: 10px;
-    overflow-x: auto;
-    padding-bottom: 10px;
-    scroll-behavior: smooth;
-    scrollbar-width: none;
-}
-
-/* Adicione este trecho AO FINAL do seu CSS existente */
-
-.categories {
-    /* Mantém o overflow-x para o scroll lateral */
-    overflow-x: auto;
-    /* Garante que o scroll não fique escondido pelo gap */
-    padding-bottom: 10px;
-    scroll-behavior: smooth;
-    scrollbar-width: thin; /* Firefox: "auto" ou "thin" */
-    scrollbar-color: #1a73e8 #e3e8ef; /* Cor do thumb e da track */
-}
-
-/* Webkit (Chrome, Edge, Safari) */
-.categories::-webkit-scrollbar {
-    height: 8px; /* Altura da barra */
-}
-
-.categories::-webkit-scrollbar-thumb {
-    background: #1a73e8; /* Azul principal */
-    border-radius: 6px;
-}
-
-.categories::-webkit-scrollbar-track {
-    background: #e3e8ef; /* Cor de fundo da track */
-    border-radius: 6px;
-}
-
-.categories::-webkit-scrollbar-thumb:hover {
-    background: #1357b9; /* Azul um pouco mais escuro no hover */
-}
-
-/* Para garantir que a barra fique visível em todos os navegadores */
-.categories {
-    scrollbar-width: thin;
-    scrollbar-color: #1a73e8 #e3e8ef;
-}
-
-.category {
-    padding: 10px 20px;
-    background-color: var(--card-bg);
-    color: var(--text-color);
-    border-radius: 50px;
-    white-space: nowrap;
-    font-weight: 500;
-    cursor: pointer;
-    border: 1px solid var(--medium-gray);
-    transition: var(--transition);
-    font-size: 0.95rem;
-}
-
-.category.active {
-    background-color: var(--primary);
-    color: var(--light);
-    border-color: var(--primary);
-}
-
-.category:hover:not(.active), .category:focus:not(.active) {
-    background-color: var(--light-gray);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-
-.menu-btn {
-    color: var(--light);
-    font-size: var(--font-size-base);
-    background: var(--primary-dark);
-    border: none;
-    padding: 8px 16px;
-    border-radius: var(--border-radius-sm);
-    transition: var(--transition-normal);
-}
-
-.menu-btn:hover {
-    background: var(--primary);
-    transform: scale(1.05);
-}
-
-.category:focus {
-    outline: 2px solid var(--primary);
-    outline-offset: 2px;
-}
-
-/* Main Content */
-.container {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: clamp(1.5rem, 3vw, 2rem);
-}
-
-.main-content {
-    margin-top: var(--space-xl);
-}
-
-.section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: var(--space-xl);
-}
-
-.section-title {
-    font-size: clamp(1.6rem, 3vw, 1.8rem);
-    font-weight: 700;
-    color: var(--primary-color);
-    margin: 0;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.section-title i {
-    color: var(--accent-color);
-}
-
-/* Post Creation Card */
-.post-creation-card {
-    background-color: var(--card-bg);
-    border-radius: 12px;
-    box-shadow: var(--card-shadow);
-    padding: var(--space-lg);
-    margin-bottom: var(--space-xl);
-    animation: fadeIn 0.5s ease-out;
-}
-
-.post-creation-card .form-control {
-    border: 1px solid var(--medium-gray);
-    border-radius: var(--border-radius-sm);
-    padding: var(--space-md);
-    font-size: var(--font-size-base);
-    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
-    resize: none;
-}
-
-.post-creation-card .form-control:focus {
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px var(--primary-transparent);
-}
-
-.post-creation-card .char-counter {
-    position: absolute;
-    bottom: 15px;
-    right: 15px;
-    font-size: var(--font-size-sm);
-    color: var(--dark-gray);
-}
-
-.post-creation-card .char-counter.limit {
-    color: var(--danger);
-}
-
-.post-creation-card .btn-publish {
-    background-color: var(--primary);
-    border-color: var(--primary);
-    padding: var(--space-md) var(--space-xl);
-    border-radius: var(--border-radius-sm);
-    font-weight: 600;
-    transition: background-color var(--transition-fast), transform var(--transition-fast);
-}
-
-.post-creation-card .btn-publish:hover, .post-creation-card .btn-publish:focus {
-    background-color: var(--primary-dark);
-    border-color: var(--primary-dark);
-    transform: translateY(-2px);
-}
-
-.category-selector .form-select {
-    border-radius: var(--border-radius-sm);
-    padding: var(--space-sm) var(--space-md);
-    font-size: var(--font-size-sm);
-    max-width: 200px;
-}
-
-/* Post Grid */
-.post-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 25px;
-}
-
-.post-card {
-    background-color: var(--card-bg);
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: var(--card-shadow);
-    transition: var(--transition);
-    position: relative;
-    animation: fadeIn 0.5s ease-out;
-    margin-bottom: 1.5rem; /* ou ajuste o valor como preferir */
-}
-
-.post-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
-}
-
-.post-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1.25rem;
-    border-bottom: 1px solid var(--medium-gray);
-    
-}
-
-.user-info {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.avatar-initials {
-    width: 40px;
-    height: 40px;
-    font-size: var(--font-size-base);
-    font-weight: 600;
-}
-
-.username {
-    font-size: var(--font-size-base);
-    font-weight: 600;
-    color: var(--primary-color);
-    margin: 0;
-}
-
-.post-actions .btn {
-    padding: 6px 12px;
-}
-
-.post-content {
-    padding: 1.25rem;
-}
-
-.post-category-tag {
-    display: inline-block;
-    background-color: var(--accent-color);
-    color: var(--light);
-    padding: 4px 12px;
-    border-radius: 50px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    margin-bottom: 12px;
-}
-
-.post-content p {
-    font-size: 0.9rem;
-    color: var(--dark-gray);
-    display: -webkit-box;
-    -webkit-line-clamp: 4;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    margin-bottom: 0;
-}
-
-.post-footer {
-    padding: 1rem 1.25rem;
-    border-top: 1px solid var(--medium-gray);
-    display: flex;
-    gap: 12px;
-}
-
-.post-footer .btn {
-    font-size: 0.85rem;
-    padding: 6px 12px;
-}
-
-.like-btn.active {
-    background-color: var(--primary);
-    color: var(--light);
-    border-color: var(--primary);
-}
-
-/* Empty State Card */
-.empty-state-card {
-    background-color: var(--card-bg);
-    border-radius: 12px;
-    box-shadow: var(--card-shadow);
-    text-align: center;
-    padding: var(--space-lg);
-}
-
-/* Footer Styles */
-.app-footer {
-    background-color: var(--primary-color);
-    color: var(--light);
-    padding: 3rem 0;
-    margin-top: auto;
-}
-
-.footer-content {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 0 clamp(1rem, 2vw, 2rem);
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 3rem;
-}
-
-.footer-column h3 {
-    font-size: 1.2rem;
-    margin-bottom: 1.5rem;
-    position: relative;
-    padding-bottom: 10px;
-}
-
-.footer-column h3::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 40px;
-    height: 3px;
-    background-color: var(--accent-color);
-}
-
-.footer-links {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.footer-links li {
-    margin-bottom: 12px;
-}
-
-.footer-links a {
-    color: #cbd5e1;
-    transition: var(--transition);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.footer-links a:hover, .footer-links a:focus {
-    color: var(--light);
-}
-
-.footer-bottom {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 1.5rem clamp(1rem, 2vw, 2rem) 0;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    text-align: center;
-    font-size: 0.9rem;
-    color: #94a3b8;
-}
-
-/* Animations */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes slideIn {
-    from { transform: translateX(-100%); }
-    to { transform: translateX(0); }
-}
-
-.notification {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 2000;
-    padding: var(--space-md);
-    border-radius: var(--border-radius-sm);
-    box-shadow: var(--shadow-md);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    opacity: 0;
-    transform: translateX(100%);
-    transition: opacity var(--transition-fast), transform var(--transition-fast);
-}
-
-.notification.show {
-    opacity: 1;
-    transform: translateX(0);
-}
-
-.notification-success { background-color: var(--success); color: var(--light); }
-.notification-error { background-color: var(--danger); color: var(--light); }
-.notification-info { background-color: var(--primary); color: var(--light); }
-
-.notification-close {
-    background: none;
-    border: none;
-    color: var(--light);
-    cursor: pointer;
-}
-
-/* Responsive Design */
-@media (max-width: 1400px) {
-    .container { max-width: 1140px; }
-}
-
-@media (max-width: 1200px) {
-    .container { max-width: 960px; }
-    .logo { font-size: clamp(1.2rem, 2.5vw, 1.6rem); }
-}
-
-@media (max-width: 992px) {
-    .container { max-width: 720px; }
-    .header-content {
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        padding: 1rem;
-    }
-    .logo {
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-        font-size: clamp(1.1rem, 2vw, 1.4rem);
-    }
-    .search-bar.search-active + .logo {
-        display: none;
-    }
-    .search-bar {
-        max-width: unset;
-        margin: 0;
-        order: -1;
-        position: relative;
-    }
-    .search-bar input {
-        display: none;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        max-width: 200px;
-        width: 100%;
-        padding: 8px 15px 8px 36px;
-        z-index: 101;
-        border-radius: var(--border-radius-md);
-        background-color: rgba(255, 255, 255, 0.95);
-        color: var(--text-color);
-        box-shadow: var(--shadow-md);
-        transition: opacity var(--transition-fast), transform var(--transition-fast);
-        opacity: 0;
-        transform: translate(-50%, -40%);
-    }
-    .search-bar.search-active input {
-        display: block;
-        opacity: 1;
-        transform: translate(-50%, -50%);
-    }
-    .search-bar input::placeholder {
-        color: var(--dark-gray);
-    }
-    .search-bar i {
-        position: static;
-        transform: none;
-        font-size: 1.2rem;
-        cursor: pointer;
-        padding: var(--space-sm);
-    }
-    .search-bar.search-active i {
-        position: absolute;
-        left: calc(50% - 94px);
-        top: 50%;
-        transform: translateY(-50%);
-        color: var(--text-color);
-        z-index: 102;
-    }
-    .menu-btn {
-        order: 1;
-    }
-    .offcanvas { width: 280px; }
-}
-
-@media (max-width: 768px) {
-    .container { max-width: 540px; padding: var(--space-md); }
-    .logo { font-size: clamp(1rem, 1.8vw, 1.4rem); }
-    .post-grid {
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    }
-    .section-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1rem;
-    }
-}
-
-@media (max-width: 576px) {
-    .container { max-width: 100%; padding: var(--space-sm); }
-    .logo { font-size: clamp(0.9rem, 1.6vw, 1.2rem); }
-    .post-grid { grid-template-columns: 1fr; }
-    .categories { gap: 8px; }
-    .category { padding: 8px 16px; font-size: 0.85rem; }
-}
-
-
-
-
-esse é o css da tela inical
-
-
-
-quero que ele vira uma tela de dashboard para o usuario e nao apenas para postagfens, pois os clientes ficavem em duvida pois trazia algo meio vago, entao atyualize o html css e js no máximo que cosnseguir, preciso de algo muito foda, para os usuario ficarem no site, quero o mesmo header, nao altere o estilo
-
-tela
-
-
-ele tem que ter um pouco de cada html 
-
-
-materiais de estudo.html 
-
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Materiais de Estudo</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/materiaisestudo.css') }}">
-</head>
-<body>
-    <div class="container">
-        <h1>Portal de Aprendizagem</h1>
-
-        <div class="filter-section">
-            <select class="form-select" name="category" id="category-filter">
-                <option value="" disabled selected>Selecione a categoria</option>
-                <option value="IA">IA</option>
-                <option value="Banco de Dados">Banco de Dados</option>
-                <option value="Front-end">Front-end</option>
-                <option value="Back-end">Back-end</option>
-                <option value="Dúvidas Gerais">Dúvidas Gerais</option>
-                <option value="Carreiras">Carreiras</option>
-                <option value="Modelagem a Banco de Dados">Modelagem a Banco de Dados</option>
-                <option value="Lógica">Lógica</option>
-                <option value="Processos">Processos</option>
-                <option value="Programação Android">Programação Android</option>
-                <option value="Projeto Multidisciplinar">Projeto Multidisciplinar</option>
-                <option value="Redes">Redes</option>
-                <option value="Versionamento">Versionamento</option>
-            </select>
-        </div>
-
-        <div class="study-materials" id="study-materials">
-            <!-- Study materials will be dynamically added here -->
-        </div>
-    </div>
-
-    <div class="modal" id="material-modal">
-        <div class="modal-content">
-            <span class="close-btn" id="close-modal">×</span>
-            <h2 id="modal-title"></h2>
-            <p id="modal-description"></p>
-            <p><strong>Nível:</strong> <span id="modal-level"></span></p>
-            <p><strong>Categoria:</strong> <span id="modal-category"></span></p>
-            <a id="modal-download" class="download-btn" href="#" target="_blank">Baixar Apostila</a>
-        </div>
-    </div>
-
-    <script src="{{ url_for('static', filename='js/materiaisestudo.js') }}"></script>
-</body>
-</html>
-
-
-pdf e apostilas <!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDFs e Apostilas</title>
-    <style>
-        /* Estilos comuns */
-        :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #3498db;
-            --accent-color: #e74c3c;
-            --text-color: #333;
-            --background-color: #f9f9f9;
-            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s ease;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: var(--background-color);
-            color: var(--text-color);
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        h1 {
-            color: var(--primary-color);
-            text-align: center;
-            margin-bottom: 40px;
-            font-size: 2.5rem;
-        }
-
-        /* PDFs e Apostilas - Estrutura de Lista */
-        .pdfs-section {
-            margin-bottom: 40px;
-        }
-
-        .pdfs-title {
-            display: flex;
-            align-items: center;
-            color: var(--primary-color);
-            font-size: 1.8rem;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid var(--secondary-color);
-        }
-
-        .pdfs-title i {
-            margin-right: 15px;
-            font-size: 1.8rem;
-        }
-
-        .pdfs-list {
-            list-style: none;
-            padding: 0;
-        }
-
-        .pdf-item {
-            background-color: white;
-            margin-bottom: 15px;
-            padding: 15px;
-            border-radius: 6px;
-            box-shadow: var(--card-shadow);
-            display: flex;
-            align-items: center;
-            transition: var(--transition);
-            cursor: pointer;
-        }
-
-        .pdf-item:hover {
-            transform: translateX(5px);
-            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
-            background-color: #f0f7ff;
-        }
-
-        .pdf-icon {
-            margin-right: 15px;
-            color: var(--accent-color);
-            font-size: 24px;
-        }
-
-        .pdf-details {
-            flex-grow: 1;
-        }
-
-        .pdf-title {
-            font-weight: 600;
-            margin: 0 0 5px 0;
-            color: var(--primary-color);
-        }
-
-        .pdf-meta {
-            font-size: 0.85rem;
-            color: #666;
-        }
-
-        .pdf-download {
-            background-color: var(--secondary-color);
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .pdf-download:hover {
-            background-color: #2980b9;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Biblioteca Digital</h1>
-        
-        <section class="pdfs-section">
-            <h2 class="pdfs-title"><i>📄</i> PDFs e Apostilas</h2>
-            
-            <ul class="pdfs-list">
-                <li class="pdf-item">
-                    <div class="pdf-icon">📑</div>
-                    <div class="pdf-details">
-                        <h3 class="pdf-title">Apostila de Matemática</h3>
-                        <div class="pdf-meta">PDF • 5.2 MB • Atualizado em 15/04/2025</div>
-                    </div>
-                    <button class="pdf-download">Baixar</button>
-                </li>
-                
-                <li class="pdf-item">
-                    <div class="pdf-icon">📑</div>
-                    <div class="pdf-details">
-                        <h3 class="pdf-title">Apostila de Física</h3>
-                        <div class="pdf-meta">PDF • 3.8 MB • Atualizado em 22/03/2025</div>
-                    </div>
-                    <button class="pdf-download">Baixar</button>
-                </li>
-                
-                <li class="pdf-item">
-                    <div class="pdf-icon">📑</div>
-                    <div class="pdf-details">
-                        <h3 class="pdf-title">Apostila de Química</h3>
-                        <div class="pdf-meta">PDF • 4.1 MB • Atualizado em 05/04/2025</div>
-                    </div>
-                    <button class="pdf-download">Baixar</button>
-                </li>
-            </ul>
-        </section>
-    </div>
-</body>
-</html>
-
-videos e tutoriais.html <!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TechNoBug</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/static/css/videoseetutoriais.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
-</head>
-<body>
-    <header class="app-header">
-        <div class="header-content">
-            <div class="search-bar">
-                <i class="fas fa-search"></i>
-                <input type="text" placeholder="Pesquisar vídeos, tutoriais, tópicos...">
-            </div>
-            <div class="logo" onclick="window.location.href = '{{ url_for('telainicial') }}';" style="cursor: pointer;">
-                <i class="fas fa-graduation-cap"></i>
-                <span>TechNoBug</span>
-            </div>
-            <button class="btn menu-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" aria-controls="offcanvasMenu">
-                <i class="fas fa-bars"></i>
-                <span>Menu</span>
-            </button>
-        </div>
-    </header>
-
-    <!-- Offcanvas Menu -->
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasMenuLabel">
-        <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="offcanvasMenuLabel">Menu</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body">
-            <div class="user-profile mb-4">
-                <div class="d-flex align-items-center">
-                    <div class="avatar me-3">
-                        <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center">
-                            {{ user.username[0]|upper }}
-                        </div>
-                    </div>
-                    <div>
-                        <h6 class="mb-0">{{ user.username }}</h6>
-                        <small class="text-muted">{{ user.email }}</small>
-                    </div>
-                </div>
-            </div>
-            <ul class="navbar-nav">
-                <li class="nav-item mb-2"><a class="nav-link active" href="{{ url_for('telainicial') }}"><i class="fas fa-home me-2"></i>Página Inicial</a></li>
-                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('materiais') }}"><i class="fas fa-book me-2"></i>Materiais de Estudo</a></li>
-                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('pdfs') }}"><i class="fas fa-file-pdf me-2"></i>PDFs e Apostilas</a></li>
-                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('videos') }}"><i class="fas fa-video me-2"></i>Vídeos e Tutoriais</a></li>
-                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('codigo') }}"><i class="fas fa-code me-2"></i>Exemplos de Código</a></li>
-                <li class="nav-item mb-2"><a class="nav-link" href="#"><i class="fas fa-users me-2"></i>Comunidade</a></li>
-                <li class="nav-item mb-2"><a class="nav-link" href="#"><i class="fas fa-cog me-2"></i>Configurações</a></li>
-                <li class="nav-item"><a class="nav-link text-danger" href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt me-2"></i>Sair</a></li>
-            </ul>
-        </div>
-    </div>
-
-    <nav class="category-nav">
-        <div class="categories-wrapper">
-            <div class="categories">
-                <div class="category active">Todos</div>
-                <div class="category">Versionamento</div>
-                <div class="category">I.A</div>
-                <div class="category">Modelagem a Banco de Dados</div>
-                <div class="category">Lógica</div>
-                <div class="category">Processos</div>
-                <div class="category">Front-end</div>
-                <div class="category">Back-end</div>
-                <div class="category">Programação Android</div>
-                <div class="category">Projeto Multidisciplinar</div>
-                <div class="category">Carreiras</div>
-                <div class="category">Redes</div>
-            </div>
-        </div>
-    </nav>
-
-    <div class="container">
-        <main class="main-content">
-            <div class="section-header">
-                <h2 class="section-title">
-                    <i class="fas fa-fire"></i>
-                    <span>Tutoriais em Destaque</span>
-                </h2>
-                <div class="section-actions">
-                    <div class="view-toggle">
-                        <button class="active">
-                            <i class="fas fa-th"></i>
-                        </button>
-                        <button>
-                            <i class="fas fa-list"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="video-grid">
-                <!-- Card 1: Aprenda Git e Github em 5 minutos -->
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <a href="https://youtu.be/-l4Aa8wef8s?si=ziRfdFpMjxiSdThi" target="_blank">
-                            <img src="https://img.youtube.com/vi/-l4Aa8wef8s/hqdefault.jpg" alt="Thumbnail do vídeo">
-                        </a>
-                        <div class="video-category-tag">Versionamento</div>
-                        <div class="video-play-icon">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="video-duration">4:57</div>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">
-                            <a href="https://youtu.be/-l4Aa8wef8s?si=ziRfdFpMjxiSdThi" target="_blank" style="text-decoration: none; color: inherit;">
-                                Aprenda Git e Github em 5 minutos
-                            </a>
-                        </h3>
-                        <div class="video-meta">
-                            <div class="instructor">
-                                <span class="instructor-name">Mucharski</span>
-                            </div>
-                            <div class="video-stats">
-                                <span><i class="fas fa-eye"></i> 11.5K</span>
-                                <span><i class="fas fa-thumbs-up"></i> 6.1K</span>
+                                {% endif %}
                             </div>
                         </div>
-                        <p class="video-description">Um tutorial rápido e direto para aprender os conceitos básicos de Git e GitHub em apenas 5 minutos.</p>
-                        <div class="video-tags">
-                            <span class="video-tag">Git</span>
-                            <span class="video-tag">GitHub</span>
-                            <span class="video-tag">Versionamento</span>
-                        </div>
                     </div>
-                </div>
-
-                <!-- Card 2: Como Instalar Python e Visual Studio Code -->
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <a href="https://youtu.be/R9dLGLVqK9Q?si=t0m91hvDA1PA4JgN" target="_blank">
-                            <img src="https://img.youtube.com/vi/R9dLGLVqK9Q/hqdefault.jpg" alt="Thumbnail do vídeo">
-                        </a>
-                        <div class="video-category-tag">Lógica</div>
-                        <div class="video-play-icon">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="video-duration">17:22</div>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">
-                            <a href="https://youtu.be/R9dLGLVqK9Q?si=t0m91hvDA1PA4JgN" target="_blank" style="text-decoration: none; color: inherit;">
-                                Como Instalar Python e Visual Studio Code no Windows | Python do Jeito Certo 2.0
-                            </a>
-                        </h3>
-                        <div class="video-meta">
-                            <div class="instructor">
-                                <span class="instructor-name">Programação Dinâmica</span>
+                    
+                    <div class="col-lg-4">
+                        <div class="dashboard-card">
+                            <div class="dashboard-card-header">
+                                <h3 class="dashboard-card-title"><i class="fas fa-star"></i> Recomendados</h3>
+                                <a href="{{ url_for('materiais') }}" class="see-all-link">Ver tudo</a>
                             </div>
-                            <div class="video-stats">
-                                <span><i class="fas fa-eye"></i> 85K</span>
-                                <span><i class="fas fa-thumbs-up"></i> 4.5K</span>
+                            <div class="resource-item">
+                                <h4 class="resource-title">Introdução a Python</h4>
+                                <div class="resource-meta">
+                                    <span><i class="fas fa-book"></i> Material</span>
+                                    <span><i class="fas fa-clock"></i> 15 min</span>
+                                </div>
+                                <span class="resource-category">Lógica</span>
+                            </div>
+                            <div class="resource-item">
+                                <h4 class="resource-title">Modelagem de Banco de Dados</h4>
+                                <div class="resource-meta">
+                                    <span><i class="fas fa-video"></i> Vídeo</span>
+                                    <span><i class="fas fa-clock"></i> 22 min</span>
+                                </div>
+                                <span class="resource-category">Banco de Dados</span>
+                            </div>
+                            <div class="resource-item">
+                                <h4 class="resource-title">Git e GitHub para Iniciantes</h4>
+                                <div class="resource-meta">
+                                    <span><i class="fas fa-file-pdf"></i> PDF</span>
+                                    <span><i class="fas fa-clock"></i> 30 min</span>
+                                </div>
+                                <span class="resource-category">Versionamento</span>
                             </div>
                         </div>
-                        <p class="video-description">Aprenda a instalar o Python e o Visual Studio Code no Windows de forma correta para começar a programar.</p>
-                        <div class="video-tags">
-                            <span class="video-tag">Python</span>
-                            <span class="video-tag">Visual Studio Code</span>
-                            <span class="video-tag">Iniciante</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 3: Curso Python #01 - Seja um Programador -->
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <a href="https://www.youtube.com/watch?v=S9uPNppGsGo&list=PLvE-ZAFRgX8hnECDn1v9HNTI71veL3oW0" target="_blank">
-                            <img src="https://img.youtube.com/vi/S9uPNppGsGo/hqdefault.jpg" alt="Thumbnail do vídeo">
-                        </a>
-                        <div class="video-category-tag">Lógica</div>
-                        <div class="video-play-icon">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="video-duration">29:06</div>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">
-                            <a href="https://www.youtube.com/watch?v=S9uPNppGsGo&list=PLvE-ZAFRgX8hnECDn1v9HNTI71veL3oW0" target="_blank" style="text-decoration: none; color: inherit;">
-                                Curso Python #01 - Seja um Programador
-                            </a>
-                        </h3>
-                        <div class="video-meta">
-                            <div class="instructor">
-                                <span class="instructor-name">Curso em Vídeo</span>
+                        
+                        <div class="dashboard-card">
+                            <div class="dashboard-card-header">
+                                <h3 class="dashboard-card-title"><i class="fas fa-code"></i> Exemplo de Código</h3>
+                                <a href="{{ url_for('codigo') }}" class="see-all-link">Ver mais</a>
                             </div>
-                            <div class="video-stats">
-                                <span><i class="fas fa-eye"></i> 8.8M</span>
-                                <span><i class="fas fa-thumbs-up"></i> 474K</span>
-                            </div>
-                        </div>
-                        <p class="video-description">Primeira aula de um curso completo de Python para iniciantes, ensinando fundamentos de programação.</p>
-                        <div class="video-tags">
-                            <span class="video-tag">Python</span>
-                            <span class="video-tag">Programação</span>
-                            <span class="video-tag">Iniciante</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 4: Curso Grátis de Inteligência Artificial -->
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <a href="https://www.youtube.com/watch?v=jQMbuK6URws&list=PLHz_AreHm4dm24MhlWJYiR_Rm7TFtvs6S" target="_blank">
-                            <img src="https://img.youtube.com/vi/jQMbuK6URws/hqdefault.jpg" alt="Thumbnail do vídeo">
-                        </a>
-                        <div class="video-category-tag">I.A</div>
-                        <div class="video-play-icon">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="video-duration">2:44</div>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">
-                            <a href="https://www.youtube.com/watch?v=jQMbuK6URws&list=PLHz_AreHm4dm24MhlWJYiR_Rm7TFtvs6S" target="_blank" style="text-decoration: none; color: inherit;">
-                                Curso Grátis de Inteligência Artificial - @CursoemVideo IA
-                            </a>
-                        </h3>
-                        <div class="video-meta">
-                            <div class="instructor">
-                                <span class="instructor-name">Curso em Vídeo</span>
-                            </div>
-                            <div class="video-stats">
-                                <span><i class="fas fa-eye"></i> 203K</span>
-                                <span><i class="fas fa-thumbs-up"></i> 15K</span>
-                            </div>
-                        </div>
-                        <p class="video-description">Apresentação do curso gratuito de Inteligência Artificial do Curso em Vídeo.</p>
-                        <div class="video-tags">
-                            <span class="video-tag">IA</span>
-                            <span class="video-tag">Curso</span>
-                            <span class="video-tag">Gratuito</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 5: Modelagem de Dados - Conceitos de Bancos de Dados -->
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <a href="https://www.youtube.com/watch?v=Q_KTYFgvu1s&list=PLucm8g_ezqNoNHU8tjVeHmRGBFnjDIlxD" target="_blank">
-                            <img src="https://img.youtube.com/vi/Q_KTYFgvu1s/hqdefault.jpg" alt="Thumbnail do vídeo">
-                        </a>
-                        <div class="video-category-tag">Modelagem a Banco de Dados</div>
-                        <div class="video-play-icon">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="video-duration">-</div>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">
-                            <a href="https://www.youtube.com/watch?v=Q_KTYFgvu1s&list=PLucm8g_ezqNoNHU8tjVeHmRGBFnjDIlxD" target="_blank" style="text-decoration: none; color: inherit;">
-                                Modelagem de Dados - Conceitos de Bancos de Dados
-                            </a>
-                        </h3>
-                        <div class="video-meta">
-                            <div class="instructor">
-                                <span class="instructor-name">Bóson Treinamentos</span>
-                            </div>
-                            <div class="video-stats">
-                                <span><i class="fas fa-eye"></i> 576K</span>
-                                <span><i class="fas fa-thumbs-up"></i> 23K</span>
-                            </div>
-                        </div>
-                        <p class="video-description">Fundamentos essenciais de modelagem de dados para bancos de dados relacionais.</p>
-                        <div class="video-tags">
-                            <span class="video-tag">Banco de Dados</span>
-                            <span class="video-tag">Modelagem</span>
-                            <span class="video-tag">SQL</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 6: Introdução à Modelagem de Dados -->
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <a href="https://www.youtube.com/watch?v=W49AO7f93Jk" target="_blank">
-                            <img src="https://img.youtube.com/vi/W49AO7f93Jk/hqdefault.jpg" alt="Thumbnail do vídeo">
-                        </a>
-                        <div class="video-category-tag">Modelagem a Banco de Dados</div>
-                        <div class="video-play-icon">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="video-duration">-</div>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">
-                            <a href="https://www.youtube.com/watch?v=W49AO7f93Jk" target="_blank" style="text-decoration: none; color: inherit;">
-                                Introdução à Modelagem de Dados
-                            </a>
-                        </h3>
-                        <div class="video-meta">
-                            <div class="instructor">
-                                <span class="instructor-name">Hashtag Programação</span>
-                            </div>
-                            <div class="video-stats">
-                                <span><i class="fas fa-eye"></i> 32K</span>
-                                <span><i class="fas fa-thumbs-up"></i> 2K</span>
-                            </div>
-                        </div>
-                        <p class="video-description">Conceitos básicos de modelagem de dados para quem está começando com bancos de dados.</p>
-                        <div class="video-tags">
-                            <span class="video-tag">Modelagem</span>
-                            <span class="video-tag">Banco de Dados</span>
-                            <span class="video-tag">SQL</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 7: Git #1 - Conceitos e principais comandos de versionamento -->
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <a href="https://www.youtube.com/watch?v=GIEquFr3jcg&list=PLDqnSpzNKDvkfF_ZMfukmOG3MtGKfXlfJ" target="_blank">
-                            <img src="https://img.youtube.com/vi/GIEquFr3jcg/hqdefault.jpg" alt="Thumbnail do vídeo">
-                        </a>
-                        <div class="video-category-tag">Versionamento</div>
-                        <div class="video-play-icon">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="video-duration">1:20:10</div>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">
-                            <a href="https://www.youtube.com/watch?v=GIEquFr3jcg&list=PLDqnSpzNKDvkfF_ZMfukmOG3MtGKfXlfJ" target="_blank" style="text-decoration: none; color: inherit;">
-                                Git #1 - Conceitos e principais comandos de versionamento
-                            </a>
-                        </h3>
-                        <div class="video-meta">
-                            <div class="instructor">
-                                <span class="instructor-name">Angelo Luz</span>
-                            </div>
-                            <div class="video-stats">
-                                <span><i class="fas fa-eye"></i> 11K</span>
-                                <span><i class="fas fa-thumbs-up"></i> 559</span>
-                            </div>
-                        </div>
-                        <p class="video-description">Introdução aos conceitos de versionamento com Git, cobrindo comandos essenciais para iniciantes.</p>
-                        <div class="video-tags">
-                            <span class="video-tag">Git</span>
-                            <span class="video-tag">Versionamento</span>
-                            <span class="video-tag">Iniciante</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 8: Seu primeiro código HTML - @Curso em Vídeo HTML5 e CSS3 -->
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <a href="https://www.youtube.com/watch?v=E6CdIawPTh0&list=PLHz_AreHm4dkZ9-atkcmcBaMZdmLHft8n&index=12" target="_blank">
-                            <img src="https://img.youtube.com/vi/E6CdIawPTh0/hqdefault.jpg" alt="Thumbnail do vídeo">
-                        </a>
-                        <div class="video-category-tag">Front-end</div>
-                        <div class="video-play-icon">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="video-duration">17:33</div>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">
-                            <a href="https://www.youtube.com/watch?v=E6CdIawPTh0&list=PLHz_AreHm4dkZ9-atkcmcBaMZdmLHft8n&index=12" target="_blank" style="text-decoration: none; color: inherit;">
-                                Seu primeiro código HTML - @Curso em Vídeo HTML5 e CSS3
-                            </a>
-                        </h3>
-                        <div class="video-meta">
-                            <div class="instructor">
-                                <span class="instructor-name">Curso em Vídeo</span>
-                            </div>
-                            <div class="video-stats">
-                                <span><i class="fas fa-eye"></i> 962K</span>
-                                <span><i class="fas fa-thumbs-up"></i> 45K</span>
-                            </div>
-                        </div>
-                        <p class="video-description">Aprenda a criar seu primeiro código HTML com este tutorial prático do curso de HTML5 e CSS3.</p>
-                        <div class="video-tags">
-                            <span class="video-tag">HTML</span>
-                            <span class="video-tag">CSS</span>
-                            <span class="video-tag">Iniciante</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 9: Tudo sobre Front-End: salários, o que estudar e dicas para carreira -->
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <a href="https://www.youtube.com/watch?v=8xo1FID4TqU" target="_blank">
-                            <img src="https://img.youtube.com/vi/8xo1FID4TqU/hqdefault.jpg" alt="Thumbnail do vídeo">
-                        </a>
-                        <div class="video-category-tag">Front-end</div>
-                        <div class="video-play-icon">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="video-duration">18:42</div>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">
-                            <a href="https://www.youtube.com/watch?v=8xo1FID4TqU" target="_blank" style="text-decoration: none; color: inherit;">
-                                Tudo sobre Front-End: 💰 salários, o que estudar e dicas para carreira
-                            </a>
-                        </h3>
-                        <div class="video-meta">
-                            <div class="instructor">
-                                <span class="instructor-name">Gabriel Rangel</span>
-                            </div>
-                            <div class="video-stats">
-                                <span><i class="fas fa-eye"></i> 122K</span>
-                                <span><i class="fas fa-thumbs-up"></i> 9.8K</span>
-                            </div>
-                        </div>
-                        <p class="video-description">Explore a carreira de Front-End, incluindo salários, habilidades essenciais e dicas para se destacar.</p>
-                        <div class="video-tags">
-                            <span class="video-tag">Front-end</span>
-                            <span class="video-tag">Carreira</span>
-                            <span class="video-tag">Programação</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 10: O que é Front End e Back End? Diferenças que Você Precisa Saber -->
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <a href="https://www.youtube.com/watch?v=LDU4BCSxPp4" target="_blank">
-                            <img src="https://img.youtube.com/vi/LDU4BCSxPp4/hqdefault.jpg" alt="Thumbnail do vídeo">
-                        </a>
-                        <div class="video-category-tag">Front-end</div>
-                        <div class="video-play-icon">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="video-duration">8:34</div>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">
-                            <a href="https://www.youtube.com/watch?v=LDU4BCSxPp4" target="_blank" style="text-decoration: none; color: inherit;">
-                                O que é Front End e Back End? Diferenças que Você Precisa Saber
-                            </a>
-                        </h3>
-                        <div class="video-meta">
-                            <div class="instructor">
-                                <span class="instructor-name">Alura</span>
-                            </div>
-                            <div class="video-stats">
-                                <span><i class="fas fa-eye"></i> 16K</span>
-                                <span><i class="fas fa-thumbs-up"></i> 1K</span>
-                            </div>
-                        </div>
-                        <p class="video-description">Entenda as diferenças entre Front-End e Back-End e como eles funcionam no desenvolvimento web.</p>
-                        <div class="video-tags">
-                            <span class="video-tag">Front-end</span>
-                            <span class="video-tag">Back-end</span>
-                            <span class="video-tag">Programação</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 11: CURSO DE KOTLIN PARA INICIANTES - BEM-VINDO #01 -->
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <a href="https://www.youtube.com/watch?v=4lOjDziyce8&list=PLJ0AcghBBWSj0i1SQfr3GdwUBnUaIf5xw" target="_blank">
-                            <img src="https://img.youtube.com/vi/4lOjDziyce8/hqdefault.jpg" alt="Thumbnail do vídeo">
-                        </a>
-                        <div class="video-category-tag">Android</div>
-                        <div class="video-play-icon">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="video-duration">21:55</div>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">
-                            <a href="https://www.youtube.com/watch?v=4lOjDziyce8&list=PLJ0AcghBBWSj0i1SQfr3GdwUBnUaIf5xw" target="_blank" style="text-decoration: none; color: inherit;">
-                                CURSO DE KOTLIN PARA INICIANTES - BEM-VINDO #01
-                            </a>
-                        </h3>
-                        <div class="video-meta">
-                            <div class="instructor">
-                                <span class="instructor-name">Tiago Aguiar</span>
-                            </div>
-                            <div class="video-stats">
-                                <span><i class="fas fa-eye"></i> 68K</span>
-                                <span><i class="fas fa-thumbs-up"></i> 2.2K</span>
-                            </div>
-                        </div>
-                        <p class="video-description">Introdução ao curso de Kotlin para iniciantes, abordando os conceitos básicos da linguagem.</p>
-                        <div class="video-tags">
-                            <span class="video-tag">Kotlin</span>
-                            <span class="video-tag">Android</span>
-                            <span class="video-tag">Iniciante</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 12: Curso de Flutter #1 - Apresentação -->
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <a href="https://www.youtube.com/watch?v=XeUiJJN0vsE&list=PLlBnICoI-g-d-J57QIz6Tx5xtUDGQdBFB" target="_blank">
-                            <img src="https://img.youtube.com/vi/XeUiJJN0vsE/hqdefault.jpg" alt="Thumbnail do vídeo">
-                        </a>
-                        <div class="video-category-tag">Android</div>
-                        <div class="video-play-icon">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="video-duration">4:26</div>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">
-                            <a href="https://www.youtube.com/watch?v=XeUiJJN0vsE&list=PLlBnICoI-g-d-J57QIz6Tx5xtUDGQdBFB" target="_blank" style="text-decoration: none; color: inherit;">
-                                Curso de Flutter #1 - Apresentação
-                            </a>
-                        </h3>
-                        <div class="video-meta">
-                            <div class="instructor">
-                                <span class="instructor-name">Flutterando TV</span>
-                            </div>
-                            <div class="video-stats">
-                                <span><i class="fas fa-eye"></i> -</span>
-                                <span><i class="fas fa-thumbs-up"></i> 7.7K</span>
-                            </div>
-                        </div>
-                        <p class="video-description">Apresentação do curso completo de Flutter para desenvolvimento multiplataforma.</p>
-                        <div class="video-tags">
-                            <span class="video-tag">Flutter</span>
-                            <span class="video-tag">Mobile</span>
-                            <span class="video-tag">Dart</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 13: Curso Javascript Completo: Aula 01 - JS Interno e Externo -->
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <a href="https://www.youtube.com/watch?v=vEwPnjqWQ-g&list=PL2Fdisxwzt_d590u3uad46W-kHA0PTjjw" target="_blank">
-                            <img src="https://img.youtube.com/vi/vEwPnjqWQ-g/hqdefault.jpg" alt="Thumbnail do vídeo">
-                        </a>
-                        <div class="video-category-tag">Front-end</div>
-                        <div class="video-play-icon">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="video-duration">12:24</div>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">
-                            <a href="https://www.youtube.com/watch?v=vEwPnjqWQ-g&list=PL2Fdisxwzt_d590u3uad46W-kHA0PTjjw" target="_blank" style="text-decoration: none; color: inherit;">
-                                Curso Javascript Completo: Aula 01 - JS Interno e Externo
-                            </a>
-                        </h3>
-                        <div class="video-meta">
-                            <div class="instructor">
-                                <span class="instructor-name">Programação Web</span>
-                            </div>
-                            <div class="video-stats">
-                                <span><i class="fas fa-eye"></i> 220K</span>
-                                <span><i class="fas fa-thumbs-up"></i> 12K</span>
-                            </div>
-                        </div>
-                        <p class="video-description">Primeira aula do curso completo de JavaScript, abordando como incluir JS em páginas HTML.</p>
-                        <div class="video-tags">
-                            <span class="video-tag">JavaScript</span>
-                            <span class="video-tag">Front-end</span>
-                            <span class="video-tag">Iniciante</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 14: Curso React: Introdução - #01 -->
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <a href="https://www.youtube.com/watch?v=FXqX7oof0I4&list=PLnDvRpP8BneyVA0SZ2okm-QBojomniQVO" target="_blank">
-                            <img src="https://img.youtube.com/vi/FXqX7oof0I4/hqdefault.jpg" alt="Thumbnail do vídeo">
-                        </a>
-                        <div class="video-category-tag">Front-end</div>
-                        <div class="video-play-icon">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="video-duration">11:44</div>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">
-                            <a href="https://www.youtube.com/watch?v=FXqX7oof0I4&list=PLnDvRpP8BneyVA0SZ2okm-QBojomniQVO" target="_blank" style="text-decoration: none; color: inherit;">
-                                Curso React: Introdução - #01
-                            </a>
-                        </h3>
-                        <div class="video-meta">
-                            <div class="instructor">
-                                <span class="instructor-name">Matheus Battisti - Hora de Codar</span>
-                            </div>
-                            <div class="video-stats">
-                                <span><i class="fas fa-eye"></i> 369K</span>
-                                <span><i class="fas fa-thumbs-up"></i> 13K</span>
-                            </div>
-                        </div>
-                        <p class="video-description">Introdução ao curso de React, apresentando os conceitos básicos da biblioteca JavaScript.</p>
-                        <div class="video-tags">
-                            <span class="video-tag">React</span>
-                            <span class="video-tag">JavaScript</span>
-                            <span class="video-tag">Front-end</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 15: Processos de Desenvolvimento de Software -->
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <a href="https://www.youtube.com/watch?v=kZImAXvRjH8" target="_blank">
-                            <img src="https://img.youtube.com/vi/kZImAXvRjH8/hqdefault.jpg" alt="Thumbnail do vídeo">
-                        </a>
-                        <div class="video-category-tag">Processos</div>
-                        <div class="video-play-icon">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="video-duration">44:35</div>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">
-                            <a href="https://www.youtube.com/watch?v=kZImAXvRjH8" target="_blank" style="text-decoration: none; color: inherit;">
-                                Processos de Desenvolvimento de Software
-                            </a>
-                        </h3>
-                        <div class="video-meta">
-                            <div class="instructor">
-                                <span class="instructor-name">Rainara Maia</span>
-                            </div>
-                            <div class="video-stats">
-                                <span><i class="fas fa-eye"></i> 12K</span>
-                                <span><i class="fas fa-thumbs-up"></i> 527</span>
-                            </div>
-                        </div>
-                        <p class="video-description">Aula sobre os principais processos de desenvolvimento de software utilizados na indústria.</p>
-                        <div class="video-tags">
-                            <span class="video-tag">Processos</span>
-                            <span class="video-tag">Desenvolvimento</span>
-                            <span class="video-tag">Software</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 16: Modelo em Cascata - Ciclos de Vida de Desenvolvimento de Software -->
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <a href="https://www.youtube.com/watch?v=luCQslwi8pE" target="_blank">
-                            <img src="https://img.youtube.com/vi/luCQslwi8pE/hqdefault.jpg" alt="Thumbnail do vídeo">
-                        </a>
-                        <div class="video-category-tag">Processos</div>
-                        <div class="video-play-icon">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="video-duration">11:47</div>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">
-                            <a href="https://www.youtube.com/watch?v=luCQslwi8pE" target="_blank" style="text-decoration: none; color: inherit;">
-                                Modelo em Cascata - Ciclos de Vida de Desenvolvimento de Software
-                            </a>
-                        </h3>
-                        <div class="video-meta">
-                            <div class="instructor">
-                                <span class="instructor-name">Bóson Treinamentos</span>
-                            </div>
-                            <div class="video-stats">
-                                <span><i class="fas fa-eye"></i> 27K</span>
-                                <span><i class="fas fa-thumbs-up"></i> 1.5K</span>
-                            </div>
-                        </div>
-                        <p class="video-description">Explicação detalhada sobre o modelo em cascata no desenvolvimento de software.</p>
-                        <div class="video-tags">
-                            <span class="video-tag">Waterfall</span>
-                            <span class="video-tag">Processos</span>
-                            <span class="video-tag">Desenvolvimento</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 17: Curso Lógica de Programação Completo 2025 -->
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <a href="https://www.youtube.com/watch?v=iF2MdbrTiBM" target="_blank">
-                            <img src="https://img.youtube.com/vi/iF2MdbrTiBM/hqdefault.jpg" alt="Thumbnail do vídeo">
-                        </a>
-                        <div class="video-category-tag">Lógica</div>
-                        <div class="video-play-icon">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="video-duration">3:02:05</div>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">
-                            <a href="https://www.youtube.com/watch?v=iF2MdbrTiBM" target="_blank" style="text-decoration: none; color: inherit;">
-                                Curso Lógica de Programação Completo 2025 [Iniciantes] + Desafios
-                            </a>
-                        </h3>
-                        <div class="video-meta">
-                            <div class="instructor">
-                                <span class="instructor-name">Dev Aprender | Jhonatan de Souza</span>
-                            </div>
-                            <div class="video-stats">
-                                <span><i class="fas fa-eye"></i> 3.2M</span>
-                                <span><i class="fas fa-thumbs-up"></i> 133K</span>
-                            </div>
-                        </div>
-                        <p class="video-description">Curso completo de lógica de programação para iniciantes com muitos exercícios práticos.</p>
-                        <div class="video-tags">
-                            <span class="video-tag">Lógica</span>
-                            <span class="video-tag">Iniciante</span>
-                            <span class="video-tag">Programação</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 18: CURSO DE JAVA PARA INICIANTES - BEM-VINDO #01 -->
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <a href="https://www.youtube.com/watch?v=mRryrODqQcw&list=PLJ0AcghBBWSi6nK2CUkw9ngvwWB1gE8mL" target="_blank">
-                            <img src="https://img.youtube.com/vi/mRryrODqQcw/hqdefault.jpg" alt="Thumbnail do vídeo">
-                        </a>
-                        <div class="video-category-tag">Back-end</div>
-                        <div class="video-play-icon">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="video-duration">6:13</div>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">
-                            <a href="https://www.youtube.com/watch?v=mRryrODqQcw&list=PLJ0AcghBBWSi6nK2CUkw9ngvwWB1gE8mL" target="_blank" style="text-decoration: none; color: inherit;">
-                                CURSO DE JAVA PARA INICIANTES - BEM-VINDO #01
-                            </a>
-                        </h3>
-                        <div class="video-meta">
-                            <div class="instructor">
-                                <span class="instructor-name">Tiago Aguiar</span>
-                            </div>
-                            <div class="video-stats">
-                                <span><i class="fas fa-eye"></i> 260K</span>
-                                <span><i class="fas fa-thumbs-up"></i> 11K</span>
-                            </div>
-                        </div>
-                        <p class="video-description">Introdução ao curso de Java para iniciantes, apresentando os conceitos básicos da linguagem.</p>
-                        <div class="video-tags">
-                            <span class="video-tag">Java</span>
-                            <span class="video-tag">Back-end</span>
-                            <span class="video-tag">Iniciante</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 19: Como vai ser o Curso de Redes? - Curso Redes #01 -->
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <a href="https://www.youtube.com/watch?v=QkMbqL8QD9w&list=PLHz_AreHm4dkd4lr9G0Up-W-YaHYdTDuP" target="_blank">
-                            <img src="https://img.youtube.com/vi/QkMbqL8QD9w/hqdefault.jpg" alt="Thumbnail do vídeo">
-                        </a>
-                        <div class="video-category-tag">Redes</div>
-                        <div class="video-play-icon">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="video-duration">23:19</div>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">
-                            <a href="https://www.youtube.com/watch?v=QkMbqL8QD9w&list=PLHz_AreHm4dkd4lr9G0Up-W-YaHYdTDuP" target="_blank" style="text-decoration: none; color: inherit;">
-                                Como vai ser o Curso de Redes? - Curso Redes #01
-                            </a>
-                        </h3>
-                        <div class="video-meta">
-                            <div class="instructor">
-                                <span class="instructor-name">Curso em Vídeo</span>
-                            </div>
-                            <div class="video-stats">
-                                <span><i class="fas fa-eye"></i> 697K</span>
-                                <span><i class="fas fa-thumbs-up"></i> 32K</span>
-                            </div>
-                        </div>
-                        <p class="video-description">Apresentação do curso completo de redes de computadores para iniciantes.</p>
-                        <div class="video-tags">
-                            <span class="video-tag">Redes</span>
-                            <span class="video-tag">Computadores</span>
-                            <span class="video-tag">Iniciante</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 20: O que é Rede de Computadores?! -->
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <a href="https://www.youtube.com/watch?v=jLYSmtDGF-k" target="_blank">
-                            <img src="https://img.youtube.com/vi/jLYSmtDGF-k/hqdefault.jpg" alt="Thumbnail do vídeo">
-                        </a>
-                        <div class="video-category-tag">Redes</div>
-                        <div class="video-play-icon">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="video-duration">10:03</div>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">
-                            <a href="https://www.youtube.com/watch?v=jLYSmtDGF-k" target="_blank" style="text-decoration: none; color: inherit;">
-                                O que é Rede de Computadores?!
-                            </a>
-                        </h3>
-                        <div class="video-meta">
-                            <div class="instructor">
-                                <span class="instructor-name">Prof. Marcel Rios - Informática</span>
-                            </div>
-                            <div class="video-stats">
-                                <span><i class="fas fa-eye"></i> 23K</span>
-                                <span><i class="fas fa-thumbs-up"></i> 1.7K</span>
-                            </div>
-                        </div>
-                        <p class="video-description">Introdução aos conceitos básicos de redes de computadores para iniciantes.</p>
-                        <div class="video-tags">
-                            <span class="video-tag">Redes</span>
-                            <span class="video-tag">Computadores</span>
-                            <span class="video-tag">Conceitos</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 21: Inteligência Artificial Explicada em Apenas 11 Minutos -->
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <a href="https://www.youtube.com/watch?v=HNBtdyMjxKU&t=283s" target="_blank">
-                            <img src="https://img.youtube.com/vi/HNBtdyMjxKU/hqdefault.jpg" alt="Thumbnail do vídeo">
-                        </a>
-                        <div class="video-category-tag">I.A</div>
-                        <div class="video-play-icon">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="video-duration">11:23</div>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">
-                            <a href="https://www.youtube.com/watch?v=HNBtdyMjxKU&t=283s" target="_blank" style="text-decoration: none; color: inherit;">
-                                Inteligência Artificial Explicada em Apenas 11 Minutos
-                            </a>
-                        </h3>
-                        <div class="video-meta">
-                            <div class="instructor">
-                                <span class="instructor-name">Bruno Picinini</span>
-                            </div>
-                            <div class="video-stats">
-                                <span><i class="fas fa-eye"></i> 171K</span>
-                                <span><i class="fas fa-thumbs-up"></i> 6.7K</span>
-                            </div>
-                        </div>
-                        <p class="video-description">Explicação rápida e direta sobre o que é Inteligência Artificial e como ela funciona.</p>
-                        <div class="video-tags">
-                            <span class="video-tag">IA</span>
-                            <span class="video-tag">Inteligência Artificial</span>
-                            <span class="video-tag">Introdução</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 22: Aprenda IA em 30 Minutos -->
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <a href="https://www.youtube.com/watch?v=0Qy-yafeHIg" target="_blank">
-                            <img src="https://img.youtube.com/vi/0Qy-yafeHIg/hqdefault.jpg" alt="Thumbnail do vídeo">
-                        </a>
-                        <div class="video-category-tag">I.A</div>
-                        <div class="video-play-icon">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="video-duration">30:23</div>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">
-                            <a href="https://www.youtube.com/watch?v=0Qy-yafeHIg" target="_blank" style="text-decoration: none; color: inherit;">
-                                Aprenda IA em 30 Minutos: Fique 10 Passos à Frente da Média
-                            </a>
-                        </h3>
-                        <div class="video-meta">
-                            <div class="instructor">
-                                <span class="instructor-name">Sancler Miranda | IA Revolution</span>
-                            </div>
-                            <div class="video-stats">
-                                <span><i class="fas fa-eye"></i> 60K</span>
-                                <span><i class="fas fa-thumbs-up"></i> 2.8K</span>
-                            </div>
-                        </div>
-                        <p class="video-description">Guia rápido para entender os conceitos fundamentais de Inteligência Artificial.</p>
-                        <div class="video-tags">
-                            <span class="video-tag">IA</span>
-                            <span class="video-tag">ChatGPT</span>
-                            <span class="video-tag">Tutorial</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 23: Inteligência Artificial na Prática com Python -->
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <a href="https://www.youtube.com/watch?v=GMDb2jtzKZQ&list=PLpdAy0tYrnKyVQDckS5IDB24QrSap2u8y" target="_blank">
-                            <img src="https://img.youtube.com/vi/GMDb2jtzKZQ/hqdefault.jpg" alt="Thumbnail do vídeo">
-                        </a>
-                        <div class="video-category-tag">I.A</div>
-                        <div class="video-play-icon">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="video-duration">-</div>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">
-                            <a href="https://www.youtube.com/watch?v=GMDb2jtzKZQ&list=PLpdAy0tYrnKyVQDckS5IDB24QrSap2u8y" target="_blank" style="text-decoration: none; color: inherit;">
-                                Inteligência Artificial na Prática com Python [Projeto Flappy Bird]
-                            </a>
-                        </h3>
-                        <div class="video-meta">
-                            <div class="instructor">
-                                <span class="instructor-name">Hashtag Programação</span>
-                            </div>
-                            <div class="video-stats">
-                                <span><i class="fas fa-eye"></i> 326K</span>
-                                <span><i class="fas fa-thumbs-up"></i> 7.8K</span>
-                            </div>
-                        </div>
-                        <p class="video-description">Aula prática de IA com Python criando um jogo Flappy Bird inteligente.</p>
-                        <div class="video-tags">
-                            <span class="video-tag">Python</span>
-                            <span class="video-tag">IA</span>
-                            <span class="video-tag">Projeto Prático</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
-    </div>
-
-    {% include 'footer.html' %}
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="static\js\videosetutoriais.js"></script>
-</body>
-</html>
-
-exemplosdecodigo.html
-
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exemplos de Código - CodeLearn</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/exemplosdecodigo.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
-</head>
-<body>
-    <!-- Header -->
-    <header class="app-header">
-        <div class="header-content">
-            <div class="search-bar">
-                <i class="fas fa-search"></i>
-                <input type="text" placeholder="Pesquisar postagens, tópicos...">
-            </div>
-            <div class="logo" onclick="window.location.href = '{{ url_for('telainicial') }}';" style="cursor: pointer;">
-                <i class="fas fa-graduation-cap"></i>
-                <span>TechNoBug</span>
-            </div>
-            <button class="btn menu-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" aria-controls="offcanvasMenu">
-                <i class="fas fa-bars"></i>
-                <span>Menu</span>
-            </button>
-        </div>
-    </header>
-
-    <!-- Offcanvas Menu -->
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasMenuLabel">
-        <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="offcanvasMenuLabel">Menu</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body">
-            <div class="user-profile mb-4">
-                <div class="d-flex align-items-center">
-                    <div class="avatar me-3">
-                        <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center">
-                            {{ user.username[0]|upper }}
-                        </div>
-                    </div>
-                    <div>
-                        <h6 class="mb-0">{{ user.username }}</h6>
-                        <small class="text-muted">{{ user.email }}</small>
-                    </div>
-                </div>
-            </div>
-            <ul class="navbar-nav">
-    <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('telainicial') }}"><i class="fas fa-home me-2"></i>Página Inicial</a></li>
-    <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('materiais') }}"><i class="fas fa-book me-2"></i>Materiais de Estudo</a></li>
-    <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('pdfs') }}"><i class="fas fa-file-pdf me-2"></i>PDFs e Apostilas</a></li>
-    <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('videos') }}"><i class="fas fa-video me-2"></i>Vídeos e Tutoriais</a></li>
-    <li class="nav-item mb-2"><a class="nav-link active" href="{{ url_for('codigo') }}"><i class="fas fa-code me-2"></i>Exemplos de Código</a></li>
-    <li class="nav-item mb-2"><a class="nav-link" href="#"><i class="fas fa-users me-2"></i>Comunidade</a></li>
-    <li class="nav-item mb-2"><a class="nav-link" href="#"><i class="fas fa-cog me-2"></i>Configurações</a></li>
-    <li class="nav-item"><a class="nav-link text-danger" href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt me-2"></i>Sair</a></li>
-</ul>
-        </div>
-    </div>
-
-    <!-- Main Content -->
-    <div class="container">
-        <main class="main-content">
-            <div class="section-header">
-                <h2 class="section-title">
-                    <i class="fas fa-code"></i>
-                    <span>Exemplos de Código para Iniciantes</span>
-                </h2>
-            </div>
-
-            <!-- Fundamentos -->
-            <section class="code-section" id="fundamentals">
-                <div class="code-header">
-                    <div class="code-icon">🔰</div>
-                    <h3 class="code-title">Fundamentos da Programação</h3>
-                </div>
-                <div class="code-tabs">
-                    <div class="code-tab active" data-lang="python">Python</div>
-                    <div class="code-tab" data-lang="javascript">JavaScript</div>
-                    <div class="code-tab" data-lang="java">Java</div>
-                    <div class="code-tab" data-lang="csharp">C#</div>
-                    <div class="code-tab" data-lang="cpp">C++</div>
-                    <div class="code-tab" data-lang="ruby">Ruby</div>
-                </div>
-                <div class="code-content">
-                    <div class="code-block" data-lang="python">
-                        <div class="code-language">Python</div>
-                        <pre>
-# Exemplo básico de variáveis e operações
-nome = "Ana"
-idade = 20
-altura = 1.65
-estudante = True
-
-print("Olá,", nome)
-print("Você tem", idade, "anos")
-
-cidade = input("Digite sua cidade: ")
-print("Você mora em", cidade)
-
-soma = 15 + 5
-subtracao = 15 - 5
-multiplicacao = 15 * 5
-divisao = 15 / 3
-resto = 15 % 4
-potencia = 2 ** 3
-print("Soma:", soma, "Potência:", potencia)
-                        </pre>
-                        <div class="code-actions">
-                            <button class="code-action-btn" onclick="copyCode(this)">
-                                <i class="code-action-icon fas fa-copy"></i> Copiar
-                            </button>
-                        </div>
-                    </div>
-                    <div class="code-block" data-lang="javascript" style="display: none;">
-                        <div class="code-language">JavaScript</div>
-                        <pre>
-let nome = "Ana";
-const idade = 20;
-let altura = 1.65;
-let estudante = true;
-
-console.log("Olá,", nome);
-console.log(`Você tem ${idade} anos`);
-
-let cidade = prompt("Digite sua cidade:");
-console.log("Você mora em", cidade);
-
-let soma = 15 + 5;
-let subtracao = 15 - 5;
-let multiplicacao = 15 * 5;
-let divisao = 15 / 3;
-let resto = 15 % 4;
-let potencia = 2 ** 3;
-console.log("Soma:", soma, "Potência:", potencia);
-                        </pre>
-                        <div class="code-actions">
-                            <button class="code-action-btn" onclick="copyCode(this)">
-                                <i class="code-action-icon fas fa-copy"></i> Copiar
-                            </button>
-                        </div>
-                    </div>
-                    <div class="code-block" data-lang="java" style="display: none;">
-                        <div class="code-language">Java</div>
-                        <pre>
-public class Main {
-    public static void main(String[] args) {
-        String nome = "Ana";
-        int idade = 20;
-        double altura = 1.65;
-        boolean estudante = true;
-
-        System.out.println("Olá, " + nome);
-        System.out.println("Você tem " + idade + " anos");
-
-        java.util.Scanner scanner = new java.util.Scanner(System.in);
-        System.out.print("Digite sua cidade: ");
-        String cidade = scanner.nextLine();
-        System.out.println("Você mora em " + cidade);
-
-        int soma = 15 + 5;
-        int subtracao = 15 - 5;
-        int multiplicacao = 15 * 5;
-        double divisao = 15 / 3.0;
-        int resto = 15 % 4;
-        double potencia = Math.pow(2, 3);
-        System.out.println("Soma: " + soma + " Potência: " + potencia);
-    }
-}
-                        </pre>
-                        <div class="code-actions">
-                            <button class="code-action-btn" onclick="copyCode(this)">
-                                <i class="code-action-icon fas fa-copy"></i> Copiar
-                            </button>
-                        </div>
-                    </div>
-                    <div class="code-block" data-lang="csharp" style="display: none;">
-                        <div class="code-language">C#</div>
-                        <pre>
-using System;
-
-class Program {
-    static void Main(string[] args) {
-        string nome = "Ana";
-        int idade = 20;
-        double altura = 1.65;
-        bool estudante = true;
-
-        Console.WriteLine("Olá, " + nome);
-        Console.WriteLine($"Você tem {idade} anos");
-
-        Console.Write("Digite sua cidade: ");
-        string cidade = Console.ReadLine();
-        Console.WriteLine("Você mora em " + cidade);
-
-        int soma = 15 + 5;
-        int subtracao = 15 - 5;
-        int multiplicacao = 15 * 5;
-        double divisao = 15 / 3.0;
-        int resto = 15 % 4;
-        double potencia = Math.Pow(2, 3);
-        Console.WriteLine("Soma: " + soma + " Potência: " + potencia);
-    }
-}
-                        </pre>
-                        <div class="code-actions">
-                            <button class="code-action-btn" onclick="copyCode(this)">
-                                <i class="code-action-icon fas fa-copy"></i> Copiar
-                            </button>
-                        </div>
-                    </div>
-                    <div class="code-block" data-lang="cpp" style="display: none;">
-                        <div class="code-language">C++</div>
-                        <pre>
-#include <iostream>
-#include <string>
-using namespace std;
-
-int main() {
-    string nome = "Ana";
-    int idade = 20;
-    double altura = 1.65;
-    bool estudante = true;
-
-    cout << "Olá, " << nome << endl;
-    cout << "Você tem " << idade << " anos" << endl;
-
-    string cidade;
-    cout << "Digite sua cidade: ";
-    getline(cin, cidade);
-    cout << "Você mora em " << cidade << endl;
-
-    int soma = 15 + 5;
-    int subtracao = 15 - 5;
-    int multiplicacao = 15 * 5;
-    double divisao = 15.0 / 3;
-    int resto = 15 % 4;
-    double potencia = pow(2, 3);
-    cout << "Soma: " << soma << " Potência: " << potencia << endl;
-    return 0;
-}
-                        </pre>
-                        <div class="code-actions">
-                            <button class="code-action-btn" onclick="copyCode(this)">
-                                <i class="code-action-icon fas fa-copy"></i> Copiar
-                            </button>
-                        </div>
-                    </div>
-                    <div class="code-block" data-lang="ruby" style="display: none;">
-                        <div class="code-language">Ruby</div>
-                        <pre>
-# Exemplo básico de variáveis e operações
-nome = "Ana"
-idade = 20
-altura = 1.65
-estudante = true
-
-puts "Olá, #{nome}"
-puts "Você tem #{idade} anos"
-
-print "Digite sua cidade: "
-cidade = gets.chomp
-puts "Você mora em #{cidade}"
-
-soma = 15 + 5
-subtracao = 15 - 5
-multiplicacao = 15 * 5
-divisao = 15.0 / 3
-resto = 15 % 4
-potencia = 2 ** 3
-puts "Soma: #{soma}, Potência: #{potencia}"
-                        </pre>
-                        <div class="code-actions">
-                            <button class="code-action-btn" onclick="copyCode(this)">
-                                <i class="code-action-icon fas fa-copy"></i> Copiar
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Estruturas Condicionais -->
-            <section class="code-section" id="conditionals">
-                <div class="code-header">
-                    <div class="code-icon">🔀</div>
-                    <h3 class="code-title">Estruturas Condicionais</h3>
-                </div>
-                <div class="code-tabs">
-                    <div class="code-tab active" data-lang="python">Python</div>
-                    <div class="code-tab" data-lang="javascript">JavaScript</div>
-                    <div class="code-tab" data-lang="java">Java</div>
-                    <div class="code-tab" data-lang="csharp">C#</div>
-                    <div class="code-tab" data-lang="cpp">C++</div>
-                    <div class="code-tab" data-lang="ruby">Ruby</div>
-                </div>
-                <div class="code-content">
-                    <div class="code-block" data-lang="python">
-                        <div class="code-language">Python</div>
-                        <pre>
-# Exemplo de estruturas condicionais
-idade = 18
-if idade >= 18:
-    print("Você é maior de idade")
-else:
-    print("Você é menor de idade")
-
-nota = 7.5
-if nota >= 9:
-    print("Conceito A")
-elif nota >= 7:
-    print("Conceito B")
-elif nota >= 5:
-    print("Conceito C")
-else:
-    print("Conceito D")
-
-status = "Aprovado" if nota >= 6 else "Reprovado"
-print("Status:", status)
-                        </pre>
-                        <div class="code-actions">
-                            <button class="code-action-btn" onclick="copyCode(this)">
-                                <i class="code-action-icon fas fa-copy"></i> Copiar
-                            </button>
-                        </div>
-                    </div>
-                    <div class="code-block" data-lang="javascript" style="display: none;">
-                        <div class="code-language">JavaScript</div>
-                        <pre>
-// Exemplo de estruturas condicionais
-let idade = 18;
-if (idade >= 18) {
-    console.log("Você é maior de idade");
-} else {
-    console.log("Você é menor de idade");
-}
-
-let nota = 7.5;
-if (nota >= 9) {
-    console.log("Conceito A");
-} else if (nota >= 7) {
-    console.log("Conceito B");
-} else if (nota >= 5) {
-    console.log("Conceito C");
-} else {
-    console.log("Conceito D");
-}
-
-let status = nota >= 6 ? "Aprovado" : "Reprovado";
-console.log("Status:", status);
-                        </pre>
-                        <div class="code-actions">
-                            <button class="code-action-btn" onclick="copyCode(this)">
-                                <i class="code-action-icon fas fa-copy"></i> Copiar
-                            </button>
-                        </div>
-                    </div>
-                    <div class="code-block" data-lang="java" style="display: none;">
-                        <div class="code-language">Java</div>
-                        <pre>
-public class Main {
-    public static void main(String[] args) {
-        int idade = 18;
-        if (idade >= 18) {
-            System.out.println("Você é maior de idade");
-        } else {
-            System.out.println("Você é menor de idade");
-        }
-
-        double nota = 7.5;
-        if (nota >= 9) {
-            System.out.println("Conceito A");
-        } else if (nota >= 7) {
-            System.out.println("Conceito B");
-        } else if (nota >= 5) {
-            System.out.println("Conceito C");
-        } else {
-            System.out.println("Conceito D");
-        }
-
-        String status = nota >= 6 ? "Aprovado" : "Reprovado";
-        System.out.println("Status: " + status);
-    }
-}
-                        </pre>
-                        <div class="code-actions">
-                            <button class="code-action-btn" onclick="copyCode(this)">
-                                <i class="code-action-icon fas fa-copy"></i> Copiar
-                            </button>
-                        </div>
-                    </div>
-                    <div class="code-block" data-lang="csharp" style="display: none;">
-                        <div class="code-language">C#</div>
-                        <pre>
-using System;
-
-class Program {
-    static void Main(string[] args) {
-        int idade = 18;
-        if (idade >= 18) {
-            Console.WriteLine("Você é maior de idade");
-        } else {
-            Console.WriteLine("Você é menor de idade");
-        }
-
-        double nota = 7.5;
-        if (nota >= 9) {
-            Console.WriteLine("Conceito A");
-        } else if (nota >= 7) {
-            Console.WriteLine("Conceito B");
-        } else if (nota >= 5) {
-            Console.WriteLine("Conceito C");
-        } else {
-            Console.WriteLine("Conceito D");
-        }
-
-        string status = nota >= 6 ? "Aprovado" : "Reprovado";
-        Console.WriteLine("Status: " + status);
-    }
-}
-                        </pre>
-                        <div class="code-actions">
-                            <button class="code-action-btn" onclick="copyCode(this)">
-                                <i class="code-action-icon fas fa-copy"></i> Copiar
-                            </button>
-                        </div>
-                    </div>
-                    <div class="code-block" data-lang="cpp" style="display: none;">
-                        <div class="code-language">C++</div>
-                        <pre>
-#include <iostream>
-using namespace std;
-
-int main() {
-    int idade = 18;
-    if (idade >= 18) {
-        cout << "Você é maior de idade" << endl;
-    } else {
-        cout << "Você é menor de idade" << endl;
-    }
-
-    double nota = 7.5;
-    if (nota >= 9) {
-        cout << "Conceito A" << endl;
-    } else if (nota >= 7) {
-        cout << "Conceito B" << endl;
-    } else if (nota >= 5) {
-        cout << "Conceito C" << endl;
-    } else {
-        cout << "Conceito D" << endl;
-    }
-
-    string status = nota >= 6 ? "Aprovado" : "Reprovado";
-    cout << "Status: " << status << endl;
-    return 0;
-}
-                        </pre>
-                        <div class="code-actions">
-                            <button class="code-action-btn" onclick="copyCode(this)">
-                                <i class="code-action-icon fas fa-copy"></i> Copiar
-                            </button>
-                        </div>
-                    </div>
-                    <div class="code-block" data-lang="ruby" style="display: none;">
-                        <div class="code-language">Ruby</div>
-                        <pre>
-# Exemplo de estruturas condicionais
-idade = 18
-if idade >= 18
-    puts "Você é maior de idade"
-else
-    puts "Você é menor de idade"
-end
-
-nota = 7.5
-if nota >= 9
-    puts "Conceito A"
-elsif nota >= 7
-    puts "Conceito B"
-elsif nota >= 5
-    puts "Conceito C"
-else
-    puts "Conceito D"
-end
-
-status = nota >= 6 ? "Aprovado" : "Reprovado"
-puts "Status: #{status}"
-                        </pre>
-                        <div class="code-actions">
-                            <button class="code-action-btn" onclick="copyCode(this)">
-                                <i class="code-action-icon fas fa-copy"></i> Copiar
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Laços de Repetição -->
-            <section class="code-section" id="loops">
-                <div class="code-header">
-                    <div class="code-icon">🔄</div>
-                    <h3 class="code-title">Laços de Repetição</h3>
-                </div>
-                <div class="code-tabs">
-                    <div class="code-tab active" data-lang="python">Python</div>
-                    <div class="code-tab" data-lang="javascript">JavaScript</div>
-                    <div class="code-tab" data-lang="java">Java</div>
-                    <div class="code-tab" data-lang="csharp">C#</div>
-                    <div class="code-tab" data-lang="cpp">C++</div>
-                    <div class="code-tab" data-lang="ruby">Ruby</div>
-                </div>
-                <div class="code-content">
-                    <div class="code-block" data-lang="python">
-                        <div class="code-language">Python</div>
-                        <pre>
-# Exemplo de laços de repetição
-for i in range(5):
-    print("Número:", i)
-
-frutas = ["maçã", "banana", "laranja"]
-for fruta in frutas:
-    print("Fruta:", fruta)
-
-contador = 0
-while contador < 5:
-    print("Contador:", contador)
-    contador += 1
-                        </pre>
-                        <div class="code-actions">
-                            <button class="code-action-btn" onclick="copyCode(this)">
-                                <i class="code-action-icon fas fa-copy"></i> Copiar
-                            </button>
-                        </div>
-                    </div>
-                    <div class="code-block" data-lang="javascript" style="display: none;">
-                        <div class="code-language">JavaScript</div>
-                        <pre>
-for (let i = 0; i < 5; i++) {
-    console.log("Número:", i);
-}
-
-let frutas = ["maçã", "banana", "laranja"];
-for (let fruta of frutas) {
-    console.log("Fruta:", fruta);
-}
-
-let contador = 0;
-while (contador < 5) {
-    console.log("Contador:", contador);
-    contador++;
-}
-                        </pre>
-                        <div class="code-actions">
-                            <button class="code-action-btn" onclick="copyCode(this)">
-                                <i class="code-action-icon fas fa-copy"></i> Copiar
-                            </button>
-                        </div>
-                    </div>
-                    <div class="code-block" data-lang="java" style="display: none;">
-                        <div class="code-language">Java</div>
-                        <pre>
-public class Main {
-    public static void main(String[] args) {
-        for (int i = 0; i < 5; i++) {
-            System.out.println("Número: " + i);
-        }
-
-        String[] frutas = {"maçã", "banana", "laranja"};
-        for (String fruta : frutas) {
-            System.out.println("Fruta: " + fruta);
-        }
-
-        int contador = 0;
-        while (contador < 5) {
-            System.out.println("Contador: " + contador);
-            contador++;
-        }
-    }
-}
-                        </pre>
-                        <div class="code-actions">
-                            <button class="code-action-btn" onclick="copyCode(this)">
-                                <i class="code-action-icon fas fa-copy"></i> Copiar
-                            </button>
-                        </div>
-                    </div>
-                    <div class="code-block" data-lang="csharp" style="display: none;">
-                        <div class="code-language">C#</div>
-                        <pre>
-using System;
-
-class Program {
-    static void Main(string[] args) {
-        for (int i = 0; i < 5; i++) {
-            Console.WriteLine("Número: " + i);
-        }
-
-        string[] frutas = {"maçã", "banana", "laranja"};
-        foreach (string fruta in frutas) {
-            Console.WriteLine("Fruta: " + fruta);
-        }
-
-        int contador = 0;
-        while (contador < 5) {
-            Console.WriteLine("Contador: " + contador);
-            contador++;
-        }
-    }
-}
-                        </pre>
-                        <div class="code-actions">
-                            <button class="code-action-btn" onclick="copyCode(this)">
-                                <i class="code-action-icon fas fa-copy"></i> Copiar
-                            </button>
-                        </div>
-                    </div>
-                    <div class="code-block" data-lang="cpp" style="display: none;">
-                        <div class="code-language">C++</div>
-                        <pre>
-#include <iostream>
-#include <vector>
-using namespace std;
-
-int main() {
-    for (int i = 0; i < 5; i++) {
-        cout << "Número: " << i << endl;
-    }
-
-    vector<string> frutas = {"maçã", "banana", "laranja"};
-    for (string fruta : frutas) {
-        cout << "Fruta: " << fruta << endl;
-    }
-
-    int contador = 0;
-    while (contador < 5) {
-        cout << "Contador: " << contador << endl;
-        contador++;
-    }
-    return 0;
-}
-                        </pre>
-                        <div class="code-actions">
-                            <button class="code-action-btn" onclick="copyCode(this)">
-                                <i class="code-action-icon fas fa-copy"></i> Copiar
-                            </button>
-                        </div>
-                    </div>
-                    <div class="code-block" data-lang="ruby" style="display: none;">
-                        <div class="code-language">Ruby</div>
-                        <pre>
-# Exemplo de laços de repetição
-(0..4).each do |i|
-    puts "Número: #{i}"
-end
-
-frutas = ["maçã", "banana", "laranja"]
-frutas.each do |fruta|
-    puts "Fruta: #{fruta}"
-end
-
-contador = 0
-while contador < 5
-    puts "Contador: #{contador}"
-    contador += 1
-end
-                        </pre>
-                        <div class="code-actions">
-                            <button class="code-action-btn" onclick="copyCode(this)">
-                                <i class="code-action-icon fas fa-copy"></i> Copiar
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Funções -->
-            <section class="code-section" id="functions">
-                <div class="code-header">
-                    <div class="code-icon">⚙️</div>
-                    <h3 class="code-title">Funções</h3>
-                </div>
-                <div class="code-tabs">
-                    <div class="code-tab active" data-lang="python">Python</div>
-                    <div class="code-tab" data-lang="javascript">JavaScript</div>
-                    <div class="code-tab" data-lang="java">Java</div>
-                    <div class="code-tab" data-lang="csharp">C#</div>
-                    <div class="code-tab" data-lang="cpp">C++</div>
-                    <div class="code-tab" data-lang="ruby">Ruby</div>
-                </div>
-                <div class="code-content">
-                    <div class="code-block" data-lang="python">
-                        <div class="code-language">Python</div>
-                        <pre>
-# Exemplo de funções
+                            <div class="code-preview">
+                                <pre># Função em Python
 def saudacao(nome):
     return f"Olá, {nome}!"
 
-def calcular_area_retangulo(largura, altura):
-    return largura * altura
+# List comprehension
+quadrados = [x**2 for x in range(10)]
 
-def eh_par(numero):
-    return numero % 2 == 0
-
-# Uso das funções
-print(saudacao("Maria"))
-area = calcular_area_retangulo(5, 3)
-print("Área do retângulo:", area)
-print("6 é par?", eh_par(6))
-                        </pre>
-                        <div class="code-actions">
-                            <button class="code-action-btn" onclick="copyCode(this)">
-                                <i class="code-action-icon fas fa-copy"></i> Copiar
-                            </button>
-                        </div>
-                    </div>
-                    <div class="code-block" data-lang="javascript" style="display: none;">
-                        <div class="code-language">JavaScript</div>
-                        <pre>
-function saudacao(nome) {
-    return `Olá, ${nome}!`;
-}
-
-function calcularAreaRetangulo(largura, altura) {
-    return largura * altura;
-}
-
-function ehPar(numero) {
-    return numero % 2 === 0;
-}
-
-console.log(saudacao("Maria"));
-const area = calcularAreaRetangulo(5, 3);
-console.log("Área do retângulo:", area);
-console.log("6 é par?", ehPar(6));
-                        </pre>
-                        <div class="code-actions">
-                            <button class="code-action-btn" onclick="copyCode(this)">
-                                <i class="code-action-icon fas fa-copy"></i> Copiar
-                            </button>
-                        </div>
-                    </div>
-                    <div class="code-block" data-lang="java" style="display: none;">
-                        <div class="code-language">Java</div>
-                        <pre>
-public class Main {
-    public static String saudacao(String nome) {
-        return "Olá, " + nome + "!";
-    }
-
-    public static double calcularAreaRetangulo(double largura, double altura) {
-        return largura * altura;
-    }
-
-    public static boolean ehPar(int numero) {
-        return numero % 2 == 0;
-    }
-
-    public static void main(String[] args) {
-        System.out.println(saudacao("Maria"));
-        double area = calcularAreaRetangulo(5, 3);
-        System.out.println("Área do retângulo: " + area);
-        System.out.println("6 é par? " + ehPar(6));
-    }
-}
-                        </pre>
-                        <div class="code-actions">
-                            <button class="code-action-btn" onclick="copyCode(this)">
-                                <i class="code-action-icon fas fa-copy"></i> Copiar
-                            </button>
-                        </div>
-                    </div>
-                    <div class="code-block" data-lang="csharp" style="display: none;">
-                        <div class="code-language">C#</div>
-                        <pre>
-using System;
-
-class Program {
-    static string Saudacao(string nome) {
-        return $"Olá, {nome}!";
-    }
-
-    static double CalcularAreaRetangulo(double largura, double altura) {
-        return largura * altura;
-    }
-
-    static bool EhPar(int numero) {
-        return numero % 2 == 0;
-    }
-
-    static void Main(string[] args) {
-        Console.WriteLine(Saudacao("Maria"));
-        double area = CalcularAreaRetangulo(5, 3);
-        Console.WriteLine("Área do retângulo: " + area);
-        Console.WriteLine("6 é par? " + EhPar(6));
-    }
-}
-                        </pre>
-                        <div class="code-actions">
-                            <button class="code-action-btn" onclick="copyCode(this)">
-                                <i class="code-action-icon fas fa-copy"></i> Copiar
-                            </button>
-                        </div>
-                    </div>
-                    <div class="code-block" data-lang="cpp" style="display: none;">
-                        <div class="code-language">C++</div>
-                        <pre>
-#include <iostream>
-#include <string>
-using namespace std;
-
-string saudacao(string nome) {
-    return "Olá, " + nome + "!";
-}
-
-double calcularAreaRetangulo(double largura, double altura) {
-    return largura * altura;
-}
-
-bool ehPar(int numero) {
-    return numero % 2 == 0;
-}
-
-int main() {
-    cout << saudacao("Maria") << endl;
-    double area = calcularAreaRetangulo(5, 3);
-    cout << "Área do retângulo: " << area << endl;
-    cout << "6 é par? " << (ehPar(6) ? "true" : "false") << endl;
-    return 0;
-}
-                        </pre>
-                        <div class="code-actions">
-                            <button class="code-action-btn" onclick="copyCode(this)">
-                                <i class="code-action-icon fas fa-copy"></i> Copiar
-                            </button>
-                        </div>
-                    </div>
-                    <div class="code-block" data-lang="ruby" style="display: none;">
-                        <div class="code-language">Ruby</div>
-                        <pre>
-def saudacao(nome)
-    "Olá, #{nome}!"
-end
-
-def calcular_area_retangulo(largura, altura)
-    largura * altura
-end
-
-def eh_par(numero)
-    numero % 2 == 0
-end
-
-puts saudacao("Maria")
-area = calcular_area_retangulo(5, 3)
-puts "Área do retângulo: #{area}"
-puts "6 é par? #{eh_par(6)}"
-                        </pre>
-                        <div class="code-actions">
-                            <button class="code-action-btn" onclick="copyCode(this)">
-                                <i class="code-action-icon fas fa-copy"></i> Copiar
-                            </button>
+# Condicional
+idade = 18
+status = "Maior" if idade >= 18 else "Menor"</pre>
+                            </div>
+                            <div class="text-end">
+                                <a href="{{ url_for('codigo') }}" class="btn btn-sm btn-outline-primary">Ver mais exemplos</a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- Arrays -->
-            <section class="code-section" id="arrays">
-                <div class="code-header">
-                    <div class="code-icon">📋</div>
-                    <h3 class="code-title">Arrays e Listas</h3>
-                </div>
-                <div class="code-tabs">
-                    <div class="code-tab active" data-lang="python">Python</div>
-                    <div class="code-tab" data-lang="javascript">JavaScript</div>
-                    <div class="code-tab" data-lang="java">Java</div>
-                    <div class="code-tab" data-lang="csharp">C#</div>
-                    <div class="code-tab" data-lang="cpp">C++</div>
-                    <div class="code-tab" data-lang="ruby">Ruby</div>
-                </div>
-                <div class="code-content">
-                    <div class="code-block" data-lang="python">
-                        <div class="code-language">Python</div>
-                        <pre>
-# Exemplo de listas
-numeros = [1, 2, 3, 4, 5]
-nomes = ["Ana", "João", "Maria"]
-
-print("Primeiro número:", numeros[0])
-numeros.append(6)
-print("Após adicionar 6:", numeros)
-
-nomes[1] = "Pedro"
-print("Após alterar:", nomes)
-
-for numero in numeros:
-    print("Número:", numero)
-
-print("Tamanho da lista:", len(numeros))
-                        </pre>
-                        <div class="code-actions">
-                            <button class="code-action-btn" onclick="copyCode(this)">
-                                <i class="code-action-icon fas fa-copy"></i> Copiar
-                            </button>
+            <!-- Learning Resources -->
+            <section class="dashboard-section">
+                <h3 class="section-title mb-4">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Recursos de Aprendizado</span>
+                </h3>
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="dashboard-card">
+                            <div class="dashboard-card-header">
+                                <h3 class="dashboard-card-title"><i class="fas fa-video"></i> Vídeos em Destaque</h3>
+                                <a href="{{ url_for('videos') }}" class="see-all-link">Ver todos</a>
+                            </div>
+                            <div class="video-thumbnail">
+                                <img src="https://img.youtube.com/vi/-l4Aa8wef8s/hqdefault.jpg" alt="Thumbnail do vídeo">
+                                <div class="video-play-icon">
+                                    <i class="fas fa-play"></i>
+                                </div>
+                            </div>
+                            <h4 class="resource-title">Aprenda Git e Github em 5 minutos</h4>
+                            <div class="resource-meta">
+                                <span><i class="fas fa-clock"></i> 4:57</span>
+                                <span><i class="fas fa-eye"></i> 11.5K</span>
+                            </div>
+                            <span class="resource-category">Versionamento</span>
                         </div>
                     </div>
-                    <div class="code-block" data-lang="javascript" style="display: none;">
-                        <div class="code-language">JavaScript</div>
-                        <pre>
-let numeros = [1, 2, 3, 4, 5];
-let nomes = ["Ana", "João", "Maria"];
-
-console.log("Primeiro número:", numeros[0]);
-numeros.push(6);
-console.log("Após adicionar 6:", numeros);
-
-nomes[1] = "Pedro";
-console.log("Após alterar:", nomes);
-
-for (let numero of numeros) {
-    console.log("Número:", numero);
-}
-
-console.log("Tamanho do array:", numeros.length);
-                        </pre>
-                        <div class="code-actions">
-                            <button class="code-action-btn" onclick="copyCode(this)">
-                                <i class="code-action-icon fas fa-copy"></i> Copiar
-                            </button>
-                        </div>
-                    </div>
-                    <div class="code-block" data-lang="java" style="display: none;">
-                        <div class="code-language">Java</div>
-                        <pre>
-import java.util.ArrayList;
-
-public class Main {
-    public static void main(String[] args) {
-        ArrayList<Integer> numeros = new ArrayList<>();
-        numeros.add(1);
-        numeros.add(2);
-        numeros.add(3);
-        numeros.add(4);
-        numeros.add(5);
-
-        String[] nomes = {"Ana", "João", "Maria"};
-
-        System.out.println("Primeiro número: " + numeros.get(0));
-        numeros.add(6);
-        System.out.println("Após adicionar 6: " + numeros);
-
-        nomes[1] = "Pedro";
-        System.out.println("Após alterar: ");
-        for (String nome : nomes) {
-            System.out.println("Nome: " + nome);
-        }
-
-        for (int numero : numeros) {
-            System.out.println("Número: " + numero);
-        }
-
-        System.out.println("Tamanho da lista: " + numeros.size());
-    }
-}
-                        </pre>
-                        <div class="code-actions">
-                            <button class="code-action-btn" onclick="copyCode(this)">
-                                <i class="code-action-icon fas fa-copy"></i> Copiar
-                            </button>
-                        </div>
-                    </div>
-                    <div class="code-block" data-lang="csharp" style="display: none;">
-                        <div class="code-language">C#</div>
-                        <pre>
-using System;
-using System.Collections.Generic;
-
-class Program {
-    static void Main(string[] args) {
-        List<int> numeros = new List<int> {1, 2, 3, 4, 5};
-        string[] nomes = {"Ana", "João", "Maria"};
-
-        Console.WriteLine("Primeiro número: " + numeros[0]);
-        numeros.Add(6);
-        Console.WriteLine("Após adicionar 6: " + string.Join(", ", numeros));
-
-        nomes[1] = "Pedro";
-        Console.WriteLine("Após alterar: " + string.Join(", ", nomes));
-
-        foreach (int numero in numeros) {
-            Console.WriteLine("Número: " + numero);
-        }
-
-        Console.WriteLine("Tamanho da lista: " + numeros.Count);
-    }
-}
-                        </pre>
-                        <div class="code-actions">
-                            <button class="code-action-btn" onclick="copyCode(this)">
-                                <i class="code-action-icon fas fa-copy"></i> Copiar
-                            </button>
-                        </div>
-                    </div>
-                    <div class="code-block" data-lang="cpp" style="display: none;">
-                        <div class="code-language">C++</div>
-                        <pre>
-#include <iostream>
-#include <vector>
-#include <string>
-using namespace std;
-
-int main() {
-    vector<int> numeros = {1, 2, 3, 4, 5};
-    string nomes[] = {"Ana", "João", "Maria"};
-
-    cout << "Primeiro número: " << numeros[0] << endl;
-    numeros.push_back(6);
-    cout << "Após adicionar 6: ";
-    for (int num : numeros) cout << num << " ";
-    cout << endl;
-
-    nomes[1] = "Pedro";
-    cout << "Após alterar: ";
-    for (string nome : nomes) cout << nome << " ";
-    cout << endl;
-
-    for (int numero : numeros) {
-        cout << "Número: " << numero << endl;
-    }
-
-    cout << "Tamanho da lista: " << numeros.size() << endl;
-    return 0;
-}
-                        </pre>
-                        <div class="code-actions">
-                            <button class="code-action-btn" onclick="copyCode(this)">
-                                <i class="code-action-icon fas fa-copy"></i> Copiar
-                            </button>
-                        </div>
-                    </div>
-                    <div class="code-block" data-lang="ruby" style="display: none;">
-                        <div class="code-language">Ruby</div>
-                        <pre>
-# Exemplo de arrays
-numeros = [1, 2, 3, 4, 5]
-nomes = ["Ana", "João", "Maria"]
-
-puts "Primeiro número: #{numeros[0]}"
-numeros << 6
-puts "Após adicionar 6: #{numeros}"
-
-nomes[1] = "Pedro"
-puts "Após alterar: #{nomes}"
-
-numeros.each do |numero|
-    puts "Número: #{numero}"
-end
-
-puts "Tamanho do array: #{numeros.length}"
-                        </pre>
-                        <div class="code-actions">
-                            <button class="code-action-btn" onclick="copyCode(this)">
-                                <i class="code-action-icon fas fa-copy"></i> Copiar
-                            </button>
+                    
+                    <div class="col-md-6 mb-4">
+                        <div class="dashboard-card">
+                            <div class="dashboard-card-header">
+                                <h3 class="dashboard-card-title"><i class="fas fa-book"></i> Materiais Recentes</h3>
+                                <a href="{{ url_for('materiais') }}" class="see-all-link">Ver todos</a>
+                            </div>
+                            <div class="resource-item">
+                                <h4 class="resource-title">Guia Completo de HTML5 e CSS3</h4>
+                                <div class="resource-meta">
+                                    <span><i class="fas fa-file-pdf"></i> PDF</span>
+                                    <span><i class="fas fa-clock"></i> 45 min</span>
+                                </div>
+                                <span class="resource-category">Front-end</span>
+                            </div>
+                            <div class="resource-item">
+                                <h4 class="resource-title">Exercícios de Lógica de Programação</h4>
+                                <div class="resource-meta">
+                                    <span><i class="fas fa-file-alt"></i> Apostila</span>
+                                    <span><i class="fas fa-clock"></i> 30 min</span>
+                                </div>
+                                <span class="resource-category">Lógica</span>
+                            </div>
+                            <div class="resource-item">
+                                <h4 class="resource-title">Introdução à Inteligência Artificial</h4>
+                                <div class="resource-meta">
+                                    <span><i class="fas fa-file-pdf"></i> PDF</span>
+                                    <span><i class="fas fa-clock"></i> 25 min</span>
+                                </div>
+                                <span class="resource-category">IA</span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- Jogos Simples -->
-            <section class="code-section" id="games">
-                <div class="code-header">
-                    <div class="code-icon">🎮</div>
-                    <h3 class="code-title">Jogos Simples</h3>
-                </div>
-                <div class="code-tabs">
-                    <div class="code-tab active" data-lang="python">Python</div>
-                    <div class="code-tab" data-lang="javascript">JavaScript</div>
-                    <div class="code-tab" data-lang="java">Java</div>
-                    <div class="code-tab" data-lang="csharp">C#</div>
-                    <div class="code-tab" data-lang="cpp">C++</div>
-                    <div class="code-tab" data-lang="ruby">Ruby</div>
-                </div>
-                <div class="code-content">
-                    <div class="code-block" data-lang="python">
-                        <div class="code-language">Python</div>
-                        <pre>
-# Jogo de Adivinhação
-import random
-
-def jogo_adivinhacao():
-    numero_secreto = random.randint(1, 100)
-    tentativas = 0
-    print("Bem-vindo ao Jogo de Adivinhação!")
-    print("Tente adivinhar o número entre 1 e 100.")
-
-    while True:
-        palpite = int(input("Digite seu palpite: "))
-        tentativas += 1
-        if palpite < numero_secreto:
-            print("Muito baixo! Tente novamente.")
-        elif palpite > numero_secreto:
-            print("Muito alto! Tente novamente.")
-        else:
-            print(f"Parabéns! Você acertou em {tentativas} tentativas!")
-            break
-
-jogo_adivinhacao()
-                        </pre>
-                        <div class="code-actions">
-                            <button class="code-action-btn" onclick="copyCode(this)">
-                                <i class="code-action-icon fas fa-copy"></i> Copiar
-                            </button>
+            <!-- Community Highlights -->
+            <section class="dashboard-section">
+                <h3 class="section-title mb-4">
+                    <i class="fas fa-users"></i>
+                    <span>Destaques da Comunidade</span>
+                </h3>
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <div class="dashboard-card">
+                            <div class="dashboard-card-header">
+                                <h3 class="dashboard-card-title"><i class="fas fa-trophy"></i> Top Contribuidores</h3>
+                            </div>
+                            <div class="resource-item">
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar me-3">
+                                        <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center">
+                                            J
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h5 class="mb-0">João Silva</h5>
+                                        <small class="text-muted">15 contribuições</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="resource-item">
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar me-3">
+                                        <div class="avatar-initials bg-success text-white rounded-circle d-flex justify-content-center align-items-center">
+                                            M
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h5 class="mb-0">Maria Oliveira</h5>
+                                        <small class="text-muted">12 contribuições</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="resource-item">
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar me-3">
+                                        <div class="avatar-initials bg-warning text-white rounded-circle d-flex justify-content-center align-items-center">
+                                            P
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h5 class="mb-0">Pedro Santos</h5>
+                                        <small class="text-muted">10 contribuições</small>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="code-block" data-lang="javascript" style="display: none;">
-                        <div class="code-language">JavaScript</div>
-                        <pre>
-// Jogo de Adivinhação
-function jogoAdivinhacao() {
-    const numeroSecreto = Math.floor(Math.random() * 100) + 1;
-    let tentativas = 0;
-    console.log("Bem-vindo ao Jogo de Adivinhação!");
-    console.log("Tente adivinhar o número entre 1 e 100.");
-
-    function tentar() {
-        let palpite = prompt("Digite seu palpite:");
-        palpite = parseInt(palpite);
-        tentativas++;
-        if (palpite < numeroSecreto) {
-            console.log("Muito baixo! Tente novamente.");
-            tentar();
-        } else if (palpite > numeroSecreto) {
-            console.log("Muito alto! Tente novamente.");
-            tentar();
-        } else {
-            console.log(`Parabéns! Você acertou em ${tentativas} tentativas!`);
-        }
-    }
-    tentar();
-}
-
-jogoAdivinhacao();
-                        </pre>
-                        <div class="code-actions">
-                            <button class="code-action-btn" onclick="copyCode(this)">
-                                <i class="code-action-icon fas fa-copy"></i> Copiar
-                            </button>
+                    
+                    <div class="col-md-4 mb-4">
+                        <div class="dashboard-card">
+                            <div class="dashboard-card-header">
+                                <h3 class="dashboard-card-title"><i class="fas fa-fire"></i> Tópicos Populares</h3>
+                            </div>
+                            <div class="resource-item">
+                                <h4 class="resource-title">Como resolver problemas de lógica?</h4>
+                                <div class="resource-meta">
+                                    <span><i class="fas fa-comment"></i> 24 respostas</span>
+                                    <span><i class="fas fa-heart"></i> 45</span>
+                                </div>
+                                <span class="resource-category">Lógica</span>
+                            </div>
+                            <div class="resource-item">
+                                <h4 class="resource-title">Dúvida sobre modelagem de banco</h4>
+                                <div class="resource-meta">
+                                    <span><i class="fas fa-comment"></i> 15 respostas</span>
+                                    <span><i class="fas fa-heart"></i> 32</span>
+                                </div>
+                                <span class="resource-category">Banco de Dados</span>
+                            </div>
+                            <div class="resource-item">
+                                <h4 class="resource-title">Melhor linguagem para iniciantes</h4>
+                                <div class="resource-meta">
+                                    <span><i class="fas fa-comment"></i> 38 respostas</span>
+                                    <span><i class="fas fa-heart"></i> 56</span>
+                                </div>
+                                <span class="resource-category">Dúvidas Gerais</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="code-block" data-lang="java" style="display: none;">
-                        <div class="code-language">Java</div>
-                        <pre>
-import java.util.Random;
-import java.util.Scanner;
-
-public class Main {
-    public static void jogoAdivinhacao() {
-        Random random = new Random();
-        int numeroSecreto = random.nextInt(100) + 1;
-        int tentativas = 0;
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Bem-vindo ao Jogo de Adivinhação!");
-        System.out.println("Tente adivinhar o número entre 1 e 100.");
-
-        while (true) {
-            System.out.print("Digite seu palpite: ");
-            int palpite = scanner.nextInt();
-            tentativas++;
-            if (palpite < numeroSecreto) {
-                System.out.println("Muito baixo! Tente novamente.");
-            } else if (palpite > numeroSecreto) {
-                System.out.println("Muito alto! Tente novamente.");
-            } else {
-                System.out.println("Parabéns! Você acertou em " + tentativas + " tentativas!");
-                break;
-            }
-        }
-    }
-
-    public static void main(String[] args) {
-        jogoAdivinhacao();
-    }
-}
-                        </pre>
-                        <div class="code-actions">
-                            <button class="code-action-btn" onclick="copyCode(this)">
-                                <i class="code-action-icon fas fa-copy"></i> Copiar
-                            </button>
-                        </div>
-                    </div>
-                    <div class="code-block" data-lang="csharp" style="display: none;">
-                        <div class="code-language">C#</div>
-                        <pre>
-using System;
-
-class Program {
-    static void JogoAdivinhacao() {
-        Random random = new Random();
-        int numeroSecreto = random.Next(1, 101);
-        int tentativas = 0;
-        Console.WriteLine("Bem-vindo ao Jogo de Adivinhação!");
-        Console.WriteLine("Tente adivinhar o número entre 1 e 100.");
-
-        while (true) {
-            Console.Write("Digite seu palpite: ");
-            int palpite = int.Parse(Console.ReadLine());
-            tentativas++;
-            if (palpite < numeroSecreto) {
-                Console.WriteLine("Muito baixo! Tente novamente.");
-            } else if (palpite > numeroSecreto) {
-                Console.WriteLine("Muito alto! Tente novamente.");
-            } else {
-                Console.WriteLine($"Parabéns! Você acertou em {tentativas} tentativas!");
-                break;
-            }
-        }
-    }
-
-    static void Main(string[] args) {
-        JogoAdivinhacao();
-    }
-}
-                        </pre>
-                        <div class="code-actions">
-                            <button class="code-action-btn" onclick="copyCode(this)">
-                                <i class="code-action-icon fas fa-copy"></i> Copiar
-                            </button>
-                        </div>
-                    </div>
-                    <div class="code-block" data-lang="cpp" style="display: none;">
-                        <div class="code-language">C++</div>
-                        <pre>
-#include <iostream>
-#include <cstdlib>
-#include <ctime>
-using namespace std;
-
-void jogoAdivinhacao() {
-    srand(time(0));
-    int numeroSecreto = rand() % 100 + 1;
-    int tentativas = 0;
-    int palpite;
-
-    cout << "Bem-vindo ao Jogo de Adivinhação!" << endl;
-    cout << "Tente adivinhar o número entre 1 e 100." << endl;
-
-    while (true) {
-        cout << "Digite seu palpite: ";
-        cin >> palpite;
-        tentativas++;
-        if (palpite < numeroSecreto) {
-            cout << "Muito baixo! Tente novamente." << endl;
-        } else if (palpite > numeroSecreto) {
-            cout << "Muito alto! Tente novamente." << endl;
-        } else {
-            cout << "Parabéns! Você acertou em " << tentativas << " tentativas!" << endl;
-            break;
-        }
-    }
-}
-
-int main() {
-    jogoAdivinhacao();
-    return 0;
-}
-                        </pre>
-                        <div class="code-actions">
-                            <button class="code-action-btn" onclick="copyCode(this)">
-                                <i class="code-action-icon fas fa-copy"></i> Copiar
-                            </button>
-                        </div>
-                    </div>
-                    <div class="code-block" data-lang="ruby" style="display: none;">
-                        <div class="code-language">Ruby</div>
-                        <pre>
-# Jogo de Adivinhação
-def jogo_adivinhacao
-    numero_secreto = rand(1..100)
-    tentativas = 0
-    puts "Bem-vindo ao Jogo de Adivinhação!"
-    puts "Tente adivinhar o número entre 1 e 100."
-
-    loop do
-        print "Digite seu palpite: "
-        palpite = gets.chomp.to_i
-        tentativas += 1
-        if palpite < numero_secreto
-            puts "Muito baixo! Tente novamente."
-        elsif palpite > numero_secreto
-            puts "Muito alto! Tente novamente."
-        else
-            puts "Parabéns! Você acertou em #{tentativas} tentativas!"
-            break
-        end
-    end
-end
-
-jogo_adivinhacao
-                        </pre>
-                        <div class="code-actions">
-                            <button class="code-action-btn" onclick="copyCode(this)">
-                                <i class="code-action-icon fas fa-copy"></i> Copiar
-                            </button>
+                    
+                    <div class="col-md-4 mb-4">
+                        <div class="dashboard-card">
+                            <div class="dashboard-card-header">
+                                <h3 class="dashboard-card-title"><i class="fas fa-calendar"></i> Eventos</h3>
+                            </div>
+                            <div class="resource-item">
+                                <h4 class="resource-title">Workshop de Git e GitHub</h4>
+                                <div class="resource-meta">
+                                    <span><i class="fas fa-clock"></i> 15/06 - 19h</span>
+                                    <span><i class="fas fa-user"></i> 45 participantes</span>
+                                </div>
+                                <span class="resource-category">Versionamento</span>
+                            </div>
+                            <div class="resource-item">
+                                <h4 class="resource-title">Live: Carreira em TI</h4>
+                                <div class="resource-meta">
+                                    <span><i class="fas fa-clock"></i> 20/06 - 20h</span>
+                                    <span><i class="fas fa-user"></i> 82 participantes</span>
+                                </div>
+                                <span class="resource-category">Carreiras</span>
+                            </div>
+                            <div class="resource-item">
+                                <h4 class="resource-title">Desafio de Lógica Semanal</h4>
+                                <div class="resource-meta">
+                                    <span><i class="fas fa-clock"></i> Todo domingo</span>
+                                    <span><i class="fas fa-user"></i> 120 participantes</span>
+                                </div>
+                                <span class="resource-category">Lógica</span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </section>
-
-            <!-- Footer -->
-            
         </main>
     </div>
+
+    <!-- Footer -->
     {% include 'footer.html' %}
+
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{{ url_for('static', filename='js/exemplosdecodigo.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/telainicial.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
 </body>
 </html>
-

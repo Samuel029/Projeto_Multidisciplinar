@@ -241,6 +241,75 @@ def codigo():
     
     return render_template('exemplosdecodigo.html', user=user)
 
+@app.route('/comunidade')
+def comunidade():
+    user_id = session.get('user_id')
+    if not user_id:
+        flash('Por favor, faça login para acessar esta página.', 'error')
+        return redirect(url_for('registroelogin'))
+    
+    user = db.session.get(User, user_id)
+    if not user:
+        session.clear()
+        flash('Sua sessão expirou ou o usuário não existe mais.', 'error')
+        return redirect(url_for('registroelogin'))
+    
+    # Eager load comments, replies, and authors
+    posts = Post.query.options(
+        db.joinedload(Post.comments).joinedload(Comment.author),
+        db.joinedload(Post.comments).joinedload(Comment.replies).joinedload(Comment.author)
+    ).order_by(Post.created_at.desc()).all()
+    
+    return render_template('comunidade.html', user=user, posts=posts)
+
+@app.route('/configuracoes')
+def configuracoes():
+    user_id = session.get('user_id')
+    if not user_id:
+        flash('Por favor, faça login para acessar esta página.', 'error')
+        return redirect(url_for('registroelogin'))
+    
+    user = db.session.get(User, user_id)
+    if not user:
+        session.clear()
+        flash('Sua sessão expirou ou o usuário não existe mais.', 'error')
+        return redirect(url_for('registroelogin'))
+    
+    return render_template('configuracoes.html', user=user)
+
+@app.route('/search', methods=['GET'])
+def search():
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({'status': 'error', 'message': 'Por favor, faça login para realizar buscas.'}), 401
+    
+    query = request.args.get('q', '').strip()
+    if len(query) < 2:
+        return jsonify([]), 200
+    
+    try:
+        # Search posts (add other models like Resource if applicable)
+        posts = Post.query.filter(
+            Post.content.ilike(f'%{query}%') | Post.category.ilike(f'%{query}%')
+        ).limit(10).all()
+        
+        results = [
+            {
+                'title': post.content[:100] + '...' if len(post.content) > 100 else post.content,
+                'type': 'Postagem',
+                'category': post.category,
+                'url': url_for('post_comments', post_id=post.id, _external=True)
+            } for post in posts
+        ]
+        
+        # Add search for other resources if you have a Resource model
+        # Example: resources = Resource.query.filter(...).all()
+        
+        return jsonify(results), 200
+    except Exception as e:
+        logger.error(f"Erro na busca: {str(e)}")
+        return jsonify({'status': 'error', 'message': 'Erro ao realizar busca.'}), 500
+
 @app.route('/telainicial', methods=['GET', 'POST'])
 def telainicial():
     user_id = session.get('user_id')
@@ -506,7 +575,7 @@ def like_post(post_id):
                 'status': 'success',
                 'message': 'Curtida removida com sucesso!',
                 'liked': False,
-                'like_count': like_count
+                'likes': like_count
             })
         except Exception as e:
             db.session.rollback()
@@ -522,7 +591,7 @@ def like_post(post_id):
                 'status': 'success',
                 'message': 'Postagem curtida com sucesso!',
                 'liked': True,
-                'like_count': like_count
+                'likes': like_count
             })
         except Exception as e:
             db.session.rollback()
@@ -597,7 +666,7 @@ def get_comment_likes(comment_id):
         'user_liked': user_liked
     })
 
-@app.route('/delete_post/<int:post_id>', methods=['POST'])
+@app.route('/delete_post/<int:post_id>', methods=['DELETE'])
 def delete_post(post_id):
     if 'user_id' not in session:
         return jsonify({'status': 'error', 'message': 'Por favor, faça login para realizar esta ação.'}), 401
