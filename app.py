@@ -241,7 +241,7 @@ def codigo():
     
     return render_template('exemplosdecodigo.html', user=user)
 
-@app.route('/comunidade')
+@app.route('/comunidade', methods=['GET'])
 def comunidade():
     user_id = session.get('user_id')
     if not user_id:
@@ -255,6 +255,26 @@ def comunidade():
         return redirect(url_for('registroelogin'))
     
     # Eager load comments, replies, and authors
+    posts = Post.query.options(
+        db.joinedload(Post.comments).joinedload(Comment.author),
+        db.joinedload(Post.comments).joinedload(Comment.replies).joinedload(Comment.author)
+    ).order_by(Post.created_at.desc()).all()
+    
+    return render_template('comunidade.html', user=user, posts=posts)
+
+@app.route('/create_post_form', methods=['GET'])
+def create_post_form():
+    user_id = session.get('user_id')
+    if not user_id:
+        flash('Por favor, faça login para acessar esta página.', 'error')
+        return redirect(url_for('registroelogin'))
+    
+    user = db.session.get(User, user_id)
+    if not user:
+        session.clear()
+        flash('Sua sessão expirou ou o usuário não existe mais.', 'error')
+        return redirect(url_for('registroelogin'))
+    
     posts = Post.query.options(
         db.joinedload(Post.comments).joinedload(Comment.author),
         db.joinedload(Post.comments).joinedload(Comment.replies).joinedload(Comment.author)
@@ -301,9 +321,6 @@ def search():
                 'url': url_for('post_comments', post_id=post.id, _external=True)
             } for post in posts
         ]
-        
-        # Add search for other resources if you have a Resource model
-        # Example: resources = Resource.query.filter(...).all()
         
         return jsonify(results), 200
     except Exception as e:

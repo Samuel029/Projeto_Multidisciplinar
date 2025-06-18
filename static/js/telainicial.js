@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Elementos da interface
     const searchBar = document.querySelector('.search-bar');
     const searchInput = document.querySelector('.search-bar input');
     const searchIcon = document.querySelector('.search-bar i');
@@ -11,10 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const categories = document.querySelectorAll('.category');
     const sideMenu = document.getElementById('offcanvasMenu');
 
-    // Inicializa componentes
     initializeComponents();
-
-    // Configura eventos
     setupSearchBar();
     setupPostForm();
     setupLikeButtons();
@@ -23,7 +19,6 @@ document.addEventListener('DOMContentLoaded', function() {
     setupDrawer();
 
     function initializeComponents() {
-        // Carrega likes para posts
         likeButtons.forEach(btn => {
             const postId = btn.closest('.post-card').dataset.postId;
             fetch(`/get_post_likes/${postId}`, {
@@ -44,12 +39,10 @@ document.addEventListener('DOMContentLoaded', function() {
             .catch(error => console.error('Error fetching post likes:', error));
         });
 
-        // Inicializa o contador de caracteres para o formulário de postagem
         if (postTextarea && charCounter) {
             postTextarea.dispatchEvent(new Event('input'));
         }
 
-        // Ajusta a categoria ativa ao iniciar a página
         if (categories && categories.length > 0) {
             const activeCategory = localStorage.getItem('activeCategory') || 'Todas';
             categories.forEach(cat => {
@@ -76,7 +69,6 @@ document.addEventListener('DOMContentLoaded', function() {
     function setupSearchBar() {
         if (!searchBar || !searchInput || !searchIcon) return;
 
-        // Toggle da barra de pesquisa em dispositivos móveis
         searchIcon.addEventListener('click', function(event) {
             if (window.innerWidth <= 992) {
                 searchBar.classList.toggle('search-active');
@@ -92,7 +84,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // Fecha a barra de pesquisa ao clicar fora
         document.addEventListener('click', function(event) {
             if (window.innerWidth <= 992 && !searchBar.contains(event.target)) {
                 searchBar.classList.remove('search-active');
@@ -104,13 +95,11 @@ document.addEventListener('DOMContentLoaded', function() {
             event.stopPropagation();
         });
 
-        // Filtra posts ao digitar
         searchInput.addEventListener('input', function() {
             const searchTerm = normalizeText(this.value);
             filterPosts(searchTerm);
         });
 
-        // Carrega o termo de busca da URL, se existir
         const urlParams = new URLSearchParams(window.location.search);
         const searchTerm = urlParams.get('search') || '';
         searchInput.value = searchTerm;
@@ -174,120 +163,8 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
-                    const postList = document.querySelector('.post-list');
-                    const emptyState = postList.querySelector('.empty-state-card');
-                    if (emptyState) {
-                        emptyState.remove();
-                    }
-
-                    const newPost = document.createElement('div');
-                    newPost.className = 'post-card';
-                    newPost.dataset.postId = data.post.id;
-                    newPost.dataset.category = data.post.category;
-                    newPost.innerHTML = `
-                        <div class="post-header">
-                            <div class="user-info">
-                                <div class="avatar">
-                                    <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center">
-                                        ${data.post.username[0].toUpperCase()}
-                                    </div>
-                                </div>
-                                <div>
-                                    <h5 class="username">${data.post.username}</h5>
-                                    <small class="text-muted">${data.post.created_at}</small>
-                                </div>
-                            </div>
-                            <div class="post-actions">
-                                <button class="btn btn-sm btn-danger delete-post" data-post-id="${data.post.id}">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="post-content">
-                            <div class="post-category-tag">${data.post.category}</div>
-                            <p>${data.post.content}</p>
-                        </div>
-                        <div class="post-footer">
-                            <button class="btn btn-sm btn-outline-primary like-btn" data-post-id="${data.post.id}">
-                                <i class="fas fa-thumbs-up"></i> <span class="like-count">0</span>
-                            </button>
-                            <a href="/post/${data.post.id}" class="btn btn-sm btn-outline-secondary comment-btn">
-                                <i class="fas fa-comment"></i> Comentar
-                            </a>
-                        </div>
-                    `;
-                    postList.prepend(newPost);
-                    postTextarea.value = '';
-                    postForm.querySelector('select[name="category"]').value = '';
-                    charCounter.textContent = '0/500';
                     showNotification('Postagem criada com sucesso!', 'success');
-
-                    // Inicializa o botão de like para o novo post
-                    const newLikeButton = newPost.querySelector('.like-btn');
-                    newLikeButton.addEventListener('click', function() {
-                        fetch(`/like_post/${data.post.id}`, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            }
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.status === 'success') {
-                                newLikeButton.querySelector('.like-count').textContent = data.like_count;
-                                if (data.liked) {
-                                    newLikeButton.classList.add('active');
-                                    showNotification('Postagem curtida!', 'success');
-                                } else {
-                                    newLikeButton.classList.remove('active');
-                                    showNotification('Like removido', 'info');
-                                }
-                            } else {
-                                showNotification(data.message || 'Erro ao curtir postagem.', 'error');
-                            }
-                        })
-                        .catch(() => {
-                            showNotification('Erro ao conectar com o servidor.', 'error');
-                        });
-                    });
-
-                    // Inicializa o botão de deletar para o novo post
-                    const newDeleteButton = newPost.querySelector('.delete-post');
-                    newDeleteButton.addEventListener('click', function() {
-                        if (confirm('Tem certeza que deseja deletar esta postagem?')) {
-                            fetch(`/delete_post/${data.post.id}`, {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                }
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.status === 'success') {
-                                    newPost.remove();
-                                    showNotification('Postagem deletada com sucesso!', 'success');
-                                    if (!postList.querySelector('.post-card')) {
-                                        postList.innerHTML = `
-                                            <div class="empty-state-card">
-                                                <div class="text-center py-3">
-                                                    <i class="fas fa-file-alt fa-2x mb-2 text-muted"></i>
-                                                    <p class="text-muted">Nenhuma postagem encontrada.</p>
-                                                </div>
-                                            </div>
-                                        `;
-                                    }
-                                } else {
-                                    showNotification(data.message || 'Erro ao deletar postagem.', 'error');
-                                }
-                            })
-                            .catch(() => {
-                                showNotification('Erro ao conectar com o servidor.', 'error');
-                            });
-                        }
-                    });
-
-                    // Aplica o filtro atual
-                    filterPosts(normalizeText(searchInput.value));
+                    window.location.href = '/telainicial';
                 } else {
                     showNotification(data.message || 'Erro ao criar postagem', 'error');
                 }
@@ -320,7 +197,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 .then(response => response.json())
                 .then(data => {
                     if (data.status === 'success') {
-                        this.querySelector('.like-count').textContent = data.like_count;
+                        this.querySelector('.like-count').textContent = data.likes;
                         if (data.liked) {
                             this.classList.add('active');
                             showNotification('Postagem curtida!', 'success');
@@ -348,7 +225,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const postCard = this.closest('.post-card');
                 if (confirm('Tem certeza que deseja deletar esta postagem?')) {
                     fetch(`/delete_post/${postId}`, {
-                        method: 'POST',
+                        method: 'DELETE',
                         headers: {
                             'Content-Type': 'application/json'
                         }
@@ -502,7 +379,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Função global para mostrar notificações
     window.showNotification = function(message, type) {
         const notification = document.createElement('div');
         notification.className = `notification notification-${type}`;

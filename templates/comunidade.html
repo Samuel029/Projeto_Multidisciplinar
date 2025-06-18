@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechNoBug - Comunidade</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/telainicial.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+</head>
+<body>
+    <!-- Header -->
+    <header class="app-header">
+        <div class="header-content">
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Pesquisar postagens, tópicos...">
+            </div>
+            <div class="logo" onclick="window.location.href = '{{ url_for('telainicial') }}';" style="cursor: pointer;">
+                <i class="fas fa-graduation-cap"></i>
+                <span>TechNoBug</span>
+            </div>
+            <button class="btn menu-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" aria-controls="offcanvasMenu">
+                <i class="fas fa-bars"></i>
+                <span>Menu</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Offcanvas Menu -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasMenuLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasMenuLabel">Menu</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="user-profile mb-4">
+                <div class="d-flex align-items-center">
+                    <div class="avatar me-3">
+                        <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center">
+                            {{ user.username[0]|upper }}
+                        </div>
+                    </div>
+                    <div>
+                        <h6 class="mb-0">{{ user.username }}</h6>
+                        <small class="text-muted">{{ user.email }}</small>
+                    </div>
+                </div>
+            </div>
+            <ul class="navbar-nav">
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('telainicial') }}"><i class="fas fa-home me-2"></i>Dashboard</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('materiais') }}"><i class="fas fa-book me-2"></i>Materiais de Estudo</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('pdfs') }}"><i class="fas fa-file-pdf me-2"></i>PDFs e Apostilas</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('videos') }}"><i class="fas fa-video me-2"></i>Vídeos e Tutoriais</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('codigo') }}"><i class="fas fa-code me-2"></i>Exemplos de Código</a></li>
+                <li class="nav-item mb-2"><a class="nav-link active" href="{{ url_for('comunidade') }}"><i class="fas fa-users me-2"></i>Comunidade</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('configuracoes') }}"><i class="fas fa-cog me-2"></i>Configurações</a></li>
+                <li class="nav-item"><a class="nav-link text-danger" href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt me-2"></i>Sair</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <main class="main-content">
+            <!-- Post Creation Form -->
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-pen"></i>
+                    <span>Qual Sua Dúvida?</span>
+                </h2>
+            </div>
+            <div class="post-creation-card">
+                <form class="post-form" action="{{ url_for('create_post') }}" method="POST">
+                    <div class="mb-3 position-relative">
+                        <textarea class="form-control" name="post_content" rows="4" placeholder="No que você está pensando?" required></textarea>
+                        <div class="char-counter">0/500</div>
+                    </div>
+                    <div class="row align-items-center">
+                        <div class="col-md-6 mb-3 mb-md-0">
+                            <select class="form-select" name="category" required>
+                                <option value="" disabled selected>Selecione a categoria</option>
+                                <option value="IA">IA</option>
+                                <option value="Banco de Dados">Banco de Dados</option>
+                                <option value="Front-end">Front-end</option>
+                                <option value="Back-end">Back-end</option>
+                                <option value="Carreiras">Carreiras</option>
+                                <option value="Dúvidas Gerais">Dúvidas Gerais</option>
+                                <option value="Modelagem a Banco de Dados">Modelagem a Banco de Dados</option>
+                                <option value="Lógica">Lógica</option>
+                                <option value="Processos">Processos</option>
+                                <option value="Programação Android">Programação Android</option>
+                                <option value="Redes">Redes</option>
+                                <option value="Versionamento">Versionamento</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 text-md-end">
+                            <button type="submit" class="btn btn-primary">Publicar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Category Navigation -->
+            <nav class="category-nav">
+                <div class="categories-wrapper">
+                    <div class="categories">
+                        <span class="category active" data-category="Todas">Todas</span>
+                        <span class="category" data-category="IA">IA</span>
+                        <span class="category" data-category="Banco de Dados">Banco de Dados</span>
+                        <span class="category" data-category="Front-end">Front-end</span>
+                        <span class="category" data-category="Back-end">Back-end</span>
+                        <span class="category" data-category="Carreiras">Carreiras</span>
+                        <span class="category" data-category="Dúvidas Gerais">Dúvidas Gerais</span>
+                        <span class="category" data-category="Modelagem a Banco de Dados">Modelagem a Banco de Dados</span>
+                        <span class="category" data-category="Lógica">Lógica</span>
+                        <span class="category" data-category="Processos">Processos</span>
+                        <span class="category" data-category="Programação Android">Programação Android</span>
+                        <span class="category" data-category="Redes">Redes</span>
+                        <span class="category" data-category="Versionamento">Versionamento</span>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Post List -->
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-list"></i>
+                    <span>Postagens</span>
+                </h2>
+            </div>
+            <div class="post-list">
+                {% if posts %}
+                    {% for post in posts %}
+                        <div class="post-card" data-post-id="{{ post.id }}" data-category="{{ post.category }}">
+                            <div class="post-header">
+                                <div class="user-info">
+                                    <div class="avatar">
+                                        <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center">
+                                            {{ post.author.username[0]|upper }}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h5 class="username">{{ post.author.username }}</h5>
+                                        <small class="text-muted">{{ post.created_at.strftime('%d/%m/%Y %H:%M') }}</small>
+                                    </div>
+                                </div>
+                                {% if post.user_id == user.id %}
+                                    <div class="post-actions">
+                                        <button class="btn btn-sm btn-danger delete-post" data-post-id="{{ post.id }}">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="post-content">
+                                <div class="post-category-tag">{{ post.category }}</div>
+                                <p>{{ post.content }}</p>
+                            </div>
+                            <div class="post-footer">
+                                <button class="btn btn-sm btn-outline-primary like-btn" data-post-id="{{ post.id }}">
+                                    <i class="fas fa-thumbs-up"></i> <span class="like-count">{{ post.likes|length }}</span>
+                                </button>
+                                <a href="{{ url_for('post_comments', post_id=post.id) }}" class="btn btn-sm btn-outline-secondary comment-btn">
+                                    <i class="fas fa-comment"></i> Comentar
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-state-card">
+                        <div class="text-center py-3">
+                            <i class="fas fa-file-alt fa-2x mb-2 text-muted"></i>
+                            <p class="text-muted">Nenhuma postagem encontrada.</p>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </main>
+    </div>
+
+    {% include 'footer.html' %}
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/telainicial.js') }}"></script>
+</body>
+</html>
