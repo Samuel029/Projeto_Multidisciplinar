@@ -197,50 +197,158 @@
                                 <a href="{{ url_for('materiais') }}" class="see-all-link">Ver tudo</a>
                             </div>
                             <div class="resource-item">
-                                <h4 class="resource-title">Introdução a Python</h4>
-                                <div class="resource-meta">
-                                    <span><i class="fas fa-book"></i> Material</span>
-                                    <span><i class="fas fa-clock"></i> 15 min</span>
-                                </div>
-                                <span class="resource-category">Lógica</span>
+                                <a href="https://www.w3schools.com/python/python_intro.asp" class="text-decoration-none">
+                                    <h4 class="resource-title">Python Tutorial - W3Schools</h4>
+                                    <div class="resource-meta">
+                                        <span><i class="fas fa-book"></i> Tutorial Online</span>
+                                        <span><i class="fas fa-clock"></i> 20 min</span>
+                                    </div>
+                                    <span class="resource-category">Programação</span>
+                                </a>
                             </div>
                             <div class="resource-item">
-                                <h4 class="resource-title">Modelagem de Banco de Dados</h4>
-                                <div class="resource-meta">
-                                    <span><i class="fas fa-video"></i> Vídeo</span>
-                                    <span><i class="fas fa-clock"></i> 22 min</span>
-                                </div>
-                                <span class="resource-category">Banco de Dados</span>
+                                <a href="https://www.youtube.com/watch?v=rfscVS0vtbw" class="text-decoration-none">
+                                    <h4 class="resource-title">Learn Python - Full Course for Beginners</h4>
+                                    <div class="resource-meta">
+                                        <span><i class="fas fa-video"></i> Vídeo</span>
+                                        <span><i class="fas fa-clock"></i> 4h 26m</span>
+                                    </div>
+                                    <span class="resource-category">Programação</span>
+                                </a>
                             </div>
                             <div class="resource-item">
-                                <h4 class="resource-title">Git e GitHub para Iniciantes</h4>
-                                <div class="resource-meta">
-                                    <span><i class="fas fa-file-pdf"></i> PDF</span>
-                                    <span><i class="fas fa-clock"></i> 30 min</span>
-                                </div>
-                                <span class="resource-category">Versionamento</span>
+                                <a href="https://www.postgresql.org/docs/current/tutorial.html" class="text-decoration-none">
+                                    <h4 class="resource-title">PostgreSQL Tutorial</h4>
+                                    <div class="resource-meta">
+                                        <span><i class="fas fa-file-alt"></i> Documentação</span>
+                                        <span><i class="fas fa-clock"></i> 30 min</span>
+                                    </div>
+                                    <span class="resource-category">Banco de Dados</span>
+                                </a>
                             </div>
                         </div>
                         
                         <div class="dashboard-card">
                             <div class="dashboard-card-header">
                                 <h3 class="dashboard-card-title"><i class="fas fa-code"></i> Exemplo de Código</h3>
-                                <a href="{{ url_for('codigo') }}" class="see-all-link">Ver mais</a>
+                                <a href="/codigo" class="see-all-link">Ver mais</a>
                             </div>
-                            <div class="code-preview">
-                                <pre># Função em Python
-def saudacao(nome):
-    return f"Olá, {nome}!"
+                            <div class="code-container">
+                                <div class="code-preview">
+                                    <h4>1. Python: Jogo de Adivinhação</h4>
+                                    <pre>
+{% raw %}
+# Python: Jogo de Adivinhação
+import random
+numero_secreto = random.randint(1, 100)
+tentativas = 0
+while True:
+    palpite = int(input("Adivinhe o número (1-100): "))
+    tentativas += 1
+    if palpite == numero_secreto:
+        print(f"Parabéns! Você acertou em {tentativas} tentativas!")
+        break
+    elif palpite < numero_secreto:
+        print("Tente um número maior!")
+    else:
+        print("Tente um número menor!")
+{% endraw %}
+                                    </pre>
+                                </div>
 
-# List comprehension
-quadrados = [x**2 for x in range(10)]
+                                <div class="code-preview">
+                                    <h4>2. JavaScript: Jogo de Memória</h4>
+                                    <pre>
+{% raw %}
+// JavaScript: Jogo de Memória (início)
+const cards = ['A', 'A', 'B', 'B', 'C', 'C'];
+let flippedCards = [];
+function flipCard(card) {
+    if (flippedCards.length < 2 && !flippedCards.includes(card)) {
+        card.classList.add('flipped');
+        flippedCards.push(card);
+        if (flippedCards.length === 2) {
+            setTimeout(checkMatch, 1000);
+        }
+    }
+}
+function checkMatch() {
+    const [card1, card2] = flippedCards;
+    if (card1.dataset.value === card2.dataset.value) {
+        card1.classList.add('matched');
+        card2.classList.add('matched');
+    } else {
+        card1.classList.remove('flipped');
+        card2.classList.remove('flipped');
+    }
+    flippedCards = [];
+}
+{% endraw %}
+                                    </pre>
+                                </div>
 
-# Condicional
-idade = 18
-status = "Maior" if idade >= 18 else "Menor"</pre>
+                                <div class="code-preview">
+                                    <h4>3. Java: Jogo da Velha</h4>
+                                    <pre>
+{% raw %}
+// Java: Jogo da Velha (trecho)
+public class TicTacToe {
+    private char[][] board = {{' ', ' ', ' '}, {' ', ' ', ' '}, {' ', ' ', ' '}};
+    public boolean makeMove(int row, int col, char player) {
+        if (row >= 0 && row < 3 && col >= 0 && col < 3 && board[row][col] == ' ') {
+            board[row][col] = player;
+            return true;
+        }
+        return false;
+    }
+    public boolean checkWin(char player) {
+        for (int i = 0; i < 3; i++) {
+            if (board[i][0] == player && board[i][1] == player && board[i][2] == player) return true;
+            if (board[0][i] == player && board[1][i] == player && board[2][i] == player) return true;
+        }
+        if (board[0][0] == player && board[1][1] == player && board[2][2] == player) return true;
+        if (board[0][2] == player && board[1][1] == player && board[2][0] == player) return true;
+        return false;
+    }
+}
+{% endraw %}
+                                    </pre>
+                                </div>
+
+                                <div class="code-preview">
+                                    <h4>4. C++: Jogo de Snake</h4>
+                                    <pre>
+{% raw %}
+// C++: Jogo de Snake (trecho)
+#include <vector>
+#include <conio.h>
+struct Point { int x, y; };
+class Snake {
+    std::vector<Point> body;
+    Point food;
+    char direction = 'R';
+public:
+    Snake() { body.push_back({10, 10}); generateFood(); }
+    void generateFood() {
+        food.x = rand() % 20; food.y = rand() % 20;
+    }
+    void move() {
+        Point head = body[0];
+        if (direction == 'R') head.x++;
+        else if (direction == 'L') head.x--;
+        else if (direction == 'U') head.y--;
+        else if (direction == 'D') head.y++;
+        body.insert(body.begin(), head);
+        if (head.x == food.x && head.y == food.y) generateFood();
+        else body.pop_back();
+    }
+};
+{% endraw %}
+                                    </pre>
+                                </div>
                             </div>
                             <div class="text-end">
-                                <a href="{{ url_for('codigo') }}" class="btn btn-sm btn-outline-primary">Ver mais exemplos</a>
+                                <a href="/codigo" class="btn btn-sm btn-outline-primary">Ver mais exemplos</a>
                             </div>
                         </div>
                     </div>
