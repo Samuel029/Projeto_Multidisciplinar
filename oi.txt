@@ -846,3 +846,591 @@ if __name__ == '__main__':
 
 mande completo os arquivos que tenho que criar e pa ou substituir
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+no caso eu quero vamo supor 
+
+joao colocou uma foto do brasil, isso fica no perfil dele, eu entrarndo com a fconta de felipe por exemplo consigo ver a postagem dele coma  foto dele e eu vejo a minha postagem com a minha foto <!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechNoBug - Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/telainicial.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+</head>
+<body>
+    <!-- Header -->
+    <header class="app-header">
+        <div class="header-content">
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Pesquisar postagens, tópicos...">
+            </div>
+            <div class="logo" onclick="window.location.href = '{{ url_for('telainicial') }}';" style="cursor: pointer;">
+                <i class="fas fa-graduation-cap"></i>
+                <span>TechNoBug</span>
+            </div>
+            <button class="btn menu-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" aria-controls="offcanvasMenu">
+                <i class="fas fa-bars"></i>
+                <span>Menu</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Offcanvas Menu -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasMenuLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasMenuLabel">Menu</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="user-profile mb-4">
+                <div class="d-flex align-items-center">
+                    <div class="avatar me-3">
+                        <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center">
+                            {{ user.username[0]|upper }}
+                        </div>
+                    </div>
+                    <div>
+                        <h6 class="mb-0">{{ user.username }}</h6>
+                        <small class="text-muted">{{ user.email }}</small>
+                    </div>
+                </div>
+            </div>
+            <ul class="navbar-nav">
+                <li class="nav-item mb-2"><a class="nav-link active" href="{{ url_for('telainicial') }}"><i class="fas fa-home me-2"></i>Dashboard</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('materiais') }}"><i class="fas fa-book me-2"></i>Materiais de Estudo</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('pdfs') }}"><i class="fas fa-file-pdf me-2"></i>PDFs e Apostilas</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('videos') }}"><i class="fas fa-video me-2"></i>Vídeos e Tutoriais</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('codigo') }}"><i class="fas fa-code me-2"></i>Exemplos de Código</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('comunidade') }}"><i class="fas fa-users me-2"></i>Comunidade</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('configuracoes') }}"><i class="fas fa-cog me-2"></i>Configurações</a></li>
+                <li class="nav-item"><a class="nav-link text-danger" href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt me-2"></i>Sair</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <main class="main-content">
+            <!-- Welcome Section -->
+            <section class="dashboard-section">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="dashboard-card">
+                            <h2 class="mb-4">Bem-vindo de volta, {{ user.username }}! 👋</h2>
+                            <p class="mb-4">O que você gostaria de aprender hoje? Aqui estão seus recursos personalizados com base em suas atividades recentes.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="dashboard-card stats-card">
+                            <div class="stats-number" id="resources-count">0</div>
+                            <div class="stats-label">Recursos estudados</div>
+                            <div class="progress-container">
+                                <div class="progress-label">
+                                    <span>Seu progresso</span>
+                                    <span>65%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-bar-fill"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quick Actions -->
+            <section class="dashboard-section">
+                <h3 class="section-title mb-4">
+                    <i class="fas fa-bolt"></i>
+                    <span>Ações Rápidas</span>
+                </h3>
+                <div class="row">
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <a href="{{ url_for('create_post_form') }}" class="dashboard-card quick-action-card text-center text-decoration-none">
+                            <i class="fas fa-pen fa-2x mb-3"></i>
+                            <h4>Criar Postagem</h4>
+                            <p class="small text-muted">Compartilhe sua dúvida com a comunidade</p>
+                        </a>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <a href="{{ url_for('materiais') }}" class="dashboard-card quick-action-card text-center text-decoration-none">
+                            <i class="fas fa-book fa-2x mb-3"></i>
+                            <h4>Materiais</h4>
+                            <p class="small text-muted">Acesse materiais de estudo</p>
+                        </a>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <a href="{{ url_for('videos') }}" class="dashboard-card quick-action-card text-center text-decoration-none">
+                            <i class="fas fa-video fa-2x mb-3"></i>
+                            <h4>Tutoriais</h4>
+                            <p class="small text-muted">Assista vídeos explicativos</p>
+                        </a>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <a href="{{ url_for('codigo') }}" class="dashboard-card quick-action-card text-center text-decoration-none">
+                            <i class="fas fa-code fa-2x mb-3"></i>
+                            <h4>Códigos</h4>
+                            <p class="small text-muted">Explore exemplos práticos</p>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Recent Posts and Community Activity -->
+            <section class="dashboard-section">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="dashboard-card">
+                            <div class="dashboard-card-header">
+                                <h3 class="dashboard-card-title"><i class="fas fa-comments"></i> Atividade Recente</h3>
+                                <a href="{{ url_for('comunidade') }}" class="see-all-link">Ver tudo</a>
+                            </div>
+                            <div class="post-list">
+                                {% if posts %}
+                                    {% for post in posts %}
+                                        <div class="post-card" data-post-id="{{ post.id }}" data-category="{{ post.category }}">
+                                            <div class="post-header">
+                                                <div class="user-info">
+                                                    <div class="profile-pic-preview" id="profile-pic-preview">
+    {% if user.profile_pic and user.profile_pic != 'default.png' %}
+        <img id="profile-pic-preview-img" class="profile-pic-img" src="{{ url_for('static', filename='uploads/' + user.profile_pic) }}" alt="Foto de perfil" />
+    {% else %}
+        <div class="profile-pic-avatar" id="profile-pic-avatar">
+            {{ user.username[0]|upper }}
+        </div>
+    {% endif %}
+</div>
+                                                    <div>
+                                                        <h5 class="username">{{ post.author.username }}</h5>
+                                                        <small class="text-muted">{{ post.created_at.strftime('%d/%m/%Y %H:%M') }}</small>
+                                                    </div>
+                                                </div>
+                                                {% if post.user_id == user.id %}
+                                                    <div class="post-actions">
+                                                        <button class="btn btn-sm btn-danger delete-post" data-post-id="{{ post.id }}">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                            <div class="post-content">
+                                                <div class="post-category-tag">{{ post.category }}</div>
+                                                <p>{{ post.content }}</p>
+                                            </div>
+                                            <div class="post-footer">
+                                                <button class="btn btn-sm btn-outline-primary like-btn" data-post-id="{{ post.id }}">
+                                                    <i class="fas fa-thumbs-up"></i> <span class="like-count">{{ post.likes|length }}</span>
+                                                </button>
+                                                <a href="{{ url_for('post_comments', post_id=post.id) }}" class="btn btn-sm btn-outline-secondary comment-btn">
+                                                    <i class="fas fa-comment"></i> Comentar
+                                                </a>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                {% else %}
+                                    <div class="empty-state-card">
+                                        <div class="text-center py-3">
+                                            <i class="fas fa-file-alt fa-2x mb-2 text-muted"></i>
+                                            <p class="text-muted">Nenhuma postagem encontrada.</p>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4">
+                        <div class="dashboard-card">
+                            <div class="dashboard-card-header">
+                                <h3 class="dashboard-card-title"><i class="fas fa-star"></i> Recomendados</h3>
+                                <a href="{{ url_for('materiais') }}" class="see-all-link">Ver tudo</a>
+                            </div>
+                            <div class="resource-item">
+                                <a href="https://www.w3schools.com/python/python_intro.asp" class="text-decoration-none">
+                                    <h4 class="resource-title">Python Tutorial - W3Schools</h4>
+                                    <div class="resource-meta">
+                                        <span><i class="fas fa-book"></i> Tutorial Online</span>
+                                        <span><i class="fas fa-clock"></i> 20 min</span>
+                                    </div>
+                                    <span class="resource-category">Programação</span>
+                                </a>
+                            </div>
+                            <div class="resource-item">
+                                <a href="https://www.youtube.com/watch?v=rfscVS0vtbw" class="text-decoration-none">
+                                    <h4 class="resource-title">Learn Python - Full Course for Beginners</h4>
+                                    <div class="resource-meta">
+                                        <span><i class="fas fa-video"></i> Vídeo</span>
+                                        <span><i class="fas fa-clock"></i> 4h 26m</span>
+                                    </div>
+                                    <span class="resource-category">Programação</span>
+                                </a>
+                            </div>
+                            <div class="resource-item">
+                                <a href="https://www.postgresql.org/docs/current/tutorial.html" class="text-decoration-none">
+                                    <h4 class="resource-title">PostgreSQL Tutorial</h4>
+                                    <div class="resource-meta">
+                                        <span><i class="fas fa-file-alt"></i> Documentação</span>
+                                        <span><i class="fas fa-clock"></i> 30 min</span>
+                                    </div>
+                                    <span class="resource-category">Banco de Dados</span>
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <div class="dashboard-card">
+                            <div class="dashboard-card-header">
+                                <h3 class="dashboard-card-title"><i class="fas fa-code"></i> Exemplo de Código</h3>
+                                <a href="/codigo" class="see-all-link">Ver mais</a>
+                            </div>
+                            <div class="code-container">
+                                <div class="code-preview">
+                                    <h4>1. Python: Jogo de Adivinhação</h4>
+                                    <pre>
+{% raw %}
+# Python: Jogo de Adivinhação
+import random
+numero_secreto = random.randint(1, 100)
+tentativas = 0
+while True:
+    palpite = int(input("Adivinhe o número (1-100): "))
+    tentativas += 1
+    if palpite == numero_secreto:
+        print(f"Parabéns! Você acertou em {tentativas} tentativas!")
+        break
+    elif palpite < numero_secreto:
+        print("Tente um número maior!")
+    else:
+        print("Tente um número menor!")
+{% endraw %}
+                                    </pre>
+                                </div>
+
+                                <div class="code-preview">
+                                    <h4>2. JavaScript: Jogo de Memória</h4>
+                                    <pre>
+{% raw %}
+// JavaScript: Jogo de Memória (início)
+const cards = ['A', 'A', 'B', 'B', 'C', 'C'];
+let flippedCards = [];
+function flipCard(card) {
+    if (flippedCards.length < 2 && !flippedCards.includes(card)) {
+        card.classList.add('flipped');
+        flippedCards.push(card);
+        if (flippedCards.length === 2) {
+            setTimeout(checkMatch, 1000);
+        }
+    }
+}
+function checkMatch() {
+    const [card1, card2] = flippedCards;
+    if (card1.dataset.value === card2.dataset.value) {
+        card1.classList.add('matched');
+        card2.classList.add('matched');
+    } else {
+        card1.classList.remove('flipped');
+        card2.classList.remove('flipped');
+    }
+    flippedCards = [];
+}
+{% endraw %}
+                                    </pre>
+                                </div>
+
+                                <div class="code-preview">
+                                    <h4>3. Java: Jogo da Velha</h4>
+                                    <pre>
+{% raw %}
+// Java: Jogo da Velha (trecho)
+public class TicTacToe {
+    private char[][] board = {{' ', ' ', ' '}, {' ', ' ', ' '}, {' ', ' ', ' '}};
+    public boolean makeMove(int row, int col, char player) {
+        if (row >= 0 && row < 3 && col >= 0 && col < 3 && board[row][col] == ' ') {
+            board[row][col] = player;
+            return true;
+        }
+        return false;
+    }
+    public boolean checkWin(char player) {
+        for (int i = 0; i < 3; i++) {
+            if (board[i][0] == player && board[i][1] == player && board[i][2] == player) return true;
+            if (board[0][i] == player && board[1][i] == player && board[2][i] == player) return true;
+        }
+        if (board[0][0] == player && board[1][1] == player && board[2][2] == player) return true;
+        if (board[0][2] == player && board[1][1] == player && board[2][0] == player) return true;
+        return false;
+    }
+}
+{% endraw %}
+                                    </pre>
+                                </div>
+
+                                <div class="code-preview">
+                                    <h4>4. C++: Jogo de Snake</h4>
+                                    <pre>
+{% raw %}
+// C++: Jogo de Snake (trecho)
+#include <vector>
+#include <conio.h>
+struct Point { int x, y; };
+class Snake {
+    std::vector<Point> body;
+    Point food;
+    char direction = 'R';
+public:
+    Snake() { body.push_back({10, 10}); generateFood(); }
+    void generateFood() {
+        food.x = rand() % 20; food.y = rand() % 20;
+    }
+    void move() {
+        Point head = body[0];
+        if (direction == 'R') head.x++;
+        else if (direction == 'L') head.x--;
+        else if (direction == 'U') head.y--;
+        else if (direction == 'D') head.y++;
+        body.insert(body.begin(), head);
+        if (head.x == food.x && head.y == food.y) generateFood();
+        else body.pop_back();
+    }
+};
+{% endraw %}
+                                    </pre>
+                                </div>
+                            </div>
+                            <div class="text-end">
+                                <a href="/codigo" class="btn btn-sm btn-outline-primary">Ver mais exemplos</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Learning Resources -->
+            <section class="dashboard-section">
+                <h3 class="section-title mb-4">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Recursos de Aprendizado</span>
+                </h3>
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="dashboard-card">
+                            <div class="dashboard-card-header">
+                                <h3 class="dashboard-card-title"><i class="fas fa-video"></i> Vídeos em Destaque</h3>
+                                <a href="{{ url_for('videos') }}" class="see-all-link">Ver todos</a>
+                            </div>
+                            <div class="video-thumbnail">
+                                <img src="https://img.youtube.com/vi/-l4Aa8wef8s/hqdefault.jpg" alt="Thumbnail do vídeo">
+                                <div class="video-play-icon">
+                                    <i class="fas fa-play"></i>
+                                </div>
+                            </div>
+                            <h4 class="resource-title">Aprenda Git e Github em 5 minutos</h4>
+                            <div class="resource-meta">
+                                <span><i class="fas fa-clock"></i> 4:57</span>
+                                <span><i class="fas fa-eye"></i> 11.5K</span>
+                            </div>
+                            <span class="resource-category">Versionamento</span>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 mb-4">
+                        <div class="dashboard-card">
+                            <div class="dashboard-card-header">
+                                <h3 class="dashboard-card-title"><i class="fas fa-book"></i> Materiais Recentes</h3>
+                                <a href="{{ url_for('materiais') }}" class="see-all-link">Ver todos</a>
+                            </div>
+                            <div class="resource-item">
+                                <h4 class="resource-title">Guia Completo de HTML5 e CSS3</h4>
+                                <div class="resource-meta">
+                                    <span><i class="fas fa-file-pdf"></i> PDF</span>
+                                    <span><i class="fas fa-clock"></i> 45 min</span>
+                                </div>
+                                <span class="resource-category">Front-end</span>
+                            </div>
+                            <div class="resource-item">
+                                <h4 class="resource-title">Exercícios de Lógica de Programação</h4>
+                                <div class="resource-meta">
+                                    <span><i class="fas fa-file-alt"></i> Apostila</span>
+                                    <span><i class="fas fa-clock"></i> 30 min</span>
+                                </div>
+                                <span class="resource-category">Lógica</span>
+                            </div>
+                            <div class="resource-item">
+                                <h4 class="resource-title">Introdução à Inteligência Artificial</h4>
+                                <div class="resource-meta">
+                                    <span><i class="fas fa-file-pdf"></i> PDF</span>
+                                    <span><i class="fas fa-clock"></i> 25 min</span>
+                                </div>
+                                <span class="resource-category">IA</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Community Highlights -->
+            <section class="dashboard-section">
+                <h3 class="section-title mb-4">
+                    <i class="fas fa-users"></i>
+                    <span>Destaques da Comunidade</span>
+                </h3>
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <div class="dashboard-card">
+                            <div class="dashboard-card-header">
+                                <h3 class="dashboard-card-title"><i class="fas fa-trophy"></i> Top Contribuidores</h3>
+                            </div>
+                            <div class="resource-item">
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar me-3">
+                                        <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center">
+                                            J
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h5 class="mb-0">João Silva</h5>
+                                        <small class="text-muted">15 contribuições</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="resource-item">
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar me-3">
+                                        <div class="avatar-initials bg-success text-white rounded-circle d-flex justify-content-center align-items-center">
+                                            M
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h5 class="mb-0">Maria Oliveira</h5>
+                                        <small class="text-muted">12 contribuições</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="resource-item">
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar me-3">
+                                        <div class="avatar-initials bg-warning text-white rounded-circle d-flex justify-content-center align-items-center">
+                                            P
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h5 class="mb-0">Pedro Santos</h5>
+                                        <small class="text-muted">10 contribuições</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4 mb-4">
+                        <div class="dashboard-card">
+                            <div class="dashboard-card-header">
+                                <h3 class="dashboard-card-title"><i class="fas fa-fire"></i> Tópicos Populares</h3>
+                            </div>
+                            <div class="resource-item">
+                                <h4 class="resource-title">Como resolver problemas de lógica?</h4>
+                                <div class="resource-meta">
+                                    <span><i class="fas fa-comment"></i> 24 respostas</span>
+                                    <span><i class="fas fa-heart"></i> 45</span>
+                                </div>
+                                <span class="resource-category">Lógica</span>
+                            </div>
+                            <div class="resource-item">
+                                <h4 class="resource-title">Dúvida sobre modelagem de banco</h4>
+                                <div class="resource-meta">
+                                    <span><i class="fas fa-comment"></i> 15 respostas</span>
+                                    <span><i class="fas fa-heart"></i> 32</span>
+                                </div>
+                                <span class="resource-category">Banco de Dados</span>
+                            </div>
+                            <div class="resource-item">
+                                <h4 class="resource-title">Melhor linguagem para iniciantes</h4>
+                                <div class="resource-meta">
+                                    <span><i class="fas fa-comment"></i> 38 respostas</span>
+                                    <span><i class="fas fa-heart"></i> 56</span>
+                                </div>
+                                <span class="resource-category">Dúvidas Gerais</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4 mb-4">
+                        <div class="dashboard-card">
+                            <div class="dashboard-card-header">
+                                <h3 class="dashboard-card-title"><i class="fas fa-calendar"></i> Eventos</h3>
+                            </div>
+                            <div class="resource-item">
+                                <h4 class="resource-title">Workshop de Git e GitHub</h4>
+                                <div class="resource-meta">
+                                    <span><i class="fas fa-clock"></i> 15/06 - 19h</span>
+                                    <span><i class="fas fa-user"></i> 45 participantes</span>
+                                </div>
+                                <span class="resource-category">Versionamento</span>
+                            </div>
+                            <div class="resource-item">
+                                <h4 class="resource-title">Live: Carreira em TI</h4>
+                                <div class="resource-meta">
+                                    <span><i class="fas fa-clock"></i> 20/06 - 20h</span>
+                                    <span><i class="fas fa-user"></i> 82 participantes</span>
+                                </div>
+                                <span class="resource-category">Carreiras</span>
+                            </div>
+                            <div class="resource-item">
+                                <h4 class="resource-title">Desafio de Lógica Semanal</h4>
+                                <div class="resource-meta">
+                                    <span><i class="fas fa-clock"></i> Todo domingo</span>
+                                    <span><i class="fas fa-user"></i> 120 participantes</span>
+                                </div>
+                                <span class="resource-category">Lógica</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    {% include 'footer.html' %}
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/telainicial.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>

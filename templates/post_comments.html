@@ -44,10 +44,14 @@
             <div class="user-profile mb-4">
                 <div class="d-flex align-items-center">
                     <div class="avatar me-3">
-                        <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center">
-                            {{ user.username[0]|upper }}
-                        </div>
-                    </div>
+    {% if user.profile_pic and user.profile_pic != 'default.png' %}
+        <img src="{{ url_for('static', filename='uploads/' + user.profile_pic) }}" alt="Foto de perfil" class="profile-pic-img rounded-circle" style="width:48px;height:48px;object-fit:cover;">
+    {% else %}
+        <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center" style="width:48px;height:48px;font-size:1.7em;">
+            {{ user.username[0]|upper }}
+        </div>
+    {% endif %}
+</div>
                     <div>
                         <h6 class="mb-0">{{ user.username }}</h6>
                         <small class="text-muted">{{ user.email }}</small>
@@ -134,10 +138,14 @@
                             <div class="comment-wrapper">
                                 <div class="comment-header d-flex align-items-center">
                                     <div class="avatar me-3">
-                                        <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center">
-                                            {{ comment.author.username[0]|upper }}
-                                        </div>
-                                    </div>
+    {% if user.profile_pic and user.profile_pic != 'default.png' %}
+        <img src="{{ url_for('static', filename='uploads/' + user.profile_pic) }}" alt="Foto de perfil" class="profile-pic-img rounded-circle" style="width:48px;height:48px;object-fit:cover;">
+    {% else %}
+        <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center" style="width:48px;height:48px;font-size:1.7em;">
+            {{ user.username[0]|upper }}
+        </div>
+    {% endif %}
+</div>
                                     <div class="comment-meta">
                                         <h6 class="mb-0">
                                             {{ comment.author.username }}
@@ -209,10 +217,14 @@
                                                 <div class="comment-wrapper">
                                                     <div class="comment-header d-flex align-items-center">
                                                         <div class="avatar me-3">
-                                                            <div class="avatar-initials bg-secondary text-white rounded-circle d-flex justify-content-center align-items-center">
-                                                                {{ reply.author.username[0]|upper }}
-                                                            </div>
-                                                        </div>
+    {% if user.profile_pic and user.profile_pic != 'default.png' %}
+        <img src="{{ url_for('static', filename='uploads/' + user.profile_pic) }}" alt="Foto de perfil" class="profile-pic-img rounded-circle" style="width:48px;height:48px;object-fit:cover;">
+    {% else %}
+        <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center" style="width:48px;height:48px;font-size:1.7em;">
+            {{ user.username[0]|upper }}
+        </div>
+    {% endif %}
+</div>
                                                         <div class="comment-meta">
                                                             <h6 class="mb-0">
                                                                 {{ reply.author.username }}
