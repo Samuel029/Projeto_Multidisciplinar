@@ -78,10 +78,14 @@
             <div class="post-card" data-post-id="{{ post.id }}" data-category="{{ post.category }}">
                 <div class="post-header">
                     <div class="user-info">
-                        <div class="avatar">
-                            <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center">
-                                {{ post.author.username[0]|upper }}
-                            </div>
+                        <div class="profile-pic-preview">
+                            {% if post.author.profile_pic and post.author.profile_pic != 'default.png' %}
+                                <img class="profile-pic-img" src="{{ url_for('static', filename='Uploads/' + post.author.profile_pic) }}" alt="Foto de perfil" />
+                            {% else %}
+                                <div class="profile-pic-avatar">
+                                    {{ post.author.username[0]|upper }}
+                                </div>
+                            {% endif %}
                         </div>
                         <div>
                             <h5 class="username">{{ post.author.username }}</h5>
@@ -216,15 +220,15 @@
                                             <div class="comment reply" data-reply-id="{{ reply.id }}">
                                                 <div class="comment-wrapper">
                                                     <div class="comment-header d-flex align-items-center">
-                                                        <div class="avatar me-3">
-    {% if user.profile_pic and user.profile_pic != 'default.png' %}
-        <img src="{{ url_for('static', filename='uploads/' + user.profile_pic) }}" alt="Foto de perfil" class="profile-pic-img rounded-circle" style="width:48px;height:48px;object-fit:cover;">
-    {% else %}
-        <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center" style="width:48px;height:48px;font-size:1.7em;">
-            {{ user.username[0]|upper }}
-        </div>
-    {% endif %}
-</div>
+                                                        <div class="profile-pic-preview">
+                            {% if post.author.profile_pic and post.author.profile_pic != 'default.png' %}
+                                <img class="profile-pic-img" src="{{ url_for('static', filename='Uploads/' + post.author.profile_pic) }}" alt="Foto de perfil" />
+                            {% else %}
+                                <div class="profile-pic-avatar">
+                                    {{ post.author.username[0]|upper }}
+                                </div>
+                            {% endif %}
+                        </div>
                                                         <div class="comment-meta">
                                                             <h6 class="mb-0">
                                                                 {{ reply.author.username }}
