@@ -7,16 +7,32 @@ import os
 import firebase_admin
 from firebase_admin import auth, credentials
 from flask_migrate import Migrate
+from backend.reset_password import reset_bp
 import logging
+from flask_mail import Mail
 
-# Configurar logging para depuração
+# Configurar logging
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 app.config.from_object('backend.config.Config')
+
+# Configuração do Flask-Mail para Brevo SMTP
+app.config['MAIL_SERVER'] = 'smtp-relay.brevo.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = '901acc001@smtp-brevo.com'
+app.config['MAIL_PASSWORD'] = 'VPt45nhgXkBxjEy6'
+app.config['MAIL_DEFAULT_SENDER'] = 'technobugproject@gmail.com'
+
+mail = Mail(app)
+
 db.init_app(app)
 migrate = Migrate(app, db)
+
+# Registrar o blueprint de recuperação de senha
+app.register_blueprint(reset_bp)
 
 # Criar pasta instance se não existir
 instance_dir = app.config['INSTANCE_DIR']
@@ -42,13 +58,22 @@ except Exception as e:
     logger.error(f"Erro de permissão no diretório instance: {str(e)}")
     raise
 
-# Inicializar Firebase
+cred_path = 'technobug-6daca-firebase-adminsdk-fbsvc-19273e6f57.json'
+
+if not os.path.exists(cred_path):
+    logger.error(f"Arquivo de credenciais Firebase não encontrado: {cred_path}")
+    raise FileNotFoundError(f"Arquivo de credenciais Firebase não encontrado: {cred_path}")
+
 try:
-    cred = credentials.Certificate('technobug-6daca-firebase-adminsdk-fbsvc-19273e6f57.json')
-    firebase_admin.initialize_app(cred)
-    logger.info("Firebase inicializado com sucesso")
+    if not firebase_admin._apps:  # Só inicializa se ainda não foi inicializado
+        cred = credentials.Certificate(cred_path)
+        firebase_admin.initialize_app(cred)
+        logger.info("Firebase inicializado com sucesso")
+    else:
+        logger.info("Firebase já estava inicializado")
 except Exception as e:
     logger.error(f"Erro ao inicializar Firebase: {str(e)}")
+    raise
 
 @app.route('/')
 def index():
@@ -67,7 +92,6 @@ def post_comments(post_id):
         flash('Sua sessão expirou ou o usuário não existe mais.', 'error')
         return redirect(url_for('registroelogin'))
     
-    # Eager load comments, replies, and authors
     post = Post.query.options(
         db.joinedload(Post.comments).joinedload(Comment.author),
         db.joinedload(Post.comments).joinedload(Comment.replies).joinedload(Comment.author)
@@ -80,10 +104,9 @@ def registroelogin():
     user_id = session.get('user_id')
     if user_id:
         user = db.session.get(User, user_id)
-        if not user:
-            session.clear()
-        else:
+        if user:
             return redirect(url_for('telainicial'))
+        session.clear()
     
     if request.method == 'POST':
         if 'login' in request.form:
@@ -131,6 +154,12 @@ def registroelogin():
             try:
                 db.session.add(new_user)
                 db.session.commit()
+                # Criar usuário no Firebase Authentication
+                try:
+                    auth.create_user(email=email, password=password)
+                    logger.info(f"Usuário {email} criado no Firebase Authentication")
+                except Exception as e:
+                    logger.warning(f"Erro ao criar usuário no Firebase: {str(e)}")
                 flash('Conta criada com sucesso! Faça login para continuar.', 'success')
             except Exception as e:
                 db.session.rollback()
@@ -254,7 +283,6 @@ def comunidade():
         flash('Sua sessão expirou ou o usuário não existe mais.', 'error')
         return redirect(url_for('registroelogin'))
     
-    # Eager load comments, replies, and authors
     posts = Post.query.options(
         db.joinedload(Post.comments).joinedload(Comment.author),
         db.joinedload(Post.comments).joinedload(Comment.replies).joinedload(Comment.author)
@@ -308,7 +336,6 @@ def search():
         return jsonify([]), 200
     
     try:
-        # Search posts (add other models like Resource if applicable)
         posts = Post.query.filter(
             Post.content.ilike(f'%{query}%') | Post.category.ilike(f'%{query}%')
         ).limit(10).all()
@@ -357,7 +384,6 @@ def telainicial():
         else:
             flash('Por favor, preencha todos os campos.', 'error')
     
-    # Eager load comments, replies, and authors
     posts = Post.query.options(
         db.joinedload(Post.comments).joinedload(Comment.author),
         db.joinedload(Post.comments).joinedload(Comment.replies).joinedload(Comment.author)
@@ -544,7 +570,6 @@ def delete_comment(comment_id):
         return jsonify({'status': 'error', 'message': 'Você não tem permissão para deletar este comentário.'}), 403
     
     try:
-        # Deletar respostas associadas
         Comment.query.filter_by(parent_id=comment_id).delete()
         db.session.delete(comment)
         db.session.commit()

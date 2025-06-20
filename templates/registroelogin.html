@@ -698,7 +698,7 @@
                 <span>ou use seu e-mail e senha</span>
                 <input type="email" name="email" placeholder="Email" required>
                 <input type="password" name="password" placeholder="Senha" required>
-                <a href="#">Esqueceu sua senha?</a>
+                <a href="{{ url_for('reset.reset_password') }}">Esqueceu sua senha?</a>
                 <button type="submit" name="login" value="login">Entrar</button>
             </form>
         </div>

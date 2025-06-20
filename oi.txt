@@ -1,466 +1,1034 @@
-<div class="search-bar">
-  <!-- ...input da pesquisa... -->
-</div>
-<div class="search-results-container">
-  <!-- Resultados da pesquisa são inseridos aqui -->
-  <div class="search-result">
-    <span class="result-title">oi</span>
-    <span class="result-meta">Postagem | Dúvidas Gerais</span>
-  </div>
-  <!-- repita para outros resultados -->
-</div>
+perfeito INFO:backend.reset_password:Usuário encontrado no Firebase: felipepereirabritto08@gmail.com, UID: h0T9t18Z9yWoEtJmgZjwLkLWGYt2
+INFO:app:SQLALCHEMY_DATABASE_URI: sqlite:///c:\Users\felip\Projeto_Multidisciplinar-8\backend\instance\app.db
+INFO:app:Permissões de escrita verificadas com sucesso em: c:\Users\felip\Projeto_Multidisciplinar-8\backend\instance
+INFO:app:Firebase já estava inicializado
+INFO:app:Tabelas do banco de dados criadas com sucesso
+INFO:backend.reset_password:Email com código de redefinição enviado para: felipepereirabritto08@gmail.com
+INFO:werkzeug:127.0.0.1 - - [19/Jun/2025 23:54:15] "POST /reset_password HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [19/Jun/2025 23:54:18] "GET /verify_reset_code?email=felipepereirabritto08@gmail.com HTTP/1.1" 200 -
+DEBUG:urllib3.connectionpool:https://identitytoolkit.googleapis.com:443 "POST /v1/projects/technobug-6daca/accounts:lookup HTTP/1.1" 200 None
+ERROR:backend.reset_password:Erro ao verificar código para felipepereirabritto08@gmail.com: Invalid password string. Password must be a string at least 6 characters long.
+INFO:werkzeug:127.0.0.1 - - [19/Jun/2025 23:55:25] "POST /verify_reset_code HTTP/1.1" 500 -
+DEBUG:urllib3.connectionpool:https://identitytoolkit.googleapis.com:443 "POST /v1/projects/technobug-6daca/accounts:lookup HTTP/1.1" 200 None
+DEBUG:urllib3.connectionpool:https://identitytoolkit.googleapis.com:443 "POST /v1/projects/technobug-6daca/accounts:update HTTP/1.1" 200 None
+DEBUG:urllib3.connectionpool:https://identitytoolkit.googleapis.com:443 "POST /v1/projects/technobug-6daca/accounts:lookup HTTP/1.1" 200 None
+INFO:backend.reset_password:Senha atualizada no Firebase para felipepereirabritto08@gmail.com
+INFO:werkzeug:127.0.0.1 - - [19/Jun/2025 23:55:34] "POST /verify_reset_code HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [19/Jun/2025 23:55:37] "GET /registroelogin HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [19/Jun/2025 23:55:46] "POST /registroelogin HTTP/1.1" 302 -
+INFO:werkzeug:127.0.0.1 - - [19/Jun/2025 23:55:46] "GET /registroelogin HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [19/Jun/2025 23:56:03] "POST /registroelogin HTTP/1.1" 302 -
+INFO:werkzeug:127.0.0.1 - - [19/Jun/2025 23:56:03] "GET /registroelogin HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [19/Jun/2025 23:56:24] "GET /reset_password HTTP/1.1" 200 -
+DEBUG:urllib3.connectionpool:https://identitytoolkit.googleapis.com:443 "POST /v1/projects/technobug-6daca/accounts:lookup HTTP/1.1" 200 None
+INFO:backend.reset_password:Usuário encontrado no Firebase: cxrzinmodder@gmail.com, UID: pOS31jV7m4SPYLlqzb5Mc8xk8Qu1
+INFO:backend.reset_password:Email com código de redefinição enviado para: cxrzinmodder@gmail.com
+INFO:werkzeug:127.0.0.1 - - [19/Jun/2025 23:56:27] "POST /reset_password HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [19/Jun/2025 23:56:30] "GET /verify_reset_code?email=cxrzinmodder@gmail.com HTTP/1.1" 200 -
+DEBUG:urllib3.connectionpool:https://identitytoolkit.googleapis.com:443 "POST /v1/projects/technobug-6daca/accounts:lookup HTTP/1.1" 200 None
+DEBUG:urllib3.connectionpool:https://identitytoolkit.googleapis.com:443 "POST /v1/projects/technobug-6daca/accounts:update HTTP/1.1" 200 None
+DEBUG:urllib3.connectionpool:https://identitytoolkit.googleapis.com:443 "POST /v1/projects/technobug-6daca/accounts:lookup HTTP/1.1" 200 None
+INFO:backend.reset_password:Senha atualizada no Firebase para cxrzinmodder@gmail.com
+INFO:werkzeug:127.0.0.1 - - [19/Jun/2025 23:56:56] "POST /verify_reset_code HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [19/Jun/2025 23:56:59] "GET /registroelogin HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [19/Jun/2025 23:57:06] "POST /registroelogin HTTP/1.1" 302 -
+INFO:werkzeug:127.0.0.1 - - [19/Jun/2025 23:57:06] "GET /registroelogin HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [19/Jun/2025 23:57:20] "POST /registroelogin HTTP/1.1" 302 -
+INFO:werkzeug:127.0.0.1 - - [19/Jun/2025 23:57:20] "GET /registroelogin HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [19/Jun/2025 23:57:26] "GET /reset_password HTTP/1.1" 200 -
+DEBUG:urllib3.connectionpool:https://identitytoolkit.googleapis.com:443 "POST /v1/projects/technobug-6daca/accounts:lookup HTTP/1.1" 200 None
+INFO:backend.reset_password:Usuário encontrado no Firebase: cxrzinmodder@gmail.com, UID: pOS31jV7m4SPYLlqzb5Mc8xk8Qu1
+INFO:backend.reset_password:Email com código de redefinição enviado para: cxrzinmodder@gmail.com
+INFO:werkzeug:127.0.0.1 - - [19/Jun/2025 23:57:31] "POST /reset_password HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [19/Jun/2025 23:57:34] "GET /verify_reset_code?email=cxrzinmodder@gmail.com HTTP/1.1" 200 -
+DEBUG:urllib3.connectionpool:https://identitytoolkit.googleapis.com:443 "POST /v1/projects/technobug-6daca/accounts:lookup HTTP/1.1" 200 None
+DEBUG:urllib3.connectionpool:https://identitytoolkit.googleapis.com:443 "POST /v1/projects/technobug-6daca/accounts:update HTTP/1.1" 200 None
+DEBUG:urllib3.connectionpool:https://identitytoolkit.googleapis.com:443 "POST /v1/projects/technobug-6daca/accounts:lookup HTTP/1.1" 200 None
+INFO:backend.reset_password:Senha atualizada no Firebase para cxrzinmodder@gmail.com
+INFO:werkzeug:127.0.0.1 - - [19/Jun/2025 23:58:11] "POST /verify_reset_code HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [19/Jun/2025 23:58:14] "GET /registroelogin HTTP/1.1" 200 -
 
 
-Pronto! Agora você tem o HTML completo com a estrutura limpa. Para adicionar cada resultado da pesquisa, você insere dentro da .search-results-container assim:
-html<div class="search-result-row">
-    <div class="result-title">{{ titulo_do_resultado }}</div>
-    <div class="result-meta">{{ tipo }} | {{ categoria }}</div>
-</div>
+codigo ta normalzinho chega no email e pa poremmm nao etsa atualizando a senha ao alterar ela tentei entrar com a nova senha e deu erro 
+
+
+o config.py import os
+
+class Config:
+    # Chave secreta para sessão
+    SECRET_KEY = os.environ.get('SECRET_KEY') or os.urandom(32).hex()
+    
+    # Diretório base
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    INSTANCE_DIR = os.path.join(basedir, 'instance')
+    
+    # Banco de dados
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
+        f'sqlite:///{os.path.join(INSTANCE_DIR, "app.db")}'
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+    # SMTP - Brevo (Sendinblue)
+    MAIL_SERVER = os.environ.get('MAIL_SERVER', 'smtp-relay.brevo.com')
+    MAIL_PORT = int(os.environ.get('MAIL_PORT', 587))
+    MAIL_USE_TLS = True
+    MAIL_USERNAME = os.environ.get('MAIL_USERNAME', '901acc001@smtp-brevo.com')
+    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD', 'VPt45nhgXkBxjEy6')
+    MAIL_DEFAULT_SENDER = os.environ.get('MAIL_DEFAULT_SENDER', 'technobugproject@gmail.com')
+
+models.py from backend.extensions import db
+from datetime import datetime, timedelta
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password = db.Column(db.String(200))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    is_admin = db.Column(db.Boolean, default=False)
+    is_moderator = db.Column(db.Boolean, default=False)
+    posts = db.relationship('Post', backref='author', lazy=True)
+    comments = db.relationship('Comment', backref='author', lazy=True)
+    likes = db.relationship('Like', backref='user', lazy=True)
+
+class Post(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Text, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    category = db.Column(db.String(50), nullable=False)
+    comments = db.relationship('Comment', backref='post', lazy=True, cascade="all, delete-orphan")
+    likes = db.relationship('Like', backref='post', lazy=True)
+
+class Comment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Text, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
+    parent_id = db.Column(db.Integer, db.ForeignKey('comment.id'))
+    replies = db.relationship('Comment', backref=db.backref('parent', remote_side=[id]), lazy=True)
+    likes = db.relationship('Like', backref='comment', lazy=True)
+
+class Like(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id'))
+    comment_id = db.Column(db.Integer, db.ForeignKey('comment.id'))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+class ResetCode(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(120), nullable=False)
+    code = db.Column(db.String(6), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    expires_at = db.Column(db.DateTime, nullable=False)
+
+
+reset_password.py from flask import Blueprint, request, jsonify, render_template, flash, current_app
+from backend.models import User, ResetCode
+from backend.extensions import db
+from werkzeug.security import generate_password_hash
+from firebase_admin import auth
+import random
+import string
+from datetime import datetime, timedelta
+import logging
+
+# Configurar logging
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
+
+reset_bp = Blueprint('reset', __name__)
+
+def generate_reset_code():
+    """Gera um código de 6 dígitos."""
+    return ''.join(random.choices(string.digits, k=6))
+
+def send_reset_email(to_email, subject, html_content):
+    """Envia e-mail via SMTP usando Flask-Mail"""
+    from app import mail  # importa o mail já inicializado no app.py
+    from flask_mail import Message
+
+    sender = current_app.config.get('MAIL_DEFAULT_SENDER', 'technobugproject@gmail.com')
+    msg = Message(subject, recipients=[to_email], html=html_content, sender=sender)
+    mail.send(msg)
+
+@reset_bp.route('/reset_password', methods=['GET'])
+def reset_password_form():
+    return render_template('reset_password.html')
+
+@reset_bp.route('/reset_password', methods=['POST'])
+def reset_password():
+    email = request.form.get('email')
+
+    if not email:
+        logger.warning("Tentativa de recuperação de senha sem email fornecido")
+        flash('Por favor, forneça um email.', 'error')
+        return jsonify({'status': 'error', 'message': 'Por favor, forneça um email.'}), 400
+
+    try:
+        # Verificar se o usuário existe no Firebase
+        user = auth.get_user_by_email(email)
+        logger.info(f"Usuário encontrado no Firebase: {user.email}, UID: {user.uid}")
+
+        code = generate_reset_code()
+        expires_at = datetime.utcnow() + timedelta(minutes=10)
+
+        reset_code = ResetCode(email=email, code=code, expires_at=expires_at)
+        db.session.add(reset_code)
+        db.session.commit()
+
+        subject = 'Código de Redefinição de Senha - TechnoBug'
+        html_content = f"""
+        <p>Olá,</p>
+        <p>Seu código de redefinição de senha é: <strong>{code}</strong></p>
+        <p>Este código expira em 10 minutos.</p>
+        <p>Se você não solicitou esta redefinição, ignore este e-mail.</p>
+        <p>Atenciosamente,<br>Equipe TechnoBug</p>
+        """
+
+        send_reset_email(email, subject, html_content)
+
+        logger.info(f"Email com código de redefinição enviado para: {email}")
+        flash('Um código de redefinição foi enviado para o seu e-mail. Verifique sua caixa de entrada ou spam.', 'success')
+        return jsonify({
+            'status': 'success',
+            'message': 'Um código de redefinição foi enviado para o seu e-mail. Verifique sua caixa de entrada ou spam.',
+            'email': email
+        })
+
+    except auth.UserNotFoundError:
+        logger.warning(f"Tentativa de recuperação de senha para email não registrado: {email}")
+        flash('Email não registrado.', 'error')
+        return jsonify({'status': 'error', 'message': 'Email não registrado.'}), 404
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Erro ao processar redefinição de senha para {email}: {str(e)}")
+        flash(f'Erro ao processar a solicitação: {str(e)}', 'error')
+        return jsonify({'status': 'error', 'message': f'Erro ao processar a solicitação: {str(e)}'}), 500
+
+@reset_bp.route('/verify_reset_code', methods=['GET'])
+def verify_reset_code_form():
+    email = request.args.get('email')
+    return render_template('verify_reset_code.html', email=email)
+
+@reset_bp.route('/verify_reset_code', methods=['POST'])
+def verify_reset_code():
+    email = request.form.get('email')
+    code = request.form.get('code')
+    new_password = request.form.get('new_password')
+    confirm_password = request.form.get('confirm_password')
+
+    if not all([email, code, new_password, confirm_password]):
+        logger.warning("Campos incompletos na verificação do código")
+        flash('Por favor, preencha todos os campos.', 'error')
+        return jsonify({'status': 'error', 'message': 'Por favor, preencha todos os campos.'}), 400
+
+    if new_password != confirm_password:
+        logger.warning(f"Senhas não coincidem para {email}")
+        flash('As senhas não coincidem.', 'error')
+        return jsonify({'status': 'error', 'message': 'As senhas não coincidem.'}), 400
+
+    try:
+        reset_code = ResetCode.query.filter_by(email=email, code=code).first()
+        if not reset_code:
+            logger.warning(f"Código inválido para {email}")
+            flash('Código inválido.', 'error')
+            return jsonify({'status': 'error', 'message': 'Código inválido.'}), 404
+
+        if datetime.utcnow() > reset_code.expires_at:
+            logger.warning(f"Código expirado para {email}")
+            db.session.delete(reset_code)
+            db.session.commit()
+            flash('O código expirou. Solicite um novo.', 'error')
+            return jsonify({'status': 'error', 'message': 'O código expirou. Solicite um novo.'}), 400
+
+        user = auth.get_user_by_email(email)
+        auth.update_user(user.uid, password=new_password)
+        logger.info(f"Senha atualizada no Firebase para {email}")
+
+        local_user = User.query.filter_by(email=email).first()
+        if local_user:
+            local_user.password = generate_password_hash(new_password)
+            db.session.commit()
+            logger.info(f"Senha atualizada no banco local para {email}")
+
+        db.session.delete(reset_code)
+        db.session.commit()
+
+        flash('Senha redefinida com sucesso! Faça login com sua nova senha.', 'success')
+        return jsonify({
+            'status': 'success',
+            'message': 'Senha redefinida com sucesso! Faça login com sua nova senha.'
+        })
+    except auth.UserNotFoundError:
+        logger.warning(f"Usuário não encontrado no Firebase durante verificação: {email}")
+        flash('Email não registrado.', 'error')
+        return jsonify({'status': 'error', 'message': 'Email não registrado.'}), 404
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Erro ao verificar código para {email}: {str(e)}")
+        flash(f'Erro ao processar a solicitação: {str(e)}', 'error')
+        return jsonify({'status': 'error', 'message': f'Erro ao processar a solicitação: {str(e)}'}), 500
+
+
+app.py
+
+from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
+from werkzeug.security import generate_password_hash, check_password_hash
+from backend.extensions import db
+from backend.models import User, Post, Comment, Like
+from datetime import datetime
+import os
+import firebase_admin
+from firebase_admin import auth, credentials
+from flask_migrate import Migrate
+from backend.reset_password import reset_bp
+import logging
+from flask_mail import Mail
+
+# Configurar logging
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
+
+app = Flask(__name__)
+app.config.from_object('backend.config.Config')
+
+# Configuração do Flask-Mail para Brevo SMTP
+app.config['MAIL_SERVER'] = 'smtp-relay.brevo.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = '901acc001@smtp-brevo.com'
+app.config['MAIL_PASSWORD'] = 'VPt45nhgXkBxjEy6'
+app.config['MAIL_DEFAULT_SENDER'] = 'technobugproject@gmail.com'
+
+mail = Mail(app)
+
+db.init_app(app)
+migrate = Migrate(app, db)
+
+# Registrar o blueprint de recuperação de senha
+app.register_blueprint(reset_bp)
+
+# Criar pasta instance se não existir
+instance_dir = app.config['INSTANCE_DIR']
+if not os.path.exists(instance_dir):
+    try:
+        os.makedirs(instance_dir)
+        logger.info(f"Pasta instance criada em: {instance_dir}")
+    except Exception as e:
+        logger.error(f"Erro ao criar pasta instance: {str(e)}")
+        raise
+
+# Log do caminho do banco de dados
+logger.info(f"SQLALCHEMY_DATABASE_URI: {app.config['SQLALCHEMY_DATABASE_URI']}")
+
+# Verificar permissões de escrita no diretório instance
+try:
+    test_file = os.path.join(instance_dir, 'test_write.txt')
+    with open(test_file, 'w') as f:
+        f.write('test')
+    os.remove(test_file)
+    logger.info(f"Permissões de escrita verificadas com sucesso em: {instance_dir}")
+except Exception as e:
+    logger.error(f"Erro de permissão no diretório instance: {str(e)}")
+    raise
+
+cred_path = 'technobug-6daca-firebase-adminsdk-fbsvc-19273e6f57.json'
+
+if not os.path.exists(cred_path):
+    logger.error(f"Arquivo de credenciais Firebase não encontrado: {cred_path}")
+    raise FileNotFoundError(f"Arquivo de credenciais Firebase não encontrado: {cred_path}")
+
+try:
+    if not firebase_admin._apps:  # Só inicializa se ainda não foi inicializado
+        cred = credentials.Certificate(cred_path)
+        firebase_admin.initialize_app(cred)
+        logger.info("Firebase inicializado com sucesso")
+    else:
+        logger.info("Firebase já estava inicializado")
+except Exception as e:
+    logger.error(f"Erro ao inicializar Firebase: {str(e)}")
+    raise
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/post/<int:post_id>', methods=['GET'])
+def post_comments(post_id):
+    user_id = session.get('user_id')
+    if not user_id:
+        flash('Por favor, faça login para acessar esta página.', 'error')
+        return redirect(url_for('registroelogin'))
+    
+    user = db.session.get(User, user_id)
+    if not user:
+        session.clear()
+        flash('Sua sessão expirou ou o usuário não existe mais.', 'error')
+        return redirect(url_for('registroelogin'))
+    
+    post = Post.query.options(
+        db.joinedload(Post.comments).joinedload(Comment.author),
+        db.joinedload(Post.comments).joinedload(Comment.replies).joinedload(Comment.author)
+    ).get_or_404(post_id)
+    
+    return render_template('post_comments.html', user=user, post=post)
+
+@app.route('/registroelogin', methods=['GET', 'POST'])
+def registroelogin():
+    user_id = session.get('user_id')
+    if user_id:
+        user = db.session.get(User, user_id)
+        if user:
+            return redirect(url_for('telainicial'))
+        session.clear()
+    
+    if request.method == 'POST':
+        if 'login' in request.form:
+            email = request.form.get('email')
+            password = request.form.get('password')
+            
+            if not email or not password:
+                flash('Por favor, preencha todos os campos.', 'error')
+                return redirect(url_for('registroelogin'))
+            
+            user = User.query.filter_by(email=email).first()
+            if user and user.password and check_password_hash(user.password, password):
+                session['user_id'] = user.id
+                session['username'] = user.username
+                flash(f'Bem-vindo de volta, {user.username}!', 'success')
+                return redirect(url_for('telainicial'))
+            else:
+                flash('Email ou senha incorretos.', 'error')
+                return redirect(url_for('registroelogin'))
+                
+        elif 'register' in request.form:
+            username = request.form.get('username')
+            email = request.form.get('email')
+            password = request.form.get('password')
+            confirm_password = request.form.get('confirm_password')
+            
+            if not username or not email or not password or not confirm_password:
+                flash('Por favor, preencha todos os campos.', 'error')
+                return redirect(url_for('registroelogin'))
+                
+            if password != confirm_password:
+                flash('As senhas não coincidem.', 'error')
+                return redirect(url_for('registroelogin'))
+                
+            existing_user = User.query.filter_by(email=email).first()
+            if existing_user:
+                flash('Este email já está em uso.', 'error')
+                return redirect(url_for('registroelogin'))
+                
+            new_user = User(
+                username=username,
+                email=email,
+                password=generate_password_hash(password)
+            )
+            try:
+                db.session.add(new_user)
+                db.session.commit()
+                # Criar usuário no Firebase Authentication
+                try:
+                    auth.create_user(email=email, password=password)
+                    logger.info(f"Usuário {email} criado no Firebase Authentication")
+                except Exception as e:
+                    logger.warning(f"Erro ao criar usuário no Firebase: {str(e)}")
+                flash('Conta criada com sucesso! Faça login para continuar.', 'success')
+            except Exception as e:
+                db.session.rollback()
+                logger.error(f"Erro ao criar usuário: {str(e)}")
+                flash('Erro ao criar conta. Tente novamente.', 'error')
+            
+            return redirect(url_for('registroelogin'))
+    
+    return render_template('registroelogin.html')
+
+@app.route('/verify-token', methods=['POST'])
+def verify_token():
+    id_token = request.json.get('idToken')
+    try:
+        decoded_token = auth.verify_id_token(id_token)
+        email = decoded_token.get('email')
+        username = decoded_token.get('name', email.split('@')[0])
+        uid = decoded_token['uid']
+        
+        user = User.query.filter_by(email=email).first()
+        if not user:
+            user = User(
+                username=username,
+                email=email,
+                password=''  # Sem senha para autenticação Google
+            )
+            try:
+                db.session.add(user)
+                db.session.commit()
+                logger.info(f"Usuário {email} criado com sucesso")
+            except Exception as e:
+                db.session.rollback()
+                logger.error(f"Erro ao criar usuário no banco: {str(e)}")
+                return jsonify({'status': 'error', 'message': 'Erro ao criar usuário no banco de dados'}), 500
+        
+        session['user_id'] = user.id
+        session['username'] = user.username
+        
+        return jsonify({'status': 'success', 'user': {'id': user.id, 'username': user.username, 'email': user.email}})
+    except auth.ExpiredIdTokenError:
+        logger.warning("Token expirado recebido")
+        return jsonify({'status': 'error', 'message': 'Token expirado. Faça login novamente.'}), 401
+    except Exception as e:
+        logger.error(f"Erro ao verificar token: {str(e)}")
+        return jsonify({'status': 'error', 'message': 'Erro ao verificar token'}), 401
+
+@app.route('/videos-e-tutoriais')
+def videos():
+    user_id = session.get('user_id')
+    if not user_id:
+        flash('Por favor, faça login para acessar esta página.', 'error')
+        return redirect(url_for('registroelogin'))
+    
+    user = db.session.get(User, user_id)
+    if not user:
+        session.clear()
+        flash('Sua sessão expirou ou o usuário não existe mais.', 'error')
+        return redirect(url_for('registroelogin'))
+    
+    return render_template('videosetutoriais.html', user=user)
+
+@app.route('/politica-de-privacidade')
+def politica_privacidade():
+    return render_template('politicadeprivacidade.html')
+
+@app.route('/materiais-de-estudo')
+def materiais():
+    user_id = session.get('user_id')
+    if not user_id:
+        flash('Por favor, faça login para acessar esta página.', 'error')
+        return redirect(url_for('registroelogin'))
+    
+    user = db.session.get(User, user_id)
+    if not user:
+        session.clear()
+        flash('Sua sessão expirou ou o usuário não existe mais.', 'error')
+        return redirect(url_for('registroelogin'))
+    
+    return render_template('materiaisestudo.html', user=user)
+
+@app.route('/pdfs-e-apostilas')
+def pdfs():
+    user_id = session.get('user_id')
+    if not user_id:
+        flash('Por favor, faça login para acessar esta página.', 'error')
+        return redirect(url_for('registroelogin'))
+    
+    user = db.session.get(User, user_id)
+    if not user:
+        session.clear()
+        flash('Sua sessão expirou ou o usuário não existe mais.', 'error')
+        return redirect(url_for('registroelogin'))
+    
+    return render_template('pdfeapostilas.html', user=user)
+
+@app.route('/codigo')
+def codigo():
+    user_id = session.get('user_id')
+    if not user_id:
+        flash('Por favor, faça login para acessar esta página.', 'error')
+        return redirect(url_for('registroelogin'))
+    
+    user = db.session.get(User, user_id)
+    if not user:
+        session.clear()
+        flash('Sua sessão expirou ou o usuário não existe mais.', 'error')
+        return redirect(url_for('registroelogin'))
+    
+    return render_template('exemplosdecodigo.html', user=user)
+
+@app.route('/comunidade', methods=['GET'])
+def comunidade():
+    user_id = session.get('user_id')
+    if not user_id:
+        flash('Por favor, faça login para acessar esta página.', 'error')
+        return redirect(url_for('registroelogin'))
+    
+    user = db.session.get(User, user_id)
+    if not user:
+        session.clear()
+        flash('Sua sessão expirou ou o usuário não existe mais.', 'error')
+        return redirect(url_for('registroelogin'))
+    
+    posts = Post.query.options(
+        db.joinedload(Post.comments).joinedload(Comment.author),
+        db.joinedload(Post.comments).joinedload(Comment.replies).joinedload(Comment.author)
+    ).order_by(Post.created_at.desc()).all()
+    
+    return render_template('comunidade.html', user=user, posts=posts)
+
+@app.route('/create_post_form', methods=['GET'])
+def create_post_form():
+    user_id = session.get('user_id')
+    if not user_id:
+        flash('Por favor, faça login para acessar esta página.', 'error')
+        return redirect(url_for('registroelogin'))
+    
+    user = db.session.get(User, user_id)
+    if not user:
+        session.clear()
+        flash('Sua sessão expirou ou o usuário não existe mais.', 'error')
+        return redirect(url_for('registroelogin'))
+    
+    posts = Post.query.options(
+        db.joinedload(Post.comments).joinedload(Comment.author),
+        db.joinedload(Post.comments).joinedload(Comment.replies).joinedload(Comment.author)
+    ).order_by(Post.created_at.desc()).all()
+    
+    return render_template('comunidade.html', user=user, posts=posts)
+
+@app.route('/configuracoes')
+def configuracoes():
+    user_id = session.get('user_id')
+    if not user_id:
+        flash('Por favor, faça login para acessar esta página.', 'error')
+        return redirect(url_for('registroelogin'))
+    
+    user = db.session.get(User, user_id)
+    if not user:
+        session.clear()
+        flash('Sua sessão expirou ou o usuário não existe mais.', 'error')
+        return redirect(url_for('registroelogin'))
+    
+    return render_template('configuracoes.html', user=user)
+
+@app.route('/search', methods=['GET'])
+def search():
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({'status': 'error', 'message': 'Por favor, faça login para realizar buscas.'}), 401
+    
+    query = request.args.get('q', '').strip()
+    if len(query) < 2:
+        return jsonify([]), 200
+    
+    try:
+        posts = Post.query.filter(
+            Post.content.ilike(f'%{query}%') | Post.category.ilike(f'%{query}%')
+        ).limit(10).all()
+        
+        results = [
+            {
+                'title': post.content[:100] + '...' if len(post.content) > 100 else post.content,
+                'type': 'Postagem',
+                'category': post.category,
+                'url': url_for('post_comments', post_id=post.id, _external=True)
+            } for post in posts
+        ]
+        
+        return jsonify(results), 200
+    except Exception as e:
+        logger.error(f"Erro na busca: {str(e)}")
+        return jsonify({'status': 'error', 'message': 'Erro ao realizar busca.'}), 500
+
+@app.route('/telainicial', methods=['GET', 'POST'])
+def telainicial():
+    user_id = session.get('user_id')
+    if not user_id:
+        flash('Por favor, faça login para acessar esta página.', 'error')
+        return redirect(url_for('registroelogin'))
+    
+    user = db.session.get(User, user_id)
+    if not user:
+        session.clear()
+        flash('Sua sessão expirou ou o usuário não existe mais.', 'error')
+        return redirect(url_for('registroelogin'))
+    
+    if request.method == 'POST':
+        content = request.form.get('content') or request.form.get('post_content')
+        category = request.form.get('category')
+        if content and category:
+            new_post = Post(content=content, user_id=user.id, category=category)
+            try:
+                db.session.add(new_post)
+                db.session.commit()
+                flash('Postagem publicada com sucesso!', 'success')
+            except Exception as e:
+                db.session.rollback()
+                logger.error(f"Erro ao criar postagem: {str(e)}")
+                flash('Erro ao publicar postagem. Tente novamente.', 'error')
+            return redirect(url_for('telainicial'))
+        else:
+            flash('Por favor, preencha todos os campos.', 'error')
+    
+    posts = Post.query.options(
+        db.joinedload(Post.comments).joinedload(Comment.author),
+        db.joinedload(Post.comments).joinedload(Comment.replies).joinedload(Comment.author)
+    ).order_by(Post.created_at.desc()).all()
+    
+    return render_template('telainicial.html', user=user, posts=posts)
+
+@app.route('/create_post', methods=['POST'])
+def create_post():
+    if 'user_id' not in session:
+        return jsonify({'status': 'error', 'message': 'Por favor, faça login para realizar esta ação.'}), 401
+    
+    user_id = session['user_id']
+    user = db.session.get(User, user_id)
+    if not user:
+        session.clear()
+        return jsonify({'status': 'error', 'message': 'Sua sessão expirou ou o usuário não existe mais.'}), 401
+    
+    content = request.form.get('post_content')
+    category = request.form.get('category')
+    
+    if not content:
+        return jsonify({'status': 'error', 'message': 'O conteúdo da postagem não pode estar vazio.'}), 400
+    
+    if not category:
+        return jsonify({'status': 'error', 'message': 'Por favor, selecione uma categoria.'}), 400
+    
+    new_post = Post(content=content, user_id=user.id, category=category)
+    try:
+        db.session.add(new_post)
+        db.session.commit()
+        return jsonify({
+            'status': 'success',
+            'post': {
+                'id': new_post.id,
+                'content': new_post.content,
+                'category': new_post.category,
+                'username': user.username,
+                'created_at': new_post.created_at.strftime('%d/%m/%Y %H:%M')
+            }
+        })
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Erro ao criar postagem: {str(e)}")
+        return jsonify({'status': 'error', 'message': 'Erro ao criar postagem. Tente novamente.'}), 500
+
+@app.route('/comment/<int:post_id>', methods=['POST'])
+def add_comment(post_id):
+    if 'user_id' not in session:
+        return jsonify({'status': 'error', 'message': 'Por favor, faça login para comentar.'}), 401
+    
+    post = Post.query.get_or_404(post_id)
+    content = request.form.get('comment_content')
+    
+    if not content:
+        return jsonify({'status': 'error', 'message': 'O comentário não pode estar vazio.'}), 400
+    
+    new_comment = Comment(
+        content=content,
+        user_id=session['user_id'],
+        post_id=post_id
+    )
+    
+    try:
+        db.session.add(new_comment)
+        db.session.commit()
+        return jsonify({
+            'status': 'success',
+            'comment': {
+                'id': new_comment.id,
+                'content': new_comment.content,
+                'username': new_comment.author.username,
+                'created_at': new_comment.created_at.strftime('%d/%m/%Y %H:%M'),
+                'is_admin': new_comment.author.is_admin,
+                'is_moderator': new_comment.author.is_moderator
+            }
+        })
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Erro ao adicionar comentário: {str(e)}")
+        return jsonify({'status': 'error', 'message': 'Erro ao adicionar comentário.'}), 500
+
+@app.route('/reply/<int:comment_id>', methods=['POST'])
+def add_reply(comment_id):
+    if 'user_id' not in session:
+        return jsonify({'status': 'error', 'message': 'Por favor, faça login para responder.'}), 401
+    
+    parent_comment = Comment.query.get_or_404(comment_id)
+    content = request.form.get('reply_content')
+    
+    if not content:
+        return jsonify({'status': 'error', 'message': 'A resposta não pode estar vazia.'}), 400
+    
+    new_reply = Comment(
+        content=content,
+        user_id=session['user_id'],
+        post_id=parent_comment.post_id,
+        parent_id=comment_id
+    )
+    
+    try:
+        db.session.add(new_reply)
+        db.session.commit()
+        return jsonify({
+            'status': 'success',
+            'reply': {
+                'id': new_reply.id,
+                'content': new_reply.content,
+                'username': new_reply.author.username,
+                'created_at': new_reply.created_at.strftime('%d/%m/%Y %H:%M'),
+                'is_admin': new_reply.author.is_admin,
+                'is_moderator': new_reply.author.is_moderator
+            }
+        })
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Erro ao adicionar resposta: {str(e)}")
+        return jsonify({'status': 'error', 'message': 'Erro ao adicionar resposta.'}), 500
+
+@app.route('/edit_comment/<int:comment_id>', methods=['POST'])
+def edit_comment(comment_id):
+    if 'user_id' not in session:
+        return jsonify({'status': 'error', 'message': 'Por favor, faça login para editar.'}), 401
+    
+    comment = Comment.query.get_or_404(comment_id)
+    
+    if comment.user_id != session['user_id']:
+        return jsonify({'status': 'error', 'message': 'Você não tem permissão para editar este comentário.'}), 403
+    
+    content = request.form.get('edit_comment_content')
+    
+    if not content:
+        return jsonify({'status': 'error', 'message': 'O comentário não pode estar vazio.'}), 400
+    
+    try:
+        comment.content = content
+        db.session.commit()
+        return jsonify({
+            'status': 'success',
+            'message': 'Comentário editado com sucesso!',
+            'content': comment.content
+        })
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Erro ao editar comentário: {str(e)}")
+        return jsonify({'status': 'error', 'message': 'Erro ao editar comentário.'}), 500
+
+@app.route('/edit_reply/<int:reply_id>', methods=['POST'])
+def edit_reply(reply_id):
+    if 'user_id' not in session:
+        return jsonify({'status': 'error', 'message': 'Por favor, faça login para editar.'}), 401
+    
+    reply = Comment.query.get_or_404(reply_id)
+    
+    if reply.user_id != session['user_id']:
+        return jsonify({'status': 'error', 'message': 'Você não tem permissão para editar esta resposta.'}), 403
+    
+    content = request.form.get('edit_reply_content')
+    
+    if not content:
+        return jsonify({'status': 'error', 'message': 'A resposta não pode estar vazia.'}), 400
+    
+    try:
+        reply.content = content
+        db.session.commit()
+        return jsonify({
+            'status': 'success',
+            'message': 'Resposta editada com sucesso!',
+            'content': reply.content
+        })
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Erro ao editar resposta: {str(e)}")
+        return jsonify({'status': 'error', 'message': 'Erro ao editar resposta.'}), 500
+
+@app.route('/delete_comment/<int:comment_id>', methods=['POST'])
+def delete_comment(comment_id):
+    if 'user_id' not in session:
+        return jsonify({'status': 'error', 'message': 'Por favor, faça login para deletar.'}), 401
+    
+    comment = Comment.query.get_or_404(comment_id)
+    
+    if comment.user_id != session['user_id']:
+        return jsonify({'status': 'error', 'message': 'Você não tem permissão para deletar este comentário.'}), 403
+    
+    try:
+        Comment.query.filter_by(parent_id=comment_id).delete()
+        db.session.delete(comment)
+        db.session.commit()
+        return jsonify({'status': 'success', 'message': 'Comentário deletado com sucesso!'})
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Erro ao deletar comentário: {str(e)}")
+        return jsonify({'status': 'error', 'message': 'Erro ao deletar comentário.'}), 500
+
+@app.route('/delete_reply/<int:reply_id>', methods=['POST'])
+def delete_reply(reply_id):
+    if 'user_id' not in session:
+        return jsonify({'status': 'error', 'message': 'Por favor, faça login para deletar.'}), 401
+    
+    reply = Comment.query.get_or_404(reply_id)
+    
+    if reply.user_id != session['user_id']:
+        return jsonify({'status': 'error', 'message': 'Você não tem permissão para deletar esta resposta.'}), 403
+    
+    try:
+        db.session.delete(reply)
+        db.session.commit()
+        return jsonify({'status': 'success', 'message': 'Resposta deletada com sucesso!'})
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Erro ao deletar resposta: {str(e)}")
+        return jsonify({'status': 'error', 'message': 'Erro ao deletar resposta.'}), 500
+
+@app.route('/like_post/<int:post_id>', methods=['POST'])
+def like_post(post_id):
+    if 'user_id' not in session:
+        return jsonify({'status': 'error', 'message': 'Por favor, faça login para curtir.'}), 401
+    
+    post = Post.query.get_or_404(post_id)
+    user_id = session['user_id']
+    
+    existing_like = Like.query.filter_by(user_id=user_id, post_id=post_id).first()
+    
+    if existing_like:
+        try:
+            db.session.delete(existing_like)
+            db.session.commit()
+            like_count = Like.query.filter_by(post_id=post_id).count()
+            return jsonify({
+                'status': 'success',
+                'message': 'Curtida removida com sucesso!',
+                'liked': False,
+                'likes': like_count
+            })
+        except Exception as e:
+            db.session.rollback()
+            logger.error(f"Erro ao remover curtida: {str(e)}")
+            return jsonify({'status': 'error', 'message': 'Erro ao remover curtida.'}), 500
+    else:
+        new_like = Like(user_id=user_id, post_id=post_id)
+        try:
+            db.session.add(new_like)
+            db.session.commit()
+            like_count = Like.query.filter_by(post_id=post_id).count()
+            return jsonify({
+                'status': 'success',
+                'message': 'Postagem curtida com sucesso!',
+                'liked': True,
+                'likes': like_count
+            })
+        except Exception as e:
+            db.session.rollback()
+            logger.error(f"Erro ao adicionar curtida: {str(e)}")
+            return jsonify({'status': 'error', 'message': 'Erro ao curtir postagem.'}), 500
+
+@app.route('/get_post_likes/<int:post_id>', methods=['GET'])
+def get_post_likes(post_id):
+    post = Post.query.get_or_404(post_id)
+    like_count = Like.query.filter_by(post_id=post_id).count()
+    user_liked = False
+    if 'user_id' in session:
+        user_liked = Like.query.filter_by(user_id=session['user_id'], post_id=post_id).first() is not None
+    return jsonify({
+        'status': 'success',
+        'like_count': like_count,
+        'user_liked': user_liked
+    })
+
+@app.route('/like_comment/<int:comment_id>', methods=['POST'])
+def like_comment(comment_id):
+    if 'user_id' not in session:
+        return jsonify({'status': 'error', 'message': 'Por favor, faça login para curtir.'}), 401
+    
+    comment = Comment.query.get_or_404(comment_id)
+    user_id = session['user_id']
+    
+    existing_like = Like.query.filter_by(user_id=user_id, comment_id=comment_id).first()
+    
+    if existing_like:
+        try:
+            db.session.delete(existing_like)
+            db.session.commit()
+            like_count = Like.query.filter_by(comment_id=comment_id).count()
+            return jsonify({
+                'status': 'success',
+                'message': 'Curtida removida com sucesso!',
+                'liked': False,
+                'like_count': like_count
+            })
+        except Exception as e:
+            db.session.rollback()
+            logger.error(f"Erro ao remover curtida: {str(e)}")
+            return jsonify({'status': 'error', 'message': 'Erro ao remover curtida.'}), 500
+    else:
+        new_like = Like(user_id=user_id, comment_id=comment_id)
+        try:
+            db.session.add(new_like)
+            db.session.commit()
+            like_count = Like.query.filter_by(comment_id=comment_id).count()
+            return jsonify({
+                'status': 'success',
+                'message': 'Comentário curtido com sucesso!',
+                'liked': True,
+                'like_count': like_count
+            })
+        except Exception as e:
+            db.session.rollback()
+            logger.error(f"Erro ao adicionar curtida: {str(e)}")
+            return jsonify({'status': 'error', 'message': 'Erro ao curtir comentário.'}), 500
+
+@app.route('/get_comment_likes/<int:comment_id>', methods=['GET'])
+def get_comment_likes(comment_id):
+    comment = Comment.query.get_or_404(comment_id)
+    like_count = Like.query.filter_by(comment_id=comment_id).count()
+    user_liked = False
+    if 'user_id' in session:
+        user_liked = Like.query.filter_by(user_id=session['user_id'], comment_id=comment_id).first() is not None
+    return jsonify({
+        'status': 'success',
+        'like_count': like_count,
+        'user_liked': user_liked
+    })
+
+@app.route('/delete_post/<int:post_id>', methods=['DELETE'])
+def delete_post(post_id):
+    if 'user_id' not in session:
+        return jsonify({'status': 'error', 'message': 'Por favor, faça login para realizar esta ação.'}), 401
+    
+    post = Post.query.get_or_404(post_id)
+    
+    if post.user_id != session['user_id']:
+        return jsonify({'status': 'error', 'message': 'Você não tem permissão para deletar esta postagem.'}), 403
+    
+    try:
+        db.session.delete(post)
+        db.session.commit()
+        return jsonify({'status': 'success', 'message': 'Postagem deletada com sucesso!'})
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Erro ao deletar postagem: {str(e)}")
+        return jsonify({'status': 'error', 'message': 'Erro ao deletar postagem. Tente novamente.'}), 500
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    flash('Você saiu da sua conta.', 'info')
+    return redirect(url_for('registroelogin'))
+
+with app.app_context():
+    try:
+        db_path = os.path.join(instance_dir, 'app.db')
+        if not os.path.exists(instance_dir):
+            logger.error(f"Diretório instance não encontrado: {instance_dir}")
+            raise FileNotFoundError(f"Diretório instance não encontrado: {instance_dir}")
+        
+        with open(db_path, 'a'):
+            pass
+        
+        db.create_all()
+        logger.info("Tabelas do banco de dados criadas com sucesso")
+    except Exception as e:
+        logger.error(f"Erro ao criar tabelas do banco de dados: {str(e)}")
+        raise
+
+if __name__ == '__main__':
+    app.run(debug=True)
 
 
 
-coloque no html abaixo e me mande completo 
 
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TechNoBug - Dashboard</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/telainicial.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
-</head>
-<body>
-    <!-- Header -->
-    <header class="app-header">
-        <div class="header-content">
-            <div class="search-bar">
-                <i class="fas fa-search"></i>
-                <input type="text" id="searchInput" placeholder="Pesquisar postagens, tópicos...">
-            </div>
-            <div class="logo" onclick="window.location.href = '{{ url_for('telainicial') }}';" style="cursor: pointer;">
-                <i class="fas fa-graduation-cap"></i>
-                <span>TechNoBug</span>
-            </div>
-            <button class="btn menu-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" aria-controls="offcanvasMenu">
-                <i class="fas fa-bars"></i>
-                <span>Menu</span>
-            </button>
-        </div>
-    </header>
-
-    <!-- Offcanvas Menu -->
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasMenuLabel">
-        <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="offcanvasMenuLabel">Menu</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body">
-            <div class="user-profile mb-4">
-                <div class="d-flex align-items-center">
-                    <div class="avatar me-3">
-                        <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center">
-                            {{ user.username[0]|upper }}
-                        </div>
-                    </div>
-                    <div>
-                        <h6 class="mb-0">{{ user.username }}</h6>
-                        <small class="text-muted">{{ user.email }}</small>
-                    </div>
-                </div>
-            </div>
-            <ul class="navbar-nav">
-                <li class="nav-item mb-2"><a class="nav-link active" href="{{ url_for('telainicial') }}"><i class="fas fa-home me-2"></i>Dashboard</a></li>
-                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('materiais') }}"><i class="fas fa-book me-2"></i>Materiais de Estudo</a></li>
-                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('pdfs') }}"><i class="fas fa-file-pdf me-2"></i>PDFs e Apostilas</a></li>
-                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('videos') }}"><i class="fas fa-video me-2"></i>Vídeos e Tutoriais</a></li>
-                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('codigo') }}"><i class="fas fa-code me-2"></i>Exemplos de Código</a></li>
-                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('comunidade') }}"><i class="fas fa-users me-2"></i>Comunidade</a></li>
-                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('configuracoes') }}"><i class="fas fa-cog me-2"></i>Configurações</a></li>
-                <li class="nav-item"><a class="nav-link text-danger" href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt me-2"></i>Sair</a></li>
-            </ul>
-        </div>
-    </div>
-
-    <!-- Main Content -->
-    <div class="container">
-        <main class="main-content">
-            <!-- Welcome Section -->
-            <section class="dashboard-section">
-                <div class="row">
-                    <div class="col-md-8">
-                        <div class="dashboard-card">
-                            <h2 class="mb-4">Bem-vindo de volta, {{ user.username }}! 👋</h2>
-                            <p class="mb-4">O que você gostaria de aprender hoje? Aqui estão seus recursos personalizados com base em suas atividades recentes.</p>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="dashboard-card stats-card">
-                            <div class="stats-number" id="resources-count">0</div>
-                            <div class="stats-label">Recursos estudados</div>
-                            <div class="progress-container">
-                                <div class="progress-label">
-                                    <span>Seu progresso</span>
-                                    <span>65%</span>
-                                </div>
-                                <div class="progress-bar">
-                                    <div class="progress-bar-fill"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Quick Actions -->
-            <section class="dashboard-section">
-                <h3 class="section-title mb-4">
-                    <i class="fas fa-bolt"></i>
-                    <span>Ações Rápidas</span>
-                </h3>
-                <div class="row">
-                    <div class="col-md-3 col-sm-6 mb-3">
-                        <a href="{{ url_for('create_post') }}" class="dashboard-card quick-action-card text-center text-decoration-none">
-                            <i class="fas fa-pen fa-2x mb-3"></i>
-                            <h4>Criar Postagem</h4>
-                            <p class="small text-muted">Compartilhe sua dúvida com a comunidade</p>
-                        </a>
-                    </div>
-                    <div class="col-md-3 col-sm-6 mb-3">
-                        <a href="{{ url_for('materiais') }}" class="dashboard-card quick-action-card text-center text-decoration-none">
-                            <i class="fas fa-book fa-2x mb-3"></i>
-                            <h4>Materiais</h4>
-                            <p class="small text-muted">Acesse materiais de estudo</p>
-                        </a>
-                    </div>
-                    <div class="col-md-3 col-sm-6 mb-3">
-                        <a href="{{ url_for('videos') }}" class="dashboard-card quick-action-card text-center text-decoration-none">
-                            <i class="fas fa-video fa-2x mb-3"></i>
-                            <h4>Tutoriais</h4>
-                            <p class="small text-muted">Assista vídeos explicativos</p>
-                        </a>
-                    </div>
-                    <div class="col-md-3 col-sm-6 mb-3">
-                        <a href="{{ url_for('codigo') }}" class="dashboard-card quick-action-card text-center text-decoration-none">
-                            <i class="fas fa-code fa-2x mb-3"></i>
-                            <h4>Códigos</h4>
-                            <p class="small text-muted">Explore exemplos práticos</p>
-                        </a>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Recent Posts and Community Activity -->
-            <section class="dashboard-section">
-                <div class="row">
-                    <div class="col-lg-8">
-                        <div class="dashboard-card">
-                            <div class="dashboard-card-header">
-                                <h3 class="dashboard-card-title"><i class="fas fa-comments"></i> Atividade Recente</h3>
-                                <a href="{{ url_for('comunidade') }}" class="see-all-link">Ver tudo</a>
-                            </div>
-                            <div class="post-list">
-                                {% if posts %}
-                                    {% for post in posts %}
-                                        <div class="post-card" data-post-id="{{ post.id }}" data-category="{{ post.category }}">
-                                            <div class="post-header">
-                                                <div class="user-info">
-                                                    <div class="avatar">
-                                                        <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center">
-                                                            {{ post.author.username[0]|upper }}
-                                                        </div>
-                                                    </div>
-                                                    <div>
-                                                        <h5 class="username">{{ post.author.username }}</h5>
-                                                        <small class="text-muted">{{ post.created_at.strftime('%d/%m/%Y %H:%M') }}</small>
-                                                    </div>
-                                                </div>
-                                                {% if post.user_id == user.id %}
-                                                    <div class="post-actions">
-                                                        <button class="btn btn-sm btn-danger delete-post" data-post-id="{{ post.id }}">
-                                                            <i class="fas fa-trash"></i>
-                                                        </button>
-                                                    </div>
-                                                {% endif %}
-                                            </div>
-                                            <div class="post-content">
-                                                <div class="post-category-tag">{{ post.category }}</div>
-                                                <p>{{ post.content }}</p>
-                                            </div>
-                                            <div class="post-footer">
-                                                <button class="btn btn-sm btn-outline-primary like-btn" data-post-id="{{ post.id }}">
-                                                    <i class="fas fa-thumbs-up"></i> <span class="like-count">{{ post.likes|length }}</span>
-                                                </button>
-                                                <a href="{{ url_for('post_comments', post_id=post.id) }}" class="btn btn-sm btn-outline-secondary comment-btn">
-                                                    <i class="fas fa-comment"></i> Comentar
-                                                </a>
-                                            </div>
-                                        </div>
-                                    {% endfor %}
-                                {% else %}
-                                    <div class="empty-state-card">
-                                        <div class="text-center py-3">
-                                            <i class="fas fa-file-alt fa-2x mb-2 text-muted"></i>
-                                            <p class="text-muted">Nenhuma postagem encontrada.</p>
-                                        </div>
-                                    </div>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="col-lg-4">
-                        <div class="dashboard-card">
-                            <div class="dashboard-card-header">
-                                <h3 class="dashboard-card-title"><i class="fas fa-star"></i> Recomendados</h3>
-                                <a href="{{ url_for('materiais') }}" class="see-all-link">Ver tudo</a>
-                            </div>
-                            <div class="resource-item">
-                                <h4 class="resource-title">Introdução a Python</h4>
-                                <div class="resource-meta">
-                                    <span><i class="fas fa-book"></i> Material</span>
-                                    <span><i class="fas fa-clock"></i> 15 min</span>
-                                </div>
-                                <span class="resource-category">Lógica</span>
-                            </div>
-                            <div class="resource-item">
-                                <h4 class="resource-title">Modelagem de Banco de Dados</h4>
-                                <div class="resource-meta">
-                                    <span><i class="fas fa-video"></i> Vídeo</span>
-                                    <span><i class="fas fa-clock"></i> 22 min</span>
-                                </div>
-                                <span class="resource-category">Banco de Dados</span>
-                            </div>
-                            <div class="resource-item">
-                                <h4 class="resource-title">Git e GitHub para Iniciantes</h4>
-                                <div class="resource-meta">
-                                    <span><i class="fas fa-file-pdf"></i> PDF</span>
-                                    <span><i class="fas fa-clock"></i> 30 min</span>
-                                </div>
-                                <span class="resource-category">Versionamento</span>
-                            </div>
-                        </div>
-                        
-                        <div class="dashboard-card">
-                            <div class="dashboard-card-header">
-                                <h3 class="dashboard-card-title"><i class="fas fa-code"></i> Exemplo de Código</h3>
-                                <a href="{{ url_for('codigo') }}" class="see-all-link">Ver mais</a>
-                            </div>
-                            <div class="code-preview">
-                                <pre># Função em Python
-def saudacao(nome):
-    return f"Olá, {nome}!"
-
-# List comprehension
-quadrados = [x**2 for x in range(10)]
-
-# Condicional
-idade = 18
-status = "Maior" if idade >= 18 else "Menor"</pre>
-                            </div>
-                            <div class="text-end">
-                                <a href="{{ url_for('codigo') }}" class="btn btn-sm btn-outline-primary">Ver mais exemplos</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Learning Resources -->
-            <section class="dashboard-section">
-                <h3 class="section-title mb-4">
-                    <i class="fas fa-graduation-cap"></i>
-                    <span>Recursos de Aprendizado</span>
-                </h3>
-                <div class="row">
-                    <div class="col-md-6 mb-4">
-                        <div class="dashboard-card">
-                            <div class="dashboard-card-header">
-                                <h3 class="dashboard-card-title"><i class="fas fa-video"></i> Vídeos em Destaque</h3>
-                                <a href="{{ url_for('videos') }}" class="see-all-link">Ver todos</a>
-                            </div>
-                            <div class="video-thumbnail">
-                                <img src="https://img.youtube.com/vi/-l4Aa8wef8s/hqdefault.jpg" alt="Thumbnail do vídeo">
-                                <div class="video-play-icon">
-                                    <i class="fas fa-play"></i>
-                                </div>
-                            </div>
-                            <h4 class="resource-title">Aprenda Git e Github em 5 minutos</h4>
-                            <div class="resource-meta">
-                                <span><i class="fas fa-clock"></i> 4:57</span>
-                                <span><i class="fas fa-eye"></i> 11.5K</span>
-                            </div>
-                            <span class="resource-category">Versionamento</span>
-                        </div>
-                    </div>
-                    
-                    <div class="col-md-6 mb-4">
-                        <div class="dashboard-card">
-                            <div class="dashboard-card-header">
-                                <h3 class="dashboard-card-title"><i class="fas fa-book"></i> Materiais Recentes</h3>
-                                <a href="{{ url_for('materiais') }}" class="see-all-link">Ver todos</a>
-                            </div>
-                            <div class="resource-item">
-                                <h4 class="resource-title">Guia Completo de HTML5 e CSS3</h4>
-                                <div class="resource-meta">
-                                    <span><i class="fas fa-file-pdf"></i> PDF</span>
-                                    <span><i class="fas fa-clock"></i> 45 min</span>
-                                </div>
-                                <span class="resource-category">Front-end</span>
-                            </div>
-                            <div class="resource-item">
-                                <h4 class="resource-title">Exercícios de Lógica de Programação</h4>
-                                <div class="resource-meta">
-                                    <span><i class="fas fa-file-alt"></i> Apostila</span>
-                                    <span><i class="fas fa-clock"></i> 30 min</span>
-                                </div>
-                                <span class="resource-category">Lógica</span>
-                            </div>
-                            <div class="resource-item">
-                                <h4 class="resource-title">Introdução à Inteligência Artificial</h4>
-                                <div class="resource-meta">
-                                    <span><i class="fas fa-file-pdf"></i> PDF</span>
-                                    <span><i class="fas fa-clock"></i> 25 min</span>
-                                </div>
-                                <span class="resource-category">IA</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Community Highlights -->
-            <section class="dashboard-section">
-                <h3 class="section-title mb-4">
-                    <i class="fas fa-users"></i>
-                    <span>Destaques da Comunidade</span>
-                </h3>
-                <div class="row">
-                    <div class="col-md-4 mb-4">
-                        <div class="dashboard-card">
-                            <div class="dashboard-card-header">
-                                <h3 class="dashboard-card-title"><i class="fas fa-trophy"></i> Top Contribuidores</h3>
-                            </div>
-                            <div class="resource-item">
-                                <div class="d-flex align-items-center">
-                                    <div class="avatar me-3">
-                                        <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center">
-                                            J
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <h5 class="mb-0">João Silva</h5>
-                                        <small class="text-muted">15 contribuições</small>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="resource-item">
-                                <div class="d-flex align-items-center">
-                                    <div class="avatar me-3">
-                                        <div class="avatar-initials bg-success text-white rounded-circle d-flex justify-content-center align-items-center">
-                                            M
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <h5 class="mb-0">Maria Oliveira</h5>
-                                        <small class="text-muted">12 contribuições</small>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="resource-item">
-                                <div class="d-flex align-items-center">
-                                    <div class="avatar me-3">
-                                        <div class="avatar-initials bg-warning text-white rounded-circle d-flex justify-content-center align-items-center">
-                                            P
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <h5 class="mb-0">Pedro Santos</h5>
-                                        <small class="text-muted">10 contribuições</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="col-md-4 mb-4">
-                        <div class="dashboard-card">
-                            <div class="dashboard-card-header">
-                                <h3 class="dashboard-card-title"><i class="fas fa-fire"></i> Tópicos Populares</h3>
-                            </div>
-                            <div class="resource-item">
-                                <h4 class="resource-title">Como resolver problemas de lógica?</h4>
-                                <div class="resource-meta">
-                                    <span><i class="fas fa-comment"></i> 24 respostas</span>
-                                    <span><i class="fas fa-heart"></i> 45</span>
-                                </div>
-                                <span class="resource-category">Lógica</span>
-                            </div>
-                            <div class="resource-item">
-                                <h4 class="resource-title">Dúvida sobre modelagem de banco</h4>
-                                <div class="resource-meta">
-                                    <span><i class="fas fa-comment"></i> 15 respostas</span>
-                                    <span><i class="fas fa-heart"></i> 32</span>
-                                </div>
-                                <span class="resource-category">Banco de Dados</span>
-                            </div>
-                            <div class="resource-item">
-                                <h4 class="resource-title">Melhor linguagem para iniciantes</h4>
-                                <div class="resource-meta">
-                                    <span><i class="fas fa-comment"></i> 38 respostas</span>
-                                    <span><i class="fas fa-heart"></i> 56</span>
-                                </div>
-                                <span class="resource-category">Dúvidas Gerais</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="col-md-4 mb-4">
-                        <div class="dashboard-card">
-                            <div class="dashboard-card-header">
-                                <h3 class="dashboard-card-title"><i class="fas fa-calendar"></i> Eventos</h3>
-                            </div>
-                            <div class="resource-item">
-                                <h4 class="resource-title">Workshop de Git e GitHub</h4>
-                                <div class="resource-meta">
-                                    <span><i class="fas fa-clock"></i> 15/06 - 19h</span>
-                                    <span><i class="fas fa-user"></i> 45 participantes</span>
-                                </div>
-                                <span class="resource-category">Versionamento</span>
-                            </div>
-                            <div class="resource-item">
-                                <h4 class="resource-title">Live: Carreira em TI</h4>
-                                <div class="resource-meta">
-                                    <span><i class="fas fa-clock"></i> 20/06 - 20h</span>
-                                    <span><i class="fas fa-user"></i> 82 participantes</span>
-                                </div>
-                                <span class="resource-category">Carreiras</span>
-                            </div>
-                            <div class="resource-item">
-                                <h4 class="resource-title">Desafio de Lógica Semanal</h4>
-                                <div class="resource-meta">
-                                    <span><i class="fas fa-clock"></i> Todo domingo</span>
-                                    <span><i class="fas fa-user"></i> 120 participantes</span>
-                                </div>
-                                <span class="resource-category">Lógica</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </main>
-    </div>
-
-    <!-- Footer -->
-    {% include 'footer.html' %}
-
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{{ url_for('static', filename='js/telainicial.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
-</body>
-</html>
+no caso o firebase so é utilizado para logar usando google, para logar cadastrando manualmente, ele chega codigo, entao esse nao esta necessariamente no firebase
