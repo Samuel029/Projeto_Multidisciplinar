@@ -1,117 +1,184 @@
-body {
-    background: #f5f6fa;
-    font-family: 'Segoe UI', sans-serif;
+/* Configurações específicas para a página de configurações */
+
+/* Reutilizando variáveis do tema da tela inicial */
+:root {
+    --primary: #1a73e8;
+    --primary-light: #4a91ff;
+    --primary-dark: #1357b9;
+    --primary-transparent: rgba(26, 115, 232, 0.1);
+    --secondary: #202124;
+    --light: #ffffff;
+    --light-gray: #f1f3f4;
+    --medium-gray: #dadce0;
+    --dark-gray: #80868b;
+    --dark: #202124;
+    --success: #34c759;
+    --danger: #ff4444;
+    --font-primary: 'Inter', system-ui, -apple-system, sans-serif;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --border-radius-sm: 0.375rem;
+    --shadow-md: 0 3px 8px rgba(0, 0, 0, 0.12);
+    --transition-fast: 0.2s ease;
+    --card-bg: #ffffff;
+    --text-color: #1e293b;
+    --background-color: #f1f5f9;
 }
 
-.container-config {
-    max-width: 400px;
-    margin: 40px auto;
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 2px 12px rgba(60,60,90,0.07);
-    padding: 32px 28px 22px 28px;
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
+[data-theme="dark"] {
+    --primary: #4a91ff;
+    --primary-light: #6ab0ff;
+    --primary-dark: #2a6acc;
+    --secondary: #e0e0e0;
+    --light: #1e293b;
+    --light-gray: #2d3748;
+    --medium-gray: #4a5568;
+    --dark-gray: #a0aec0;
+    --dark: #ffffff;
+    --background-color: #1a202c;
+    --card-bg: #2d3748;
+    --text-color: #e2e8f0;
 }
 
-h2 {
-    margin-top: 0;
-    color: #333;
-    text-align: center;
+/* Estilização do formulário de configurações */
+.config-form {
+    padding: var(--space-lg);
 }
 
-.card {
-    background: #f9f9f9;
-    border-radius: 8px;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
+.config-form .form-label {
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    color: var(--secondary);
+    margin-bottom: var(--space-sm);
 }
 
-label {
-    font-size: 1rem;
-    color: #444;
+.config-form .form-control {
+    border: 1px solid var(--medium-gray);
+    border-radius: var(--border-radius-sm);
+    padding: var(--space-md);
+    font-size: var(--font-size-base);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    background-color: var(--light-gray);
+    color: var(--text-color);
 }
 
-input[type="text"], input[type="file"] {
-    padding: 9px;
-    font-size: 1rem;
-    border: 1px solid #d8d8d8;
-    border-radius: 6px;
+.config-form .form-control:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-transparent);
+    background-color: var(--light);
 }
 
-button {
-    background: #2d7ef7;
-    color: white;
-    font-size: 1rem;
-    border: none;
-    border-radius: 6px;
-    padding: 10px;
-    cursor: pointer;
-    margin-top: 8px;
-    transition: background 0.25s;
+.config-form .btn-publish {
+    background-color: var(--primary);
+    border-color: var(--primary);
+    padding: var(--space-md) var(--space-xl);
+    border-radius: var(--border-radius-sm);
+    font-weight: 600;
+    color: var(--light);
+    transition: background-color var(--transition-fast), transform var(--transition-fast);
 }
 
-button:hover {
-    background: #2259a8;
+.config-form .btn-publish:hover,
+.config-form .btn-publish:focus {
+    background-color: var(--primary-dark);
+    border-color: var(--primary-dark);
+    transform: translateY(-2px);
 }
 
+.config-form .msg {
+    display: block;
+    margin-top: var(--space-sm);
+    font-size: var(--font-size-sm);
+}
+
+.config-form .msg.success {
+    color: var(--success);
+}
+
+.config-form .msg.error {
+    color: var(--danger);
+}
+
+/* Estilização da pré-visualização da foto de perfil */
 .profile-pic-preview {
-    min-height: 95px;
     display: flex;
     align-items: center;
-    margin-bottom: 0;
-    gap: 0;
+    justify-content: center;
+    margin-bottom: var(--space-md);
 }
 
 .profile-pic-img {
     width: 80px;
     height: 80px;
-    border-radius: 50%;
     object-fit: cover;
-    border: 2px solid #b1c8f4;
-    background: #eaeaea;
-    display: block;
+    border-radius: 50%;
+    border: 2px solid var(--medium-gray);
+    transition: border-color var(--transition-fast);
+}
+
+.profile-pic-img:hover {
+    border-color: var(--primary);
 }
 
 .profile-pic-avatar {
     width: 80px;
     height: 80px;
+    font-size: 2em;
+    font-weight: 600;
     border-radius: 50%;
-    background: #b1c8f4;
-    color: #fff;
     display: flex;
-    align-items: center;
     justify-content: center;
-    font-size: 2.7em;
-    font-weight: bold;
-    border: 2px solid #b1c8f4;
-    user-select: none;
+    align-items: center;
+    background-color: var(--primary);
+    color: var(--light);
+    border: 2px solid var(--medium-gray);
+    transition: border-color var(--transition-fast);
 }
 
-.msg {
-    font-size: 0.95em;
-    margin-top: 5px;
-    min-height: 18px;
+.profile-pic-avatar:hover {
+    border-color: var(--primary);
 }
 
-.msg.success {
-    color: #0a8a36;
-}
-.msg.error {
-    color: #d63b28;
-}
-
+/* Botão Voltar */
 .voltar-link {
-    display: block;
-    text-align: center;
-    color: #2d7ef7;
-    margin-top: 13px;
-    text-decoration: none;
-    font-weight: 500;
+    font-size: var(--font-size-base);
+    padding: var(--space-md) var(--space-xl);
+    border-radius: var(--border-radius-sm);
+    transition: background-color var(--transition-fast), transform var(--transition-fast);
 }
-.voltar-link:hover {
-    text-decoration: underline;
+
+.voltar-link:hover,
+.voltar-link:focus {
+    background-color: var(--light-gray);
+    transform: translateY(-2px);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .config-form {
+        padding: var(--space-md);
+    }
+
+    .profile-pic-img,
+    .profile-pic-avatar {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5em;
+    }
+
+    .config-form .btn-publish,
+    .voltar-link {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+@media (max-width: 576px) {
+    .config-form .form-label {
+        font-size: var(--font-size-sm);
+    }
+
+    .config-form .form-control {
+        font-size: var(--font-size-sm);
+    }
 }

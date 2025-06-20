@@ -1,36 +1,126 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Configurações</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechNoBug - Configurações</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/telainicial.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/configuracoes.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
 </head>
 <body>
-    <div class="container-config">
-        <h2>Configurações da Conta</h2>
-        <form id="update-username-form" class="card">
-            <label for="username">Nome de usuário</label>
-            <input type="text" id="username" name="username" value="{{ user.username }}" required>
-            <button type="submit">Salvar nome</button>
-            <span id="username-msg" class="msg"></span>
-        </form>
-        <form id="update-profile-pic-form" class="card" enctype="multipart/form-data">
-            <label for="profile-pic">Foto de perfil</label>
-            <div class="profile-pic-preview" id="profile-pic-preview">
-    {% if user.profile_pic and user.profile_pic != 'default.png' %}
-        <img id="profile-pic-preview-img" class="profile-pic-img" src="{{ url_for('static', filename='uploads/' + user.profile_pic) }}" alt="Foto de perfil" />
-    {% else %}
-        <div class="profile-pic-avatar" id="profile-pic-avatar">
-            {{ user.username[0]|upper }}
+    <!-- Header -->
+    <header class="app-header">
+        <div class="header-content">
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Pesquisar postagens, tópicos...">
+            </div>
+            <div class="logo" onclick="window.location.href = '{{ url_for('telainicial') }}';" style="cursor: pointer;">
+                <i class="fas fa-graduation-cap"></i>
+                <span>TechNoBug</span>
+            </div>
+            <button class="btn menu-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" aria-controls="offcanvasMenu">
+                <i class="fas fa-bars"></i>
+                <span>Menu</span>
+            </button>
         </div>
-    {% endif %}
-</div>
-            <input type="file" id="profile-pic" name="profile_pic" accept="image/*">
-            <button type="submit">Salvar foto</button>
-            <span id="profile-pic-msg" class="msg"></span>
-        </form>
-        <a href="{{ url_for('telainicial') }}" class="voltar-link">Voltar</a>
+    </header>
+
+    <!-- Offcanvas Menu -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasMenuLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasMenuLabel">Menu</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="user-profile mb-4">
+                <div class="d-flex align-items-center">
+                    <div class="avatar me-3">
+                        {% if user.profile_pic and user.profile_pic != 'default.png' %}
+                            <img src="{{ url_for('static', filename='uploads/' + user.profile_pic) }}" alt="Foto de perfil" class="profile-pic-img rounded-circle" style="width:48px;height:48px;object-fit:cover;">
+                        {% else %}
+                            <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center" style="width:48px;height:48px;font-size:1.7em;">
+                                {{ user.username[0]|upper }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <h6 class="mb-0">{{ user.username }}</h6>
+                        <small class="text-muted">{{ user.email }}</small>
+                    </div>
+                </div>
+            </div>
+            <ul class="navbar-nav">
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('telainicial') }}"><i class="fas fa-home me-2"></i>Tela Inicial</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('materiais') }}"><i class="fas fa-book me-2"></i>Materiais de Estudo</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('pdfs') }}"><i class="fas fa-file-pdf me-2"></i>PDFs e Apostilas</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('videos') }}"><i class="fas fa-video me-2"></i>Vídeos e Tutoriais</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('codigo') }}"><i class="fas fa-code me-2"></i>Exemplos de Código</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('comunidade') }}"><i class="fas fa-users me-2"></i>Comunidade</a></li>
+                <li class="nav-item mb-2"><a class="nav-link active" href="{{ url_for('configuracoes') }}"><i class="fas fa-cog me-2"></i>Configurações</a></li>
+                <li class="nav-item"><a class="nav-link text-danger" href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt me-2"></i>Sair</a></li>
+            </ul>
+        </div>
     </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <main class="main-content">
+            <section class="dashboard-section">
+                <h2 class="section-title mb-4">
+                    <i class="fas fa-cog"></i>
+                    <span>Configurações da Conta</span>
+                </h2>
+                <div class="row">
+                    <div class="col-lg-6 col-md-8 mx-auto">
+                        <div class="dashboard-card">
+                            <form id="update-username-form" class="config-form" action="{{ url_for('update_username') }}" method="POST">
+                                <div class="mb-3">
+                                    <label for="username" class="form-label">Nome de Usuário</label>
+                                    <input type="text" id="username" name="username" class="form-control" value="{{ user.username }}" required>
+                                    <span id="username-msg" class="msg text-muted"></span>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-publish">Salvar Nome</button>
+                            </form>
+                        </div>
+                        <div class="dashboard-card mt-4">
+                            <form id="update-profile-pic-form" class="config-form" action="{{ url_for('update_profile_pic') }}" method="POST" enctype="multipart/form-data">
+                                <div class="mb-3">
+                                    <label for="profile-pic" class="form-label">Foto de Perfil</label>
+                                    <div class="profile-pic-preview mb-3" id="profile-pic-preview">
+                                        {% if user.profile_pic and user.profile_pic != 'default.png' %}
+                                            <img id="profile-pic-preview-img" class="profile-pic-img rounded-circle" src="{{ url_for('static', filename='uploads/' + user.profile_pic) }}" alt="Foto de perfil" style="width:80px;height:80px;object-fit:cover;">
+                                        {% else %}
+                                            <div class="profile-pic-avatar avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center" id="profile-pic-avatar" style="width:80px;height:80px;font-size:2em;">
+                                                {{ user.username[0]|upper }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <input type="file" id="profile-pic" name="profile_pic" class="form-control" accept="image/*">
+                                    <span id="profile-pic-msg" class="msg text-muted"></span>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-publish">Salvar Foto</button>
+                            </form>
+                        </div>
+                        <div class="text-center mt-4">
+                            <a href="{{ url_for('telainicial') }}" class="btn btn-outline-secondary voltar-link">Voltar</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    {% include 'footer.html' %}
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/telainicial.js') }}"></script>
     <script src="{{ url_for('static', filename='js/configuracoes.js') }}"></script>
 </body>
 </html>

@@ -1,118 +1,115 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // Atualizar nome de usuário
-    document.getElementById('update-username-form').onsubmit = async function(e) {
-        e.preventDefault();
-        const username = document.getElementById('username').value;
-        const msg = document.getElementById('username-msg');
-        msg.textContent = "Salvando...";
-        try {
-            const response = await fetch('/update_username', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({username})
-            });
-            const data = await response.json();
-            msg.textContent = data.message;
-            msg.className = data.status === 'success' ? 'msg success' : 'msg error';
-            // Atualiza a letra do avatar se não tiver foto
-            if (data.status === 'success') {
-                const avatarDiv = document.getElementById('profile-pic-avatar');
-                if (avatarDiv) {
-                    avatarDiv.textContent = username[0].toUpperCase();
-                }
-            }
-        } catch (err) {
-            msg.textContent = "Erro ao atualizar nome.";
-            msg.className = 'msg error';
-        }
-    };
+document.addEventListener('DOMContentLoaded', () => {
+    // Pré-visualização da foto de perfil
+    const profilePicInput = document.getElementById('profile-pic');
+    const profilePicPreview = document.getElementById('profile-pic-preview');
+    const profilePicPreviewImg = document.getElementById('profile-pic-preview-img');
+    const profilePicAvatar = document.getElementById('profile-pic-avatar');
 
-    // Preview foto de perfil
-    const fileInput = document.getElementById('profile-pic');
-    if (fileInput) {
-        fileInput.onchange = function(e) {
-            const [file] = e.target.files;
-            const previewDiv = document.getElementById('profile-pic-preview');
-            let img = document.getElementById('profile-pic-preview-img');
-            let avatarDiv = document.getElementById('profile-pic-avatar');
-
+    if (profilePicInput) {
+        profilePicInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
             if (file) {
-                // Remove a letra se existir
-                if (avatarDiv) {
-                    avatarDiv.remove();
-                }
-                // Cria ou mostra o <img>
-                if (!img) {
-                    img = document.createElement('img');
-                    img.id = "profile-pic-preview-img";
-                    img.className = "profile-pic-img";
-                    img.style.width = "80px";
-                    img.style.height = "80px";
-                    img.style.borderRadius = "50%";
-                    previewDiv.appendChild(img);
-                }
-                img.src = URL.createObjectURL(file);
-                img.style.display = 'block';
-            } else {
-                // Remove a imagem se existir
-                if (img) {
-                    img.remove();
-                }
-                // Cria a letra se não existir
-                if (!avatarDiv) {
-                    avatarDiv = document.createElement('div');
-                    avatarDiv.id = "profile-pic-avatar";
-                    avatarDiv.className = "profile-pic-avatar";
-                    // Pega a letra do input username
-                    avatarDiv.textContent = document.getElementById('username').value[0].toUpperCase();
-                    previewDiv.appendChild(avatarDiv);
-                }
-                avatarDiv.style.display = 'flex';
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    if (profilePicPreviewImg) {
+                        profilePicPreviewImg.src = e.target.result;
+                        profilePicPreviewImg.style.display = 'block';
+                        if (profilePicAvatar) {
+                            profilePicAvatar.style.display = 'none';
+                        }
+                    } else {
+                        const img = document.createElement('img');
+                        img.id = 'profile-pic-preview-img';
+                        img.className = 'profile-pic-img rounded-circle';
+                        img.src = e.target.result;
+                        img.style.width = '80px';
+                        img.style.height = '80px';
+                        img.style.objectFit = 'cover';
+                        profilePicPreview.innerHTML = '';
+                        profilePicPreview.appendChild(img);
+                    }
+                };
+                reader.readAsDataURL(file);
             }
-        }
+        });
     }
 
-    // Atualizar foto de perfil
-    document.getElementById('update-profile-pic-form').onsubmit = async function(e) {
-        e.preventDefault();
-        const msg = document.getElementById('profile-pic-msg');
-        msg.textContent = "Salvando...";
-        const formData = new FormData();
-        const fileInput = document.getElementById('profile-pic');
-        if (fileInput.files.length === 0) {
-            msg.textContent = "Selecione uma imagem!";
-            msg.className = 'msg error';
-            return;
-        }
-        formData.append('profile_pic', fileInput.files[0]);
-        try {
-            const response = await fetch('/update_profile_pic', {
-                method: 'POST',
-                body: formData
-            });
-            const data = await response.json();
-            msg.textContent = data.message;
-            msg.className = data.status === 'success' ? 'msg success' : 'msg error';
-            if (data.status === 'success' && data.new_url) {
-                const previewDiv = document.getElementById('profile-pic-preview');
-                let img = document.getElementById('profile-pic-preview-img');
-                let avatarDiv = document.getElementById('profile-pic-avatar');
-                if (avatarDiv) avatarDiv.remove();
-                if (!img) {
-                    img = document.createElement('img');
-                    img.id = "profile-pic-preview-img";
-                    img.className = "profile-pic-img";
-                    img.style.width = "80px";
-                    img.style.height = "80px";
-                    img.style.borderRadius = "50%";
-                    previewDiv.appendChild(img);
+    // Envio do formulário de nome de usuário
+    const usernameForm = document.getElementById('update-username-form');
+    const usernameMsg = document.getElementById('username-msg');
+
+    if (usernameForm) {
+        usernameForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+
+            try {
+                const response = await fetch(usernameForm.action, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username }),
+                });
+
+                const result = await response.json();
+                usernameMsg.textContent = result.message;
+
+                if (response.ok) {
+                    usernameMsg.classList.remove('error');
+                    usernameMsg.classList.add('success');
+                } else {
+                    usernameMsg.classList.remove('success');
+                    usernameMsg.classList.add('error');
                 }
-                img.src = data.new_url + '?t=' + Date.now();
-                img.style.display = 'block';
+            } catch (error) {
+                usernameMsg.textContent = 'Erro ao atualizar o nome de usuário.';
+                usernameMsg.classList.remove('success');
+                usernameMsg.classList.add('error');
             }
-        } catch (err) {
-            msg.textContent = "Erro ao atualizar foto.";
-            msg.className = 'msg error';
-        }
-    };
+        });
+    }
+
+    // Envio do formulário de foto de perfil
+    const profilePicForm = document.getElementById('update-profile-pic-form');
+    const profilePicMsg = document.getElementById('profile-pic-msg');
+
+    if (profilePicForm) {
+        profilePicForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const formData = new FormData(profilePicForm);
+
+            try {
+                const response = await fetch(profilePicForm.action, {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                const result = await response.json();
+                profilePicMsg.textContent = result.message;
+
+                if (response.ok) {
+                    profilePicMsg.classList.remove('error');
+                    profilePicMsg.classList.add('success');
+                    // Atualizar a imagem no menu offcanvas
+                    const offcanvasAvatarImg = document.querySelector('.offcanvas .profile-pic-img');
+                    const offcanvasAvatarInitials = document.querySelector('.offcanvas .avatar-initials');
+                    if (offcanvasAvatarImg && result.profile_pic) {
+                        offcanvasAvatarImg.src = result.profile_pic;
+                        offcanvasAvatarImg.style.display = 'block';
+                        if (offcanvasAvatarInitials) {
+                            offcanvasAvatarInitials.style.display = 'none';
+                        }
+                    }
+                } else {
+                    profilePicMsg.classList.remove('success');
+                    profilePicMsg.classList.add('error');
+                }
+            } catch (error) {
+                profilePicMsg.textContent = 'Erro ao atualizar a foto de perfil.';
+                profilePicMsg.classList.remove('success');
+                profilePicMsg.classList.add('error');
+            }
+        });
+    }
 });
