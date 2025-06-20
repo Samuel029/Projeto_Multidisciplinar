@@ -10,6 +10,7 @@ from flask_migrate import Migrate
 from backend.reset_password import reset_bp
 import logging
 from flask_mail import Mail
+from werkzeug.utils import secure_filename
 
 # Configurar logging
 logging.basicConfig(level=logging.DEBUG)
@@ -17,6 +18,53 @@ logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 app.config.from_object('backend.config.Config')
+
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@app.route('/update_username', methods=['POST'])
+def update_username():
+    if 'user_id' not in session:
+        return jsonify({'status': 'error', 'message': 'Faça login para alterar o nome.'}), 403
+    data = request.get_json()
+    new_username = data.get('username', '').strip()
+    if not new_username:
+        return jsonify({'status': 'error', 'message': 'Nome de usuário não pode ser vazio.'}), 400
+    if User.query.filter_by(username=new_username).first():
+        return jsonify({'status': 'error', 'message': 'Nome de usuário já está em uso.'}), 409
+    user = db.session.get(User, session['user_id'])
+    if not user:
+        return jsonify({'status': 'error', 'message': 'Usuário não encontrado.'}), 404
+    user.username = new_username
+    db.session.commit()
+    session['username'] = new_username
+    return jsonify({'status': 'success', 'message': 'Nome de usuário atualizado com sucesso.'})
+
+@app.route('/update_profile_pic', methods=['POST'])
+def update_profile_pic():
+    if 'user_id' not in session:
+        return jsonify({'status': 'error', 'message': 'Faça login para alterar a foto.'}), 403
+    if 'profile_pic' not in request.files:
+        return jsonify({'status': 'error', 'message': 'Nenhum arquivo enviado.'}), 400
+    file = request.files['profile_pic']
+    if file.filename == '':
+        return jsonify({'status': 'error', 'message': 'Nenhum arquivo selecionado.'}), 400
+    if not allowed_file(file.filename):
+        return jsonify({'status': 'error', 'message': 'Tipo de arquivo não suportado.'}), 400
+    filename = f"user_{session['user_id']}_{secure_filename(file.filename)}"
+    upload_folder = os.path.join(app.root_path, 'static', 'uploads')
+    os.makedirs(upload_folder, exist_ok=True)
+    file_path = os.path.join(upload_folder, filename)
+    file.save(file_path)
+    user = db.session.get(User, session['user_id'])
+    if not user:
+        return jsonify({'status': 'error', 'message': 'Usuário não encontrado.'}), 404
+    user.profile_pic = filename
+    db.session.commit()
+    img_url = url_for('static', filename='uploads/' + filename)
+    return jsonify({'status': 'success', 'message': 'Foto de perfil atualizada!', 'new_url': img_url})
 
 # Configuração do Flask-Mail para Brevo SMTP
 app.config['MAIL_SERVER'] = 'smtp-relay.brevo.com'

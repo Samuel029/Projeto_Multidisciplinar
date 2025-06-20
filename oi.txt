@@ -1,58 +1,11 @@
-perfeito INFO:backend.reset_password:Usuário encontrado no Firebase: felipepereirabritto08@gmail.com, UID: h0T9t18Z9yWoEtJmgZjwLkLWGYt2
-INFO:app:SQLALCHEMY_DATABASE_URI: sqlite:///c:\Users\felip\Projeto_Multidisciplinar-8\backend\instance\app.db
-INFO:app:Permissões de escrita verificadas com sucesso em: c:\Users\felip\Projeto_Multidisciplinar-8\backend\instance
-INFO:app:Firebase já estava inicializado
-INFO:app:Tabelas do banco de dados criadas com sucesso
-INFO:backend.reset_password:Email com código de redefinição enviado para: felipepereirabritto08@gmail.com
-INFO:werkzeug:127.0.0.1 - - [19/Jun/2025 23:54:15] "POST /reset_password HTTP/1.1" 200 -
-INFO:werkzeug:127.0.0.1 - - [19/Jun/2025 23:54:18] "GET /verify_reset_code?email=felipepereirabritto08@gmail.com HTTP/1.1" 200 -
-DEBUG:urllib3.connectionpool:https://identitytoolkit.googleapis.com:443 "POST /v1/projects/technobug-6daca/accounts:lookup HTTP/1.1" 200 None
-ERROR:backend.reset_password:Erro ao verificar código para felipepereirabritto08@gmail.com: Invalid password string. Password must be a string at least 6 characters long.
-INFO:werkzeug:127.0.0.1 - - [19/Jun/2025 23:55:25] "POST /verify_reset_code HTTP/1.1" 500 -
-DEBUG:urllib3.connectionpool:https://identitytoolkit.googleapis.com:443 "POST /v1/projects/technobug-6daca/accounts:lookup HTTP/1.1" 200 None
-DEBUG:urllib3.connectionpool:https://identitytoolkit.googleapis.com:443 "POST /v1/projects/technobug-6daca/accounts:update HTTP/1.1" 200 None
-DEBUG:urllib3.connectionpool:https://identitytoolkit.googleapis.com:443 "POST /v1/projects/technobug-6daca/accounts:lookup HTTP/1.1" 200 None
-INFO:backend.reset_password:Senha atualizada no Firebase para felipepereirabritto08@gmail.com
-INFO:werkzeug:127.0.0.1 - - [19/Jun/2025 23:55:34] "POST /verify_reset_code HTTP/1.1" 200 -
-INFO:werkzeug:127.0.0.1 - - [19/Jun/2025 23:55:37] "GET /registroelogin HTTP/1.1" 200 -
-INFO:werkzeug:127.0.0.1 - - [19/Jun/2025 23:55:46] "POST /registroelogin HTTP/1.1" 302 -
-INFO:werkzeug:127.0.0.1 - - [19/Jun/2025 23:55:46] "GET /registroelogin HTTP/1.1" 200 -
-INFO:werkzeug:127.0.0.1 - - [19/Jun/2025 23:56:03] "POST /registroelogin HTTP/1.1" 302 -
-INFO:werkzeug:127.0.0.1 - - [19/Jun/2025 23:56:03] "GET /registroelogin HTTP/1.1" 200 -
-INFO:werkzeug:127.0.0.1 - - [19/Jun/2025 23:56:24] "GET /reset_password HTTP/1.1" 200 -
-DEBUG:urllib3.connectionpool:https://identitytoolkit.googleapis.com:443 "POST /v1/projects/technobug-6daca/accounts:lookup HTTP/1.1" 200 None
-INFO:backend.reset_password:Usuário encontrado no Firebase: cxrzinmodder@gmail.com, UID: pOS31jV7m4SPYLlqzb5Mc8xk8Qu1
-INFO:backend.reset_password:Email com código de redefinição enviado para: cxrzinmodder@gmail.com
-INFO:werkzeug:127.0.0.1 - - [19/Jun/2025 23:56:27] "POST /reset_password HTTP/1.1" 200 -
-INFO:werkzeug:127.0.0.1 - - [19/Jun/2025 23:56:30] "GET /verify_reset_code?email=cxrzinmodder@gmail.com HTTP/1.1" 200 -
-DEBUG:urllib3.connectionpool:https://identitytoolkit.googleapis.com:443 "POST /v1/projects/technobug-6daca/accounts:lookup HTTP/1.1" 200 None
-DEBUG:urllib3.connectionpool:https://identitytoolkit.googleapis.com:443 "POST /v1/projects/technobug-6daca/accounts:update HTTP/1.1" 200 None
-DEBUG:urllib3.connectionpool:https://identitytoolkit.googleapis.com:443 "POST /v1/projects/technobug-6daca/accounts:lookup HTTP/1.1" 200 None
-INFO:backend.reset_password:Senha atualizada no Firebase para cxrzinmodder@gmail.com
-INFO:werkzeug:127.0.0.1 - - [19/Jun/2025 23:56:56] "POST /verify_reset_code HTTP/1.1" 200 -
-INFO:werkzeug:127.0.0.1 - - [19/Jun/2025 23:56:59] "GET /registroelogin HTTP/1.1" 200 -
-INFO:werkzeug:127.0.0.1 - - [19/Jun/2025 23:57:06] "POST /registroelogin HTTP/1.1" 302 -
-INFO:werkzeug:127.0.0.1 - - [19/Jun/2025 23:57:06] "GET /registroelogin HTTP/1.1" 200 -
-INFO:werkzeug:127.0.0.1 - - [19/Jun/2025 23:57:20] "POST /registroelogin HTTP/1.1" 302 -
-INFO:werkzeug:127.0.0.1 - - [19/Jun/2025 23:57:20] "GET /registroelogin HTTP/1.1" 200 -
-INFO:werkzeug:127.0.0.1 - - [19/Jun/2025 23:57:26] "GET /reset_password HTTP/1.1" 200 -
-DEBUG:urllib3.connectionpool:https://identitytoolkit.googleapis.com:443 "POST /v1/projects/technobug-6daca/accounts:lookup HTTP/1.1" 200 None
-INFO:backend.reset_password:Usuário encontrado no Firebase: cxrzinmodder@gmail.com, UID: pOS31jV7m4SPYLlqzb5Mc8xk8Qu1
-INFO:backend.reset_password:Email com código de redefinição enviado para: cxrzinmodder@gmail.com
-INFO:werkzeug:127.0.0.1 - - [19/Jun/2025 23:57:31] "POST /reset_password HTTP/1.1" 200 -
-INFO:werkzeug:127.0.0.1 - - [19/Jun/2025 23:57:34] "GET /verify_reset_code?email=cxrzinmodder@gmail.com HTTP/1.1" 200 -
-DEBUG:urllib3.connectionpool:https://identitytoolkit.googleapis.com:443 "POST /v1/projects/technobug-6daca/accounts:lookup HTTP/1.1" 200 None
-DEBUG:urllib3.connectionpool:https://identitytoolkit.googleapis.com:443 "POST /v1/projects/technobug-6daca/accounts:update HTTP/1.1" 200 None
-DEBUG:urllib3.connectionpool:https://identitytoolkit.googleapis.com:443 "POST /v1/projects/technobug-6daca/accounts:lookup HTTP/1.1" 200 None
-INFO:backend.reset_password:Senha atualizada no Firebase para cxrzinmodder@gmail.com
-INFO:werkzeug:127.0.0.1 - - [19/Jun/2025 23:58:11] "POST /verify_reset_code HTTP/1.1" 200 -
-INFO:werkzeug:127.0.0.1 - - [19/Jun/2025 23:58:14] "GET /registroelogin HTTP/1.1" 200 -
+belezaa quero um html configuracoes
+
+lá sera possivel alterar nome de usuario e adcionar toto de perfil crie para mmim essa tela 
 
 
-codigo ta normalzinho chega no email e pa poremmm nao etsa atualizando a senha ao alterar ela tentei entrar com a nova senha e deu erro 
+config.py
 
-
-o config.py import os
+import os
 
 class Config:
     # Chave secreta para sessão
@@ -75,7 +28,9 @@ class Config:
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD', 'VPt45nhgXkBxjEy6')
     MAIL_DEFAULT_SENDER = os.environ.get('MAIL_DEFAULT_SENDER', 'technobugproject@gmail.com')
 
-models.py from backend.extensions import db
+models.py 
+
+from backend.extensions import db
 from datetime import datetime, timedelta
 
 class User(db.Model):
@@ -124,155 +79,15 @@ class ResetCode(db.Model):
     expires_at = db.Column(db.DateTime, nullable=False)
 
 
-reset_password.py from flask import Blueprint, request, jsonify, render_template, flash, current_app
-from backend.models import User, ResetCode
-from backend.extensions import db
-from werkzeug.security import generate_password_hash
-from firebase_admin import auth
-import random
-import string
-from datetime import datetime, timedelta
-import logging
+pode adcionar js para melhorar isso 
 
-# Configurar logging
-logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger(__name__)
+js nesse local static\js
 
-reset_bp = Blueprint('reset', __name__)
+css nesse
 
-def generate_reset_code():
-    """Gera um código de 6 dígitos."""
-    return ''.join(random.choices(string.digits, k=6))
+static\css
 
-def send_reset_email(to_email, subject, html_content):
-    """Envia e-mail via SMTP usando Flask-Mail"""
-    from app import mail  # importa o mail já inicializado no app.py
-    from flask_mail import Message
-
-    sender = current_app.config.get('MAIL_DEFAULT_SENDER', 'technobugproject@gmail.com')
-    msg = Message(subject, recipients=[to_email], html=html_content, sender=sender)
-    mail.send(msg)
-
-@reset_bp.route('/reset_password', methods=['GET'])
-def reset_password_form():
-    return render_template('reset_password.html')
-
-@reset_bp.route('/reset_password', methods=['POST'])
-def reset_password():
-    email = request.form.get('email')
-
-    if not email:
-        logger.warning("Tentativa de recuperação de senha sem email fornecido")
-        flash('Por favor, forneça um email.', 'error')
-        return jsonify({'status': 'error', 'message': 'Por favor, forneça um email.'}), 400
-
-    try:
-        # Verificar se o usuário existe no Firebase
-        user = auth.get_user_by_email(email)
-        logger.info(f"Usuário encontrado no Firebase: {user.email}, UID: {user.uid}")
-
-        code = generate_reset_code()
-        expires_at = datetime.utcnow() + timedelta(minutes=10)
-
-        reset_code = ResetCode(email=email, code=code, expires_at=expires_at)
-        db.session.add(reset_code)
-        db.session.commit()
-
-        subject = 'Código de Redefinição de Senha - TechnoBug'
-        html_content = f"""
-        <p>Olá,</p>
-        <p>Seu código de redefinição de senha é: <strong>{code}</strong></p>
-        <p>Este código expira em 10 minutos.</p>
-        <p>Se você não solicitou esta redefinição, ignore este e-mail.</p>
-        <p>Atenciosamente,<br>Equipe TechnoBug</p>
-        """
-
-        send_reset_email(email, subject, html_content)
-
-        logger.info(f"Email com código de redefinição enviado para: {email}")
-        flash('Um código de redefinição foi enviado para o seu e-mail. Verifique sua caixa de entrada ou spam.', 'success')
-        return jsonify({
-            'status': 'success',
-            'message': 'Um código de redefinição foi enviado para o seu e-mail. Verifique sua caixa de entrada ou spam.',
-            'email': email
-        })
-
-    except auth.UserNotFoundError:
-        logger.warning(f"Tentativa de recuperação de senha para email não registrado: {email}")
-        flash('Email não registrado.', 'error')
-        return jsonify({'status': 'error', 'message': 'Email não registrado.'}), 404
-    except Exception as e:
-        db.session.rollback()
-        logger.error(f"Erro ao processar redefinição de senha para {email}: {str(e)}")
-        flash(f'Erro ao processar a solicitação: {str(e)}', 'error')
-        return jsonify({'status': 'error', 'message': f'Erro ao processar a solicitação: {str(e)}'}), 500
-
-@reset_bp.route('/verify_reset_code', methods=['GET'])
-def verify_reset_code_form():
-    email = request.args.get('email')
-    return render_template('verify_reset_code.html', email=email)
-
-@reset_bp.route('/verify_reset_code', methods=['POST'])
-def verify_reset_code():
-    email = request.form.get('email')
-    code = request.form.get('code')
-    new_password = request.form.get('new_password')
-    confirm_password = request.form.get('confirm_password')
-
-    if not all([email, code, new_password, confirm_password]):
-        logger.warning("Campos incompletos na verificação do código")
-        flash('Por favor, preencha todos os campos.', 'error')
-        return jsonify({'status': 'error', 'message': 'Por favor, preencha todos os campos.'}), 400
-
-    if new_password != confirm_password:
-        logger.warning(f"Senhas não coincidem para {email}")
-        flash('As senhas não coincidem.', 'error')
-        return jsonify({'status': 'error', 'message': 'As senhas não coincidem.'}), 400
-
-    try:
-        reset_code = ResetCode.query.filter_by(email=email, code=code).first()
-        if not reset_code:
-            logger.warning(f"Código inválido para {email}")
-            flash('Código inválido.', 'error')
-            return jsonify({'status': 'error', 'message': 'Código inválido.'}), 404
-
-        if datetime.utcnow() > reset_code.expires_at:
-            logger.warning(f"Código expirado para {email}")
-            db.session.delete(reset_code)
-            db.session.commit()
-            flash('O código expirou. Solicite um novo.', 'error')
-            return jsonify({'status': 'error', 'message': 'O código expirou. Solicite um novo.'}), 400
-
-        user = auth.get_user_by_email(email)
-        auth.update_user(user.uid, password=new_password)
-        logger.info(f"Senha atualizada no Firebase para {email}")
-
-        local_user = User.query.filter_by(email=email).first()
-        if local_user:
-            local_user.password = generate_password_hash(new_password)
-            db.session.commit()
-            logger.info(f"Senha atualizada no banco local para {email}")
-
-        db.session.delete(reset_code)
-        db.session.commit()
-
-        flash('Senha redefinida com sucesso! Faça login com sua nova senha.', 'success')
-        return jsonify({
-            'status': 'success',
-            'message': 'Senha redefinida com sucesso! Faça login com sua nova senha.'
-        })
-    except auth.UserNotFoundError:
-        logger.warning(f"Usuário não encontrado no Firebase durante verificação: {email}")
-        flash('Email não registrado.', 'error')
-        return jsonify({'status': 'error', 'message': 'Email não registrado.'}), 404
-    except Exception as e:
-        db.session.rollback()
-        logger.error(f"Erro ao verificar código para {email}: {str(e)}")
-        flash(f'Erro ao processar a solicitação: {str(e)}', 'error')
-        return jsonify({'status': 'error', 'message': f'Erro ao processar a solicitação: {str(e)}'}), 500
-
-
-app.py
+meu app.py 
 
 from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -1029,6 +844,5 @@ if __name__ == '__main__':
     app.run(debug=True)
 
 
+mande completo os arquivos que tenho que criar e pa ou substituir
 
-
-no caso o firebase so é utilizado para logar usando google, para logar cadastrando manualmente, ele chega codigo, entao esse nao esta necessariamente no firebase

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Configurações</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/configuracoes.css') }}">
+</head>
+<body>
+    <div class="container-config">
+        <h2>Configurações da Conta</h2>
+        <form id="update-username-form" class="card">
+            <label for="username">Nome de usuário</label>
+            <input type="text" id="username" name="username" value="{{ user.username }}" required>
+            <button type="submit">Salvar nome</button>
+            <span id="username-msg" class="msg"></span>
+        </form>
+        <form id="update-profile-pic-form" class="card" enctype="multipart/form-data">
+            <label for="profile-pic">Foto de perfil</label>
+            <div class="profile-pic-preview" id="profile-pic-preview">
+    {% if user.profile_pic and user.profile_pic != 'default.png' %}
+        <img id="profile-pic-preview-img" class="profile-pic-img" src="{{ url_for('static', filename='uploads/' + user.profile_pic) }}" alt="Foto de perfil" />
+    {% else %}
+        <div class="profile-pic-avatar" id="profile-pic-avatar">
+            {{ user.username[0]|upper }}
+        </div>
+    {% endif %}
+</div>
+            <input type="file" id="profile-pic" name="profile_pic" accept="image/*">
+            <button type="submit">Salvar foto</button>
+            <span id="profile-pic-msg" class="msg"></span>
+        </form>
+        <a href="{{ url_for('telainicial') }}" class="voltar-link">Voltar</a>
+    </div>
+    <script src="{{ url_for('static', filename='js/configuracoes.js') }}"></script>
+</body>
+</html>

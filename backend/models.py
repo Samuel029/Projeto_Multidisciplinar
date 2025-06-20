@@ -12,6 +12,7 @@ class User(db.Model):
     posts = db.relationship('Post', backref='author', lazy=True)
     comments = db.relationship('Comment', backref='author', lazy=True)
     likes = db.relationship('Like', backref='user', lazy=True)
+    profile_pic = db.Column(db.String(120), default='default.png')
 
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
