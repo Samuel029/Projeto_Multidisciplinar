@@ -1,0 +1,68 @@
+[
+    {
+        "title": "Banco de Dados Relacionais",
+        "category": "Banco de Dados",
+        "author": "Casa do Código",
+        "description": "Guia completo sobre bancos de dados relacionais, cobrindo SQL, modelagem e administração.",
+        "tags": ["SQL", "Modelagem", "Banco de Dados"],
+        "views": "15K",
+        "downloads": "8K",
+        "thumbnail": "https://via.placeholder.com/300x180?text=Banco+de+Dados",
+        "file_path": "/pdfs/banco-de-dados-relacionais.pdf"
+    },
+    {
+        "title": "Fundamentos de Estudo",
+        "category": "Estudo",
+        "author": "Editora Tech",
+        "description": "Apostila abrangendo processadores, memória, compiladores e conceitos fundamentais de Estudo.",
+        "tags": ["Processadores", "Compiladores", "Memória"],
+        "views": "20K",
+        "downloads": "12K",
+        "thumbnail": "https://via.placeholder.com/300x180?text=Ciência+da+Computação",
+        "file_path": "/pdfs/fundamentos-ciencia-computacao.pdf"
+    },
+    {
+        "title": "Python para Iniciantes",
+        "category": "Linguagens de Programação",
+        "author": "Casa do Código",
+        "description": "Apostila introdutória sobre Python, cobrindo sintaxe básica e estruturas de dados.",
+        "tags": ["Python", "Programação", "Iniciante"],
+        "views": "25K",
+        "downloads": "18K",
+        "thumbnail": "https://via.placeholder.com/300x180?text=Python",
+        "file_path": "/pdfs/python-para-iniciantes.pdf"
+    },
+    {
+        "title": "Fundamentos de Redes de Computadores",
+        "category": "Redes",
+        "author": "Editora Network",
+        "description": "Apostila sobre conceitos básicos de redes, incluindo protocolos e configurações.",
+        "tags": ["Redes", "Protocolos", "TCP/IP"],
+        "views": "10K",
+        "downloads": "6K",
+        "thumbnail": "https://via.placeholder.com/300x180?text=Redes",
+        "file_path": "/pdfs/fundamentos-redes-computadores.pdf"
+    },
+    {
+        "title": "Introdução às Redes Neurais",
+        "category": "Redes Neurais",
+        "author": "AI Academy",
+        "description": "Apostila introdutória sobre redes neurais e aprendizado de máquina.",
+        "tags": ["Redes Neurais", "IA", "Machine Learning"],
+        "views": "12K",
+        "downloads": "7K",
+        "thumbnail": "https://via.placeholder.com/300x180?text=Redes+Neurais",
+        "file_path": "/pdfs/introducao-redes-neurais.pdf"
+    },
+    {
+        "title": "Java intermediário",
+        "category": "Linguagens de Programação",
+        "author": "Casa do Código",
+        "description": "Apostila sobre programação em Java, cobrindo tópicos intermediários como coleções e threads.",
+        "tags": ["Java", "Programação", "Intermediário"],
+        "views": "18K",
+        "downloads": "10K",
+        "thumbnail": "https://via.placeholder.com/300x180?text=Java",
+        "file_path": "/pdfs/java-intermediario.pdf"
+    }
+]

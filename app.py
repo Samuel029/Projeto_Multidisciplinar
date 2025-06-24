@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
+from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify, send_from_directory
 from werkzeug.security import generate_password_hash, check_password_hash
 from backend.extensions import db
 from backend.models import User, Post, Comment, Like
@@ -19,52 +19,16 @@ logger = logging.getLogger(__name__)
 app = Flask(__name__)
 app.config.from_object('backend.config.Config')
 
+# Configurar diretórios para PDFs e JSON
+PDFS_FOLDER = os.path.join(app.root_path, 'pdfs')
+DATA_FOLDER = os.path.join(app.root_path, 'data')
+app.config['PDFS_FOLDER'] = PDFS_FOLDER
+app.config['DATA_FOLDER'] = DATA_FOLDER
+
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-@app.route('/update_username', methods=['POST'])
-def update_username():
-    if 'user_id' not in session:
-        return jsonify({'status': 'error', 'message': 'Faça login para alterar o nome.'}), 403
-    data = request.get_json()
-    new_username = data.get('username', '').strip()
-    if not new_username:
-        return jsonify({'status': 'error', 'message': 'Nome de usuário não pode ser vazio.'}), 400
-    if User.query.filter_by(username=new_username).first():
-        return jsonify({'status': 'error', 'message': 'Nome de usuário já está em uso.'}), 409
-    user = db.session.get(User, session['user_id'])
-    if not user:
-        return jsonify({'status': 'error', 'message': 'Usuário não encontrado.'}), 404
-    user.username = new_username
-    db.session.commit()
-    session['username'] = new_username
-    return jsonify({'status': 'success', 'message': 'Nome de usuário atualizado com sucesso.'})
-
-@app.route('/update_profile_pic', methods=['POST'])
-def update_profile_pic():
-    if 'user_id' not in session:
-        return jsonify({'status': 'error', 'message': 'Faça login para alterar a foto.'}), 403
-    if 'profile_pic' not in request.files:
-        return jsonify({'status': 'error', 'message': 'Nenhum arquivo enviado.'}), 400
-    file = request.files['profile_pic']
-    if file.filename == '':
-        return jsonify({'status': 'error', 'message': 'Nenhum arquivo selecionado.'}), 400
-    if not allowed_file(file.filename):
-        return jsonify({'status': 'error', 'message': 'Tipo de arquivo não suportado.'}), 400
-    filename = f"user_{session['user_id']}_{secure_filename(file.filename)}"
-    upload_folder = os.path.join(app.root_path, 'static', 'uploads')
-    os.makedirs(upload_folder, exist_ok=True)
-    file_path = os.path.join(upload_folder, filename)
-    file.save(file_path)
-    user = db.session.get(User, session['user_id'])
-    if not user:
-        return jsonify({'status': 'error', 'message': 'Usuário não encontrado.'}), 404
-    user.profile_pic = filename
-    db.session.commit()
-    img_url = url_for('static', filename='uploads/' + filename)
-    return jsonify({'status': 'success', 'message': 'Foto de perfil atualizada!', 'new_url': img_url})
 
 # Configuração do Flask-Mail para Brevo SMTP
 app.config['MAIL_SERVER'] = 'smtp-relay.brevo.com'
@@ -82,15 +46,16 @@ migrate = Migrate(app, db)
 # Registrar o blueprint de recuperação de senha
 app.register_blueprint(reset_bp)
 
-# Criar pasta instance se não existir
+# Criar pastas instance, pdfs e data se não existirem
 instance_dir = app.config['INSTANCE_DIR']
-if not os.path.exists(instance_dir):
-    try:
-        os.makedirs(instance_dir)
-        logger.info(f"Pasta instance criada em: {instance_dir}")
-    except Exception as e:
-        logger.error(f"Erro ao criar pasta instance: {str(e)}")
-        raise
+for directory in [instance_dir, PDFS_FOLDER, DATA_FOLDER]:
+    if not os.path.exists(directory):
+        try:
+            os.makedirs(directory)
+            logger.info(f"Pasta criada em: {directory}")
+        except Exception as e:
+            logger.error(f"Erro ao criar pasta {directory}: {str(e)}")
+            raise
 
 # Log do caminho do banco de dados
 logger.info(f"SQLALCHEMY_DATABASE_URI: {app.config['SQLALCHEMY_DATABASE_URI']}")
@@ -303,6 +268,22 @@ def pdfs():
     
     return render_template('pdfeapostilas.html', user=user)
 
+@app.route('/data/pdfs.json')
+def serve_pdfs_json():
+    try:
+        return send_from_directory(app.config['DATA_FOLDER'], 'pdfs.json')
+    except Exception as e:
+        logger.error(f"Erro ao servir pdfs.json: {str(e)}")
+        return jsonify({'status': 'error', 'message': 'Erro ao carregar arquivo de PDFs.'}), 500
+
+@app.route('/pdfs/<path:filename>')
+def serve_pdf(filename):
+    try:
+        return send_from_directory(app.config['PDFS_FOLDER'], filename)
+    except Exception as e:
+        logger.error(f"Erro ao servir PDF {filename}: {str(e)}")
+        return jsonify({'status': 'error', 'message': 'Erro ao carregar o PDF.'}), 404
+
 @app.route('/codigo')
 def codigo():
     user_id = session.get('user_id')
@@ -372,6 +353,48 @@ def configuracoes():
         return redirect(url_for('registroelogin'))
     
     return render_template('configuracoes.html', user=user)
+
+@app.route('/update_username', methods=['POST'])
+def update_username():
+    if 'user_id' not in session:
+        return jsonify({'status': 'error', 'message': 'Faça login para alterar o nome.'}), 403
+    data = request.get_json()
+    new_username = data.get('username', '').strip()
+    if not new_username:
+        return jsonify({'status': 'error', 'message': 'Nome de usuário não pode ser vazio.'}), 400
+    if User.query.filter_by(username=new_username).first():
+        return jsonify({'status': 'error', 'message': 'Nome de usuário já está em uso.'}), 409
+    user = db.session.get(User, session['user_id'])
+    if not user:
+        return jsonify({'status': 'error', 'message': 'Usuário não encontrado.'}), 404
+    user.username = new_username
+    db.session.commit()
+    session['username'] = new_username
+    return jsonify({'status': 'success', 'message': 'Nome de usuário atualizado com sucesso.'})
+
+@app.route('/update_profile_pic', methods=['POST'])
+def update_profile_pic():
+    if 'user_id' not in session:
+        return jsonify({'status': 'error', 'message': 'Faça login para alterar a foto.'}), 403
+    if 'profile_pic' not in request.files:
+        return jsonify({'status': 'error', 'message': 'Nenhum arquivo enviado.'}), 400
+    file = request.files['profile_pic']
+    if file.filename == '':
+        return jsonify({'status': 'error', 'message': 'Nenhum arquivo selecionado.'}), 400
+    if not allowed_file(file.filename):
+        return jsonify({'status': 'error', 'message': 'Tipo de arquivo não suportado.'}), 400
+    filename = f"user_{session['user_id']}_{secure_filename(file.filename)}"
+    upload_folder = os.path.join(app.root_path, 'static', 'uploads')
+    os.makedirs(upload_folder, exist_ok=True)
+    file_path = os.path.join(upload_folder, filename)
+    file.save(file_path)
+    user = db.session.get(User, session['user_id'])
+    if not user:
+        return jsonify({'status': 'error', 'message': 'Usuário não encontrado.'}), 404
+    user.profile_pic = filename
+    db.session.commit()
+    img_url = url_for('static', filename='uploads/' + filename)
+    return jsonify({'status': 'success', 'message': 'Foto de perfil atualizada!', 'new_url': img_url})
 
 @app.route('/search', methods=['GET'])
 def search():
