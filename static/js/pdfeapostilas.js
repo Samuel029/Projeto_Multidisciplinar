@@ -7,23 +7,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const pdfGrid = document.querySelector('#pdf-grid');
     const sideMenu = document.getElementById('offcanvasMenu');
 
-    initializeComponents();
     setupSearchBar();
     setupCategoryFilter();
     setupViewToggle();
-    setupThemeSwitch();
     setupDrawer();
     loadPdfs();
-
-    function initializeComponents() {
-        if (localStorage.getItem('theme') === 'dark') {
-            document.body.classList.add('dark-theme');
-            const themeSwitch = document.querySelector('.theme-switch');
-            if (themeSwitch) {
-                themeSwitch.innerHTML = '<i class="fas fa-sun"></i>';
-            }
-        }
-    }
 
     async function loadPdfs() {
         try {
@@ -223,26 +211,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    function setupThemeSwitch() {
-        const themeSwitch = document.createElement('div');
-        themeSwitch.classList.add('theme-switch');
-        themeSwitch.innerHTML = '<i class="fas fa-moon"></i>';
-        document.body.appendChild(themeSwitch);
-
-        if (localStorage.getItem('theme') === 'dark') {
-            document.body.classList.add('dark-theme');
-            themeSwitch.innerHTML = '<i class="fas fa-sun"></i>';
-        }
-
-        themeSwitch.addEventListener('click', function() {
-            document.body.classList.toggle('dark-theme');
-            const isDark = document.body.classList.contains('dark-theme');
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
-            themeSwitch.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
-            showNotification(isDark ? 'Tema escuro ativado' : 'Tema claro ativado', 'success');
-        });
-    }
-
     function setupDrawer() {
         if (!sideMenu) return;
 
@@ -317,5 +285,4 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }, 4000);
     }
-    
 });
