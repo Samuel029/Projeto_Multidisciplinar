@@ -11,6 +11,8 @@ from backend.reset_password import reset_bp
 import logging
 from flask_mail import Mail
 from werkzeug.utils import secure_filename
+import unicodedata
+import re
 
 # Configurar logging
 logging.basicConfig(level=logging.DEBUG)
@@ -87,6 +89,25 @@ try:
 except Exception as e:
     logger.error(f"Erro ao inicializar Firebase: {str(e)}")
     raise
+
+def normalize_filename(filename):
+    """Normaliza o nome do arquivo, removendo acentos e convertendo para minúsculas."""
+    # Remove acentos e caracteres especiais
+    normalized = unicodedata.normalize('NFKD', filename).encode('ASCII', 'ignore').decode('ASCII')
+    # Converte para minúsculas
+    return normalized.lower()
+
+def find_file_case_insensitive(directory, target_filename):
+    """Busca um arquivo no diretório de forma case-insensitive."""
+    target_normalized = normalize_filename(target_filename)
+    try:
+        for filename in os.listdir(directory):
+            if normalize_filename(filename) == target_normalized:
+                return filename
+        return None
+    except Exception as e:
+        logger.error(f"Erro ao listar arquivos em {directory}: {str(e)}")
+        return None
 
 @app.route('/')
 def index():
@@ -279,7 +300,21 @@ def serve_pdfs_json():
 @app.route('/pdfs/<path:filename>')
 def serve_pdf(filename):
     try:
-        return send_from_directory(app.config['PDFS_FOLDER'], filename)
+        # Verifica se o arquivo existe diretamente
+        file_path = os.path.join(app.config['PDFS_FOLDER'], filename)
+        if os.path.exists(file_path):
+            logger.info(f"Servindo arquivo: {file_path}")
+            return send_from_directory(app.config['PDFS_FOLDER'], filename)
+        
+        # Busca case-insensitive
+        actual_filename = find_file_case_insensitive(app.config['PDFS_FOLDER'], filename)
+        if actual_filename:
+            logger.info(f"Arquivo encontrado (case-insensitive): {actual_filename}")
+            return send_from_directory(app.config['PDFS_FOLDER'], actual_filename)
+        
+        # Log de erro se o arquivo não for encontrado
+        logger.error(f"Arquivo não encontrado: {filename} em {app.config['PDFS_FOLDER']}")
+        return jsonify({'status': 'error', 'message': f'PDF {filename} não encontrado.'}), 404
     except Exception as e:
         logger.error(f"Erro ao servir PDF {filename}: {str(e)}")
         return jsonify({'status': 'error', 'message': 'Erro ao carregar o PDF.'}), 404
@@ -808,8 +843,8 @@ with app.app_context():
     try:
         db_path = os.path.join(instance_dir, 'app.db')
         if not os.path.exists(instance_dir):
-            logger.error(f"Diretório instance não encontrado: {instance_dir}")
-            raise FileNotFoundError(f"Diretório instance não encontrado: {instance_dir}")
+            logger.error(f"Diretório instance não encontrada: {instance_dir}")
+            raise FileNotFoundError(f"Diretório instance não encontrada: {instance_dir}")
         
         with open(db_path, 'a'):
             pass

@@ -1,68 +1,1517 @@
 [
     {
-        "title": "Banco de Dados Relacionais",
-        "category": "Banco de Dados",
-        "author": "Casa do Código",
-        "description": "Guia completo sobre bancos de dados relacionais, cobrindo SQL, modelagem e administração.",
-        "tags": ["SQL", "Modelagem", "Banco de Dados"],
-        "views": "15K",
-        "downloads": "8K",
-        "thumbnail": "https://via.placeholder.com/300x180?text=Banco+de+Dados",
-        "file_path": "/pdfs/banco-de-dados-relacionais.pdf"
-    },
-    {
-        "title": "Fundamentos de Estudo",
-        "category": "Estudo",
-        "author": "Editora Tech",
-        "description": "Apostila abrangendo processadores, memória, compiladores e conceitos fundamentais de Estudo.",
-        "tags": ["Processadores", "Compiladores", "Memória"],
-        "views": "20K",
-        "downloads": "12K",
-        "thumbnail": "https://via.placeholder.com/300x180?text=Ciência+da+Computação",
-        "file_path": "/pdfs/fundamentos-ciencia-computacao.pdf"
-    },
-    {
-        "title": "Python para Iniciantes",
+        "title": "A Byte Of Python Pt Br",
         "category": "Linguagens de Programação",
-        "author": "Casa do Código",
-        "description": "Apostila introdutória sobre Python, cobrindo sintaxe básica e estruturas de dados.",
-        "tags": ["Python", "Programação", "Iniciante"],
-        "views": "25K",
-        "downloads": "18K",
-        "thumbnail": "https://via.placeholder.com/300x180?text=Python",
-        "file_path": "/pdfs/python-para-iniciantes.pdf"
+        "author": "Swaroop C. H.",
+        "description": "Introdução à linguagem Python para iniciantes.",
+        "tags": [
+            "Python",
+            "Programação",
+            "Iniciante"
+        ],
+        "views": "15K",
+        "downloads": "14K",
+        "thumbnail": "/static/thumbnails/a_byte_of_python_pt_br.png",
+        "file_path": "/pdfs/A Byte of Python Pt-Br.pdf"
     },
     {
-        "title": "Fundamentos de Redes de Computadores",
+        "title": "Administração De Redes",
         "category": "Redes",
-        "author": "Editora Network",
-        "description": "Apostila sobre conceitos básicos de redes, incluindo protocolos e configurações.",
-        "tags": ["Redes", "Protocolos", "TCP/IP"],
+        "author": "Autor Desconhecido",
+        "description": "Fundamentos de administração de redes de computadores.",
+        "tags": [
+            "Redes",
+            "Administração",
+            "Infraestrutura"
+        ],
+        "views": "23K",
+        "downloads": "5K",
+        "thumbnail": "/static/thumbnails/administracao_de_redes.png",
+        "file_path": "/pdfs/Administração de redes.pdf"
+    },
+    {
+        "title": "Apostila Básico Python",
+        "category": "Linguagens de Programação",
+        "author": "Guido van Rossum, Fred L. Drake, Jr., editor, Tradução: Python Brasil",
+        "description": "Conceitos básicos da linguagem Python.",
+        "tags": [
+            "Python",
+            "Básico",
+            "Programação"
+        ],
+        "views": "22K",
+        "downloads": "12K",
+        "thumbnail": "/static/thumbnails/apostila_basico_python.png",
+        "file_path": "/pdfs/Apostila Básico Python.pdf"
+    },
+    {
+        "title": "Apostila Completa Para Iniciantes Em C#",
+        "category": "Linguagens de Programação",
+        "author": "Administrador",
+        "description": "Guia completo para iniciantes na linguagem C#.",
+        "tags": [
+            "C#",
+            ".NET",
+            "Programação"
+        ],
+        "views": "27K",
+        "downloads": "8K",
+        "thumbnail": "/static/thumbnails/apostila_completa_para_iniciantes_em_c.png",
+        "file_path": "/pdfs/Apostila completa para iniciantes em C#.pdf"
+    },
+    {
+        "title": "Apostila De Html 1",
+        "category": "Desenvolvimento Web",
+        "author": "Autor Desconhecido",
+        "description": "Introdução à linguagem HTML para desenvolvimento web.",
+        "tags": [
+            "HTML",
+            "Web",
+            "Front-end"
+        ],
+        "views": "28K",
+        "downloads": "15K",
+        "thumbnail": "/static/thumbnails/apostila_de_html_1.png",
+        "file_path": "/pdfs/Apostila de HTML-1.pdf"
+    },
+    {
+        "title": "Apostila Html E Css",
+        "category": "Desenvolvimento Web",
+        "author": "unesp",
+        "description": "Desenvolvimento web com HTML e CSS.",
+        "tags": [
+            "HTML",
+            "CSS",
+            "Web Design"
+        ],
+        "views": "14K",
+        "downloads": "8K",
+        "thumbnail": "/static/thumbnails/apostila_html_e_css.png",
+        "file_path": "/pdfs/Apostila-HTML-e-CSS.pdf"
+    },
+    {
+        "title": "Apostila Programacao Web Html Css",
+        "category": "Desenvolvimento Web",
+        "author": "Prof. Msc. Regilan Meira Silva",
+        "description": "Programação web com HTML e CSS.",
+        "tags": [
+            "HTML",
+            "CSS",
+            "Web Development"
+        ],
+        "views": "15K",
+        "downloads": "15K",
+        "thumbnail": "/static/thumbnails/apostila_programacao_web_html_css.png",
+        "file_path": "/pdfs/Apostila-Programacao-WEB_HTML_CSS.pdf"
+    },
+    {
+        "title": "Aprenda Python Basico Rapido Felipe Galvao",
+        "category": "Linguagens de Programação",
+        "author": "Felipe Galvão",
+        "description": "Aprendizado rápido de Python para iniciantes.",
+        "tags": [
+            "Python",
+            "Básico",
+            "Aprendizado Rápido"
+        ],
+        "views": "25K",
+        "downloads": "11K",
+        "thumbnail": "/static/thumbnails/aprenda_python_basico_rapido_felipe_galvao_1_1.png",
+        "file_path": "/pdfs/Aprenda Python Basico - Rapido - Felipe Galvao-1-1.pdf"
+    },
+    {
+        "title": "Aprendendo Python",
+        "category": "Linguagens de Programação",
+        "author": "By MARK LUTZ, DAVID ASCHER",
+        "description": "Guia completo para aprender Python.",
+        "tags": [
+            "Python",
+            "Programação",
+            "OOP"
+        ],
+        "views": "11K",
+        "downloads": "13K",
+        "thumbnail": "/static/thumbnails/aprendendo_python.png",
+        "file_path": "/pdfs/Aprendendo Python.pdf"
+    },
+    {
+        "title": "Arq. De Computadores - Memória",
+        "category": "Engenharia de Software",
+        "author": "Autor Desconhecido",
+        "description": "Arquitetura de computadores e organização de memória.",
+        "tags": [
+            "Arquitetura",
+            "Hardware",
+            "Memória"
+        ],
         "views": "10K",
         "downloads": "6K",
-        "thumbnail": "https://via.placeholder.com/300x180?text=Redes",
-        "file_path": "/pdfs/fundamentos-redes-computadores.pdf"
+        "thumbnail": "/static/thumbnails/arq_de_computadores_memoria.png",
+        "file_path": "/pdfs/Arq. de Computadores - Memória.pdf"
     },
     {
-        "title": "Introdução às Redes Neurais",
-        "category": "Redes Neurais",
-        "author": "AI Academy",
-        "description": "Apostila introdutória sobre redes neurais e aprendizado de máquina.",
-        "tags": ["Redes Neurais", "IA", "Machine Learning"],
-        "views": "12K",
-        "downloads": "7K",
-        "thumbnail": "https://via.placeholder.com/300x180?text=Redes+Neurais",
-        "file_path": "/pdfs/introducao-redes-neurais.pdf"
-    },
-    {
-        "title": "Java intermediário",
+        "title": "Aula 05 - Escrita Python",
         "category": "Linguagens de Programação",
-        "author": "Casa do Código",
-        "description": "Apostila sobre programação em Java, cobrindo tópicos intermediários como coleções e threads.",
-        "tags": ["Java", "Programação", "Intermediário"],
+        "author": "Eliezio Soares de Sousa Neto",
+        "description": "Aula sobre escrita de código em Python.",
+        "tags": [
+            "Python",
+            "Programação",
+            "Aula"
+        ],
+        "views": "22K",
+        "downloads": "12K",
+        "thumbnail": "/static/thumbnails/aula_05_escrita_python.png",
+        "file_path": "/pdfs/Aula 05 - Escrita Python.pdf"
+    },
+    {
+        "title": "Aula 06 - Variaveis",
+        "category": "Linguagens de Programação",
+        "author": "Eliezio Soares de Sousa Neto",
+        "description": "Aula sobre variáveis em programação.",
+        "tags": [
+            "Programação",
+            "Variáveis",
+            "Fundamentos"
+        ],
+        "views": "29K",
+        "downloads": "17K",
+        "thumbnail": "/static/thumbnails/aula_06_variaveis.png",
+        "file_path": "/pdfs/Aula 06 - Variaveis.pdf"
+    },
+    {
+        "title": "Aula 07 - Entrada De Dados",
+        "category": "Linguagens de Programação",
+        "author": "Eliezio Soares de Sousa Neto",
+        "description": "Aula sobre entrada de dados em programação.",
+        "tags": [
+            "Programação",
+            "Input",
+            "Fundamentos"
+        ],
+        "views": "26K",
+        "downloads": "17K",
+        "thumbnail": "/static/thumbnails/aula_07_entrada_de_dados.png",
+        "file_path": "/pdfs/Aula 07 - Entrada de Dados.pdf"
+    },
+    {
+        "title": "Banco De Dados - Arquitetura Sgbd",
+        "category": "Banco de Dados",
+        "author": "Autor Desconhecido",
+        "description": "Arquitetura de Sistemas de Gerenciamento de Banco de Dados.",
+        "tags": [
+            "SGBD",
+            "Arquitetura",
+            "Banco de Dados"
+        ],
+        "views": "24K",
+        "downloads": "17K",
+        "thumbnail": "/static/thumbnails/banco_de_dados_arquitetura_sgbd.png",
+        "file_path": "/pdfs/Banco de Dados - Arquitetura SGBD.pdf"
+    },
+    {
+        "title": "Banco De Dados - Abordagem Relacional",
+        "category": "Banco de Dados",
+        "author": "Rebeca Barros",
+        "description": "Modelo relacional de bancos de dados.",
+        "tags": [
+            "SQL",
+            "Relacional",
+            "Modelagem"
+        ],
+        "views": "17K",
+        "downloads": "7K",
+        "thumbnail": "/static/thumbnails/banco_de_dados_abordagem_relacional.png",
+        "file_path": "/pdfs/Banco de dados - Abordagem relacional.pdf"
+    },
+    {
+        "title": "Banco De Dados - Construção Do Modelo Er",
+        "category": "Banco de Dados",
+        "author": "Autor Desconhecido",
+        "description": "Construção de modelos Entidade-Relacionamento.",
+        "tags": [
+            "Modelo ER",
+            "Diagramas",
+            "Banco de Dados"
+        ],
+        "views": "22K",
+        "downloads": "18K",
+        "thumbnail": "/static/thumbnails/banco_de_dados_construcao_do_modelo_er.png",
+        "file_path": "/pdfs/Banco de dados - Construção do modelo ER.pdf"
+    },
+    {
+        "title": "Banco De Dados - Normalização De Dados",
+        "category": "Banco de Dados",
+        "author": "Rebeca Barros",
+        "description": "Técnicas de normalização de bancos de dados.",
+        "tags": [
+            "Normalização",
+            "SQL",
+            "Banco de Dados"
+        ],
+        "views": "12K",
+        "downloads": "18K",
+        "thumbnail": "/static/thumbnails/banco_de_dados_normalizacao_de_dados.png",
+        "file_path": "/pdfs/Banco de dados - Normalização de dados.pdf"
+    },
+    {
+        "title": "Banco De Dados - Projeto De Banco De Dados",
+        "category": "Banco de Dados",
+        "author": "Autor Desconhecido",
+        "description": "Metodologias para projeto de bancos de dados.",
+        "tags": [
+            "Projeto",
+            "Modelagem",
+            "Banco de Dados"
+        ],
+        "views": "15K",
+        "downloads": "5K",
+        "thumbnail": "/static/thumbnails/banco_de_dados_projeto_de_banco_de_dados.png",
+        "file_path": "/pdfs/Banco de dados - Projeto de banco de dados.pdf"
+    },
+    {
+        "title": "Banco De Dados - Transformação Entre Modelos",
+        "category": "Banco de Dados",
+        "author": "Rebeca Barros",
+        "description": "Transformação entre modelos de bancos de dados.",
+        "tags": [
+            "Modelagem",
+            "Transformação",
+            "Banco de Dados"
+        ],
+        "views": "17K",
+        "downloads": "14K",
+        "thumbnail": "/static/thumbnails/banco_de_dados_transformacao_entre_modelos.png",
+        "file_path": "/pdfs/Banco de dados - Transformação entre modelos.pdf"
+    },
+    {
+        "title": "Beginning Programming With Python",
+        "category": "Linguagens de Programação",
+        "author": "John Paul Mueller",
+        "description": "Introdução à programação com Python.",
+        "tags": [
+            "Python",
+            "Iniciante",
+            "Programação"
+        ],
+        "views": "10K",
+        "downloads": "9K",
+        "thumbnail": "/static/thumbnails/beginning_programming_with_python.png",
+        "file_path": "/pdfs/Beginning Programming with Python.pdf"
+    },
+    {
+        "title": "Black Hat Python",
+        "category": "Segurança",
+        "author": "Justin Seitz",
+        "description": "Python para desenvolvimento de ferramentas de segurança.",
+        "tags": [
+            "Python",
+            "Hacking",
+            "Segurança"
+        ],
+        "views": "13K",
+        "downloads": "17K",
+        "thumbnail": "/static/thumbnails/black_hat_python.png",
+        "file_path": "/pdfs/Black Hat Python.pdf"
+    },
+    {
+        "title": "C E Xml",
+        "category": "Linguagens de Programação",
+        "author": "anonymous",
+        "description": "Integração entre C e XML.",
+        "tags": [
+            "C",
+            "XML",
+            "Integração"
+        ],
+        "views": "28K",
+        "downloads": "13K",
+        "thumbnail": "/static/thumbnails/c_e_xml.png",
+        "file_path": "/pdfs/C e XML.pdf"
+    },
+    {
+        "title": "Ciência Da Computação E Tecnologia Digitais",
+        "category": "Estudo",
+        "author": "Ernane Rosa Martins (Org)",
+        "description": "Fundamentos da ciência da computação.",
+        "tags": [
+            "Ciência",
+            "Fundamentos",
+            "Tecnologia"
+        ],
+        "views": "11K",
+        "downloads": "19K",
+        "thumbnail": "/static/thumbnails/ciencia_da_computacao_e_tecnologia_digitais_by_ernane_rosa_martins_org_z_lib_org.png",
+        "file_path": "/pdfs/Ciência da Computação e Tecnologia Digitais by Ernane Rosa Martins (org) (z-lib.org).pdf"
+    },
+    {
+        "title": "Clr Via C#, 4Th Edition(Inglês)",
+        "category": "Linguagens de Programação",
+        "author": "Jeffrey Richter",
+        "description": "Guia avançado de C# e CLR.",
+        "tags": [
+            "C#",
+            ".NET",
+            "CLR"
+        ],
+        "views": "24K",
+        "downloads": "16K",
+        "thumbnail": "/static/thumbnails/clr_via_c_4th_edition_ingles.png",
+        "file_path": "/pdfs/CLR via C#, 4th Edition(Inglês).pdf"
+    },
+    {
+        "title": "Clr Via C# Prepress 4Th Edition(Inglês)",
+        "category": "Linguagens de Programação",
+        "author": "Autor Desconhecido",
+        "description": "Versão pré-impressão do guia CLR via C#.",
+        "tags": [
+            "C#",
+            ".NET",
+            "CLR"
+        ],
         "views": "18K",
+        "downloads": "7K",
+        "thumbnail": "/static/thumbnails/clr_via_c_prepress_4th_edition_ingles.png",
+        "file_path": "/pdfs/clr_via_c#_prepress_4th_edition(inglês).pdf"
+    },
+    {
+        "title": "Codando Games Em Python",
+        "category": "Linguagens de Programação",
+        "author": "Autor Desconhecido",
+        "description": "Desenvolvimento de jogos com Python.",
+        "tags": [
+            "Python",
+            "Games",
+            "Desenvolvimento"
+        ],
+        "views": "11K",
+        "downloads": "12K",
+        "thumbnail": "/static/thumbnails/codando_games_em_python.png",
+        "file_path": "/pdfs/Codando games em python_.pdf"
+    },
+    {
+        "title": "Conceitos De Computação Com O Essencial De C",
+        "category": "Linguagens de Programação",
+        "author": "Cay Horstmann",
+        "description": "Conceitos fundamentais de computação com C.",
+        "tags": [
+            "C",
+            "Programação",
+            "Fundamentos"
+        ],
+        "views": "15K",
+        "downloads": "7K",
+        "thumbnail": "/static/thumbnails/conceitos_de_computacao_com_o_essencial_de_c_cay_horstmann_3a_ed_boo.png",
+        "file_path": "/pdfs/Conceitos_de_Computação_com_o_Essencial_de_C___-_Cay_Horstmann_-_3a_Ed_-_Boo.pdf"
+    },
+    {
+        "title": "Conteúdo Programático - Python 1",
+        "category": "Linguagens de Programação",
+        "author": "Autor Desconhecido",
+        "description": "Ementa programática para curso de Python.",
+        "tags": [
+            "Python",
+            "Curso",
+            "Programação"
+        ],
+        "views": "16K",
+        "downloads": "13K",
+        "thumbnail": "/static/thumbnails/conteudo_programatico_python_1.png",
+        "file_path": "/pdfs/Conteúdo Programático - Python-1.pdf"
+    },
+    {
+        "title": "Curso De Segurança Em Redes Linux",
+        "category": "Segurança",
+        "author": "Autor Desconhecido",
+        "description": "Segurança em redes utilizando Linux.",
+        "tags": [
+            "Linux",
+            "Redes",
+            "Segurança"
+        ],
+        "views": "25K",
+        "downloads": "13K",
+        "thumbnail": "/static/thumbnails/curso_de_seguranca_em_redes_linux.png",
+        "file_path": "/pdfs/Curso de Segurança em Redes Linux.pdf"
+    },
+    {
+        "title": "Curso Intensivo De Python",
+        "category": "Linguagens de Programação",
+        "author": "Eric Matthes",
+        "description": "Curso acelerado de Python.",
+        "tags": [
+            "Python",
+            "Curso",
+            "Intensivo"
+        ],
+        "views": "13K",
+        "downloads": "6K",
+        "thumbnail": "/static/thumbnails/curso_intensivo_de_python.png",
+        "file_path": "/pdfs/Curso Intensivo de Python.pdf"
+    },
+    {
+        "title": "Curso Python 3",
+        "category": "Linguagens de Programação",
+        "author": "Juracy Filho, Leonardo Leitão",
+        "description": "Curso completo de Python 3.",
+        "tags": [
+            "Python",
+            "Python3",
+            "Curso"
+        ],
+        "views": "11K",
+        "downloads": "7K",
+        "thumbnail": "/static/thumbnails/curso_python_3.png",
+        "file_path": "/pdfs/Curso Python 3.pdf"
+    },
+    {
+        "title": "Curso Python",
+        "category": "Linguagens de Programação",
+        "author": "Grupy-Sanca",
+        "description": "Curso introdutório de Python.",
+        "tags": [
+            "Python",
+            "Curso",
+            "Introdução"
+        ],
+        "views": "21K",
+        "downloads": "11K",
+        "thumbnail": "/static/thumbnails/curso_python.png",
+        "file_path": "/pdfs/curso-python.pdf"
+    },
+    {
+        "title": "E Book Redes Neurais Artificiais Uma Abordagem Para Sala De Aula",
+        "category": "Redes Neurais",
+        "author": "Autor Desconhecido",
+        "description": "Introdução didática às redes neurais artificiais.",
+        "tags": [
+            "IA",
+            "Machine Learning",
+            "Redes Neurais"
+        ],
+        "views": "20K",
+        "downloads": "5K",
+        "thumbnail": "/static/thumbnails/e_book_redes_neurais_artificiais_uma_abordagem_para_sala_de_aula.png",
+        "file_path": "/pdfs/e-book-Redes-Neurais-Artificiais-uma-Abordagem-para-Sala-de-Aula.pdf"
+    },
+    {
+        "title": "Engenharia De Sistemas Para Leigos",
+        "category": "Engenharia de Software",
+        "author": "Shamieh, Cathleen",
+        "description": "Introdução à engenharia de sistemas.",
+        "tags": [
+            "Engenharia",
+            "Sistemas",
+            "Introdução"
+        ],
+        "views": "26K",
+        "downloads": "6K",
+        "thumbnail": "/static/thumbnails/engenharia_de_sistemas_para_leigos.png",
+        "file_path": "/pdfs/Engenharia de Sistemas Para Leigos.pdf"
+    },
+    {
+        "title": "Engenharia De Software 8ª Ed. - Pressman, Roger",
+        "category": "Engenharia de Software",
+        "author": "Roger Pressman",
+        "description": "Clássico sobre engenharia de software.",
+        "tags": [
+            "Engenharia",
+            "Software",
+            "Metodologias"
+        ],
+        "views": "28K",
+        "downloads": "6K",
+        "thumbnail": "/static/thumbnails/engenharia_de_software_8a_ed_pressman_roger.png",
+        "file_path": "/pdfs/Engenharia de Software 8ª Ed. - Pressman, Roger.pdf"
+    },
+    {
+        "title": "Fluent Python 2015",
+        "category": "Linguagens de Programação",
+        "author": "Luciano Ramalho",
+        "description": "Python fluente e idiomatico.",
+        "tags": [
+            "Python",
+            "Avançado",
+            "Boas Práticas"
+        ],
+        "views": "26K",
+        "downloads": "8K",
+        "thumbnail": "/static/thumbnails/fluent_python_2015_1.png",
+        "file_path": "/pdfs/fluent-python-2015--1.pdf"
+    },
+    {
+        "title": "Fundamentos Matemáticos Para A Ciência Da Computação",
+        "category": "Estudo",
+        "author": "Judith L. Gersting",
+        "description": "Matemática discreta para ciência da computação.",
+        "tags": [
+            "Matemática",
+            "Discreta",
+            "Fundamentos"
+        ],
+        "views": "18K",
+        "downloads": "6K",
+        "thumbnail": "/static/thumbnails/fundamentos_matematicos_para_a_ciencia_da_computacao_matematica_discreta_e_suas_aplicacoes_by_judith_l_gersting_z_lib_org.png",
+        "file_path": "/pdfs/Fundamentos matemáticos para a ciência da computação Matemática Discreta e Suas Aplicações by Judith L. Gersting (z-lib.org).pdf"
+    },
+    {
+        "title": "Guia De Referências Html Hostingerbr",
+        "category": "Desenvolvimento Web",
+        "author": "Autor Desconhecido",
+        "description": "Guia de referência HTML.",
+        "tags": [
+            "HTML",
+            "Referência",
+            "Web"
+        ],
+        "views": "20K",
+        "downloads": "7K",
+        "thumbnail": "/static/thumbnails/guia_de_referencias_html_hostingerbr.png",
+        "file_path": "/pdfs/Guia-de-Referências-HTML-HostingerBR.pdf"
+    },
+    {
+        "title": "Html Completo",
+        "category": "Desenvolvimento Web",
+        "author": "Autor Desconhecido",
+        "description": "Guia completo de HTML.",
+        "tags": [
+            "HTML",
+            "Completo",
+            "Web"
+        ],
+        "views": "10K",
+        "downloads": "7K",
+        "thumbnail": "/static/thumbnails/html_completo.png",
+        "file_path": "/pdfs/HTML Completo.pdf"
+    },
+    {
+        "title": "Html5 - Curso W3C",
+        "category": "Desenvolvimento Web",
+        "author": "Autor Desconhecido",
+        "description": "Curso oficial de HTML5 pelo W3C.",
+        "tags": [
+            "HTML5",
+            "W3C",
+            "Curso"
+        ],
+        "views": "26K",
+        "downloads": "4K",
+        "thumbnail": "/static/thumbnails/html5_curso_w3c.png",
+        "file_path": "/pdfs/HTML5 - Curso W3C.pdf"
+    },
+    {
+        "title": "Html5 E Css3 - Com Farinha E Pimenta",
+        "category": "Desenvolvimento Web",
+        "author": "Autor Desconhecido",
+        "description": "HTML5 e CSS3 de forma descontraída.",
+        "tags": [
+            "HTML5",
+            "CSS3",
+            "Web Design"
+        ],
+        "views": "28K",
+        "downloads": "5K",
+        "thumbnail": "/static/thumbnails/html5_e_css3_com_farinha_e_pimenta.png",
+        "file_path": "/pdfs/HTML5 e CSS3 - Com farinha e pimenta.pdf"
+    },
+    {
+        "title": "Html5 Estrutuando Um Site",
+        "category": "Desenvolvimento Web",
+        "author": "José Antonio Cunha",
+        "description": "Estruturação de sites com HTML5.",
+        "tags": [
+            "HTML5",
+            "Estrutura",
+            "Web"
+        ],
+        "views": "21K",
+        "downloads": "11K",
+        "thumbnail": "/static/thumbnails/html5_estruruando_um_site.png",
+        "file_path": "/pdfs/HTML5 Estruruando um site.pdf"
+    },
+    {
+        "title": "Html5 E Css3",
+        "category": "Desenvolvimento Web",
+        "author": "Autor Desconhecido",
+        "description": "Desenvolvimento web com HTML5 e CSS3.",
+        "tags": [
+            "HTML5",
+            "CSS3",
+            "Web"
+        ],
+        "views": "14K",
+        "downloads": "4K",
+        "thumbnail": "/static/thumbnails/html5_e_css3.png",
+        "file_path": "/pdfs/HTML5-e-CSS3.pdf"
+    },
+    {
+        "title": "Html5 Web",
+        "category": "Desenvolvimento Web",
+        "author": "Autor Desconhecido",
+        "description": "Desenvolvimento web com HTML5.",
+        "tags": [
+            "HTML5",
+            "Web",
+            "Front-end"
+        ],
+        "views": "21K",
+        "downloads": "18K",
+        "thumbnail": "/static/thumbnails/html5_web.png",
+        "file_path": "/pdfs/html5-web.pdf"
+    },
+    {
+        "title": "Html5 E Css3 Domine A Web Do Futuro",
+        "category": "Desenvolvimento Web",
+        "author": "Autor Desconhecido",
+        "description": "Domine as tecnologias web do futuro.",
+        "tags": [
+            "HTML5",
+            "CSS3",
+            "Web Design"
+        ],
+        "views": "11K",
+        "downloads": "19K",
+        "thumbnail": "/static/thumbnails/html5_e_css3_domine_a_web_do_futuro.png",
+        "file_path": "/pdfs/Html5_E_Css3_Domine_a_Web_do_Futuro.pdf"
+    },
+    {
+        "title": "Introdução A Python - Módulo A",
+        "category": "Linguagens de Programação",
+        "author": "Administrador",
+        "description": "Módulo introdutório de Python.",
+        "tags": [
+            "Python",
+            "Introdução",
+            "Módulo A"
+        ],
+        "views": "18K",
+        "downloads": "9K",
+        "thumbnail": "/static/thumbnails/introducao_a_python_modulo_a.png",
+        "file_path": "/pdfs/Introdução a Python - Módulo A.pdf"
+    },
+    {
+        "title": "Introdução A Python - Módulo B",
+        "category": "Linguagens de Programação",
+        "author": "woiski",
+        "description": "Segundo módulo do curso de Python.",
+        "tags": [
+            "Python",
+            "Intermediário",
+            "Módulo B"
+        ],
+        "views": "21K",
+        "downloads": "13K",
+        "thumbnail": "/static/thumbnails/introducao_a_python_modulo_b.png",
+        "file_path": "/pdfs/Introdução a Python - Módulo B.pdf"
+    },
+    {
+        "title": "Introdução A Python - Módulo C",
+        "category": "Linguagens de Programação",
+        "author": "woiski",
+        "description": "Terceiro módulo do curso de Python.",
+        "tags": [
+            "Python",
+            "Avançado",
+            "Módulo C"
+        ],
+        "views": "24K",
+        "downloads": "4K",
+        "thumbnail": "/static/thumbnails/introducao_a_python_modulo_c.png",
+        "file_path": "/pdfs/Introdução a Python - Módulo C.pdf"
+    },
+    {
+        "title": "Introdução À Linguagem De Programação Python",
+        "category": "Linguagens de Programação",
+        "author": "Autor Desconhecido",
+        "description": "Introdução à linguagem Python.",
+        "tags": [
+            "Python",
+            "Introdução",
+            "Programação"
+        ],
+        "views": "29K",
         "downloads": "10K",
-        "thumbnail": "https://via.placeholder.com/300x180?text=Java",
-        "file_path": "/pdfs/java-intermediario.pdf"
+        "thumbnail": "/static/thumbnails/introducao_a_linguagem_de_programacao_python.png",
+        "file_path": "/pdfs/Introdução à linguagem de programação Python.pdf"
+    },
+    {
+        "title": "Introdução À Programação Com Python",
+        "category": "Linguagens de Programação",
+        "author": "lucas",
+        "description": "Introdução à programação usando Python.",
+        "tags": [
+            "Python",
+            "Introdução",
+            "Programação"
+        ],
+        "views": "26K",
+        "downloads": "17K",
+        "thumbnail": "/static/thumbnails/introducao_a_programacao_com_python.png",
+        "file_path": "/pdfs/Introdução à programação com Python.pdf"
+    },
+    {
+        "title": "Java - Como Programar -10ª Ed-Deitel & Deitel-2016",
+        "category": "Linguagens de Programação",
+        "author": "Deitel & Deitel",
+        "description": "Clássico sobre programação em Java.",
+        "tags": [
+            "Java",
+            "Programação",
+            "OOP"
+        ],
+        "views": "19K",
+        "downloads": "7K",
+        "thumbnail": "/static/thumbnails/java_como_programar_10a_ed_deitel_deitel_2016.png",
+        "file_path": "/pdfs/Java - Como Programar -10ª Ed--Deitel _ Deitel--2016-.pdf"
+    },
+    {
+        "title": "Javascript - Apostila",
+        "category": "Desenvolvimento Web",
+        "author": "Bete",
+        "description": "Apostila de JavaScript para desenvolvimento web.",
+        "tags": [
+            "JavaScript",
+            "Web",
+            "Front-end"
+        ],
+        "views": "22K",
+        "downloads": "11K",
+        "thumbnail": "/static/thumbnails/javascript_apostila.png",
+        "file_path": "/pdfs/JavaScript - Apostila.pdf"
+    },
+    {
+        "title": "Javascript Cheat Sheet",
+        "category": "Desenvolvimento Web",
+        "author": "Autor Desconhecido",
+        "description": "Referência rápida de JavaScript.",
+        "tags": [
+            "JavaScript",
+            "Cheat Sheet",
+            "Referência"
+        ],
+        "views": "14K",
+        "downloads": "7K",
+        "thumbnail": "/static/thumbnails/javascript_cheat_sheet.png",
+        "file_path": "/pdfs/JavaScript Cheat Sheet.pdf"
+    },
+    {
+        "title": "Javascript O Guia Definitivo",
+        "category": "Desenvolvimento Web",
+        "author": "David Flanagan",
+        "description": "Guia completo de JavaScript.",
+        "tags": [
+            "JavaScript",
+            "Completo",
+            "Referência"
+        ],
+        "views": "11K",
+        "downloads": "4K",
+        "thumbnail": "/static/thumbnails/javascript_o_guia_definitivo_v2.png",
+        "file_path": "/pdfs/JavaScript O Guia Definitivo_v2.pdf"
+    },
+    {
+        "title": "K19 Html5 Css Jquery",
+        "category": "Desenvolvimento Web",
+        "author": "Autor Desconhecido",
+        "description": "Curso de desenvolvimento web com HTML5, CSS e jQuery.",
+        "tags": [
+            "HTML5",
+            "CSS",
+            "jQuery"
+        ],
+        "views": "12K",
+        "downloads": "4K",
+        "thumbnail": "/static/thumbnails/k19_html5_css_jquery.png",
+        "file_path": "/pdfs/K19-html5-css-jquery.pdf"
+    },
+    {
+        "title": "Listas Python",
+        "category": "Linguagens de Programação",
+        "author": "Autor Desconhecido",
+        "description": "Trabalhando com listas em Python.",
+        "tags": [
+            "Python",
+            "Listas",
+            "Estruturas"
+        ],
+        "views": "25K",
+        "downloads": "7K",
+        "thumbnail": "/static/thumbnails/listas_python.png",
+        "file_path": "/pdfs/Listas-Python.pdf"
+    },
+    {
+        "title": "Minicurso Python Getmeeting",
+        "category": "Linguagens de Programação",
+        "author": "Bernardo Martins Rocha",
+        "description": "Minicurso introdutório de Python.",
+        "tags": [
+            "Python",
+            "Minicurso",
+            "Introdução"
+        ],
+        "views": "10K",
+        "downloads": "17K",
+        "thumbnail": "/static/thumbnails/minicurso_python_getmeeting.png",
+        "file_path": "/pdfs/minicurso-python-getmeeting.pdf"
+    },
+    {
+        "title": "Mysql - Consultando Múltiplas Tabelas",
+        "category": "Banco de Dados",
+        "author": "Rebeca Barros",
+        "description": "Consultas JOIN em MySQL.",
+        "tags": [
+            "MySQL",
+            "JOIN",
+            "Consultas"
+        ],
+        "views": "21K",
+        "downloads": "5K",
+        "thumbnail": "/static/thumbnails/mysql_consultando_multiplas_tabelas.png",
+        "file_path": "/pdfs/MySQL - Consultando múltiplas tabelas.pdf"
+    },
+    {
+        "title": "Mysql - Consultas",
+        "category": "Banco de Dados",
+        "author": "Rebeca Barros",
+        "description": "Realizando consultas em MySQL.",
+        "tags": [
+            "MySQL",
+            "Consultas",
+            "SQL"
+        ],
+        "views": "10K",
+        "downloads": "7K",
+        "thumbnail": "/static/thumbnails/mysql_consultas.png",
+        "file_path": "/pdfs/MySQL - Consultas.pdf"
+    },
+    {
+        "title": "Mysql - Criando O Banco De Dados",
+        "category": "Banco de Dados",
+        "author": "Rebeca Barros",
+        "description": "Criação de bancos de dados em MySQL.",
+        "tags": [
+            "MySQL",
+            "Criação",
+            "Banco de Dados"
+        ],
+        "views": "24K",
+        "downloads": "19K",
+        "thumbnail": "/static/thumbnails/mysql_criando_o_banco_de_dados.png",
+        "file_path": "/pdfs/MySQL - Criando o banco de dados.pdf"
+    },
+    {
+        "title": "Mysql - Grupos E Agrupamentos",
+        "category": "Banco de Dados",
+        "author": "Rebeca Barros",
+        "description": "Agrupamento de dados em MySQL.",
+        "tags": [
+            "MySQL",
+            "GROUP BY",
+            "Agrupamento"
+        ],
+        "views": "16K",
+        "downloads": "15K",
+        "thumbnail": "/static/thumbnails/mysql_grupos_e_agrupamentos.png",
+        "file_path": "/pdfs/MySQL - Grupos e agrupamentos.pdf"
+    },
+    {
+        "title": "Mysql - Inserir, Alterar E Excluir Dados",
+        "category": "Banco de Dados",
+        "author": "Rebeca Barros",
+        "description": "Operações CRUD em MySQL.",
+        "tags": [
+            "MySQL",
+            "CRUD",
+            "Operações"
+        ],
+        "views": "15K",
+        "downloads": "12K",
+        "thumbnail": "/static/thumbnails/mysql_inserir_alterar_e_excluir_dados.png",
+        "file_path": "/pdfs/MySQL - Inserir, alterar e excluir dados.pdf"
+    },
+    {
+        "title": "Mysql - Programas Armazenados",
+        "category": "Banco de Dados",
+        "author": "Rebeca Barros",
+        "description": "Stored procedures em MySQL.",
+        "tags": [
+            "MySQL",
+            "Stored Procedures",
+            "Programação"
+        ],
+        "views": "17K",
+        "downloads": "18K",
+        "thumbnail": "/static/thumbnails/mysql_programas_armazenados.png",
+        "file_path": "/pdfs/MySQL - Programas armazenados.pdf"
+    },
+    {
+        "title": "Mysql - Segurança Do Banco De Dados",
+        "category": "Banco de Dados",
+        "author": "Rebeca Barros",
+        "description": "Segurança em bancos de dados MySQL.",
+        "tags": [
+            "MySQL",
+            "Segurança",
+            "Privacidade"
+        ],
+        "views": "15K",
+        "downloads": "18K",
+        "thumbnail": "/static/thumbnails/mysql_seguranca_do_banco_de_dados.png",
+        "file_path": "/pdfs/MySQL - Segurança do banco de dados.pdf"
+    },
+    {
+        "title": "Mysql - Subqueries",
+        "category": "Banco de Dados",
+        "author": "Rebeca Barros",
+        "description": "Subconsultas em MySQL.",
+        "tags": [
+            "MySQL",
+            "Subconsultas",
+            "SQL"
+        ],
+        "views": "10K",
+        "downloads": "4K",
+        "thumbnail": "/static/thumbnails/mysql_subqueries.png",
+        "file_path": "/pdfs/MySQL - Subqueries.pdf"
+    },
+    {
+        "title": "Mysql - Trabalhando Com Conjuntos",
+        "category": "Banco de Dados",
+        "author": "Rebeca Barros",
+        "description": "Operações com conjuntos em MySQL.",
+        "tags": [
+            "MySQL",
+            "Conjuntos",
+            "Operações"
+        ],
+        "views": "21K",
+        "downloads": "18K",
+        "thumbnail": "/static/thumbnails/mysql_trabalhando_com_conjuntos.png",
+        "file_path": "/pdfs/MySQL - Trabalhando com conjuntos.pdf"
+    },
+    {
+        "title": "Mysql - Views",
+        "category": "Banco de Dados",
+        "author": "Rebeca Barros",
+        "description": "Criação e uso de views em MySQL.",
+        "tags": [
+            "MySQL",
+            "Views",
+            "Banco de Dados"
+        ],
+        "views": "16K",
+        "downloads": "16K",
+        "thumbnail": "/static/thumbnails/mysql_views.png",
+        "file_path": "/pdfs/MySQL - Views.pdf"
+    },
+    {
+        "title": "Nocao De Redes Neurais Artificiais",
+        "category": "Redes Neurais",
+        "author": "Autor Desconhecido",
+        "description": "Introdução às redes neurais artificiais.",
+        "tags": [
+            "Redes Neurais",
+            "IA",
+            "Introdução"
+        ],
+        "views": "16K",
+        "downloads": "6K",
+        "thumbnail": "/static/thumbnails/nocao_de_redes_neurais_artificiais.png",
+        "file_path": "/pdfs/NOCaO DE REDES NEURAIS ARTIFICIAIS.pdf"
+    },
+    {
+        "title": "Pense Em Python - Segunda Edição",
+        "category": "Linguagens de Programação",
+        "author": "Allen Downey",
+        "description": "Abordagem conceitual da linguagem Python.",
+        "tags": [
+            "Python",
+            "Programação",
+            "Conceitos"
+        ],
+        "views": "17K",
+        "downloads": "5K",
+        "thumbnail": "/static/thumbnails/pense_em_python_segunda_edicao.png",
+        "file_path": "/pdfs/Pense em Python - Segunda Edição.pdf"
+    },
+    {
+        "title": "Pense Em Python",
+        "category": "Linguagens de Programação",
+        "author": "Allen Downey",
+        "description": "Pensando como um programador Python.",
+        "tags": [
+            "Python",
+            "Programação",
+            "Lógica"
+        ],
+        "views": "28K",
+        "downloads": "9K",
+        "thumbnail": "/static/thumbnails/pense_em_python.png",
+        "file_path": "/pdfs/Pense em Python.pdf"
+    },
+    {
+        "title": "Portas Lógicas Binárias",
+        "category": "Engenharia de Software",
+        "author": "Autor Desconhecido",
+        "description": "Fundamentos de portas lógicas digitais.",
+        "tags": [
+            "Lógica",
+            "Digital",
+            "Eletrônica"
+        ],
+        "views": "11K",
+        "downloads": "8K",
+        "thumbnail": "/static/thumbnails/portas_logicas_binarias.png",
+        "file_path": "/pdfs/Portas Lógicas Binárias.pdf"
+    },
+    {
+        "title": "Programacao C Shell",
+        "category": "Linguagens de Programação",
+        "author": "Autor Desconhecido",
+        "description": "Programação em shell script.",
+        "tags": [
+            "Shell Script",
+            "Linux",
+            "Scripting"
+        ],
+        "views": "12K",
+        "downloads": "13K",
+        "thumbnail": "/static/thumbnails/programacao_c_shell.png",
+        "file_path": "/pdfs/Programacao C-Shell.pdf"
+    },
+    {
+        "title": "Programação Básica - Introdução Em Python",
+        "category": "Linguagens de Programação",
+        "author": "Autor Desconhecido",
+        "description": "Introdução à programação usando Python.",
+        "tags": [
+            "Python",
+            "Introdução",
+            "Programação"
+        ],
+        "views": "15K",
+        "downloads": "9K",
+        "thumbnail": "/static/thumbnails/programacao_basica_introducao_em_python.png",
+        "file_path": "/pdfs/Programação Básica - Introdução em Python.pdf"
+    },
+    {
+        "title": "Programação Com Java - Uma Introdução Abrangente",
+        "category": "Linguagens de Programação",
+        "author": "Herbert Schildt, Dale Skrien",
+        "description": "Introdução abrangente à programação Java.",
+        "tags": [
+            "Java",
+            "Programação",
+            "OOP"
+        ],
+        "views": "27K",
+        "downloads": "19K",
+        "thumbnail": "/static/thumbnails/programacao_com_java_uma_introducao_abrangente_herbert_schildt_e_dale_sk.png",
+        "file_path": "/pdfs/Programação_com_Java_-_Uma_introdução_abrangente_-_Herbert_Schildt_e_Dale_Sk.pdf"
+    },
+    {
+        "title": "Protocolo De Gerenciamento Snmp",
+        "category": "Redes",
+        "author": "Nilton Alves Jr.",
+        "description": "Gerenciamento de redes com SNMP.",
+        "tags": [
+            "SNMP",
+            "Redes",
+            "Gerenciamento"
+        ],
+        "views": "16K",
+        "downloads": "17K",
+        "thumbnail": "/static/thumbnails/protocolo_de_gerenciamento_snmp.png",
+        "file_path": "/pdfs/protocolo de gerenciamento SNMP.pdf"
+    },
+    {
+        "title": "Protocolos De Redes",
+        "category": "Redes",
+        "author": "Simone",
+        "description": "Protocolos de comunicação em redes.",
+        "tags": [
+            "Protocolos",
+            "Redes",
+            "Comunicação"
+        ],
+        "views": "22K",
+        "downloads": "12K",
+        "thumbnail": "/static/thumbnails/protocolos_de_redes.png",
+        "file_path": "/pdfs/Protocolos de Redes.pdf"
+    },
+    {
+        "title": "Python Do Zero À Poo",
+        "category": "Linguagens de Programação",
+        "author": "Autor Desconhecido",
+        "description": "Do básico à programação orientada a objetos em Python.",
+        "tags": [
+            "Python",
+            "POO",
+            "Programação"
+        ],
+        "views": "12K",
+        "downloads": "6K",
+        "thumbnail": "/static/thumbnails/python_do_zero_a_poo.png",
+        "file_path": "/pdfs/Python do zero à POO.pdf"
+    },
+    {
+        "title": "Python E Orientação A Objetos",
+        "category": "Linguagens de Programação",
+        "author": "Caelum",
+        "description": "Programação orientada a objetos em Python.",
+        "tags": [
+            "Python",
+            "POO",
+            "Orientação a Objetos"
+        ],
+        "views": "18K",
+        "downloads": "18K",
+        "thumbnail": "/static/thumbnails/python_e_orientacao_a_objetos_1.png",
+        "file_path": "/pdfs/Python e Orientação a Objetos(1).pdf"
+    },
+    {
+        "title": "Python E Orientação A Objetos",
+        "category": "Linguagens de Programação",
+        "author": "Caelum",
+        "description": "Abordagem de OOP em Python.",
+        "tags": [
+            "Python",
+            "POO",
+            "Programação"
+        ],
+        "views": "13K",
+        "downloads": "18K",
+        "thumbnail": "/static/thumbnails/python_e_orientacao_a_objetos.png",
+        "file_path": "/pdfs/Python e orientação a objetos.pdf"
+    },
+    {
+        "title": "Python Essential Reference - Fourth Edition",
+        "category": "Linguagens de Programação",
+        "author": "David Beazley",
+        "description": "Referência essencial da linguagem Python.",
+        "tags": [
+            "Python",
+            "Referência",
+            "Avançado"
+        ],
+        "views": "21K",
+        "downloads": "13K",
+        "thumbnail": "/static/thumbnails/python_essential_reference_fourth_edition.png",
+        "file_path": "/pdfs/Python Essential Reference - Fourth Edition.pdf"
+    },
+    {
+        "title": "Python Hacking Essentials",
+        "category": "Segurança",
+        "author": "Autor Desconhecido",
+        "description": "Essenciais de hacking com Python.",
+        "tags": [
+            "Python",
+            "Hacking",
+            "Segurança"
+        ],
+        "views": "11K",
+        "downloads": "7K",
+        "thumbnail": "/static/thumbnails/python_hacking_essentials.png",
+        "file_path": "/pdfs/Python Hacking Essentials.pdf"
+    },
+    {
+        "title": "Python Notes For Professionals",
+        "category": "Linguagens de Programação",
+        "author": "GoalKicker.com",
+        "description": "Notas profissionais sobre Python.",
+        "tags": [
+            "Python",
+            "Profissional",
+            "Dicas"
+        ],
+        "views": "14K",
+        "downloads": "17K",
+        "thumbnail": "/static/thumbnails/python_notes_for_professionals.png",
+        "file_path": "/pdfs/Python Notes For Professionals.pdf"
+    },
+    {
+        "title": "Python Para Desenvolvedores - Segunda Edição",
+        "category": "Linguagens de Programação",
+        "author": "Luiz Eduardo Borges",
+        "description": "Python voltado para desenvolvedores experientes.",
+        "tags": [
+            "Python",
+            "Desenvolvimento",
+            "Avançado"
+        ],
+        "views": "17K",
+        "downloads": "18K",
+        "thumbnail": "/static/thumbnails/python_para_desenvolvedores_segunda_edicao.png",
+        "file_path": "/pdfs/Python para Desenvolvedores - Segunda Edição.pdf"
+    },
+    {
+        "title": "Python Parallel Programming Cookbook",
+        "category": "Linguagens de Programação",
+        "author": "Autor Desconhecido",
+        "description": "Receitas de programação paralela em Python.",
+        "tags": [
+            "Python",
+            "Paralelismo",
+            "Concorrência"
+        ],
+        "views": "29K",
+        "downloads": "14K",
+        "thumbnail": "/static/thumbnails/python_parallel_programming_cookbook.png",
+        "file_path": "/pdfs/Python Parallel Programming Cookbook.pdf"
+    },
+    {
+        "title": "Python Penetration Pt Br",
+        "category": "Segurança",
+        "author": "Autor Desconhecido",
+        "description": "Técnicas de penetração com Python.",
+        "tags": [
+            "Python",
+            "PenTest",
+            "Segurança"
+        ],
+        "views": "13K",
+        "downloads": "7K",
+        "thumbnail": "/static/thumbnails/python_penetration_pt_br.png",
+        "file_path": "/pdfs/Python Penetration Pt-Br.pdf"
+    },
+    {
+        "title": "Python Programing",
+        "category": "Linguagens de Programação",
+        "author": "AZ Elite Publishing",
+        "description": "Guia de programação em Python.",
+        "tags": [
+            "Python",
+            "Programação",
+            "Guia"
+        ],
+        "views": "12K",
+        "downloads": "13K",
+        "thumbnail": "/static/thumbnails/python_programing.png",
+        "file_path": "/pdfs/Python Programing.pdf"
+    },
+    {
+        "title": "Python",
+        "category": "Linguagens de Programação",
+        "author": "Caelum",
+        "description": "Introdução à linguagem Python.",
+        "tags": [
+            "Python",
+            "Introdução",
+            "Programação"
+        ],
+        "views": "11K",
+        "downloads": "15K",
+        "thumbnail": "/static/thumbnails/python.png",
+        "file_path": "/pdfs/Python.pdf"
+    },
+    {
+        "title": "Pythonlearn",
+        "category": "Linguagens de Programação",
+        "author": "Explorando Dados com Python 3",
+        "description": "Aprendendo Python na prática.",
+        "tags": [
+            "Python",
+            "Aprendizado",
+            "Prático"
+        ],
+        "views": "22K",
+        "downloads": "18K",
+        "thumbnail": "/static/thumbnails/pythonlearn.png",
+        "file_path": "/pdfs/pythonlearn.pdf"
+    },
+    {
+        "title": "Pythonparatodos",
+        "category": "Linguagens de Programação",
+        "author": "Explorando Dados com Python 3",
+        "description": "Python acessível para todos.",
+        "tags": [
+            "Python",
+            "Iniciante",
+            "Didático"
+        ],
+        "views": "24K",
+        "downloads": "18K",
+        "thumbnail": "/static/thumbnails/pythonparatodos.png",
+        "file_path": "/pdfs/PythonParaTodos.pdf"
+    },
+    {
+        "title": "Python Basico Final",
+        "category": "Linguagens de Programação",
+        "author": "Autor Desconhecido",
+        "description": "Curso básico final de Python.",
+        "tags": [
+            "Python",
+            "Básico",
+            "Curso"
+        ],
+        "views": "11K",
+        "downloads": "10K",
+        "thumbnail": "/static/thumbnails/python_basico_final.png",
+        "file_path": "/pdfs/Python_Basico_final.pdf"
+    },
+    {
+        "title": "Python Data Analysis",
+        "category": "Linguagens de Programação",
+        "author": "Autor Desconhecido",
+        "description": "Análise de dados com Python.",
+        "tags": [
+            "Python",
+            "Análise",
+            "Dados"
+        ],
+        "views": "13K",
+        "downloads": "18K",
+        "thumbnail": "/static/thumbnails/python_data_analysis.png",
+        "file_path": "/pdfs/Python_Data_Analysis.pdf"
+    },
+    {
+        "title": "Rede Dial Up",
+        "category": "Redes",
+        "author": "freitas",
+        "description": "Redes de acesso discado.",
+        "tags": [
+            "Dial-up",
+            "Redes",
+            "Histórico"
+        ],
+        "views": "20K",
+        "downloads": "8K",
+        "thumbnail": "/static/thumbnails/rede_dial_up.png",
+        "file_path": "/pdfs/Rede dial-up.pdf"
+    },
+    {
+        "title": "Redes Neurais Artificial",
+        "category": "Redes Neurais",
+        "author": "Autor Desconhecido",
+        "description": "Fundamentos de redes neurais artificiais.",
+        "tags": [
+            "Redes Neurais",
+            "IA",
+            "Fundamentos"
+        ],
+        "views": "12K",
+        "downloads": "4K",
+        "thumbnail": "/static/thumbnails/redes_neurais_artificial.png",
+        "file_path": "/pdfs/Redes Neurais Artificial.pdf"
+    },
+    {
+        "title": "Seg Redes Ip",
+        "category": "Redes",
+        "author": "Autor Desconhecido",
+        "description": "Segurança em redes IP.",
+        "tags": [
+            "Redes",
+            "IP",
+            "Segurança"
+        ],
+        "views": "22K",
+        "downloads": "15K",
+        "thumbnail": "/static/thumbnails/seg_redes_ip.png",
+        "file_path": "/pdfs/seg_redes_ip.pdf"
+    },
+    {
+        "title": "SQL Na Mão",
+        "category": "Banco de Dados",
+        "author": "Diego Macêdo",
+        "description": "Guia prático de SQL.",
+        "tags": [
+            "SQL",
+            "Banco de Dados",
+            "Prático"
+        ],
+        "views": "10K",
+        "downloads": "10K",
+        "thumbnail": "/static/thumbnails/sql_na_mao.png",
+        "file_path": "/pdfs/SQL na mão.pdf"
+    },
+    {
+        "title": "SqlMap Intermediário",
+        "category": "Segurança",
+        "author": "Autor Desconhecido",
+        "description": "Uso intermediário da ferramenta SqlMap.",
+        "tags": [
+            "SQL",
+            "SqlMap",
+            "Segurança"
+        ],
+        "views": "10K",
+        "downloads": "8K",
+        "thumbnail": "/static/thumbnails/sqlmap_intermediario.png",
+        "file_path": "/pdfs/SqlMap intermediário.pdf"
+    },
+    {
+        "title": "Tutorial C Unicamp",
+        "category": "Linguagens de Programação",
+        "author": "Autor Desconhecido",
+        "description": "Tutorial de linguagem C da Unicamp.",
+        "tags": [
+            "C",
+            "Tutorial",
+            "Unicamp"
+        ],
+        "views": "27K",
+        "downloads": "19K",
+        "thumbnail": "/static/thumbnails/tutorial_c_unicamp.png",
+        "file_path": "/pdfs/tutorial-c-unicamp.pdf"
+    },
+    {
+        "title": "Vulnerabilidades Em Redes Sem Fio",
+        "category": "Segurança",
+        "author": "nildo",
+        "description": "Vulnerabilidades em redes wireless.",
+        "tags": [
+            "Wireless",
+            "Redes",
+            "Segurança"
+        ],
+        "views": "24K",
+        "downloads": "9K",
+        "thumbnail": "/static/thumbnails/vulnerabilidades_em_redes_sem_fio.png",
+        "file_path": "/pdfs/vulnerabilidades_em_redes_sem_fio.pdf"
+    },
+    {
+        "title": "Web Scraping With Python, 2Nd Edition",
+        "category": "Linguagens de Programação",
+        "author": "Ryan Mitchell",
+        "description": "Web scraping utilizando Python.",
+        "tags": [
+            "Python",
+            "Web Scraping",
+            "Automação"
+        ],
+        "views": "19K",
+        "downloads": "8K",
+        "thumbnail": "/static/thumbnails/web_scraping_with_python_2nd_edition.png",
+        "file_path": "/pdfs/Web Scraping with Python, 2nd Edition.pdf"
+    },
+    {
+        "title": "Python Parallel Programming Cookbook",
+        "category": "Linguagens de Programação",
+        "author": "Autor Desconhecido",
+        "description": "Receitas de programação paralela em Python.",
+        "tags": [
+            "Python",
+            "Paralelismo",
+            "Concorrência"
+        ],
+        "views": "27K",
+        "downloads": "12K",
+        "thumbnail": "/static/thumbnails/python_parallel_programming_cookbook.png",
+        "file_path": "/pdfs/_Python Parallel Programming Cookbook.pdf"
+    },
+    {
+        "title": "Python Programing",
+        "category": "Linguagens de Programação",
+        "author": "AZ Elite Publishing",
+        "description": "Guia de programação em Python.",
+        "tags": [
+            "Python",
+            "Programação",
+            "Guia"
+        ],
+        "views": "23K",
+        "downloads": "5K",
+        "thumbnail": "/static/thumbnails/python_programing.png",
+        "file_path": "/pdfs/_Python Programing.pdf"
     }
 ]
