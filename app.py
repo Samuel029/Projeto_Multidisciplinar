@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify, send_from_directory
 from werkzeug.security import generate_password_hash, check_password_hash
 from backend.extensions import db
-from backend.models import User, Post, Comment, Like
+from backend.models import User, Post, Comment, Like, ResetCode
 from datetime import datetime
 import os
 import firebase_admin
@@ -92,9 +92,7 @@ except Exception as e:
 
 def normalize_filename(filename):
     """Normaliza o nome do arquivo, removendo acentos e convertendo para minúsculas."""
-    # Remove acentos e caracteres especiais
     normalized = unicodedata.normalize('NFKD', filename).encode('ASCII', 'ignore').decode('ASCII')
-    # Converte para minúsculas
     return normalized.lower()
 
 def find_file_case_insensitive(directory, target_filename):
@@ -167,11 +165,9 @@ def registroelogin():
             password = request.form.get('password')
             confirm_password = request.form.get('confirm_password')
             
-            # Validações
             if not username or not email or not password or not confirm_password:
                 flash('Por favor, preencha todos os campos.', 'error')
                 return redirect(url_for('registroelogin'))
-                
             if len(password) < 8:
                 flash('A senha deve ter no mínimo 8 caracteres.', 'error')
                 return redirect(url_for('registroelogin'))
@@ -193,7 +189,6 @@ def registroelogin():
             try:
                 db.session.add(new_user)
                 db.session.commit()
-                # Criar usuário no Firebase Authentication
                 try:
                     auth.create_user(email=email, password=password)
                     logger.info(f"Usuário {email} criado no Firebase Authentication")
@@ -305,19 +300,16 @@ def serve_pdfs_json():
 @app.route('/pdfs/<path:filename>')
 def serve_pdf(filename):
     try:
-        # Verifica se o arquivo existe diretamente
         file_path = os.path.join(app.config['PDFS_FOLDER'], filename)
         if os.path.exists(file_path):
             logger.info(f"Servindo arquivo: {file_path}")
             return send_from_directory(app.config['PDFS_FOLDER'], filename)
         
-        # Busca case-insensitive
         actual_filename = find_file_case_insensitive(app.config['PDFS_FOLDER'], filename)
         if actual_filename:
             logger.info(f"Arquivo encontrado (case-insensitive): {actual_filename}")
             return send_from_directory(app.config['PDFS_FOLDER'], actual_filename)
         
-        # Log de erro se o arquivo não for encontrado
         logger.error(f"Arquivo não encontrado: {filename} em {app.config['PDFS_FOLDER']}")
         return jsonify({'status': 'error', 'message': f'PDF {filename} não encontrado.'}), 404
     except Exception as e:
@@ -398,19 +390,22 @@ def configuracoes():
 def update_username():
     if 'user_id' not in session:
         return jsonify({'status': 'error', 'message': 'Faça login para alterar o nome.'}), 403
-    data = request.get_json()
-    new_username = data.get('username', '').strip()
+    
+    new_username = request.form.get('username', '').strip()
     if not new_username:
         return jsonify({'status': 'error', 'message': 'Nome de usuário não pode ser vazio.'}), 400
+    
     if User.query.filter_by(username=new_username).first():
         return jsonify({'status': 'error', 'message': 'Nome de usuário já está em uso.'}), 409
+    
     user = db.session.get(User, session['user_id'])
     if not user:
         return jsonify({'status': 'error', 'message': 'Usuário não encontrado.'}), 404
+    
     user.username = new_username
     db.session.commit()
     session['username'] = new_username
-    return jsonify({'status': 'success', 'message': 'Nome de usuário atualizado com sucesso.'})
+    return jsonify({'status': 'success', 'message': 'Nome de usuário atualizado com sucesso!'})
 
 @app.route('/update_profile_pic', methods=['POST'])
 def update_profile_pic():
@@ -435,6 +430,120 @@ def update_profile_pic():
     db.session.commit()
     img_url = url_for('static', filename='uploads/' + filename)
     return jsonify({'status': 'success', 'message': 'Foto de perfil atualizada!', 'new_url': img_url})
+
+@app.route('/update_password', methods=['POST'])
+def update_password():
+    if 'user_id' not in session:
+        return jsonify({'status': 'error', 'message': 'Faça login para alterar a senha.'}), 403
+
+    user = db.session.get(User, session['user_id'])
+    if not user:
+        return jsonify({'status': 'error', 'message': 'Usuário não encontrado.'}), 404
+
+    current_password = request.form.get('current-password')
+    new_password = request.form.get('new-password')
+    confirm_password = request.form.get('confirm-password')
+
+    if not current_password or not new_password or not confirm_password:
+        return jsonify({'status': 'error', 'message': 'Todos os campos são obrigatórios.'}), 400
+
+    if not user.password:  # Usuário com login via Google
+        return jsonify({'status': 'error', 'message': 'Usuários autenticados via Google devem usar a recuperação de senha.'}), 403
+
+    if not check_password_hash(user.password, current_password):
+        return jsonify({'status': 'error', 'message': 'Senha atual incorreta.'}), 401
+
+    if new_password != confirm_password:
+        return jsonify({'status': 'error', 'message': 'As novas senhas não coincidem.'}), 400
+
+    if len(new_password) < 8:
+        return jsonify({'status': 'error', 'message': 'A nova senha deve ter no mínimo 8 caracteres.'}), 400
+
+    try:
+        user.password = generate_password_hash(new_password)
+        try:
+            # Fetch Firebase user by email to get the correct UID
+            firebase_user = auth.get_user_by_email(user.email)
+            auth.update_user(firebase_user.uid, password=new_password)
+            logger.info(f"Senha atualizada no Firebase para o usuário {user.email}")
+        except auth.UserNotFoundError:
+            logger.warning(f"Usuário não encontrado no Firebase: {user.email}")
+            # Still proceed with local update if Firebase user not found
+        except Exception as e:
+            logger.warning(f"Erro ao atualizar senha no Firebase: {str(e)}")
+        db.session.commit()
+        return jsonify({'status': 'success', 'message': 'Senha atualizada com sucesso!'})
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Erro ao atualizar senha: {str(e)}")
+        return jsonify({'status': 'error', 'message': 'Erro ao atualizar senha.'}), 500
+
+@app.route('/active_sessions', methods=['GET'])
+def active_sessions():
+    if 'user_id' not in session:
+        return jsonify({'status': 'error', 'message': 'Faça login para visualizar sessões.'}), 403
+
+    user = db.session.get(User, session['user_id'])
+    if not user:
+        return jsonify({'status': 'error', 'message': 'Usuário não encontrado.'}), 404
+
+    try:
+        # Placeholder: Replace with actual Firebase session management
+        sessions = [{'id': 'session1', 'device': 'Unknown Device', 'last_active': '2025-07-05'}]
+        return jsonify({'status': 'success', 'sessions': sessions})
+    except Exception as e:
+        logger.error(f"Erro ao listar sessões: {str(e)}")
+        return jsonify({'status': 'error', 'message': 'Erro ao listar sessões.'}), 500
+
+@app.route('/end_session/<session_id>', methods=['POST'])
+def end_session(session_id):
+    if 'user_id' not in session:
+        return jsonify({'status': 'error', 'message': 'Faça login para encerrar sessões.'}), 403
+
+    try:
+        # Placeholder: Replace with actual Firebase session revocation
+        return jsonify({'status': 'success', 'message': 'Sessão encerrada com sucesso!'})
+    except Exception as e:
+        logger.error(f"Erro ao encerrar sessão: {str(e)}")
+        return jsonify({'status': 'error', 'message': 'Erro ao encerrar sessão.'}), 500
+
+@app.route('/delete_account', methods=['POST'])
+def delete_account():
+    if 'user_id' not in session:
+        return jsonify({'status': 'error', 'message': 'Faça login para excluir a conta.'}), 403
+
+    user = db.session.get(User, session['user_id'])
+    if not user:
+        return jsonify({'status': 'error', 'message': 'Usuário não encontrado.'}), 404
+
+    try:
+        Post.query.filter_by(user_id=user.id).delete()
+        Comment.query.filter_by(user_id=user.id).delete()
+        Like.query.filter_by(user_id=user.id).delete()
+        ResetCode.query.filter_by(email=user.email).delete()
+
+        if user.profile_pic and user.profile_pic != 'default.png':
+            file_path = os.path.join(app.root_path, 'static', 'uploads', user.profile_pic)
+            if os.path.exists(file_path):
+                os.remove(file_path)
+
+        try:
+            firebase_user = auth.get_user_by_email(user.email)
+            auth.delete_user(firebase_user.uid)
+            logger.info(f"Usuário {user.email} deletado do Firebase Authentication")
+        except auth.UserNotFoundError:
+            logger.warning(f"Usuário não encontrado no Firebase: {user.email}")
+        except Exception as e:
+            logger.warning(f"Erro ao deletar usuário do Firebase: {str(e)}")
+
+        db.session.delete(user)
+        db.session.commit()
+        session.clear()
+        return jsonify({'status': 'success', 'message': 'Conta excluída com sucesso!'})
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Erro ao excluir conta: {str(e)}")
+        return jsonify({'status': 'error', 'message': 'Erro ao excluir conta.'}), 500
 
 @app.route('/search', methods=['GET'])
 def search():
