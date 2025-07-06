@@ -167,8 +167,13 @@ def registroelogin():
             password = request.form.get('password')
             confirm_password = request.form.get('confirm_password')
             
+            # Validações
             if not username or not email or not password or not confirm_password:
                 flash('Por favor, preencha todos os campos.', 'error')
+                return redirect(url_for('registroelogin'))
+                
+            if len(password) < 8:
+                flash('A senha deve ter no mínimo 8 caracteres.', 'error')
                 return redirect(url_for('registroelogin'))
                 
             if password != confirm_password:

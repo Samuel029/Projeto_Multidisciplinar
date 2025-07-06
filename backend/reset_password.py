@@ -87,6 +87,7 @@ def verify_reset_code_form():
     return render_template('verify_reset_code.html', email=email)
 
 @reset_bp.route('/verify_reset_code', methods=['POST'])
+@reset_bp.route('/verify_reset_code', methods=['POST'])
 def verify_reset_code():
     email = request.form.get('email')
     code = request.form.get('code')
@@ -102,6 +103,12 @@ def verify_reset_code():
         logger.warning(f"Senhas não coincidem para {email}")
         flash('As senhas não coincidem.', 'error')
         return jsonify({'status': 'error', 'message': 'As senhas não coincidem.'}), 400
+
+    # Verificar se a senha tem pelo menos 8 caracteres
+    if len(new_password) < 8:
+        logger.warning(f"Senha muito curta para {email}")
+        flash('A senha deve ter pelo menos 8 caracteres.', 'error')
+        return jsonify({'status': 'error', 'message': 'A senha deve ter pelo menos 8 caracteres.'}), 400
 
     reset_code = ResetCode.query.filter_by(email=email, code=code).first()
     if not reset_code:
@@ -127,11 +134,6 @@ def verify_reset_code():
         # Atualiza no Firebase e cria/sincroniza local
         try:
             user = auth.get_user_by_email(email)
-            if len(new_password) < 6:
-                logger.error(f"Erro ao verificar código para {email}: Password menor que 6 caracteres.")
-                flash('A senha deve ter pelo menos 6 caracteres.', 'error')
-                return jsonify({'status': 'error', 'message': 'A senha deve ter pelo menos 6 caracteres.'}), 400
-
             auth.update_user(user.uid, password=new_password)
             logger.info(f"Senha atualizada no Firebase para {email}")
 

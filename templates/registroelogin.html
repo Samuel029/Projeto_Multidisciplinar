@@ -704,22 +704,24 @@
         </div>
 
         <div class="form-container criar">
-            <form method="POST" action="{{ url_for('registroelogin') }}">
-                <h1>Criar Conta</h1>
-                <div class="social-icons">
-                    <a href="#" class="icon" id="google-sign-up" title="Criar conta com Google" aria-label="Criar conta com Google">
-                        <i class="fab fa-google"></i>
-                    </a>
-                    <a href="#" class="icon"><i class="fab fa-github"></i></a>
-                </div>
-                <span>ou use seu email para cadastro</span>
-                <input type="text" name="username" placeholder="Nome" required>
-                <input type="email" name="email" placeholder="Email" required>
-                <input type="password" name="password" placeholder="Senha" required>
-                <input type="password" name="confirm_password" placeholder="Confirme sua senha" required>
-                <button type="submit" name="register" value="register">Cadastrar</button>
-            </form>
+    <form method="POST" action="{{ url_for('registroelogin') }}">
+        <h1>Criar Conta</h1>
+        <div class="social-icons">
+            <a href="#" class="icon" id="google-sign-up" title="Criar conta com Google" aria-label="Criar conta com Google">
+                <i class="fab fa-google"></i>
+            </a>
+            <a href="#" class="icon"><i class="fab fa-github"></i></a>
         </div>
+        <span>ou use seu email para cadastro</span>
+        <input type="text" name="username" placeholder="Nome" required>
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="password" name="password" id="password" placeholder="Senha" required>
+        <span id="password-error" style="color: #ef4444; font-size: 12px; display: none;"></span>
+        <input type="password" name="confirm_password" id="confirm_password" placeholder="Confirme sua senha" required>
+        <span id="confirm-password-error" style="color: #ef4444; font-size: 12px; display: none;"></span>
+        <button type="submit" name="register" value="register">Cadastrar</button>
+    </form>
+</div>
 
         <div class="toggle-container">
             <div class="toggle">
@@ -792,7 +794,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 
-    <script>
+<script>
         // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyC1fhqZQXIgC2JwU-NVJLex_mURZ2qow6k",
@@ -949,6 +951,12 @@
             if (!username || !email || !password || !confirmPassword) {
                 e.preventDefault();
                 showFlashMessage('Por favor, preencha todos os campos.', 'error');
+                return;
+            }
+            
+            if (password.length < 8) {
+                e.preventDefault();
+                showFlashMessage('A senha deve ter no mínimo 8 caracteres.', 'error');
                 return;
             }
             
