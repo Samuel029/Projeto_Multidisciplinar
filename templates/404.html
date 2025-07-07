@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página Não Encontrada | 404</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        :root {
+            --primary: #1a73e8;
+            --primary-light: #4a91ff;
+            --primary-dark: #1357b9;
+            --primary-transparent: rgba(26, 115, 232, 0.1);
+            --secondary: #202124;
+            --secondary-light: #3c4043;
+            --secondary-dark: #141517;
+            --accent: #ff4444;
+            --light: #ffffff;
+            --light-gray: #f1f3f4;
+            --medium-gray: #dadce0;
+            --dark-gray: #80868b;
+            --dark: #202124;
+            --success: #34c759;
+            --warning: #fbbc05;
+            --danger: #ff4444;
+            --font-primary: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-secondary: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-size-base: 1rem;
+            --font-size-sm: 0.875rem;
+            --font-size-lg: 1.25rem;
+            --font-size-xl: 1.5rem;
+            --font-size-xxl: 2rem;
+            --font-size-hero: 3rem;
+            --space-xs: 0.25rem;
+            --space-sm: 0.5rem;
+            --space-md: 1rem;
+            --space-lg: 1.5rem;
+            --space-xl: 2rem;
+            --space-xxl: 3rem;
+            --border-radius-sm: 0.375rem;
+            --border-radius-md: 0.75rem;
+            --border-radius-lg: 1rem;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 3px 8px rgba(0, 0, 0, 0.12);
+            --shadow-lg: 0 5px 15px rgba(0, 0, 0, 0.15);
+            --transition-fast: 0.2s ease;
+            --transition-normal: 0.3s ease;
+            --primary-color: #1e293b;
+            --secondary-color: #0ea5e9;
+            --accent-color: #f97316;
+            --text-color: #1e293b;
+            --background-color: #f1f5f9;
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            --card-bg: #ffffff;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --gradient-bg: linear-gradient(135deg, #0ea5e9, #3b82f6);
+        }
+        
+        body {
+            font-family: var(--font-primary);
+            background-color: var(--background-color);
+            color: var(--secondary);
+        }
+        
+        .button {
+            transition: var(--transition-normal);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(26, 115, 232, 0.2);
+        }
+        
+        .button:active {
+            transform: translateY(0);
+        }
+        
+        .button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: var(--transition-normal);
+        }
+        
+        .button:hover::before {
+            left: 100%;
+        }
+        
+        .floating {
+            animation: floating 6s ease-in-out infinite;
+        }
+        
+        .floating-2 {
+            animation: floating 5s ease-in-out infinite 1s;
+        }
+        
+        .floating-3 {
+            animation: floating 7s ease-in-out infinite 2s;
+        }
+        
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .shadow-morph {
+            animation: shadowMorph 8s ease-in-out infinite;
+        }
+        
+        @keyframes shadowMorph {
+            0% { box-shadow: 0 15px 30px rgba(26, 115, 232, 0.1); }
+            50% { box-shadow: 0 20px 40px rgba(26, 115, 232, 0.15); }
+            100% { box-shadow: 0 15px 30px rgba(26, 115, 232, 0.1); }
+        }
+        
+        .bg-gradient-animate {
+            background-size: 200% 200%;
+            animation: gradientAnimation 8s ease infinite;
+        }
+        
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <div class="flex-grow flex flex-col items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
+        <div class="max-w-md w-full space-y-8 rounded-xl p-8 bg-white shadow-morph relative overflow-hidden">
+            <!-- Floating decorative elements -->
+            <div class="absolute -top-20 -right-20 w-40 h-40 rounded-full bg-[var(--primary-transparent)] blur-xl z-0 floating"></div>
+            <div class="absolute -bottom-20 -left-20 w-40 h-40 rounded-full bg-[var(--primary-transparent)] blur-xl z-0 floating-2"></div>
+            <div class="absolute top-1/4 left-1/4 w-20 h-20 rounded-full bg-[var(--primary-transparent)] blur-xl z-0 floating-3"></div>
+            
+            <div class="relative z-10 flex flex-col items-center text-center">
+                <!-- Animated number -->
+                <div class="relative mb-8">
+                    <span class="text-[10rem] font-bold text-[var(--primary)] opacity-10">404</span>
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <div class="bg-gradient-to-r from-[var(--primary)] to-[var(--primary-light)] bg-clip-text text-transparent text-8xl font-bold">404</div>
+                    </div>
+                </div>
+                
+                <h2 class="text-3xl font-extrabold text-gray-900 mb-4">
+                    <span class="bg-gradient-to-r from-[var(--primary)] to-[var(--primary-light)] bg-clip-text text-transparent">
+                        Oops! Página não encontrada
+                    </span>
+                </h2>
+                
+                <p class="text-lg text-gray-600 mb-8">
+                    Parece que você encontrou um caminho que não existe. Não se preocupe, vamos te ajudar a voltar para onde você precisa estar.
+                </p>
+                
+                <div class="flex flex-col sm:flex-row gap-4 w-full">
+                    <button onclick="goToHome()" class="button flex-1 flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-gradient-to-r from-[var(--primary)] to-[var(--primary-light)] hover:from-[var(--primary-dark)] hover:to-[var(--primary)] md:py-4 md:text-lg md:px-10">
+                        <i class="fas fa-home mr-2"></i> Voltar Para o Início
+                    </button>
+                    <button onclick="goToHome()" class="button flex-1 flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-[var(--primary)] bg-[var(--light)] border-[var(--primary)] hover:bg-[var(--primary-transparent)] md:py-4 md:text-lg md:px-10">
+                        <i class="fas fa-arrow-left mr-2"></i> Voltar
+                    </button>
+                </div>
+            </div>
+            
+            <div class="relative z-10 mt-12 flex justify-center">
+                <div class="animate-pulse flex space-x-2">
+                    <div class="w-3 h-3 rounded-full bg-[var(--primary-light)]"></div>
+                    <div class="w-3 h-3 rounded-full bg-[var(--primary)]"></div>
+                    <div class="w-3 h-3 rounded-full bg-[var(--primary-dark)]"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-12 text-center text-gray-500">
+            <p class="flex items-center justify-center">
+                <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span id="countdown" class="font-medium">10</span> segundos e você será redirecionado
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Função para redirecionar para a página inicial
+        function goToHome() {
+            window.location.href = '/';
+        }
+        
+        // Countdown redirect
+        let count = 10;
+        const countdown = setInterval(() => {
+            count--;
+            document.getElementById('countdown').textContent = count;
+            
+            if (count === 0) {
+                clearInterval(countdown);
+                goToHome();
+            }
+        }, 1000);
+        
+        // Confetti effect on button click
+        document.querySelectorAll('.button').forEach(button => {
+            button.addEventListener('click', function(e) {
+                clearInterval(countdown);
+                
+                // Small animation
+                const x = e.clientX - e.target.getBoundingClientRect().left;
+                const y = e.clientY - e.target.getBoundingClientRect().top;
+                
+                const ripple = document.createElement('span');
+                ripple.classList.add('ripple');
+                ripple.style.left = `${x}px`;
+                ripple.style.top = `${y}px`;
+                
+                this.appendChild(ripple);
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 1000);
+            });
+        });
+        
+        // Dynamic background
+        document.addEventListener('mousemove', (e) => {
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            
+            const card = document.querySelector('.shadow-morph');
+            if (card) {
+                card.style.transform = `perspective(1000px) rotateX(${(y - 0.5) * 5}deg) rotateY(${(x - 0.5) * -5}deg)`;
+            }
+        });
+    </script>
+</body>
+</html>

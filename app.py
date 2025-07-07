@@ -107,6 +107,11 @@ def find_file_case_insensitive(directory, target_filename):
         logger.error(f"Erro ao listar arquivos em {directory}: {str(e)}")
         return None
 
+@app.errorhandler(404)
+def page_not_found(e):
+    logger.error(f"Erro 404: {request.url}")
+    return render_template('404.html'), 404
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -295,7 +300,7 @@ def serve_pdfs_json():
         return send_from_directory(app.config['DATA_FOLDER'], 'pdfs.json')
     except Exception as e:
         logger.error(f"Erro ao servir pdfs.json: {str(e)}")
-        return jsonify({'status': 'error', 'message': 'Erro ao carregar arquivo de PDFs.'}), 500
+        return render_template('404.html'), 404
 
 @app.route('/pdfs/<path:filename>')
 def serve_pdf(filename):
@@ -311,10 +316,10 @@ def serve_pdf(filename):
             return send_from_directory(app.config['PDFS_FOLDER'], actual_filename)
         
         logger.error(f"Arquivo não encontrado: {filename} em {app.config['PDFS_FOLDER']}")
-        return jsonify({'status': 'error', 'message': f'PDF {filename} não encontrado.'}), 404
+        return render_template('404.html'), 404
     except Exception as e:
         logger.error(f"Erro ao servir PDF {filename}: {str(e)}")
-        return jsonify({'status': 'error', 'message': 'Erro ao carregar o PDF.'}), 404
+        return render_template('404.html'), 404
 
 @app.route('/codigo')
 def codigo():
@@ -410,26 +415,31 @@ def update_username():
 @app.route('/update_profile_pic', methods=['POST'])
 def update_profile_pic():
     if 'user_id' not in session:
-        return jsonify({'status': 'error', 'message': 'Faça login para alterar a foto.'}), 403
+        flash('Faça login para alterar a foto.', 'error')
+        return redirect(url_for('registroelogin')), 403
     if 'profile_pic' not in request.files:
-        return jsonify({'status': 'error', 'message': 'Nenhum arquivo enviado.'}), 400
+        flash('Nenhum arquivo enviado.', 'error')
+        return redirect(url_for('configuracoes')), 400
     file = request.files['profile_pic']
     if file.filename == '':
-        return jsonify({'status': 'error', 'message': 'Nenhum arquivo selecionado.'}), 400
+        flash('Nenhum arquivo selecionado.', 'error')
+        return redirect(url_for('configuracoes')), 400
     if not allowed_file(file.filename):
-        return jsonify({'status': 'error', 'message': 'Tipo de arquivo não suportado.'}), 400
+        flash('Tipo de arquivo não suportado.', 'error')
+        return redirect(url_for('configuracoes')), 400
     filename = f"user_{session['user_id']}_{secure_filename(file.filename)}"
-    upload_folder = os.path.join(app.root_path, 'static', 'uploads')
+    upload_folder = os.path.join(app.root_path, 'static', 'Uploads')
     os.makedirs(upload_folder, exist_ok=True)
     file_path = os.path.join(upload_folder, filename)
     file.save(file_path)
     user = db.session.get(User, session['user_id'])
     if not user:
-        return jsonify({'status': 'error', 'message': 'Usuário não encontrado.'}), 404
+        flash('Usuário não encontrado.', 'error')
+        return redirect(url_for('configuracoes')), 404
     user.profile_pic = filename
     db.session.commit()
-    img_url = url_for('static', filename='uploads/' + filename)
-    return jsonify({'status': 'success', 'message': 'Foto de perfil atualizada!', 'new_url': img_url})
+    flash('Foto de perfil atualizada!', 'success')
+    return redirect(url_for('configuracoes'))
 
 @app.route('/update_password', methods=['POST'])
 def update_password():
@@ -523,7 +533,7 @@ def delete_account():
         ResetCode.query.filter_by(email=user.email).delete()
 
         if user.profile_pic and user.profile_pic != 'default.png':
-            file_path = os.path.join(app.root_path, 'static', 'uploads', user.profile_pic)
+            file_path = os.path.join(app.root_path, 'static', 'Uploads', user.profile_pic)
             if os.path.exists(file_path):
                 os.remove(file_path)
 
