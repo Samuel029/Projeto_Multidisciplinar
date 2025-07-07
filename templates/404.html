@@ -6,6 +6,7 @@
     <title>Página Não Encontrada | 404</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <style>
         :root {
@@ -135,37 +136,40 @@
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
-    <div class="flex-grow flex flex-col items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
-        <div class="max-w-md w-full space-y-8 rounded-xl p-8 bg-white shadow-morph relative overflow-hidden">
+    <div class="flex-grow flex flex-col items-center justify-center px-4 py-12 sm:px-6 lg:px-8 bg-gradient-to-br from-[var(--primary-transparent)] to-transparent">
+        <div class="max-w-2xl w-full space-y-8 rounded-2xl p-10 bg-white/95 backdrop-blur-sm shadow-[0_25px_50px_-15px_rgba(26,115,232,0.3)] relative overflow-hidden border border-[var(--medium-gray)]/20">
             <!-- Floating decorative elements -->
-            <div class="absolute -top-20 -right-20 w-40 h-40 rounded-full bg-[var(--primary-transparent)] blur-xl z-0 floating"></div>
-            <div class="absolute -bottom-20 -left-20 w-40 h-40 rounded-full bg-[var(--primary-transparent)] blur-xl z-0 floating-2"></div>
-            <div class="absolute top-1/4 left-1/4 w-20 h-20 rounded-full bg-[var(--primary-transparent)] blur-xl z-0 floating-3"></div>
+            <div class="absolute -top-32 -right-32 w-64 h-64 rounded-full bg-[var(--primary-transparent)] blur-2xl z-0 floating"></div>
+            <div class="absolute -bottom-32 -left-32 w-64 h-64 rounded-full bg-[var(--primary-transparent)] blur-2xl z-0 floating-2"></div>
+            <div class="absolute top-1/4 left-1/4 w-32 h-32 rounded-full bg-[var(--primary-transparent)] blur-2xl z-0 floating-3"></div>
+            <div class="absolute -bottom-10 right-1/4 w-24 h-24 rounded-full bg-[var(--accent)]/10 blur-xl z-0 floating"></div>
             
             <div class="relative z-10 flex flex-col items-center text-center">
                 <!-- Animated number -->
-                <div class="relative mb-8">
-                    <span class="text-[10rem] font-bold text-[var(--primary)] opacity-10">404</span>
+                <div class="relative mb-10">
+                    <span class="text-[12rem] font-bold text-[var(--primary)] opacity-5 tracking-tighter">404</span>
                     <div class="absolute inset-0 flex items-center justify-center">
-                        <div class="bg-gradient-to-r from-[var(--primary)] to-[var(--primary-light)] bg-clip-text text-transparent text-8xl font-bold">404</div>
+                        <div class="bg-gradient-to-r from-[var(--primary)] to-[var(--primary-light)] bg-clip-text text-transparent text-[8rem] font-bold tracking-tighter drop-shadow-lg">404</div>
                     </div>
                 </div>
                 
-                <h2 class="text-3xl font-extrabold text-gray-900 mb-4">
-                    <span class="bg-gradient-to-r from-[var(--primary)] to-[var(--primary-light)] bg-clip-text text-transparent">
-                        Oops! Página não encontrada
-                    </span>
-                </h2>
-                
-                <p class="text-lg text-gray-600 mb-8">
-                    Parece que você encontrou um caminho que não existe. Não se preocupe, vamos te ajudar a voltar para onde você precisa estar.
-                </p>
+                <div class="space-y-6">
+                    <h2 class="text-4xl font-extrabold text-gray-900">
+                        <span class="bg-gradient-to-r from-[var(--primary)] to-[var(--primary-light)] bg-clip-text text-transparent">
+                            Oops! Página não encontrada
+                        </span>
+                    </h2>
+                    
+                    <p class="text-xl text-gray-600 leading-relaxed max-w-2xl">
+                        Parece que você encontrou um caminho que não existe em nosso universo digital. Não se preocupe, nossa equipe de navegação está pronta para te guiar de volta ao porto seguro.
+                    </p>
+                </div>
                 
                 <div class="flex flex-col sm:flex-row gap-4 w-full">
-                    <button onclick="goToHome()" class="button flex-1 flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-gradient-to-r from-[var(--primary)] to-[var(--primary-light)] hover:from-[var(--primary-dark)] hover:to-[var(--primary)] md:py-4 md:text-lg md:px-10">
-                        <i class="fas fa-home mr-2"></i> Voltar Para o Início
-                    </button>
-                    <button onclick="goToHome()" class="button flex-1 flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-[var(--primary)] bg-[var(--light)] border-[var(--primary)] hover:bg-[var(--primary-transparent)] md:py-4 md:text-lg md:px-10">
+                    <a href="/" class="button flex-1 flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-gradient-to-r from-[var(--primary)] to-[var(--primary-light)] hover:from-[var(--primary-dark)] hover:to-[var(--primary)] md:py-4 md:text-lg md:px-10">
+                        <i class="fas fa-home mr-2"></i> Voltar para Home
+                    </a>
+                    <button onclick="history.back()" class="button flex-1 flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-[var(--primary)] bg-[var(--light)] border-[var(--primary)] hover:bg-[var(--primary-transparent)] md:py-4 md:text-lg md:px-10">
                         <i class="fas fa-arrow-left mr-2"></i> Voltar
                     </button>
                 </div>
@@ -180,22 +184,32 @@
             </div>
         </div>
         
-        <div class="mt-12 text-center text-gray-500">
-            <p class="flex items-center justify-center">
-                <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-                <span id="countdown" class="font-medium">10</span> segundos e você será redirecionado
-            </p>
+        <div class="mt-16 w-full max-w-md space-y-3">
+            <div class="relative pt-1">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 mr-2 text-[var(--primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span class="text-sm font-medium text-[var(--primary)]">
+                            Redirecionando em <span id="countdown" class="font-bold">10</span> segundos...
+                        </span>
+                    </div>
+                    <span class="text-xs font-semibold inline-block text-[var(--primary)]">
+                        <span id="countdown-percent">100</span>%
+                    </span>
+                </div>
+                <div class="overflow-hidden h-2 mt-2 rounded-full bg-[var(--light-gray)]">
+                    <div id="progress-bar" class="h-full rounded-full bg-gradient-to-r from-[var(--primary)] to-[var(--primary-light)]" style="width: 100%"></div>
+                </div>
+            </div>
         </div>
     </div>
+    
+    <!-- Footer -->
+    {% include 'footer.html' %}
 
     <script>
-        // Função para redirecionar para a página inicial
-        function goToHome() {
-            window.location.href = '/';
-        }
-        
         // Countdown redirect
         let count = 10;
         const countdown = setInterval(() => {
@@ -204,7 +218,7 @@
             
             if (count === 0) {
                 clearInterval(countdown);
-                goToHome();
+                window.location.href = '/';
             }
         }, 1000);
         
