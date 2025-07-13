@@ -18,7 +18,27 @@ body {
     background-color: var(--light-gray);
 }
 
+.progress-bar {
+    height: 8px;
+    background-color: #e9ecef;
+    border-radius: 4px;
+    overflow: hidden;
+    transition: background-color 0.3s;
+}
 
+.progress-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.5s ease, background-color 0.3s;
+}
+
+.progress-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    font-size: 0.85rem;
+    color: #666;
+}
 
 .container {
     max-width: 1200px;

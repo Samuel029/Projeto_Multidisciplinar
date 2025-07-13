@@ -1,7 +1,11 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify, send_from_directory
+from backend.progress_tracker import ProgressTracker
+from functools import wraps
+from flask_caching import Cache
+from werkzeug.exceptions import BadRequest
 from werkzeug.security import generate_password_hash, check_password_hash
 from backend.extensions import db
-from backend.models import User, Post, Comment, Like, ResetCode
+from backend.models import User, Post, Comment, Like, ResetCode, CodeExample
 from datetime import datetime
 import os
 import firebase_admin
@@ -12,7 +16,6 @@ import logging
 from flask_mail import Mail
 from werkzeug.utils import secure_filename
 import unicodedata
-import re
 
 # Configurar logging
 logging.basicConfig(level=logging.DEBUG)
@@ -20,6 +23,9 @@ logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 app.config.from_object('backend.config.Config')
+
+# Inicializar Cache
+cache = Cache(app, config={'CACHE_TYPE': 'simple'})
 
 # Configurar diretórios para PDFs e JSON
 PDFS_FOLDER = os.path.join(app.root_path, 'pdfs')
@@ -80,7 +86,7 @@ if not os.path.exists(cred_path):
     raise FileNotFoundError(f"Arquivo de credenciais Firebase não encontrado: {cred_path}")
 
 try:
-    if not firebase_admin._apps:  # Só inicializa se ainda não foi inicializado
+    if not firebase_admin._apps:
         cred = credentials.Certificate(cred_path)
         firebase_admin.initialize_app(cred)
         logger.info("Firebase inicializado com sucesso")
@@ -106,6 +112,36 @@ def find_file_case_insensitive(directory, target_filename):
     except Exception as e:
         logger.error(f"Erro ao listar arquivos em {directory}: {str(e)}")
         return None
+    
+def track_page_visit(page_name):
+    """Decorator para rastrear visitas às páginas"""
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            # Executar a função original primeiro
+            result = f(*args, **kwargs)
+            
+            # Rastrear a visita se o usuário estiver logado
+            if 'user_id' in session:
+                ProgressTracker.track_page_visit(session['user_id'], page_name)
+            
+            return result
+        return decorated_function
+    return decorator
+
+def track_user_activity(activity_type):
+    """Registra atividade do usuário para cálculo de progresso"""
+    if 'user_id' not in session:
+        return
+    
+    user = db.session.get(User, session['user_id'])
+    if user:
+        user.last_activity = datetime.utcnow()
+        try:
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            print(f"Erro ao rastrear atividade: {str(e)}")
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -115,6 +151,27 @@ def page_not_found(e):
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/telainicial')
+@track_page_visit('telainicial')
+def telainicial():
+    user_id = session.get('user_id')
+    if not user_id:
+        flash('Por favor, faça login para acessar esta página.', 'error')
+        return redirect(url_for('registroelogin'))
+    
+    user = db.session.get(User, user_id)
+    if not user:
+        session.clear()
+        flash('Sua sessão expirou ou o usuário não existe mais.', 'error')
+        return redirect(url_for('registroelogin'))
+    
+    posts = Post.query.options(
+        db.joinedload(Post.author),
+        db.joinedload(Post.likes)
+    ).order_by(Post.created_at.desc()).limit(10).all()
+    
+    return render_template('telainicial.html', user=user, posts=posts)
 
 @app.route('/post/<int:post_id>', methods=['GET'])
 def post_comments(post_id):
@@ -209,6 +266,81 @@ def registroelogin():
     
     return render_template('registroelogin.html')
 
+@app.route('/user_progress', methods=['GET'])
+def user_progress():
+    if 'user_id' not in session:
+        return jsonify({'status': 'error', 'message': 'Por favor, faça login para visualizar o progresso.'}), 401
+    
+    user = db.session.get(User, session['user_id'])
+    if not user:
+        return jsonify({'status': 'error', 'message': 'Usuário não encontrado.'}), 404
+    
+    try:
+        from backend.progress_tracker import ProgressTracker
+        
+        # Calcular progresso completo
+        progress_data = ProgressTracker.calculate_progress(user.id)
+        
+        # DEBUG: Verificar se há NaN
+        print(f"DEBUG - Progress data: {progress_data}")
+        print(f"DEBUG - Progress percentage: {progress_data.get('progress_percentage')}")
+        print(f"DEBUG - Activity points: {progress_data.get('activity_points')}")
+        print(f"DEBUG - Resources count: {progress_data.get('resources_count')}")
+        
+        # Obter sugestões de próximas ações
+        suggestions = ProgressTracker.get_next_actions(user.id)
+        
+        # Criar detalhes estruturados para o frontend
+        details = progress_data.get('details', {})
+        structured_details = {
+            'Páginas Visitadas': {
+                'completed': details.get('pages_visited', 0),
+                'total': details.get('total_pages', 0),
+                'percentage': (details.get('pages_visited', 0) / details.get('total_pages', 1)) * 100
+            },
+            'Recursos Acessados': {
+                'completed': details.get('resources_accessed', 0),
+                'total': details.get('total_resources', 0),
+                'percentage': (details.get('resources_accessed', 0) / details.get('total_resources', 1)) * 100
+            },
+            'Posts Criados': {
+                'completed': details.get('posts_count', 0),
+                'total': 5,  # Meta de posts
+                'percentage': min((details.get('posts_count', 0) / 5) * 100, 100)
+            },
+            'Comentários': {
+                'completed': details.get('comments_count', 0),
+                'total': 10,  # Meta de comentários
+                'percentage': min((details.get('comments_count', 0) / 10) * 100, 100)
+            },
+            'Curtidas Dadas': {
+                'completed': details.get('likes_count', 0),
+                'total': 20,  # Meta de curtidas
+                'percentage': min((details.get('likes_count', 0) / 20) * 100, 100)
+            }
+        }
+        
+        return jsonify({
+            'status': 'success',
+            'progress_percentage': progress_data['progress_percentage'],
+            'activity_points': progress_data['activity_points'],
+            'resources_count': progress_data['resources_count'],
+            'details': structured_details,
+            'suggestions': suggestions
+        })
+        
+    except Exception as e:
+        print(f"ERROR in user_progress: {str(e)}")
+        return jsonify({
+            'status': 'error', 
+            'message': 'Erro ao obter progresso.',
+            'progress_percentage': 0,
+            'activity_points': 0,
+            'resources_count': 0,
+            'details': {},
+            'suggestions': []
+        }), 500
+
 @app.route('/verify-token', methods=['POST'])
 def verify_token():
     id_token = request.json.get('idToken')
@@ -246,6 +378,7 @@ def verify_token():
         return jsonify({'status': 'error', 'message': 'Erro ao verificar token'}), 401
 
 @app.route('/videos-e-tutoriais')
+@track_page_visit('videos')
 def videos():
     user_id = session.get('user_id')
     if not user_id:
@@ -265,6 +398,7 @@ def politica_privacidade():
     return render_template('politicadeprivacidade.html')
 
 @app.route('/materiais-de-estudo')
+@track_page_visit('materiais')
 def materiais():
     user_id = session.get('user_id')
     if not user_id:
@@ -280,6 +414,7 @@ def materiais():
     return render_template('materiaisestudo.html', user=user)
 
 @app.route('/pdfs-e-apostilas')
+@track_page_visit('pdfs')
 def pdfs():
     user_id = session.get('user_id')
     if not user_id:
@@ -322,6 +457,7 @@ def serve_pdf(filename):
         return render_template('404.html'), 404
 
 @app.route('/codigo')
+@track_page_visit('codigo')
 def codigo():
     user_id = session.get('user_id')
     if not user_id:
@@ -337,6 +473,7 @@ def codigo():
     return render_template('exemplosdecodigo.html', user=user)
 
 @app.route('/comunidade', methods=['GET'])
+@track_page_visit('comunidade')
 def comunidade():
     user_id = session.get('user_id')
     if not user_id:
@@ -377,6 +514,7 @@ def create_post_form():
     return render_template('comunidade.html', user=user, posts=posts)
 
 @app.route('/configuracoes')
+@track_page_visit('configuracoes')
 def configuracoes():
     user_id = session.get('user_id')
     if not user_id:
@@ -415,31 +553,36 @@ def update_username():
 @app.route('/update_profile_pic', methods=['POST'])
 def update_profile_pic():
     if 'user_id' not in session:
-        flash('Faça login para alterar a foto.', 'error')
-        return redirect(url_for('registroelogin')), 403
+        return jsonify({'status': 'error', 'message': 'Faça login para alterar a foto.'}), 403
+    
     if 'profile_pic' not in request.files:
-        flash('Nenhum arquivo enviado.', 'error')
-        return redirect(url_for('configuracoes')), 400
+        return jsonify({'status': 'error', 'message': 'Nenhum arquivo enviado.'}), 400
+    
     file = request.files['profile_pic']
     if file.filename == '':
-        flash('Nenhum arquivo selecionado.', 'error')
-        return redirect(url_for('configuracoes')), 400
+        return jsonify({'status': 'error', 'message': 'Nenhum arquivo selecionado.'}), 400
+    
     if not allowed_file(file.filename):
-        flash('Tipo de arquivo não suportado.', 'error')
-        return redirect(url_for('configuracoes')), 400
+        return jsonify({'status': 'error', 'message': 'Tipo de arquivo não suportado.'}), 400
+    
     filename = f"user_{session['user_id']}_{secure_filename(file.filename)}"
     upload_folder = os.path.join(app.root_path, 'static', 'Uploads')
     os.makedirs(upload_folder, exist_ok=True)
     file_path = os.path.join(upload_folder, filename)
     file.save(file_path)
+    
     user = db.session.get(User, session['user_id'])
     if not user:
-        flash('Usuário não encontrado.', 'error')
-        return redirect(url_for('configuracoes')), 404
+        return jsonify({'status': 'error', 'message': 'Usuário não encontrado.'}), 404
+    
     user.profile_pic = filename
-    db.session.commit()
-    flash('Foto de perfil atualizada!', 'success')
-    return redirect(url_for('configuracoes'))
+    try:
+        db.session.commit()
+        return jsonify({'status': 'success', 'message': 'Foto de perfil atualizada!'})
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Erro ao atualizar foto de perfil: {str(e)}")
+        return jsonify({'status': 'error', 'message': 'Erro ao atualizar foto de perfil.'}), 500
 
 @app.route('/update_password', methods=['POST'])
 def update_password():
@@ -457,7 +600,7 @@ def update_password():
     if not current_password or not new_password or not confirm_password:
         return jsonify({'status': 'error', 'message': 'Todos os campos são obrigatórios.'}), 400
 
-    if not user.password:  # Usuário com login via Google
+    if not user.password:
         return jsonify({'status': 'error', 'message': 'Usuários autenticados via Google devem usar a recuperação de senha.'}), 403
 
     if not check_password_hash(user.password, current_password):
@@ -472,13 +615,11 @@ def update_password():
     try:
         user.password = generate_password_hash(new_password)
         try:
-            # Fetch Firebase user by email to get the correct UID
             firebase_user = auth.get_user_by_email(user.email)
             auth.update_user(firebase_user.uid, password=new_password)
             logger.info(f"Senha atualizada no Firebase para o usuário {user.email}")
         except auth.UserNotFoundError:
             logger.warning(f"Usuário não encontrado no Firebase: {user.email}")
-            # Still proceed with local update if Firebase user not found
         except Exception as e:
             logger.warning(f"Erro ao atualizar senha no Firebase: {str(e)}")
         db.session.commit()
@@ -498,7 +639,6 @@ def active_sessions():
         return jsonify({'status': 'error', 'message': 'Usuário não encontrado.'}), 404
 
     try:
-        # Placeholder: Replace with actual Firebase session management
         sessions = [{'id': 'session1', 'device': 'Unknown Device', 'last_active': '2025-07-05'}]
         return jsonify({'status': 'success', 'sessions': sessions})
     except Exception as e:
@@ -511,7 +651,6 @@ def end_session(session_id):
         return jsonify({'status': 'error', 'message': 'Faça login para encerrar sessões.'}), 403
 
     try:
-        # Placeholder: Replace with actual Firebase session revocation
         return jsonify({'status': 'success', 'message': 'Sessão encerrada com sucesso!'})
     except Exception as e:
         logger.error(f"Erro ao encerrar sessão: {str(e)}")
@@ -556,6 +695,7 @@ def delete_account():
         return jsonify({'status': 'error', 'message': 'Erro ao excluir conta.'}), 500
 
 @app.route('/search', methods=['GET'])
+@cache.cached(timeout=60, query_string=True)
 def search():
     user_id = session.get('user_id')
     if not user_id:
@@ -568,7 +708,7 @@ def search():
     try:
         posts = Post.query.filter(
             Post.content.ilike(f'%{query}%') | Post.category.ilike(f'%{query}%')
-        ).limit(10).all()
+        ).order_by(Post.created_at.desc()).limit(10).all()
         
         results = [
             {
@@ -584,42 +724,24 @@ def search():
         logger.error(f"Erro na busca: {str(e)}")
         return jsonify({'status': 'error', 'message': 'Erro ao realizar busca.'}), 500
 
-@app.route('/telainicial', methods=['GET', 'POST'])
-def telainicial():
-    user_id = session.get('user_id')
-    if not user_id:
-        flash('Por favor, faça login para acessar esta página.', 'error')
-        return redirect(url_for('registroelogin'))
-    
-    user = db.session.get(User, user_id)
-    if not user:
-        session.clear()
-        flash('Sua sessão expirou ou o usuário não existe mais.', 'error')
-        return redirect(url_for('registroelogin'))
-    
-    if request.method == 'POST':
-        content = request.form.get('content') or request.form.get('post_content')
-        category = request.form.get('category')
-        if content and category:
-            new_post = Post(content=content, user_id=user.id, category=category)
-            try:
-                db.session.add(new_post)
-                db.session.commit()
-                flash('Postagem publicada com sucesso!', 'success')
-            except Exception as e:
-                db.session.rollback()
-                logger.error(f"Erro ao criar postagem: {str(e)}")
-                flash('Erro ao publicar postagem. Tente novamente.', 'error')
-            return redirect(url_for('telainicial'))
-        else:
-            flash('Por favor, preencha todos os campos.', 'error')
-    
-    posts = Post.query.options(
-        db.joinedload(Post.comments).joinedload(Comment.author),
-        db.joinedload(Post.comments).joinedload(Comment.replies).joinedload(Comment.author)
-    ).order_by(Post.created_at.desc()).all()
-    
-    return render_template('telainicial.html', user=user, posts=posts)
+
+@app.route('/code_examples', methods=['GET'])
+def code_examples():
+    try:
+        examples = CodeExample.query.order_by(CodeExample.created_at.desc()).limit(10).all()
+        return jsonify([
+            {
+                'id': example.id,
+                'title': example.title,
+                'content': example.content,
+                'language': example.language,
+                'category': example.category,
+                'created_at': example.created_at.strftime('%d/%m/%Y %H:%M')
+            } for example in examples
+        ])
+    except Exception as e:
+        logger.error(f"Erro ao buscar exemplos de código: {str(e)}")
+        return jsonify({'status': 'error', 'message': 'Erro ao buscar exemplos de código.'}), 500
 
 @app.route('/create_post', methods=['POST'])
 def create_post():
@@ -645,6 +767,10 @@ def create_post():
     try:
         db.session.add(new_post)
         db.session.commit()
+        
+        # Rastrear atividade
+        track_user_activity('post_created')
+        
         return jsonify({
             'status': 'success',
             'post': {
@@ -680,6 +806,10 @@ def add_comment(post_id):
     try:
         db.session.add(new_comment)
         db.session.commit()
+        
+        # Rastrear atividade
+        track_user_activity('comment_created')
+        
         return jsonify({
             'status': 'success',
             'comment': {
@@ -695,6 +825,7 @@ def add_comment(post_id):
         db.session.rollback()
         logger.error(f"Erro ao adicionar comentário: {str(e)}")
         return jsonify({'status': 'error', 'message': 'Erro ao adicionar comentário.'}), 500
+
 
 @app.route('/reply/<int:comment_id>', methods=['POST'])
 def add_reply(comment_id):
@@ -717,6 +848,10 @@ def add_reply(comment_id):
     try:
         db.session.add(new_reply)
         db.session.commit()
+        
+        # Rastrear atividade
+        track_user_activity('comment_created')
+        
         return jsonify({
             'status': 'success',
             'reply': {
@@ -732,6 +867,7 @@ def add_reply(comment_id):
         db.session.rollback()
         logger.error(f"Erro ao adicionar resposta: {str(e)}")
         return jsonify({'status': 'error', 'message': 'Erro ao adicionar resposta.'}), 500
+
 
 @app.route('/edit_comment/<int:comment_id>', methods=['POST'])
 def edit_comment(comment_id):
@@ -858,6 +994,10 @@ def like_post(post_id):
         try:
             db.session.add(new_like)
             db.session.commit()
+            
+            # Rastrear atividade
+            track_user_activity('like_given')
+            
             like_count = Like.query.filter_by(post_id=post_id).count()
             return jsonify({
                 'status': 'success',
@@ -869,6 +1009,7 @@ def like_post(post_id):
             db.session.rollback()
             logger.error(f"Erro ao adicionar curtida: {str(e)}")
             return jsonify({'status': 'error', 'message': 'Erro ao curtir postagem.'}), 500
+
 
 @app.route('/get_post_likes/<int:post_id>', methods=['GET'])
 def get_post_likes(post_id):
@@ -913,6 +1054,10 @@ def like_comment(comment_id):
         try:
             db.session.add(new_like)
             db.session.commit()
+            
+            # Rastrear atividade
+            track_user_activity('like_given')
+            
             like_count = Like.query.filter_by(comment_id=comment_id).count()
             return jsonify({
                 'status': 'success',
@@ -956,6 +1101,8 @@ def delete_post(post_id):
         db.session.rollback()
         logger.error(f"Erro ao deletar postagem: {str(e)}")
         return jsonify({'status': 'error', 'message': 'Erro ao deletar postagem. Tente novamente.'}), 500
+    
+
 
 @app.route('/logout')
 def logout():
@@ -974,6 +1121,64 @@ with app.app_context():
             pass
         
         db.create_all()
+        
+        # Inicializar exemplos de código
+        if not CodeExample.query.first():
+            examples = [
+                CodeExample(
+                    title="Python: Jogo de Adivinhação",
+                    content="""import random
+numero_secreto = random.randint(1, 100)
+tentativas = 0
+while True:
+    palpite = int(input("Adivinhe o número (1-100): "))
+    tentativas += 1
+    if palpite == numero_secreto:
+        print(f"Parabéns! Você acertou em {tentativas} tentativas!")
+        break
+    elif palpite < numero_secreto:
+        print("Tente um número maior!")
+    else:
+        print("Tente um número menor!")""",
+                    language="Python",
+                    category="Programação"
+                ),
+                CodeExample(
+                    title="SQL: Consulta de Usuários",
+                    content="""SELECT id, username, email
+FROM users
+WHERE created_at >= CURRENT_DATE - INTERVAL '30 days'
+ORDER BY created_at DESC;""",
+                    language="SQL",
+                    category="Banco de Dados"
+                ),
+                CodeExample(
+                    title="Python: Calculadora Simples",
+                    content="""def calculadora():
+    num1 = float(input("Digite o primeiro número: "))
+    op = input("Digite a operação (+, -, *, /): ")
+    num2 = float(input("Digite o segundo número: "))
+    
+    if op == '+':
+        return num1 + num2
+    elif op == '-':
+        return num1 - num2
+    elif op == '*':
+        return num1 * num2
+    elif op == '/':
+        return num1 / num2 if num2 != 0 else "Erro: Divisão por zero!"
+    else:
+        return "Operação inválida!"
+
+print(calculadora())""",
+                    language="Python",
+                    category="Programação"
+                )
+            ]
+            db.session.add_all(examples)
+            db.session.commit()
+            logger.info("Exemplos de código inicializados com sucesso")
+        
         logger.info("Tabelas do banco de dados criadas com sucesso")
     except Exception as e:
         logger.error(f"Erro ao criar tabelas do banco de dados: {str(e)}")

@@ -1,2046 +1,1187 @@
-eu quero ujma tela para pdfs e apostilas seguindo esse padrao no header e no footer
+perfeito começou a ir @app.route('/user_progress', methods=['GET'])
+def user_progress():
+    if 'user_id' not in session:
+        return jsonify({'status': 'error', 'message': 'Por favor, faça login para visualizar o progresso.'}), 401
+    
+    user = db.session.get(User, session['user_id'])
+    if not user:
+        return jsonify({'status': 'error', 'message': 'Usuário não encontrado.'}), 404
+    
+    try:
+        posts_count = Post.query.filter_by(user_id=user.id).count()
+        likes_given = Like.query.filter_by(user_id=user.id).count()
+        comments_count = Comment.query.filter_by(user_id=user.id).count()
+        
+        print(f"DEBUG - Posts: {posts_count}, Likes: {likes_given}, Comments: {comments_count}")  # Debug
+        
+        resources_count = posts_count + likes_given + comments_count
+        progress_percentage = min((resources_count / 100) * 100, 100)  # 100 como meta
+        
+        return jsonify({
+            'status': 'success',
+            'resources_count': resources_count,
+            'progress_percentage': round(progress_percentage, 2)
+        })
+    except Exception as e:
+        print(f"ERROR in user_progress: {str(e)}")  # Debug
+        return jsonify({'status': 'error', 'message': 'Erro ao obter progresso.'}), 500
 
 
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TechNoBug</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/static/css/videoseetutoriais.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
-</head>
-<body>
-    <header class="app-header">
-        <div class="header-content">
-            <div class="search-bar">
-                <i class="fas fa-search"></i>
-                <input type="text" placeholder="Pesquisar vídeos, tutoriais, tópicos...">
-            </div>
-            <div class="logo" onclick="window.location.href = '{{ url_for('telainicial') }}';" style="cursor: pointer;">
-                <i class="fas fa-graduation-cap"></i>
-                <span>TechNoBug</span>
-            </div>
-            <button class="btn menu-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" aria-controls="offcanvasMenu">
-                <i class="fas fa-bars"></i>
-                <span>Menu</span>
-            </button>
-        </div>
-    </header>
+quero que voce identifique e coloque barra de progresso
 
-    <!-- Offcanvas Menu -->
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasMenuLabel">
-        <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="offcanvasMenuLabel">Menu</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body">
-            <div class="user-profile mb-4">
-                <div class="d-flex align-items-center">
-                    <div class="avatar me-3">
-    {% if user.profile_pic and user.profile_pic != 'default.png' %}
-        <img src="{{ url_for('static', filename='uploads/' + user.profile_pic) }}" alt="Foto de perfil" class="profile-pic-img rounded-circle" style="width:48px;height:48px;object-fit:cover;">
-    {% else %}
-        <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center" style="width:48px;height:48px;font-size:1.7em;">
-            {{ user.username[0]|upper }}
-        </div>
-    {% endif %}
-</div>
-                    <div>
-                        <h6 class="mb-0">{{ user.username }}</h6>
-                        <small class="text-muted">{{ user.email }}</small>
-                    </div>
-                </div>
-            </div>
-            <ul class="navbar-nav">
-                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('telainicial') }}"><i class="fas fa-home me-2"></i>Tela Inicial</a></li>
-                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('materiais') }}"><i class="fas fa-book me-2"></i>Materiais de Estudo</a></li>
-                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('pdfs') }}"><i class="fas fa-file-pdf me-2"></i>PDFs e Apostilas</a></li>
-                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('videos') }}"><i class="fas fa-video me-2"></i>Vídeos e Tutoriais</a></li>
-                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('codigo') }}"><i class="fas fa-code me-2"></i>Exemplos de Código</a></li>
-                <li class="nav-item mb-2"><a class="nav-link active" href="{{ url_for('comunidade') }}"><i class="fas fa-users me-2"></i>Comunidade</a></li>
-                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('configuracoes') }}"><i class="fas fa-cog me-2"></i>Configurações</a></li>
-                <li class="nav-item"><a class="nav-link text-danger" href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt me-2"></i>Sair</a></li>
-            </ul>
-        </div>
-    </div>
+from backend.extensions import db
+from datetime import datetime
 
-    <nav class="category-nav">
-        <div class="categories-wrapper">
-            <div class="categories">
-                <div class="category active">Todos</div>
-                <div class="category">Versionamento</div>
-                <div class="category">I.A</div>
-                <div class="category">Modelagem a Banco de Dados</div>
-                <div class="category">Lógica</div>
-                <div class="category">Processos</div>
-                <div class="category">Front-end</div>
-                <div class="category">Back-end</div>
-                <div class="category">Programação Android</div>
-                <div class="category">Projeto Multidisciplinar</div>
-                <div class="category">Carreiras</div>
-                <div class="category">Redes</div>
-            </div>
-        </div>
-    </nav>
+class User(db.Model):
+    __tablename__ = 'users'
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password = db.Column(db.String(256))
+    profile_pic = db.Column(db.String(120), default='default.png')
+    is_admin = db.Column(db.Boolean, default=False)
+    is_moderator = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    posts = db.relationship('Post', backref='author', lazy=True)
+    comments = db.relationship('Comment', backref='author', lazy=True)
+    likes = db.relationship('Like', backref='user', lazy=True)
 
-    <div class="container">
-        <main class="main-content">
-            <div class="section-header">
-                <h2 class="section-title">
-                    <i class="fas fa-fire"></i>
-                    <span>Tutoriais em Destaque</span>
-                </h2>
-                <div class="section-actions">
-                    <div class="view-toggle">
-                        <button class="active">
-                            <i class="fas fa-th"></i>
-                        </button>
-                        <button>
-                            <i class="fas fa-list"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
+class Post(db.Model):
+    __tablename__ = 'posts'
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Text, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    category = db.Column(db.String(50), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    comments = db.relationship('Comment', backref='post', lazy=True)
+    likes = db.relationship('Like', backref='post', lazy=True)
 
-            <div class="video-grid">
-                <!-- Card 1: Aprenda Git e Github em 5 minutos -->
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <a href="https://youtu.be/-l4Aa8wef8s?si=ziRfdFpMjxiSdThi" target="_blank">
-                            <img src="https://img.youtube.com/vi/-l4Aa8wef8s/hqdefault.jpg" alt="Thumbnail do vídeo">
-                        </a>
-                        <div class="video-category-tag">Versionamento</div>
-                        <div class="video-play-icon">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="video-duration">4:57</div>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">
-                            <a href="https://youtu.be/-l4Aa8wef8s?si=ziRfdFpMjxiSdThi" target="_blank" style="text-decoration: none; color: inherit;">
-                                Aprenda Git e Github em 5 minutos
-                            </a>
-                        </h3>
-                        <div class="video-meta">
-                            <div class="instructor">
-                                <span class="instructor-name">Mucharski</span>
-                            </div>
-                            <div class="video-stats">
-                                <span><i class="fas fa-eye"></i> 11.5K</span>
-                                <span><i class="fas fa-thumbs-up"></i> 6.1K</span>
-                            </div>
-                        </div>
-                        <p class="video-description">Um tutorial rápido e direto para aprender os conceitos básicos de Git e GitHub em apenas 5 minutos.</p>
-                        <div class="video-tags">
-                            <span class="video-tag">Git</span>
-                            <span class="video-tag">GitHub</span>
-                            <span class="video-tag">Versionamento</span>
-                        </div>
-                    </div>
-                </div>
+class Comment(db.Model):
+    __tablename__ = 'comments'
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Text, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'), nullable=False)
+    parent_id = db.Column(db.Integer, db.ForeignKey('comments.id'), nullable=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    replies = db.relationship('Comment', backref=db.backref('parent', remote_side=[id]), lazy=True)
+    likes = db.relationship('Like', backref='comment', lazy=True)
 
-                <!-- Card 2: Como Instalar Python e Visual Studio Code -->
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <a href="https://youtu.be/R9dLGLVqK9Q?si=t0m91hvDA1PA4JgN" target="_blank">
-                            <img src="https://img.youtube.com/vi/R9dLGLVqK9Q/hqdefault.jpg" alt="Thumbnail do vídeo">
-                        </a>
-                        <div class="video-category-tag">Lógica</div>
-                        <div class="video-play-icon">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="video-duration">17:22</div>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">
-                            <a href="https://youtu.be/R9dLGLVqK9Q?si=t0m91hvDA1PA4JgN" target="_blank" style="text-decoration: none; color: inherit;">
-                                Como Instalar Python e Visual Studio Code no Windows | Python do Jeito Certo 2.0
-                            </a>
-                        </h3>
-                        <div class="video-meta">
-                            <div class="instructor">
-                                <span class="instructor-name">Programação Dinâmica</span>
-                            </div>
-                            <div class="video-stats">
-                                <span><i class="fas fa-eye"></i> 85K</span>
-                                <span><i class="fas fa-thumbs-up"></i> 4.5K</span>
-                            </div>
-                        </div>
-                        <p class="video-description">Aprenda a instalar o Python e o Visual Studio Code no Windows de forma correta para começar a programar.</p>
-                        <div class="video-tags">
-                            <span class="video-tag">Python</span>
-                            <span class="video-tag">Visual Studio Code</span>
-                            <span class="video-tag">Iniciante</span>
-                        </div>
-                    </div>
-                </div>
+class Like(db.Model):
+    __tablename__ = 'likes'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'), nullable=True)
+    comment_id = db.Column(db.Integer, db.ForeignKey('comments.id'), nullable=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-                <!-- Card 3: Curso Python #01 - Seja um Programador -->
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <a href="https://www.youtube.com/watch?v=S9uPNppGsGo&list=PLvE-ZAFRgX8hnECDn1v9HNTI71veL3oW0" target="_blank">
-                            <img src="https://img.youtube.com/vi/S9uPNppGsGo/hqdefault.jpg" alt="Thumbnail do vídeo">
-                        </a>
-                        <div class="video-category-tag">Lógica</div>
-                        <div class="video-play-icon">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="video-duration">29:06</div>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">
-                            <a href="https://www.youtube.com/watch?v=S9uPNppGsGo&list=PLvE-ZAFRgX8hnECDn1v9HNTI71veL3oW0" target="_blank" style="text-decoration: none; color: inherit;">
-                                Curso Python #01 - Seja um Programador
-                            </a>
-                        </h3>
-                        <div class="video-meta">
-                            <div class="instructor">
-                                <span class="instructor-name">Curso em Vídeo</span>
-                            </div>
-                            <div class="video-stats">
-                                <span><i class="fas fa-eye"></i> 8.8M</span>
-                                <span><i class="fas fa-thumbs-up"></i> 474K</span>
-                            </div>
-                        </div>
-                        <p class="video-description">Primeira aula de um curso completo de Python para iniciantes, ensinando fundamentos de programação.</p>
-                        <div class="video-tags">
-                            <span class="video-tag">Python</span>
-                            <span class="video-tag">Programação</span>
-                            <span class="video-tag">Iniciante</span>
-                        </div>
-                    </div>
-                </div>
+class ResetCode(db.Model):
+    __tablename__ = 'reset_codes'
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(120), nullable=False)
+    code = db.Column(db.String(6), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    expires_at = db.Column(db.DateTime, nullable=False)
 
-                <!-- Card 4: Curso Grátis de Inteligência Artificial -->
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <a href="https://www.youtube.com/watch?v=jQMbuK6URws&list=PLHz_AreHm4dm24MhlWJYiR_Rm7TFtvs6S" target="_blank">
-                            <img src="https://img.youtube.com/vi/jQMbuK6URws/hqdefault.jpg" alt="Thumbnail do vídeo">
-                        </a>
-                        <div class="video-category-tag">I.A</div>
-                        <div class="video-play-icon">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="video-duration">2:44</div>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">
-                            <a href="https://www.youtube.com/watch?v=jQMbuK6URws&list=PLHz_AreHm4dm24MhlWJYiR_Rm7TFtvs6S" target="_blank" style="text-decoration: none; color: inherit;">
-                                Curso Grátis de Inteligência Artificial - @CursoemVideo IA
-                            </a>
-                        </h3>
-                        <div class="video-meta">
-                            <div class="instructor">
-                                <span class="instructor-name">Curso em Vídeo</span>
-                            </div>
-                            <div class="video-stats">
-                                <span><i class="fas fa-eye"></i> 203K</span>
-                                <span><i class="fas fa-thumbs-up"></i> 15K</span>
-                            </div>
-                        </div>
-                        <p class="video-description">Apresentação do curso gratuito de Inteligência Artificial do Curso em Vídeo.</p>
-                        <div class="video-tags">
-                            <span class="video-tag">IA</span>
-                            <span class="video-tag">Curso</span>
-                            <span class="video-tag">Gratuito</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 5: Modelagem de Dados - Conceitos de Bancos de Dados -->
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <a href="https://www.youtube.com/watch?v=Q_KTYFgvu1s&list=PLucm8g_ezqNoNHU8tjVeHmRGBFnjDIlxD" target="_blank">
-                            <img src="https://img.youtube.com/vi/Q_KTYFgvu1s/hqdefault.jpg" alt="Thumbnail do vídeo">
-                        </a>
-                        <div class="video-category-tag">Modelagem a Banco de Dados</div>
-                        <div class="video-play-icon">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="video-duration">-</div>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">
-                            <a href="https://www.youtube.com/watch?v=Q_KTYFgvu1s&list=PLucm8g_ezqNoNHU8tjVeHmRGBFnjDIlxD" target="_blank" style="text-decoration: none; color: inherit;">
-                                Modelagem de Dados - Conceitos de Bancos de Dados
-                            </a>
-                        </h3>
-                        <div class="video-meta">
-                            <div class="instructor">
-                                <span class="instructor-name">Bóson Treinamentos</span>
-                            </div>
-                            <div class="video-stats">
-                                <span><i class="fas fa-eye"></i> 576K</span>
-                                <span><i class="fas fa-thumbs-up"></i> 23K</span>
-                            </div>
-                        </div>
-                        <p class="video-description">Fundamentos essenciais de modelagem de dados para bancos de dados relacionais.</p>
-                        <div class="video-tags">
-                            <span class="video-tag">Banco de Dados</span>
-                            <span class="video-tag">Modelagem</span>
-                            <span class="video-tag">SQL</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 6: Introdução à Modelagem de Dados -->
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <a href="https://www.youtube.com/watch?v=W49AO7f93Jk" target="_blank">
-                            <img src="https://img.youtube.com/vi/W49AO7f93Jk/hqdefault.jpg" alt="Thumbnail do vídeo">
-                        </a>
-                        <div class="video-category-tag">Modelagem a Banco de Dados</div>
-                        <div class="video-play-icon">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="video-duration">-</div>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">
-                            <a href="https://www.youtube.com/watch?v=W49AO7f93Jk" target="_blank" style="text-decoration: none; color: inherit;">
-                                Introdução à Modelagem de Dados
-                            </a>
-                        </h3>
-                        <div class="video-meta">
-                            <div class="instructor">
-                                <span class="instructor-name">Hashtag Programação</span>
-                            </div>
-                            <div class="video-stats">
-                                <span><i class="fas fa-eye"></i> 32K</span>
-                                <span><i class="fas fa-thumbs-up"></i> 2K</span>
-                            </div>
-                        </div>
-                        <p class="video-description">Conceitos básicos de modelagem de dados para quem está começando com bancos de dados.</p>
-                        <div class="video-tags">
-                            <span class="video-tag">Modelagem</span>
-                            <span class="video-tag">Banco de Dados</span>
-                            <span class="video-tag">SQL</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 7: Git #1 - Conceitos e principais comandos de versionamento -->
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <a href="https://www.youtube.com/watch?v=GIEquFr3jcg&list=PLDqnSpzNKDvkfF_ZMfukmOG3MtGKfXlfJ" target="_blank">
-                            <img src="https://img.youtube.com/vi/GIEquFr3jcg/hqdefault.jpg" alt="Thumbnail do vídeo">
-                        </a>
-                        <div class="video-category-tag">Versionamento</div>
-                        <div class="video-play-icon">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="video-duration">1:20:10</div>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">
-                            <a href="https://www.youtube.com/watch?v=GIEquFr3jcg&list=PLDqnSpzNKDvkfF_ZMfukmOG3MtGKfXlfJ" target="_blank" style="text-decoration: none; color: inherit;">
-                                Git #1 - Conceitos e principais comandos de versionamento
-                            </a>
-                        </h3>
-                        <div class="video-meta">
-                            <div class="instructor">
-                                <span class="instructor-name">Angelo Luz</span>
-                            </div>
-                            <div class="video-stats">
-                                <span><i class="fas fa-eye"></i> 11K</span>
-                                <span><i class="fas fa-thumbs-up"></i> 559</span>
-                            </div>
-                        </div>
-                        <p class="video-description">Introdução aos conceitos de versionamento com Git, cobrindo comandos essenciais para iniciantes.</p>
-                        <div class="video-tags">
-                            <span class="video-tag">Git</span>
-                            <span class="video-tag">Versionamento</span>
-                            <span class="video-tag">Iniciante</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 8: Seu primeiro código HTML - @Curso em Vídeo HTML5 e CSS3 -->
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <a href="https://www.youtube.com/watch?v=E6CdIawPTh0&list=PLHz_AreHm4dkZ9-atkcmcBaMZdmLHft8n&index=12" target="_blank">
-                            <img src="https://img.youtube.com/vi/E6CdIawPTh0/hqdefault.jpg" alt="Thumbnail do vídeo">
-                        </a>
-                        <div class="video-category-tag">Front-end</div>
-                        <div class="video-play-icon">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="video-duration">17:33</div>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">
-                            <a href="https://www.youtube.com/watch?v=E6CdIawPTh0&list=PLHz_AreHm4dkZ9-atkcmcBaMZdmLHft8n&index=12" target="_blank" style="text-decoration: none; color: inherit;">
-                                Seu primeiro código HTML - @Curso em Vídeo HTML5 e CSS3
-                            </a>
-                        </h3>
-                        <div class="video-meta">
-                            <div class="instructor">
-                                <span class="instructor-name">Curso em Vídeo</span>
-                            </div>
-                            <div class="video-stats">
-                                <span><i class="fas fa-eye"></i> 962K</span>
-                                <span><i class="fas fa-thumbs-up"></i> 45K</span>
-                            </div>
-                        </div>
-                        <p class="video-description">Aprenda a criar seu primeiro código HTML com este tutorial prático do curso de HTML5 e CSS3.</p>
-                        <div class="video-tags">
-                            <span class="video-tag">HTML</span>
-                            <span class="video-tag">CSS</span>
-                            <span class="video-tag">Iniciante</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 9: Tudo sobre Front-End: salários, o que estudar e dicas para carreira -->
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <a href="https://www.youtube.com/watch?v=8xo1FID4TqU" target="_blank">
-                            <img src="https://img.youtube.com/vi/8xo1FID4TqU/hqdefault.jpg" alt="Thumbnail do vídeo">
-                        </a>
-                        <div class="video-category-tag">Front-end</div>
-                        <div class="video-play-icon">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="video-duration">18:42</div>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">
-                            <a href="https://www.youtube.com/watch?v=8xo1FID4TqU" target="_blank" style="text-decoration: none; color: inherit;">
-                                Tudo sobre Front-End: 💰 salários, o que estudar e dicas para carreira
-                            </a>
-                        </h3>
-                        <div class="video-meta">
-                            <div class="instructor">
-                                <span class="instructor-name">Gabriel Rangel</span>
-                            </div>
-                            <div class="video-stats">
-                                <span><i class="fas fa-eye"></i> 122K</span>
-                                <span><i class="fas fa-thumbs-up"></i> 9.8K</span>
-                            </div>
-                        </div>
-                        <p class="video-description">Explore a carreira de Front-End, incluindo salários, habilidades essenciais e dicas para se destacar.</p>
-                        <div class="video-tags">
-                            <span class="video-tag">Front-end</span>
-                            <span class="video-tag">Carreira</span>
-                            <span class="video-tag">Programação</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 10: O que é Front End e Back End? Diferenças que Você Precisa Saber -->
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <a href="https://www.youtube.com/watch?v=LDU4BCSxPp4" target="_blank">
-                            <img src="https://img.youtube.com/vi/LDU4BCSxPp4/hqdefault.jpg" alt="Thumbnail do vídeo">
-                        </a>
-                        <div class="video-category-tag">Front-end</div>
-                        <div class="video-play-icon">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="video-duration">8:34</div>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">
-                            <a href="https://www.youtube.com/watch?v=LDU4BCSxPp4" target="_blank" style="text-decoration: none; color: inherit;">
-                                O que é Front End e Back End? Diferenças que Você Precisa Saber
-                            </a>
-                        </h3>
-                        <div class="video-meta">
-                            <div class="instructor">
-                                <span class="instructor-name">Alura</span>
-                            </div>
-                            <div class="video-stats">
-                                <span><i class="fas fa-eye"></i> 16K</span>
-                                <span><i class="fas fa-thumbs-up"></i> 1K</span>
-                            </div>
-                        </div>
-                        <p class="video-description">Entenda as diferenças entre Front-End e Back-End e como eles funcionam no desenvolvimento web.</p>
-                        <div class="video-tags">
-                            <span class="video-tag">Front-end</span>
-                            <span class="video-tag">Back-end</span>
-                            <span class="video-tag">Programação</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 11: CURSO DE KOTLIN PARA INICIANTES - BEM-VINDO #01 -->
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <a href="https://www.youtube.com/watch?v=4lOjDziyce8&list=PLJ0AcghBBWSj0i1SQfr3GdwUBnUaIf5xw" target="_blank">
-                            <img src="https://img.youtube.com/vi/4lOjDziyce8/hqdefault.jpg" alt="Thumbnail do vídeo">
-                        </a>
-                        <div class="video-category-tag">Android</div>
-                        <div class="video-play-icon">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="video-duration">21:55</div>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">
-                            <a href="https://www.youtube.com/watch?v=4lOjDziyce8&list=PLJ0AcghBBWSj0i1SQfr3GdwUBnUaIf5xw" target="_blank" style="text-decoration: none; color: inherit;">
-                                CURSO DE KOTLIN PARA INICIANTES - BEM-VINDO #01
-                            </a>
-                        </h3>
-                        <div class="video-meta">
-                            <div class="instructor">
-                                <span class="instructor-name">Tiago Aguiar</span>
-                            </div>
-                            <div class="video-stats">
-                                <span><i class="fas fa-eye"></i> 68K</span>
-                                <span><i class="fas fa-thumbs-up"></i> 2.2K</span>
-                            </div>
-                        </div>
-                        <p class="video-description">Introdução ao curso de Kotlin para iniciantes, abordando os conceitos básicos da linguagem.</p>
-                        <div class="video-tags">
-                            <span class="video-tag">Kotlin</span>
-                            <span class="video-tag">Android</span>
-                            <span class="video-tag">Iniciante</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 12: Curso de Flutter #1 - Apresentação -->
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <a href="https://www.youtube.com/watch?v=XeUiJJN0vsE&list=PLlBnICoI-g-d-J57QIz6Tx5xtUDGQdBFB" target="_blank">
-                            <img src="https://img.youtube.com/vi/XeUiJJN0vsE/hqdefault.jpg" alt="Thumbnail do vídeo">
-                        </a>
-                        <div class="video-category-tag">Android</div>
-                        <div class="video-play-icon">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="video-duration">4:26</div>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">
-                            <a href="https://www.youtube.com/watch?v=XeUiJJN0vsE&list=PLlBnICoI-g-d-J57QIz6Tx5xtUDGQdBFB" target="_blank" style="text-decoration: none; color: inherit;">
-                                Curso de Flutter #1 - Apresentação
-                            </a>
-                        </h3>
-                        <div class="video-meta">
-                            <div class="instructor">
-                                <span class="instructor-name">Flutterando TV</span>
-                            </div>
-                            <div class="video-stats">
-                                <span><i class="fas fa-eye"></i> -</span>
-                                <span><i class="fas fa-thumbs-up"></i> 7.7K</span>
-                            </div>
-                        </div>
-                        <p class="video-description">Apresentação do curso completo de Flutter para desenvolvimento multiplataforma.</p>
-                        <div class="video-tags">
-                            <span class="video-tag">Flutter</span>
-                            <span class="video-tag">Mobile</span>
-                            <span class="video-tag">Dart</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 13: Curso Javascript Completo: Aula 01 - JS Interno e Externo -->
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <a href="https://www.youtube.com/watch?v=vEwPnjqWQ-g&list=PL2Fdisxwzt_d590u3uad46W-kHA0PTjjw" target="_blank">
-                            <img src="https://img.youtube.com/vi/vEwPnjqWQ-g/hqdefault.jpg" alt="Thumbnail do vídeo">
-                        </a>
-                        <div class="video-category-tag">Front-end</div>
-                        <div class="video-play-icon">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="video-duration">12:24</div>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">
-                            <a href="https://www.youtube.com/watch?v=vEwPnjqWQ-g&list=PL2Fdisxwzt_d590u3uad46W-kHA0PTjjw" target="_blank" style="text-decoration: none; color: inherit;">
-                                Curso Javascript Completo: Aula 01 - JS Interno e Externo
-                            </a>
-                        </h3>
-                        <div class="video-meta">
-                            <div class="instructor">
-                                <span class="instructor-name">Programação Web</span>
-                            </div>
-                            <div class="video-stats">
-                                <span><i class="fas fa-eye"></i> 220K</span>
-                                <span><i class="fas fa-thumbs-up"></i> 12K</span>
-                            </div>
-                        </div>
-                        <p class="video-description">Primeira aula do curso completo de JavaScript, abordando como incluir JS em páginas HTML.</p>
-                        <div class="video-tags">
-                            <span class="video-tag">JavaScript</span>
-                            <span class="video-tag">Front-end</span>
-                            <span class="video-tag">Iniciante</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 14: Curso React: Introdução - #01 -->
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <a href="https://www.youtube.com/watch?v=FXqX7oof0I4&list=PLnDvRpP8BneyVA0SZ2okm-QBojomniQVO" target="_blank">
-                            <img src="https://img.youtube.com/vi/FXqX7oof0I4/hqdefault.jpg" alt="Thumbnail do vídeo">
-                        </a>
-                        <div class="video-category-tag">Front-end</div>
-                        <div class="video-play-icon">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="video-duration">11:44</div>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">
-                            <a href="https://www.youtube.com/watch?v=FXqX7oof0I4&list=PLnDvRpP8BneyVA0SZ2okm-QBojomniQVO" target="_blank" style="text-decoration: none; color: inherit;">
-                                Curso React: Introdução - #01
-                            </a>
-                        </h3>
-                        <div class="video-meta">
-                            <div class="instructor">
-                                <span class="instructor-name">Matheus Battisti - Hora de Codar</span>
-                            </div>
-                            <div class="video-stats">
-                                <span><i class="fas fa-eye"></i> 369K</span>
-                                <span><i class="fas fa-thumbs-up"></i> 13K</span>
-                            </div>
-                        </div>
-                        <p class="video-description">Introdução ao curso de React, apresentando os conceitos básicos da biblioteca JavaScript.</p>
-                        <div class="video-tags">
-                            <span class="video-tag">React</span>
-                            <span class="video-tag">JavaScript</span>
-                            <span class="video-tag">Front-end</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 15: Processos de Desenvolvimento de Software -->
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <a href="https://www.youtube.com/watch?v=kZImAXvRjH8" target="_blank">
-                            <img src="https://img.youtube.com/vi/kZImAXvRjH8/hqdefault.jpg" alt="Thumbnail do vídeo">
-                        </a>
-                        <div class="video-category-tag">Processos</div>
-                        <div class="video-play-icon">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="video-duration">44:35</div>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">
-                            <a href="https://www.youtube.com/watch?v=kZImAXvRjH8" target="_blank" style="text-decoration: none; color: inherit;">
-                                Processos de Desenvolvimento de Software
-                            </a>
-                        </h3>
-                        <div class="video-meta">
-                            <div class="instructor">
-                                <span class="instructor-name">Rainara Maia</span>
-                            </div>
-                            <div class="video-stats">
-                                <span><i class="fas fa-eye"></i> 12K</span>
-                                <span><i class="fas fa-thumbs-up"></i> 527</span>
-                            </div>
-                        </div>
-                        <p class="video-description">Aula sobre os principais processos de desenvolvimento de software utilizados na indústria.</p>
-                        <div class="video-tags">
-                            <span class="video-tag">Processos</span>
-                            <span class="video-tag">Desenvolvimento</span>
-                            <span class="video-tag">Software</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 16: Modelo em Cascata - Ciclos de Vida de Desenvolvimento de Software -->
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <a href="https://www.youtube.com/watch?v=luCQslwi8pE" target="_blank">
-                            <img src="https://img.youtube.com/vi/luCQslwi8pE/hqdefault.jpg" alt="Thumbnail do vídeo">
-                        </a>
-                        <div class="video-category-tag">Processos</div>
-                        <div class="video-play-icon">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="video-duration">11:47</div>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">
-                            <a href="https://www.youtube.com/watch?v=luCQslwi8pE" target="_blank" style="text-decoration: none; color: inherit;">
-                                Modelo em Cascata - Ciclos de Vida de Desenvolvimento de Software
-                            </a>
-                        </h3>
-                        <div class="video-meta">
-                            <div class="instructor">
-                                <span class="instructor-name">Bóson Treinamentos</span>
-                            </div>
-                            <div class="video-stats">
-                                <span><i class="fas fa-eye"></i> 27K</span>
-                                <span><i class="fas fa-thumbs-up"></i> 1.5K</span>
-                            </div>
-                        </div>
-                        <p class="video-description">Explicação detalhada sobre o modelo em cascata no desenvolvimento de software.</p>
-                        <div class="video-tags">
-                            <span class="video-tag">Waterfall</span>
-                            <span class="video-tag">Processos</span>
-                            <span class="video-tag">Desenvolvimento</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 17: Curso Lógica de Programação Completo 2025 -->
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <a href="https://www.youtube.com/watch?v=iF2MdbrTiBM" target="_blank">
-                            <img src="https://img.youtube.com/vi/iF2MdbrTiBM/hqdefault.jpg" alt="Thumbnail do vídeo">
-                        </a>
-                        <div class="video-category-tag">Lógica</div>
-                        <div class="video-play-icon">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="video-duration">3:02:05</div>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">
-                            <a href="https://www.youtube.com/watch?v=iF2MdbrTiBM" target="_blank" style="text-decoration: none; color: inherit;">
-                                Curso Lógica de Programação Completo 2025 [Iniciantes] + Desafios
-                            </a>
-                        </h3>
-                        <div class="video-meta">
-                            <div class="instructor">
-                                <span class="instructor-name">Dev Aprender | Jhonatan de Souza</span>
-                            </div>
-                            <div class="video-stats">
-                                <span><i class="fas fa-eye"></i> 3.2M</span>
-                                <span><i class="fas fa-thumbs-up"></i> 133K</span>
-                            </div>
-                        </div>
-                        <p class="video-description">Curso completo de lógica de programação para iniciantes com muitos exercícios práticos.</p>
-                        <div class="video-tags">
-                            <span class="video-tag">Lógica</span>
-                            <span class="video-tag">Iniciante</span>
-                            <span class="video-tag">Programação</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 18: CURSO DE JAVA PARA INICIANTES - BEM-VINDO #01 -->
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <a href="https://www.youtube.com/watch?v=mRryrODqQcw&list=PLJ0AcghBBWSi6nK2CUkw9ngvwWB1gE8mL" target="_blank">
-                            <img src="https://img.youtube.com/vi/mRryrODqQcw/hqdefault.jpg" alt="Thumbnail do vídeo">
-                        </a>
-                        <div class="video-category-tag">Back-end</div>
-                        <div class="video-play-icon">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="video-duration">6:13</div>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">
-                            <a href="https://www.youtube.com/watch?v=mRryrODqQcw&list=PLJ0AcghBBWSi6nK2CUkw9ngvwWB1gE8mL" target="_blank" style="text-decoration: none; color: inherit;">
-                                CURSO DE JAVA PARA INICIANTES - BEM-VINDO #01
-                            </a>
-                        </h3>
-                        <div class="video-meta">
-                            <div class="instructor">
-                                <span class="instructor-name">Tiago Aguiar</span>
-                            </div>
-                            <div class="video-stats">
-                                <span><i class="fas fa-eye"></i> 260K</span>
-                                <span><i class="fas fa-thumbs-up"></i> 11K</span>
-                            </div>
-                        </div>
-                        <p class="video-description">Introdução ao curso de Java para iniciantes, apresentando os conceitos básicos da linguagem.</p>
-                        <div class="video-tags">
-                            <span class="video-tag">Java</span>
-                            <span class="video-tag">Back-end</span>
-                            <span class="video-tag">Iniciante</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 19: Como vai ser o Curso de Redes? - Curso Redes #01 -->
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <a href="https://www.youtube.com/watch?v=QkMbqL8QD9w&list=PLHz_AreHm4dkd4lr9G0Up-W-YaHYdTDuP" target="_blank">
-                            <img src="https://img.youtube.com/vi/QkMbqL8QD9w/hqdefault.jpg" alt="Thumbnail do vídeo">
-                        </a>
-                        <div class="video-category-tag">Redes</div>
-                        <div class="video-play-icon">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="video-duration">23:19</div>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">
-                            <a href="https://www.youtube.com/watch?v=QkMbqL8QD9w&list=PLHz_AreHm4dkd4lr9G0Up-W-YaHYdTDuP" target="_blank" style="text-decoration: none; color: inherit;">
-                                Como vai ser o Curso de Redes? - Curso Redes #01
-                            </a>
-                        </h3>
-                        <div class="video-meta">
-                            <div class="instructor">
-                                <span class="instructor-name">Curso em Vídeo</span>
-                            </div>
-                            <div class="video-stats">
-                                <span><i class="fas fa-eye"></i> 697K</span>
-                                <span><i class="fas fa-thumbs-up"></i> 32K</span>
-                            </div>
-                        </div>
-                        <p class="video-description">Apresentação do curso completo de redes de computadores para iniciantes.</p>
-                        <div class="video-tags">
-                            <span class="video-tag">Redes</span>
-                            <span class="video-tag">Computadores</span>
-                            <span class="video-tag">Iniciante</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 20: O que é Rede de Computadores?! -->
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <a href="https://www.youtube.com/watch?v=jLYSmtDGF-k" target="_blank">
-                            <img src="https://img.youtube.com/vi/jLYSmtDGF-k/hqdefault.jpg" alt="Thumbnail do vídeo">
-                        </a>
-                        <div class="video-category-tag">Redes</div>
-                        <div class="video-play-icon">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="video-duration">10:03</div>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">
-                            <a href="https://www.youtube.com/watch?v=jLYSmtDGF-k" target="_blank" style="text-decoration: none; color: inherit;">
-                                O que é Rede de Computadores?!
-                            </a>
-                        </h3>
-                        <div class="video-meta">
-                            <div class="instructor">
-                                <span class="instructor-name">Prof. Marcel Rios - Informática</span>
-                            </div>
-                            <div class="video-stats">
-                                <span><i class="fas fa-eye"></i> 23K</span>
-                                <span><i class="fas fa-thumbs-up"></i> 1.7K</span>
-                            </div>
-                        </div>
-                        <p class="video-description">Introdução aos conceitos básicos de redes de computadores para iniciantes.</p>
-                        <div class="video-tags">
-                            <span class="video-tag">Redes</span>
-                            <span class="video-tag">Computadores</span>
-                            <span class="video-tag">Conceitos</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 21: Inteligência Artificial Explicada em Apenas 11 Minutos -->
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <a href="https://www.youtube.com/watch?v=HNBtdyMjxKU&t=283s" target="_blank">
-                            <img src="https://img.youtube.com/vi/HNBtdyMjxKU/hqdefault.jpg" alt="Thumbnail do vídeo">
-                        </a>
-                        <div class="video-category-tag">I.A</div>
-                        <div class="video-play-icon">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="video-duration">11:23</div>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">
-                            <a href="https://www.youtube.com/watch?v=HNBtdyMjxKU&t=283s" target="_blank" style="text-decoration: none; color: inherit;">
-                                Inteligência Artificial Explicada em Apenas 11 Minutos
-                            </a>
-                        </h3>
-                        <div class="video-meta">
-                            <div class="instructor">
-                                <span class="instructor-name">Bruno Picinini</span>
-                            </div>
-                            <div class="video-stats">
-                                <span><i class="fas fa-eye"></i> 171K</span>
-                                <span><i class="fas fa-thumbs-up"></i> 6.7K</span>
-                            </div>
-                        </div>
-                        <p class="video-description">Explicação rápida e direta sobre o que é Inteligência Artificial e como ela funciona.</p>
-                        <div class="video-tags">
-                            <span class="video-tag">IA</span>
-                            <span class="video-tag">Inteligência Artificial</span>
-                            <span class="video-tag">Introdução</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 22: Aprenda IA em 30 Minutos -->
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <a href="https://www.youtube.com/watch?v=0Qy-yafeHIg" target="_blank">
-                            <img src="https://img.youtube.com/vi/0Qy-yafeHIg/hqdefault.jpg" alt="Thumbnail do vídeo">
-                        </a>
-                        <div class="video-category-tag">I.A</div>
-                        <div class="video-play-icon">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="video-duration">30:23</div>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">
-                            <a href="https://www.youtube.com/watch?v=0Qy-yafeHIg" target="_blank" style="text-decoration: none; color: inherit;">
-                                Aprenda IA em 30 Minutos: Fique 10 Passos à Frente da Média
-                            </a>
-                        </h3>
-                        <div class="video-meta">
-                            <div class="instructor">
-                                <span class="instructor-name">Sancler Miranda | IA Revolution</span>
-                            </div>
-                            <div class="video-stats">
-                                <span><i class="fas fa-eye"></i> 60K</span>
-                                <span><i class="fas fa-thumbs-up"></i> 2.8K</span>
-                            </div>
-                        </div>
-                        <p class="video-description">Guia rápido para entender os conceitos fundamentais de Inteligência Artificial.</p>
-                        <div class="video-tags">
-                            <span class="video-tag">IA</span>
-                            <span class="video-tag">ChatGPT</span>
-                            <span class="video-tag">Tutorial</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 23: Inteligência Artificial na Prática com Python -->
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <a href="https://www.youtube.com/watch?v=GMDb2jtzKZQ&list=PLpdAy0tYrnKyVQDckS5IDB24QrSap2u8y" target="_blank">
-                            <img src="https://img.youtube.com/vi/GMDb2jtzKZQ/hqdefault.jpg" alt="Thumbnail do vídeo">
-                        </a>
-                        <div class="video-category-tag">I.A</div>
-                        <div class="video-play-icon">
-                            <i class="fas fa-play"></i>
-                        </div>
-                        <div class="video-duration">-</div>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">
-                            <a href="https://www.youtube.com/watch?v=GMDb2jtzKZQ&list=PLpdAy0tYrnKyVQDckS5IDB24QrSap2u8y" target="_blank" style="text-decoration: none; color: inherit;">
-                                Inteligência Artificial na Prática com Python [Projeto Flappy Bird]
-                            </a>
-                        </h3>
-                        <div class="video-meta">
-                            <div class="instructor">
-                                <span class="instructor-name">Hashtag Programação</span>
-                            </div>
-                            <div class="video-stats">
-                                <span><i class="fas fa-eye"></i> 326K</span>
-                                <span><i class="fas fa-thumbs-up"></i> 7.8K</span>
-                            </div>
-                        </div>
-                        <p class="video-description">Aula prática de IA com Python criando um jogo Flappy Bird inteligente.</p>
-                        <div class="video-tags">
-                            <span class="video-tag">Python</span>
-                            <span class="video-tag">IA</span>
-                            <span class="video-tag">Projeto Prático</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
-    </div>
-
-    {% include 'footer.html' %}
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="static\js\videosetutoriais.js"></script>
-</body>
-</html>
+class CodeExample(db.Model):
+    __tablename__ = 'code_examples'
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(120), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    language = db.Column(db.String(50), nullable=False)
+    category = db.Column(db.String(50), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 
 
+quero que de acordo com oque tem em meus models, o usuario for usando o banco de dados em si, abrindo rotas e talz, fazendo va aumentando a barra de progresso 
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Elementos da interface
-    const searchBar = document.querySelector('.search-bar');
-    const searchInput = document.querySelector('.search-bar input');
-    const searchIcon = document.querySelector('.search-bar i');
-    const categories = document.querySelectorAll('.category');
-    const viewToggleButtons = document.querySelectorAll('.view-toggle button');
-    const videoGrid = document.querySelector('.video-grid');
-    const sideMenu = document.getElementById('offcanvasMenu');
+e quero que a ´pessoa tenha visto todas as telas do site 
 
-    // Inicializa componentes
-    initializeComponents();
+app.py com as rotas from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify, send_from_directory
+from flask_caching import Cache
+from werkzeug.exceptions import BadRequest
+from werkzeug.security import generate_password_hash, check_password_hash
+from backend.extensions import db
+from backend.models import User, Post, Comment, Like, ResetCode, CodeExample
+from datetime import datetime
+import os
+import firebase_admin
+from firebase_admin import auth, credentials
+from flask_migrate import Migrate
+from backend.reset_password import reset_bp
+import logging
+from flask_mail import Mail
+from werkzeug.utils import secure_filename
+import unicodedata
 
-    // Configura eventos
-    setupSearchBar();
-    setupCategoryFilter();
-    setupViewToggle();
-    setupThemeSwitch();
-    setupDrawer();
+# Configurar logging
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
-    function initializeComponents() {
-        // Verifica se há tema salvo no localStorage
-        if (localStorage.getItem('theme') === 'dark') {
-            document.body.classList.add('dark-theme');
-            const themeSwitch = document.querySelector('.theme-switch');
-            if (themeSwitch) {
-                themeSwitch.innerHTML = '<i class="fas fa-sun"></i>';
+app = Flask(__name__)
+app.config.from_object('backend.config.Config')
+
+# Inicializar Cache
+cache = Cache(app, config={'CACHE_TYPE': 'simple'})
+
+# Configurar diretórios para PDFs e JSON
+PDFS_FOLDER = os.path.join(app.root_path, 'pdfs')
+DATA_FOLDER = os.path.join(app.root_path, 'data')
+app.config['PDFS_FOLDER'] = PDFS_FOLDER
+app.config['DATA_FOLDER'] = DATA_FOLDER
+
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+# Configuração do Flask-Mail para Brevo SMTP
+app.config['MAIL_SERVER'] = 'smtp-relay.brevo.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = '901acc001@smtp-brevo.com'
+app.config['MAIL_PASSWORD'] = 'VPt45nhgXkBxjEy6'
+app.config['MAIL_DEFAULT_SENDER'] = 'technobugproject@gmail.com'
+
+mail = Mail(app)
+
+db.init_app(app)
+migrate = Migrate(app, db)
+
+# Registrar o blueprint de recuperação de senha
+app.register_blueprint(reset_bp)
+
+# Criar pastas instance, pdfs e data se não existirem
+instance_dir = app.config['INSTANCE_DIR']
+for directory in [instance_dir, PDFS_FOLDER, DATA_FOLDER]:
+    if not os.path.exists(directory):
+        try:
+            os.makedirs(directory)
+            logger.info(f"Pasta criada em: {directory}")
+        except Exception as e:
+            logger.error(f"Erro ao criar pasta {directory}: {str(e)}")
+            raise
+
+# Log do caminho do banco de dados
+logger.info(f"SQLALCHEMY_DATABASE_URI: {app.config['SQLALCHEMY_DATABASE_URI']}")
+
+# Verificar permissões de escrita no diretório instance
+try:
+    test_file = os.path.join(instance_dir, 'test_write.txt')
+    with open(test_file, 'w') as f:
+        f.write('test')
+    os.remove(test_file)
+    logger.info(f"Permissões de escrita verificadas com sucesso em: {instance_dir}")
+except Exception as e:
+    logger.error(f"Erro de permissão no diretório instance: {str(e)}")
+    raise
+
+cred_path = 'technobug-6daca-firebase-adminsdk-fbsvc-19273e6f57.json'
+
+if not os.path.exists(cred_path):
+    logger.error(f"Arquivo de credenciais Firebase não encontrado: {cred_path}")
+    raise FileNotFoundError(f"Arquivo de credenciais Firebase não encontrado: {cred_path}")
+
+try:
+    if not firebase_admin._apps:
+        cred = credentials.Certificate(cred_path)
+        firebase_admin.initialize_app(cred)
+        logger.info("Firebase inicializado com sucesso")
+    else:
+        logger.info("Firebase já estava inicializado")
+except Exception as e:
+    logger.error(f"Erro ao inicializar Firebase: {str(e)}")
+    raise
+
+def normalize_filename(filename):
+    """Normaliza o nome do arquivo, removendo acentos e convertendo para minúsculas."""
+    normalized = unicodedata.normalize('NFKD', filename).encode('ASCII', 'ignore').decode('ASCII')
+    return normalized.lower()
+
+def find_file_case_insensitive(directory, target_filename):
+    """Busca um arquivo no diretório de forma case-insensitive."""
+    target_normalized = normalize_filename(target_filename)
+    try:
+        for filename in os.listdir(directory):
+            if normalize_filename(filename) == target_normalized:
+                return filename
+        return None
+    except Exception as e:
+        logger.error(f"Erro ao listar arquivos em {directory}: {str(e)}")
+        return None
+
+@app.errorhandler(404)
+def page_not_found(e):
+    logger.error(f"Erro 404: {request.url}")
+    return render_template('404.html'), 404
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/telainicial')
+def telainicial():
+    user_id = session.get('user_id')
+    if not user_id:
+        flash('Por favor, faça login para acessar esta página.', 'error')
+        return redirect(url_for('registroelogin'))
+    
+    user = db.session.get(User, user_id)
+    if not user:
+        session.clear()
+        flash('Sua sessão expirou ou o usuário não existe mais.', 'error')
+        return redirect(url_for('registroelogin'))
+    
+    posts = Post.query.options(
+        db.joinedload(Post.author),
+        db.joinedload(Post.likes)
+    ).order_by(Post.created_at.desc()).limit(10).all()
+    
+    return render_template('telainicial.html', user=user, posts=posts)
+
+@app.route('/post/<int:post_id>', methods=['GET'])
+def post_comments(post_id):
+    user_id = session.get('user_id')
+    if not user_id:
+        flash('Por favor, faça login para acessar esta página.', 'error')
+        return redirect(url_for('registroelogin'))
+    
+    user = db.session.get(User, user_id)
+    if not user:
+        session.clear()
+        flash('Sua sessão expirou ou o usuário não existe mais.', 'error')
+        return redirect(url_for('registroelogin'))
+    
+    post = Post.query.options(
+        db.joinedload(Post.comments).joinedload(Comment.author),
+        db.joinedload(Post.comments).joinedload(Comment.replies).joinedload(Comment.author)
+    ).get_or_404(post_id)
+    
+    return render_template('post_comments.html', user=user, post=post)
+
+@app.route('/registroelogin', methods=['GET', 'POST'])
+def registroelogin():
+    user_id = session.get('user_id')
+    if user_id:
+        user = db.session.get(User, user_id)
+        if user:
+            return redirect(url_for('telainicial'))
+        session.clear()
+    
+    if request.method == 'POST':
+        if 'login' in request.form:
+            email = request.form.get('email')
+            password = request.form.get('password')
+            
+            if not email or not password:
+                flash('Por favor, preencha todos os campos.', 'error')
+                return redirect(url_for('registroelogin'))
+            
+            user = User.query.filter_by(email=email).first()
+            if user and user.password and check_password_hash(user.password, password):
+                session['user_id'] = user.id
+                session['username'] = user.username
+                flash(f'Bem-vindo de volta, {user.username}!', 'success')
+                return redirect(url_for('telainicial'))
+            else:
+                flash('Email ou senha incorretos.', 'error')
+                return redirect(url_for('registroelogin'))
+                
+        elif 'register' in request.form:
+            username = request.form.get('username')
+            email = request.form.get('email')
+            password = request.form.get('password')
+            confirm_password = request.form.get('confirm_password')
+            
+            if not username or not email or not password or not confirm_password:
+                flash('Por favor, preencha todos os campos.', 'error')
+                return redirect(url_for('registroelogin'))
+            if len(password) < 8:
+                flash('A senha deve ter no mínimo 8 caracteres.', 'error')
+                return redirect(url_for('registroelogin'))
+                
+            if password != confirm_password:
+                flash('As senhas não coincidem.', 'error')
+                return redirect(url_for('registroelogin'))
+                
+            existing_user = User.query.filter_by(email=email).first()
+            if existing_user:
+                flash('Este email já está em uso.', 'error')
+                return redirect(url_for('registroelogin'))
+                
+            new_user = User(
+                username=username,
+                email=email,
+                password=generate_password_hash(password)
+            )
+            try:
+                db.session.add(new_user)
+                db.session.commit()
+                try:
+                    auth.create_user(email=email, password=password)
+                    logger.info(f"Usuário {email} criado no Firebase Authentication")
+                except Exception as e:
+                    logger.warning(f"Erro ao criar usuário no Firebase: {str(e)}")
+                flash('Conta criada com sucesso! Faça login para continuar.', 'success')
+            except Exception as e:
+                db.session.rollback()
+                logger.error(f"Erro ao criar usuário: {str(e)}")
+                flash('Erro ao criar conta. Tente novamente.', 'error')
+            
+            return redirect(url_for('registroelogin'))
+    
+    return render_template('registroelogin.html')
+
+@app.route('/user_progress', methods=['GET'])
+def user_progress():
+    if 'user_id' not in session:
+        return jsonify({'status': 'error', 'message': 'Por favor, faça login para visualizar o progresso.'}), 401
+    
+    user = db.session.get(User, session['user_id'])
+    if not user:
+        return jsonify({'status': 'error', 'message': 'Usuário não encontrado.'}), 404
+    
+    try:
+        posts_count = Post.query.filter_by(user_id=user.id).count()
+        likes_given = Like.query.filter_by(user_id=user.id).count()
+        comments_count = Comment.query.filter_by(user_id=user.id).count()
+        
+        print(f"DEBUG - Posts: {posts_count}, Likes: {likes_given}, Comments: {comments_count}")  # Debug
+        
+        resources_count = posts_count + likes_given + comments_count
+        progress_percentage = min((resources_count / 100) * 100, 100)  # 100 como meta
+        
+        return jsonify({
+            'status': 'success',
+            'resources_count': resources_count,
+            'progress_percentage': round(progress_percentage, 2)
+        })
+    except Exception as e:
+        print(f"ERROR in user_progress: {str(e)}")  # Debug
+        return jsonify({'status': 'error', 'message': 'Erro ao obter progresso.'}), 500
+
+@app.route('/verify-token', methods=['POST'])
+def verify_token():
+    id_token = request.json.get('idToken')
+    try:
+        decoded_token = auth.verify_id_token(id_token)
+        email = decoded_token.get('email')
+        username = decoded_token.get('name', email.split('@')[0])
+        uid = decoded_token['uid']
+        
+        user = User.query.filter_by(email=email).first()
+        if not user:
+            user = User(
+                username=username,
+                email=email,
+                password=''  # Sem senha para autenticação Google
+            )
+            try:
+                db.session.add(user)
+                db.session.commit()
+                logger.info(f"Usuário {email} criado com sucesso")
+            except Exception as e:
+                db.session.rollback()
+                logger.error(f"Erro ao criar usuário no banco: {str(e)}")
+                return jsonify({'status': 'error', 'message': 'Erro ao criar usuário no banco de dados'}), 500
+        
+        session['user_id'] = user.id
+        session['username'] = user.username
+        
+        return jsonify({'status': 'success', 'user': {'id': user.id, 'username': user.username, 'email': user.email}})
+    except auth.ExpiredIdTokenError:
+        logger.warning("Token expirado recebido")
+        return jsonify({'status': 'error', 'message': 'Token expirado. Faça login novamente.'}), 401
+    except Exception as e:
+        logger.error(f"Erro ao verificar token: {str(e)}")
+        return jsonify({'status': 'error', 'message': 'Erro ao verificar token'}), 401
+
+@app.route('/videos-e-tutoriais')
+def videos():
+    user_id = session.get('user_id')
+    if not user_id:
+        flash('Por favor, faça login para acessar esta página.', 'error')
+        return redirect(url_for('registroelogin'))
+    
+    user = db.session.get(User, user_id)
+    if not user:
+        session.clear()
+        flash('Sua sessão expirou ou o usuário não existe mais.', 'error')
+        return redirect(url_for('registroelogin'))
+    
+    return render_template('videosetutoriais.html', user=user)
+
+@app.route('/politica-de-privacidade')
+def politica_privacidade():
+    return render_template('politicadeprivacidade.html')
+
+@app.route('/materiais-de-estudo')
+def materiais():
+    user_id = session.get('user_id')
+    if not user_id:
+        flash('Por favor, faça login para acessar esta página.', 'error')
+        return redirect(url_for('registroelogin'))
+    
+    user = db.session.get(User, user_id)
+    if not user:
+        session.clear()
+        flash('Sua sessão expirou ou o usuário não existe mais.', 'error')
+        return redirect(url_for('registroelogin'))
+    
+    return render_template('materiaisestudo.html', user=user)
+
+@app.route('/pdfs-e-apostilas')
+def pdfs():
+    user_id = session.get('user_id')
+    if not user_id:
+        flash('Por favor, faça login para acessar esta página.', 'error')
+        return redirect(url_for('registroelogin'))
+    
+    user = db.session.get(User, user_id)
+    if not user:
+        session.clear()
+        flash('Sua sessão expirou ou o usuário não existe mais.', 'error')
+        return redirect(url_for('registroelogin'))
+    
+    return render_template('pdfeapostilas.html', user=user)
+
+@app.route('/data/pdfs.json')
+def serve_pdfs_json():
+    try:
+        return send_from_directory(app.config['DATA_FOLDER'], 'pdfs.json')
+    except Exception as e:
+        logger.error(f"Erro ao servir pdfs.json: {str(e)}")
+        return render_template('404.html'), 404
+
+@app.route('/pdfs/<path:filename>')
+def serve_pdf(filename):
+    try:
+        file_path = os.path.join(app.config['PDFS_FOLDER'], filename)
+        if os.path.exists(file_path):
+            logger.info(f"Servindo arquivo: {file_path}")
+            return send_from_directory(app.config['PDFS_FOLDER'], filename)
+        
+        actual_filename = find_file_case_insensitive(app.config['PDFS_FOLDER'], filename)
+        if actual_filename:
+            logger.info(f"Arquivo encontrado (case-insensitive): {actual_filename}")
+            return send_from_directory(app.config['PDFS_FOLDER'], actual_filename)
+        
+        logger.error(f"Arquivo não encontrado: {filename} em {app.config['PDFS_FOLDER']}")
+        return render_template('404.html'), 404
+    except Exception as e:
+        logger.error(f"Erro ao servir PDF {filename}: {str(e)}")
+        return render_template('404.html'), 404
+
+@app.route('/codigo')
+def codigo():
+    user_id = session.get('user_id')
+    if not user_id:
+        flash('Por favor, faça login para acessar esta página.', 'error')
+        return redirect(url_for('registroelogin'))
+    
+    user = db.session.get(User, user_id)
+    if not user:
+        session.clear()
+        flash('Sua sessão expirou ou o usuário não existe mais.', 'error')
+        return redirect(url_for('registroelogin'))
+    
+    return render_template('exemplosdecodigo.html', user=user)
+
+@app.route('/comunidade', methods=['GET'])
+def comunidade():
+    user_id = session.get('user_id')
+    if not user_id:
+        flash('Por favor, faça login para acessar esta página.', 'error')
+        return redirect(url_for('registroelogin'))
+    
+    user = db.session.get(User, user_id)
+    if not user:
+        session.clear()
+        flash('Sua sessão expirou ou o usuário não existe mais.', 'error')
+        return redirect(url_for('registroelogin'))
+    
+    posts = Post.query.options(
+        db.joinedload(Post.comments).joinedload(Comment.author),
+        db.joinedload(Post.comments).joinedload(Comment.replies).joinedload(Comment.author)
+    ).order_by(Post.created_at.desc()).all()
+    
+    return render_template('comunidade.html', user=user, posts=posts)
+
+@app.route('/create_post_form', methods=['GET'])
+def create_post_form():
+    user_id = session.get('user_id')
+    if not user_id:
+        flash('Por favor, faça login para acessar esta página.', 'error')
+        return redirect(url_for('registroelogin'))
+    
+    user = db.session.get(User, user_id)
+    if not user:
+        session.clear()
+        flash('Sua sessão expirou ou o usuário não existe mais.', 'error')
+        return redirect(url_for('registroelogin'))
+    
+    posts = Post.query.options(
+        db.joinedload(Post.comments).joinedload(Comment.author),
+        db.joinedload(Post.comments).joinedload(Comment.replies).joinedload(Comment.author)
+    ).order_by(Post.created_at.desc()).all()
+    
+    return render_template('comunidade.html', user=user, posts=posts)
+
+@app.route('/configuracoes')
+def configuracoes():
+    user_id = session.get('user_id')
+    if not user_id:
+        flash('Por favor, faça login para acessar esta página.', 'error')
+        return redirect(url_for('registroelogin'))
+    
+    user = db.session.get(User, user_id)
+    if not user:
+        session.clear()
+        flash('Sua sessão expirou ou o usuário não existe mais.', 'error')
+        return redirect(url_for('registroelogin'))
+    
+    return render_template('configuracoes.html', user=user)
+
+@app.route('/update_username', methods=['POST'])
+def update_username():
+    if 'user_id' not in session:
+        return jsonify({'status': 'error', 'message': 'Faça login para alterar o nome.'}), 403
+    
+    new_username = request.form.get('username', '').strip()
+    if not new_username:
+        return jsonify({'status': 'error', 'message': 'Nome de usuário não pode ser vazio.'}), 400
+    
+    if User.query.filter_by(username=new_username).first():
+        return jsonify({'status': 'error', 'message': 'Nome de usuário já está em uso.'}), 409
+    
+    user = db.session.get(User, session['user_id'])
+    if not user:
+        return jsonify({'status': 'error', 'message': 'Usuário não encontrado.'}), 404
+    
+    user.username = new_username
+    db.session.commit()
+    session['username'] = new_username
+    return jsonify({'status': 'success', 'message': 'Nome de usuário atualizado com sucesso!'})
+
+@app.route('/update_profile_pic', methods=['POST'])
+def update_profile_pic():
+    if 'user_id' not in session:
+        return jsonify({'status': 'error', 'message': 'Faça login para alterar a foto.'}), 403
+    
+    if 'profile_pic' not in request.files:
+        return jsonify({'status': 'error', 'message': 'Nenhum arquivo enviado.'}), 400
+    
+    file = request.files['profile_pic']
+    if file.filename == '':
+        return jsonify({'status': 'error', 'message': 'Nenhum arquivo selecionado.'}), 400
+    
+    if not allowed_file(file.filename):
+        return jsonify({'status': 'error', 'message': 'Tipo de arquivo não suportado.'}), 400
+    
+    filename = f"user_{session['user_id']}_{secure_filename(file.filename)}"
+    upload_folder = os.path.join(app.root_path, 'static', 'Uploads')
+    os.makedirs(upload_folder, exist_ok=True)
+    file_path = os.path.join(upload_folder, filename)
+    file.save(file_path)
+    
+    user = db.session.get(User, session['user_id'])
+    if not user:
+        return jsonify({'status': 'error', 'message': 'Usuário não encontrado.'}), 404
+    
+    user.profile_pic = filename
+    try:
+        db.session.commit()
+        return jsonify({'status': 'success', 'message': 'Foto de perfil atualizada!'})
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Erro ao atualizar foto de perfil: {str(e)}")
+        return jsonify({'status': 'error', 'message': 'Erro ao atualizar foto de perfil.'}), 500
+
+@app.route('/update_password', methods=['POST'])
+def update_password():
+    if 'user_id' not in session:
+        return jsonify({'status': 'error', 'message': 'Faça login para alterar a senha.'}), 403
+
+    user = db.session.get(User, session['user_id'])
+    if not user:
+        return jsonify({'status': 'error', 'message': 'Usuário não encontrado.'}), 404
+
+    current_password = request.form.get('current-password')
+    new_password = request.form.get('new-password')
+    confirm_password = request.form.get('confirm-password')
+
+    if not current_password or not new_password or not confirm_password:
+        return jsonify({'status': 'error', 'message': 'Todos os campos são obrigatórios.'}), 400
+
+    if not user.password:
+        return jsonify({'status': 'error', 'message': 'Usuários autenticados via Google devem usar a recuperação de senha.'}), 403
+
+    if not check_password_hash(user.password, current_password):
+        return jsonify({'status': 'error', 'message': 'Senha atual incorreta.'}), 401
+
+    if new_password != confirm_password:
+        return jsonify({'status': 'error', 'message': 'As novas senhas não coincidem.'}), 400
+
+    if len(new_password) < 8:
+        return jsonify({'status': 'error', 'message': 'A nova senha deve ter no mínimo 8 caracteres.'}), 400
+
+    try:
+        user.password = generate_password_hash(new_password)
+        try:
+            firebase_user = auth.get_user_by_email(user.email)
+            auth.update_user(firebase_user.uid, password=new_password)
+            logger.info(f"Senha atualizada no Firebase para o usuário {user.email}")
+        except auth.UserNotFoundError:
+            logger.warning(f"Usuário não encontrado no Firebase: {user.email}")
+        except Exception as e:
+            logger.warning(f"Erro ao atualizar senha no Firebase: {str(e)}")
+        db.session.commit()
+        return jsonify({'status': 'success', 'message': 'Senha atualizada com sucesso!'})
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Erro ao atualizar senha: {str(e)}")
+        return jsonify({'status': 'error', 'message': 'Erro ao atualizar senha.'}), 500
+
+@app.route('/active_sessions', methods=['GET'])
+def active_sessions():
+    if 'user_id' not in session:
+        return jsonify({'status': 'error', 'message': 'Faça login para visualizar sessões.'}), 403
+
+    user = db.session.get(User, session['user_id'])
+    if not user:
+        return jsonify({'status': 'error', 'message': 'Usuário não encontrado.'}), 404
+
+    try:
+        sessions = [{'id': 'session1', 'device': 'Unknown Device', 'last_active': '2025-07-05'}]
+        return jsonify({'status': 'success', 'sessions': sessions})
+    except Exception as e:
+        logger.error(f"Erro ao listar sessões: {str(e)}")
+        return jsonify({'status': 'error', 'message': 'Erro ao listar sessões.'}), 500
+
+@app.route('/end_session/<session_id>', methods=['POST'])
+def end_session(session_id):
+    if 'user_id' not in session:
+        return jsonify({'status': 'error', 'message': 'Faça login para encerrar sessões.'}), 403
+
+    try:
+        return jsonify({'status': 'success', 'message': 'Sessão encerrada com sucesso!'})
+    except Exception as e:
+        logger.error(f"Erro ao encerrar sessão: {str(e)}")
+        return jsonify({'status': 'error', 'message': 'Erro ao encerrar sessão.'}), 500
+
+@app.route('/delete_account', methods=['POST'])
+def delete_account():
+    if 'user_id' not in session:
+        return jsonify({'status': 'error', 'message': 'Faça login para excluir a conta.'}), 403
+
+    user = db.session.get(User, session['user_id'])
+    if not user:
+        return jsonify({'status': 'error', 'message': 'Usuário não encontrado.'}), 404
+
+    try:
+        Post.query.filter_by(user_id=user.id).delete()
+        Comment.query.filter_by(user_id=user.id).delete()
+        Like.query.filter_by(user_id=user.id).delete()
+        ResetCode.query.filter_by(email=user.email).delete()
+
+        if user.profile_pic and user.profile_pic != 'default.png':
+            file_path = os.path.join(app.root_path, 'static', 'Uploads', user.profile_pic)
+            if os.path.exists(file_path):
+                os.remove(file_path)
+
+        try:
+            firebase_user = auth.get_user_by_email(user.email)
+            auth.delete_user(firebase_user.uid)
+            logger.info(f"Usuário {user.email} deletado do Firebase Authentication")
+        except auth.UserNotFoundError:
+            logger.warning(f"Usuário não encontrado no Firebase: {user.email}")
+        except Exception as e:
+            logger.warning(f"Erro ao deletar usuário do Firebase: {str(e)}")
+
+        db.session.delete(user)
+        db.session.commit()
+        session.clear()
+        return jsonify({'status': 'success', 'message': 'Conta excluída com sucesso!'})
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Erro ao excluir conta: {str(e)}")
+        return jsonify({'status': 'error', 'message': 'Erro ao excluir conta.'}), 500
+
+@app.route('/search', methods=['GET'])
+@cache.cached(timeout=60, query_string=True)
+def search():
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({'status': 'error', 'message': 'Por favor, faça login para realizar buscas.'}), 401
+    
+    query = request.args.get('q', '').strip()
+    if len(query) < 2:
+        return jsonify([]), 200
+    
+    try:
+        posts = Post.query.filter(
+            Post.content.ilike(f'%{query}%') | Post.category.ilike(f'%{query}%')
+        ).order_by(Post.created_at.desc()).limit(10).all()
+        
+        results = [
+            {
+                'title': post.content[:100] + '...' if len(post.content) > 100 else post.content,
+                'type': 'Postagem',
+                'category': post.category,
+                'url': url_for('post_comments', post_id=post.id, _external=True)
+            } for post in posts
+        ]
+        
+        return jsonify(results), 200
+    except Exception as e:
+        logger.error(f"Erro na busca: {str(e)}")
+        return jsonify({'status': 'error', 'message': 'Erro ao realizar busca.'}), 500
+
+
+@app.route('/code_examples', methods=['GET'])
+def code_examples():
+    try:
+        examples = CodeExample.query.order_by(CodeExample.created_at.desc()).limit(10).all()
+        return jsonify([
+            {
+                'id': example.id,
+                'title': example.title,
+                'content': example.content,
+                'language': example.language,
+                'category': example.category,
+                'created_at': example.created_at.strftime('%d/%m/%Y %H:%M')
+            } for example in examples
+        ])
+    except Exception as e:
+        logger.error(f"Erro ao buscar exemplos de código: {str(e)}")
+        return jsonify({'status': 'error', 'message': 'Erro ao buscar exemplos de código.'}), 500
+
+@app.route('/create_post', methods=['POST'])
+def create_post():
+    if 'user_id' not in session:
+        return jsonify({'status': 'error', 'message': 'Por favor, faça login para realizar esta ação.'}), 401
+    
+    user_id = session['user_id']
+    user = db.session.get(User, user_id)
+    if not user:
+        session.clear()
+        return jsonify({'status': 'error', 'message': 'Sua sessão expirou ou o usuário não existe mais.'}), 401
+    
+    content = request.form.get('post_content')
+    category = request.form.get('category')
+    
+    if not content:
+        return jsonify({'status': 'error', 'message': 'O conteúdo da postagem não pode estar vazio.'}), 400
+    
+    if not category:
+        return jsonify({'status': 'error', 'message': 'Por favor, selecione uma categoria.'}), 400
+    
+    new_post = Post(content=content, user_id=user.id, category=category)
+    try:
+        db.session.add(new_post)
+        db.session.commit()
+        return jsonify({
+            'status': 'success',
+            'post': {
+                'id': new_post.id,
+                'content': new_post.content,
+                'category': new_post.category,
+                'username': user.username,
+                'created_at': new_post.created_at.strftime('%d/%m/%Y %H:%M')
             }
-        }
-    }
+        })
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Erro ao criar postagem: {str(e)}")
+        return jsonify({'status': 'error', 'message': 'Erro ao criar postagem. Tente novamente.'}), 500
 
-    function setupSearchBar() {
-        if (!searchBar || !searchInput || !searchIcon) return;
-
-        // Toggle da barra de pesquisa em dispositivos móveis
-        searchIcon.addEventListener('click', function(event) {
-            if (window.innerWidth <= 992) {
-                searchBar.classList.toggle('search-active');
-                if (searchBar.classList.contains('search-active')) {
-                    searchInput.focus();
-                    searchInput.value = '';
-                    filterVideos('');
-                } else {
-                    searchInput.blur();
-                    searchInput.value = '';
-                    filterVideos('');
-                }
-                event.stopPropagation();
+@app.route('/comment/<int:post_id>', methods=['POST'])
+def add_comment(post_id):
+    if 'user_id' not in session:
+        return jsonify({'status': 'error', 'message': 'Por favor, faça login para comentar.'}), 401
+    
+    post = Post.query.get_or_404(post_id)
+    content = request.form.get('comment_content')
+    
+    if not content:
+        return jsonify({'status': 'error', 'message': 'O comentário não pode estar vazio.'}), 400
+    
+    new_comment = Comment(
+        content=content,
+        user_id=session['user_id'],
+        post_id=post_id
+    )
+    
+    try:
+        db.session.add(new_comment)
+        db.session.commit()
+        return jsonify({
+            'status': 'success',
+            'comment': {
+                'id': new_comment.id,
+                'content': new_comment.content,
+                'username': new_comment.author.username,
+                'created_at': new_comment.created_at.strftime('%d/%m/%Y %H:%M'),
+                'is_admin': new_comment.author.is_admin,
+                'is_moderator': new_comment.author.is_moderator
             }
-        });
+        })
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Erro ao adicionar comentário: {str(e)}")
+        return jsonify({'status': 'error', 'message': 'Erro ao adicionar comentário.'}), 500
 
-        // Fecha a barra de pesquisa ao clicar fora
-        document.addEventListener('click', function(event) {
-            if (window.innerWidth <= 992 && !searchBar.contains(event.target)) {
-                searchBar.classList.remove('search-active');
-                searchInput.value = '';
-                filterVideos('');
+@app.route('/reply/<int:comment_id>', methods=['POST'])
+def add_reply(comment_id):
+    if 'user_id' not in session:
+        return jsonify({'status': 'error', 'message': 'Por favor, faça login para responder.'}), 401
+    
+    parent_comment = Comment.query.get_or_404(comment_id)
+    content = request.form.get('reply_content')
+    
+    if not content:
+        return jsonify({'status': 'error', 'message': 'A resposta não pode estar vazia.'}), 400
+    
+    new_reply = Comment(
+        content=content,
+        user_id=session['user_id'],
+        post_id=parent_comment.post_id,
+        parent_id=comment_id
+    )
+    
+    try:
+        db.session.add(new_reply)
+        db.session.commit()
+        return jsonify({
+            'status': 'success',
+            'reply': {
+                'id': new_reply.id,
+                'content': new_reply.content,
+                'username': new_reply.author.username,
+                'created_at': new_reply.created_at.strftime('%d/%m/%Y %H:%M'),
+                'is_admin': new_reply.author.is_admin,
+                'is_moderator': new_reply.author.is_moderator
             }
-        });
-
-        searchBar.addEventListener('click', function(event) {
-            event.stopPropagation();
-        });
-
-        // Pesquisa em tempo real
-        searchInput.addEventListener('input', function() {
-            const searchTerm = this.value.toLowerCase().trim();
-            filterVideos(searchTerm);
-        });
-
-        // Pesquisa ao pressionar Enter
-        searchInput.addEventListener('keypress', function(event) {
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                const searchTerm = this.value.toLowerCase().trim();
-                filterVideos(searchTerm);
-                showNotification('Pesquisa realizada!', 'success');
-            }
-        });
-    }
-
-    function filterVideos(searchTerm) {
-        const activeCategory = document.querySelector('.category.active').textContent.trim();
-        document.querySelectorAll('.video-card').forEach(card => {
-            const title = card.querySelector('.video-title').textContent.toLowerCase();
-            const description = card.querySelector('.video-description').textContent.toLowerCase();
-            const instructor = card.querySelector('.instructor-name').textContent.toLowerCase();
-            const category = card.querySelector('.video-category-tag').textContent.toLowerCase();
-            const tags = Array.from(card.querySelectorAll('.video-tag')).map(tag => tag.textContent.toLowerCase());
-
-            // Mapear termos de pesquisa para categorias
-            const searchCategoryMap = {
-                'versionamento': 'versionamento',
-                'ia': 'i.a',
-                'i.a': 'i.a',
-                'banco de dados': 'banco de dados',
-                'modelagem a banco de dados': 'banco de dados',
-                'logica': 'lógica',
-                'processos': 'processos',
-                'frontend': 'front-end',
-                'front-end': 'front-end',
-                'backend': 'back-end',
-                'back-end': 'back-end',
-                'android': 'android',
-                'programação android': 'android',
-                'multidisciplinar': 'multidisciplinar',
-                'projeto multidisciplinar': 'multidisciplinar',
-                'carreiras': 'carreiras',
-                'redes': 'redes'
-            };
-
-            const matchedCategory = searchCategoryMap[searchTerm] || searchTerm;
-
-            const matchesSearch = searchTerm === '' ||
-                title.includes(searchTerm) ||
-                description.includes(searchTerm) ||
-                instructor.includes(searchTerm) ||
-                category.includes(matchedCategory) ||
-                tags.some(tag => tag.includes(searchTerm));
-
-            const matchesCategory = activeCategory === 'Todos' || 
-                (() => {
-                    const cardCategory = card.querySelector('.video-category-tag').textContent.trim();
-                    const categoryMap = {
-                        'I.A': ['I.A'],
-                        'Modelagem a Banco de Dados': ['Banco de Dados'],
-                        'Programação Android': ['Android'],
-                        'Projeto Multidisciplinar': ['Multidisciplinar'],
-                        'Versionamento': ['Versionamento']
-                    };
-                    const matchedCategories = categoryMap[activeCategory] || [activeCategory];
-                    return matchedCategories.includes(cardCategory);
-                })();
-
-            if (matchesSearch && matchesCategory) {
-                card.style.display = 'block';
-            } else {
-                card.style.display = 'none';
-            }
-        });
-    }
-
-    function setupCategoryFilter() {
-        categories.forEach(category => {
-            category.addEventListener('click', function() {
-                categories.forEach(c => c.classList.remove('active'));
-                this.classList.add('active');
-
-                const categoryName = this.textContent.trim();
-                document.querySelectorAll('.video-card').forEach(card => {
-                    const cardCategory = card.querySelector('.video-category-tag').textContent.trim();
-                    const categoryMap = {
-                        'I.A': ['I.A'],
-                        'Modelagem a Banco de Dados': ['Banco de Dados'],
-                        'Programação Android': ['Android'],
-                        'Projeto Multidisciplinar': ['Multidisciplinar'],
-                        'Versionamento': ['Versionamento']
-                    };
-
-                    if (categoryName === 'Todos') {
-                        card.style.display = 'block';
-                    } else {
-                        const matchedCategories = categoryMap[categoryName] || [categoryName];
-                        if (matchedCategories.includes(cardCategory)) {
-                            card.style.display = 'block';
-                        } else {
-                            card.style.display = 'none';
-                        }
-                    }
-                });
-
-                // Limpa a pesquisa ao mudar de categoria
-                if (searchInput) {
-                    searchInput.value = '';
-                    searchBar.classList.remove('search-active');
-                }
-                showNotification(`Filtrando por ${categoryName}`, 'success');
-            });
-        });
-    }
-
-    function setupViewToggle() {
-        if (!viewToggleButtons || !videoGrid) return;
-
-        viewToggleButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                viewToggleButtons.forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-
-                if (this.querySelector('i').classList.contains('fa-list')) {
-                    videoGrid.style.gridTemplateColumns = '1fr';
-                    videoGrid.querySelectorAll('.video-card').forEach(card => {
-                        card.style.display = 'flex';
-                        const thumbnail = card.querySelector('.video-thumbnail');
-                        if (thumbnail) thumbnail.style.width = '280px';
-                        const videoInfo = card.querySelector('.video-info');
-                        if (videoInfo) videoInfo.style.flex = '1';
-                    });
-                    showNotification('Visualização em lista ativada', 'info');
-                } else {
-                    videoGrid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(300px, 1fr))';
-                    videoGrid.querySelectorAll('.video-card').forEach(card => {
-                        card.style.display = 'block';
-                        const thumbnail = card.querySelector('.video-thumbnail');
-                        if (thumbnail) thumbnail.style.width = 'auto';
-                    });
-                    showNotification('Visualização em grade ativada', 'info');
-                }
-            });
-        });
-    }
-
-    function setupThemeSwitch() {
-        const themeSwitch = document.createElement('div');
-        themeSwitch.classList.add('theme-switch');
-        themeSwitch.innerHTML = '<i class="fas fa-moon"></i>';
-        document.body.appendChild(themeSwitch);
-
-        if (localStorage.getItem('theme') === 'dark') {
-            document.body.classList.add('dark-theme');
-            themeSwitch.innerHTML = '<i class="fas fa-sun"></i>';
-        }
-
-        themeSwitch.addEventListener('click', function() {
-            document.body.classList.toggle('dark-theme');
-            const isDark = document.body.classList.contains('dark-theme');
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
-            themeSwitch.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
-            showNotification(isDark ? 'Tema escuro ativado' : 'Tema claro ativado', 'success');
-        });
-    }
-
-    function setupDrawer() {
-    if (!sideMenu) return;
-
-    const drawerLinks = document.querySelectorAll('.offcanvas .nav-link');
-    if (drawerLinks && drawerLinks.length > 0) {
-        // Remove active class from all links
-        drawerLinks.forEach(link => {
-            link.classList.remove('active');
-        });
-
-        // Find and activate the "Vídeos e Tutoriais" link
-        const videosLink = Array.from(drawerLinks).find(link => 
-            link.getAttribute('href').includes('videos') || 
-            link.textContent.includes('Vídeos e Tutoriais')
-        );
-        if (videosLink) {
-            videosLink.classList.add('active');
-        }
-
-        // Add click event listeners to close the drawer
-        drawerLinks.forEach(link => {
-            link.addEventListener('click', function() {
-                const bsOffcanvas = bootstrap.Offcanvas.getInstance(sideMenu);
-                if (bsOffcanvas) bsOffcanvas.hide();
-            });
-        });
-    }
-
-    document.addEventListener('click', function(event) {
-        const isClickInsideDrawer = sideMenu.contains(event.target);
-        const isClickOnToggler = event.target.closest('.menu-btn');
-        const isOffcanvasOpen = sideMenu.classList.contains('show');
-
-        if (!isClickInsideDrawer && !isClickOnToggler && isOffcanvasOpen) {
-            const bsOffcanvas = bootstrap.Offcanvas.getInstance(sideMenu);
-            if (bsOffcanvas) bsOffcanvas.hide();
-        }
-    });
-
-    sideMenu.addEventListener('shown.bs.offcanvas', function() {
-        document.body.style.overflow = 'hidden';
-        document.body.style.paddingRight = '0';
-        sideMenu.style.top = '0';
-        sideMenu.style.height = '100vh';
-    });
-
-    sideMenu.addEventListener('hidden.bs.offcanvas', function() {
-        document.body.style.overflow = '';
-        document.body.style.paddingRight = '';
-    });
-}
-
-    function showNotification(message, type) {
-        const notification = document.createElement('div');
-        notification.className = `notification notification-${type}`;
-        notification.innerHTML = `
-            <div class="notification-content">
-                <div class="notification-message">${message}</div>
-            </div>
-            <button class="notification-close"><i class="fas fa-times"></i></button>
-        `;
-        document.body.appendChild(notification);
-
-        setTimeout(() => notification.classList.add('show'), 100);
-
-        notification.querySelector('.notification-close').addEventListener('click', () => {
-            notification.classList.remove('show');
-            setTimeout(() => notification.remove(), 300);
-        });
-
-        setTimeout(() => {
-            if (notification.parentNode) {
-                notification.classList.remove('show');
-                setTimeout(() => notification.remove(), 300);
-            }
-        }, 4000);
-    }
-});
-
-
-
-
-
-
-
-
-
-
-
-
-:root {
-    --primary: #1a73e8;
-    --primary-light: #4a91ff;
-    --primary-dark: #1357b9;
-    --primary-transparent: rgba(26, 115, 232, 0.1);
-    --secondary: #202124;
-    --secondary-light: #3c4043;
-    --secondary-dark: #141517;
-    --accent: #ff4444;
-    --light: #ffffff;
-    --light-gray: #f1f3f4;
-    --medium-gray: #dadce0;
-    --dark-gray: #80868b;
-    --dark: #202124;
-    --success: #34c759;
-    --warning: #fbbc05;
-    --danger: #ff4444;
-    --font-primary: 'Inter', sans-serif;
-    --font-secondary: 'Inter', sans-serif;
-    --font-size-base: 1rem;
-    --font-size-sm: 0.875rem;
-    --font-size-lg: 1.25rem;
-    --font-size-xl: 1.5rem;
-    --font-size-xxl: 2rem;
-    --font-size-hero: 3rem;
-    --space-xs: 0.25rem;
-    --space-sm: 0.5rem;
-    --space-md: 1rem;
-    --space-lg: 1.5rem;
-    --space-xl: 2rem;
-    --space-xxl: 3rem;
-    --border-radius-sm: 0.375rem;
-    --border-radius-md: 0.75rem;
-    --border-radius-lg: 1rem;
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
-    --shadow-md: 0 3px 8px rgba(0, 0, 0, 0.12);
-    --shadow-lg: 0 5px 15px rgba(0, 0, 0, 0.15);
-    --transition-fast: 0.2s ease;
-    --transition-normal: 0.3s ease;
-    --primary-color: #1e293b;
-    --secondary-color: #0ea5e9;
-    --accent-color: #f97316;
-    --text-color: #1e293b;
-    --background-color: #f1f5f9;
-    --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    --card-bg: #ffffff;
-    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --gradient-bg: linear-gradient(135deg, #0ea5e9, #3b82f6);
-}
-
-*, *::before, *::after {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-html {
-    font-size: 16px;
-    scroll-behavior: smooth;
-    overflow-x: hidden;
-}
-
-body {
-    font-family: var(--font-primary);
-    color: var(--text-color);
-    background-color: var(--background-color);
-    line-height: 1.7;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden;
-}
-
-.avatar-initials {
-    width: 50px;
-    height: 50px;
-    font-size: var(--font-size-lg);
-    font-weight: 600;
-    background-color: var(--primary);
-    color: var(--light);
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-secondary);
-    font-weight: 700;
-    color: var(--secondary);
-}
-
-h1 { font-size: var(--font-size-hero); }
-h2 { font-size: var(--font-size-xxl); }
-h3 { font-size: var(--font-size-xl); }
-h4 { font-size: var(--font-size-lg); }
-h5 { font-size: var(--font-size-base); }
-h6 { font-size: var(--font-size-sm); }
-
-a {
-    color: var(--primary);
-    text-decoration: none;
-    transition: color var(--transition-fast);
-}
-
-a:hover { color: var(--primary-dark); }
-
-.app-header {
-    background: var(--gradient-bg);
-    color: white;
-    padding: 1.5rem 0;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    max-width: 100%;
-    overflow-x: hidden;
-}
-
-.header-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 0 2rem;
-    position: relative;
-    max-width: 100%;
-}
-
-.logo {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-weight: 700;
-    font-size: 1.8rem;
-    transition: opacity var(--transition-fast);
-}
-
-.logo i {
-    font-size: 1.6rem;
-}
-
-.search-bar {
-    position: relative;
-    flex-grow: 1;
-    max-width: 500px;
-    margin: 0 2rem;
-}
-
-.search-bar input {
-    width: 100%;
-    padding: 12px 20px 12px 45px;
-    border-radius: 50px;
-    border: none;
-    background-color: rgba(255, 255, 255, 0.2);
-    color: white;
-    font-size: 1rem;
-    transition: var(--transition);
-}
-
-.search-bar input:focus {
-    background-color: rgba(255, 255, 255, 0.3);
-    outline: none;
-}
-
-.search-bar input::placeholder {
-    color: rgba(255, 255, 255, 0.7);
-}
-
-.search-bar i {
-    position: absolute;
-    left: 16px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: white;
-    font-size: 1.2rem;
-    cursor: pointer;
-}
-
-.offcanvas {
-    width: 320px;
-    box-shadow: var(--shadow-lg);
-    background-color: var(--light);
-    transition: transform var(--transition-normal);
-    z-index: 1200;
-    position: fixed;
-    top: 0;
-    height: 100vh;
-}
-
-.offcanvas-header {
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-    color: white;
-    padding: var(--space-lg);
-}
-
-.offcanvas-title {
-    font-weight: 700;
-    font-size: var(--font-size-lg);
-}
-
-.btn-close {
-    filter: brightness(0) invert(1);
-}
-
-.offcanvas-body {
-    padding: var(--space-lg);
-    overflow-y: auto;
-}
-
-.nav-link {
-    padding: var(--space-md) var(--space-lg);
-    color: var(--secondary);
-    border-radius: var(--border-radius-sm);
-    font-size: var(--font-size-base);
-    font-weight: 500;
-    transition: background-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
-    display: flex;
-    align-items: center;
-}
-
-.nav-link:hover {
-    background-color: var(--primary-transparent);
-    color: var(--primary);
-    transform: translateX(5px);
-}
-
-.nav-link.active {
-    background-color: var(--primary);
-    color: white;
-    transform: translateX(5px);
-}
-
-.nav-link i {
-    margin-right: var(--space-md);
-}
-
-.navbar-nav .nav-item {
-    margin-bottom: var(--space-sm);
-}
-
-.category-nav {
-    padding: 1.5rem 0;
-    position: sticky;
-    top: 90px;
-    background-color: var(--background-color);
-    z-index: 90;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    max-width: 100%;
-    overflow-x: hidden;
-}
-
-.categories-wrapper {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 0 2rem;
-    max-width: 100%;
-}
-
-.categories {
-    display: flex;
-    gap: 10px;
-    overflow-x: auto;
-    padding-bottom: 10px;
-    scroll-behavior: smooth;
-    scrollbar-width: none;
-    max-width: 100%;
-}
-
-.categories {
-    overflow-x: auto;
-    padding-bottom: 10px;
-    scroll-behavior: smooth;
-    scrollbar-width: thin;
-    scrollbar-color: #1a73e8 #e3e8ef;
-}
-
-.categories::-webkit-scrollbar {
-    height: 8px;
-}
-
-.categories::-webkit-scrollbar-thumb {
-    background: #1a73e8;
-    border-radius: 6px;
-}
-
-.categories::-webkit-scrollbar-track {
-    background: #e3e8ef;
-    border-radius: 6px;
-}
-
-.categories::-webkit-scrollbar-thumb:hover {
-    background: #1357b9;
-}
-
-.categories {
-    scrollbar-width: thin;
-    scrollbar-color: #1a73e8 #e3e8ef;
-}
-
-.category {
-    padding: 10px 20px;
-    background-color: white;
-    color: var(--text-color);
-    border-radius: 50px;
-    white-space: nowrap;
-    font-weight: 500;
-    cursor: pointer;
-    border: 1px solid #e2e8f0;
-    transition: var(--transition);
-    font-size: 0.95rem;
-}
-
-.category.active {
-    background-color: var(--primary-color);
-    color: white;
-    border-color: var(--primary-color);
-}
-
-.menu-btn {
-    color: var(--light);
-    font-size: var(--font-size-base);
-    background: var(--primary-dark);
-    border: none;
-    padding: 8px 16px;
-    border-radius: var(--border-radius-sm);
-    transition: var(--transition-normal);
-}
-
-.menu-btn:hover {
-    background: var(--primary);
-    transform: scale(1.05);
-}
-
-.category:hover:not(.active) {
-    background-color: #f8fafc;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-.container {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 2rem;
-    max-width: 100%;
-}
-
-.main-content {
-    margin-top: 2rem;
-    max-width: 100%;
-}
-
-.section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
-}
-
-.section-title {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: var(--primary-color);
-    margin: 0;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.section-title i {
-    color: var(--accent-color);
-}
-
-.section-actions {
-    display: flex;
-    gap: 12px;
-}
-
-.view-toggle {
-    display: flex;
-    background-color: white;
-    border-radius: 8px;
-    overflow: hidden;
-    border: 1px solid #e2e8f0;
-}
-
-.view-toggle button {
-    border: none;
-    background: none;
-    padding: 8px 16px;
-    cursor: pointer;
-    transition: var(--transition);
-}
-
-.view-toggle button.active {
-    background-color: var(--secondary-color);
-    color: white;
-}
-
-.video-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 25px;
-    max-width: 100%;
-}
-
-.video-card {
-    background-color: var(--card-bg);
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: var(--card-shadow);
-    transition: var(--transition);
-    position: relative;
-    max-width: 100%;
-}
-
-.video-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
-}
-
-.video-thumbnail {
-    position: relative;
-    height: 180px;
-    overflow: hidden;
-}
-
-.video-thumbnail img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: var(--transition);
-}
-
-.video-card:hover .video-thumbnail img {
-    transform: scale(1.05);
-}
-
-.video-category-tag {
-    position: absolute;
-    top: 12px;
-    left: 12px;
-    background-color: var(--accent-color);
-    color: white;
-    padding: 4px 12px;
-    border-radius: 50px;
-    font-size: 0.75rem;
-    font-weight: 600;
-}
-
-.video-duration {
-    position: absolute;
-    bottom: 12px;
-    right: 12px;
-    background-color: rgba(0, 0, 0, 0.7);
-    color: white;
-    padding: 4px 10px;
-    border-radius: 4px;
-    font-size: 0.8rem;
-    font-weight: 500;
-}
-
-.video-play-icon {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: rgba(0, 0, 0, 0.6);
-    color: white;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    opacity: 0;
-    transition: var(--transition);
-}
-
-.video-play-icon i {
-    font-size: 1.8rem;
-}
-
-.video-card:hover .video-play-icon {
-    opacity: 1;
-}
-
-.video-info {
-    padding: 1.25rem;
-}
-
-.video-title {
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin: 0 0 10px 0;
-    color: var(--primary-color);
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    line-height: 1.4;
-}
-
-.video-meta {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px;
-}
-
-.instructor {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.instructor-name {
-    font-size: 0.9rem;
-    color: #64748b;
-    font-weight: 500;
-}
-
-.video-stats {
-    display: flex;
-    gap: 12px;
-    font-size: 0.85rem;
-    color: #64748b;
-}
-
-.video-stats span {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-}
-
-.video-description {
-    font-size: 0.9rem;
-    color: #64748b;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    margin-bottom: 12px;
-}
-
-.video-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-}
-
-.video-tag {
-    font-size: 0.75rem;
-    color: #64748b;
-    background-color: #f1f5f9;
-    padding: 4px 10px;
-    border-radius: 4px;
-}
-
-.app-footer {
-    background-color: var(--primary-color);
-    color: white;
-    padding: 3rem 0;
-    margin-top: auto;
-    max-width: 100%;
-}
-
-.footer-content {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 0 2rem;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 3rem;
-    max-width: 100%;
-}
-
-.footer-column h3 {
-    font-size: 1.2rem;
-    margin-bottom: 1.5rem;
-    position: relative;
-    padding-bottom: 10px;
-}
-
-.footer-column h3::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 40px;
-    height: 3px;
-    background-color: var(--accent-color);
-}
-
-.footer-links {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.footer-links li {
-    margin-bottom: 12px;
-}
-
-.footer-links a {
-    color: #cbd5e1;
-    text-decoration: none;
-    transition: var(--transition);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.footer-links a:hover {
-    color: white;
-}
-
-.footer-bottom {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 1.5rem 2rem 0;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    margin-top: 2rem;
-    text-align: center;
-    font-size: 0.9rem;
-    color: #94a3b8;
-    max-width: 100%;
-}
-
-@media (max-width: 1400px) {
-    .container { max-width: 1140px; }
-}
-
-@media (max-width: 1200px) {
-    .container { max-width: 960px; }
-    .logo { font-size: 1.6rem; }
-}
-
-@media (max-width: 992px) {
-    .container { max-width: 720px; }
-    .header-content {
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        padding: 1rem;
-        position: relative;
-        max-width: 100%;
-    }
-    .logo {
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-        font-size: 1.4rem;
-    }
-    .search-bar.search-active + .logo {
-        display: none;
-    }
-    .search-bar {
-        max-width: unset;
-        margin: 0;
-        order: -1;
-        position: relative;
-    }
-    .search-bar input {
-        display: none;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        max-width: 200px;
-        width: 100%;
-        padding: 8px 15px 8px 36px;
-        z-index: 101;
-        border-radius: var(--border-radius-md);
-        background-color: rgba(255, 255, 255, 0.95);
-        color: var(--text-color);
-        box-shadow: var(--shadow-md);
-        transition: opacity var(--transition-fast), transform var(--transition-fast);
-        opacity: 0;
-        transform: translate(-50%, -40%);
-    }
-    .search-bar.search-active input {
-        display: block;
-        opacity: 1;
-        transform: translate(-50%, -50%);
-    }
-    .search-bar input::placeholder {
-        color: var(--dark-gray);
-    }
-    .search-bar i {
-        position: static;
-        transform: none;
-        font-size: 1.2rem;
-        cursor: pointer;
-        padding: var(--space-sm);
-    }
-    .search-bar.search-active i {
-        position: absolute;
-        left: calc(50% - 94px);
-        top: 50%;
-        transform: translateY(-50%);
-        color: var(--text-color);
-        z-index: 102;
-    }
-    .menu-btn {
-        order: 1;
-    }
-    .offcanvas { width: 280px; }
-}
-
-@media (max-width: 768px) {
-    .container { max-width: 540px; padding: var(--space-md); }
-    .logo { font-size: 1.4rem; }
-    .video-grid {
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    }
-    .section-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1rem;
-    }
-}
-
-@media (max-width: 576px) {
-    .container { max-width: 100%; padding: var(--space-sm); }
-    .logo { font-size: 1.2rem; }
-    .video-grid { grid-template-columns: 1fr; }
-    .categories { gap: 8px; }
-    .category { padding: 8px 16px; font-size: 0.85rem; }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-para a tela de pdfs e apostilas quero no padrao acima noque eu pedi e no meio tenha as apostilas, elas serao separadas por materia, quero que seja possivel filtrar tambem
-
-
-tem umque vai chamar
-
-Banco De Dados
-
-tem um que na onde estou procurando aqui, esta escrito casa do codigo, mas la tem varias coisas misturadas, amazon aws. node js git e github jquery e talz lá te de varias coisas
-
-
-tem outro que fala sobr eprocessadores, hhtp barramento, memoria compiladores, ciencia da computação e talz de um nome a isso tambem
-
-tem um que mostra linguagens, e elas sao assembly c e c++ c # html e css java javascript lua php python shell
-
-
-redes
-
-redesneurais
-
-
-
-mand ecompleto os 3 arquivos até o talo de bom e profissional
-
-
-
-mande em zip
+        })
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Erro ao adicionar resposta: {str(e)}")
+        return jsonify({'status': 'error', 'message': 'Erro ao adicionar resposta.'}), 500
+
+@app.route('/edit_comment/<int:comment_id>', methods=['POST'])
+def edit_comment(comment_id):
+    if 'user_id' not in session:
+        return jsonify({'status': 'error', 'message': 'Por favor, faça login para editar.'}), 401
+    
+    comment = Comment.query.get_or_404(comment_id)
+    
+    if comment.user_id != session['user_id']:
+        return jsonify({'status': 'error', 'message': 'Você não tem permissão para editar este comentário.'}), 403
+    
+    content = request.form.get('edit_comment_content')
+    
+    if not content:
+        return jsonify({'status': 'error', 'message': 'O comentário não pode estar vazio.'}), 400
+    
+    try:
+        comment.content = content
+        db.session.commit()
+        return jsonify({
+            'status': 'success',
+            'message': 'Comentário editado com sucesso!',
+            'content': comment.content
+        })
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Erro ao editar comentário: {str(e)}")
+        return jsonify({'status': 'error', 'message': 'Erro ao editar comentário.'}), 500
+
+@app.route('/edit_reply/<int:reply_id>', methods=['POST'])
+def edit_reply(reply_id):
+    if 'user_id' not in session:
+        return jsonify({'status': 'error', 'message': 'Por favor, faça login para editar.'}), 401
+    
+    reply = Comment.query.get_or_404(reply_id)
+    
+    if reply.user_id != session['user_id']:
+        return jsonify({'status': 'error', 'message': 'Você não tem permissão para editar esta resposta.'}), 403
+    
+    content = request.form.get('edit_reply_content')
+    
+    if not content:
+        return jsonify({'status': 'error', 'message': 'A resposta não pode estar vazia.'}), 400
+    
+    try:
+        reply.content = content
+        db.session.commit()
+        return jsonify({
+            'status': 'success',
+            'message': 'Resposta editada com sucesso!',
+            'content': reply.content
+        })
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Erro ao editar resposta: {str(e)}")
+        return jsonify({'status': 'error', 'message': 'Erro ao editar resposta.'}), 500
+
+@app.route('/delete_comment/<int:comment_id>', methods=['POST'])
+def delete_comment(comment_id):
+    if 'user_id' not in session:
+        return jsonify({'status': 'error', 'message': 'Por favor, faça login para deletar.'}), 401
+    
+    comment = Comment.query.get_or_404(comment_id)
+    
+    if comment.user_id != session['user_id']:
+        return jsonify({'status': 'error', 'message': 'Você não tem permissão para deletar este comentário.'}), 403
+    
+    try:
+        Comment.query.filter_by(parent_id=comment_id).delete()
+        db.session.delete(comment)
+        db.session.commit()
+        return jsonify({'status': 'success', 'message': 'Comentário deletado com sucesso!'})
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Erro ao deletar comentário: {str(e)}")
+        return jsonify({'status': 'error', 'message': 'Erro ao deletar comentário.'}), 500
+
+@app.route('/delete_reply/<int:reply_id>', methods=['POST'])
+def delete_reply(reply_id):
+    if 'user_id' not in session:
+        return jsonify({'status': 'error', 'message': 'Por favor, faça login para deletar.'}), 401
+    
+    reply = Comment.query.get_or_404(reply_id)
+    
+    if reply.user_id != session['user_id']:
+        return jsonify({'status': 'error', 'message': 'Você não tem permissão para deletar esta resposta.'}), 403
+    
+    try:
+        db.session.delete(reply)
+        db.session.commit()
+        return jsonify({'status': 'success', 'message': 'Resposta deletada com sucesso!'})
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Erro ao deletar resposta: {str(e)}")
+        return jsonify({'status': 'error', 'message': 'Erro ao deletar resposta.'}), 500
+
+@app.route('/like_post/<int:post_id>', methods=['POST'])
+def like_post(post_id):
+    if 'user_id' not in session:
+        return jsonify({'status': 'error', 'message': 'Por favor, faça login para curtir.'}), 401
+    
+    post = Post.query.get_or_404(post_id)
+    user_id = session['user_id']
+    
+    existing_like = Like.query.filter_by(user_id=user_id, post_id=post_id).first()
+    
+    if existing_like:
+        try:
+            db.session.delete(existing_like)
+            db.session.commit()
+            like_count = Like.query.filter_by(post_id=post_id).count()
+            return jsonify({
+                'status': 'success',
+                'message': 'Curtida removida com sucesso!',
+                'liked': False,
+                'likes': like_count
+            })
+        except Exception as e:
+            db.session.rollback()
+            logger.error(f"Erro ao remover curtida: {str(e)}")
+            return jsonify({'status': 'error', 'message': 'Erro ao remover curtida.'}), 500
+    else:
+        new_like = Like(user_id=user_id, post_id=post_id)
+        try:
+            db.session.add(new_like)
+            db.session.commit()
+            like_count = Like.query.filter_by(post_id=post_id).count()
+            return jsonify({
+                'status': 'success',
+                'message': 'Postagem curtida com sucesso!',
+                'liked': True,
+                'likes': like_count
+            })
+        except Exception as e:
+            db.session.rollback()
+            logger.error(f"Erro ao adicionar curtida: {str(e)}")
+            return jsonify({'status': 'error', 'message': 'Erro ao curtir postagem.'}), 500
+
+@app.route('/get_post_likes/<int:post_id>', methods=['GET'])
+def get_post_likes(post_id):
+    post = Post.query.get_or_404(post_id)
+    like_count = Like.query.filter_by(post_id=post_id).count()
+    user_liked = False
+    if 'user_id' in session:
+        user_liked = Like.query.filter_by(user_id=session['user_id'], post_id=post_id).first() is not None
+    return jsonify({
+        'status': 'success',
+        'like_count': like_count,
+        'user_liked': user_liked
+    })
+
+@app.route('/like_comment/<int:comment_id>', methods=['POST'])
+def like_comment(comment_id):
+    if 'user_id' not in session:
+        return jsonify({'status': 'error', 'message': 'Por favor, faça login para curtir.'}), 401
+    
+    comment = Comment.query.get_or_404(comment_id)
+    user_id = session['user_id']
+    
+    existing_like = Like.query.filter_by(user_id=user_id, comment_id=comment_id).first()
+    
+    if existing_like:
+        try:
+            db.session.delete(existing_like)
+            db.session.commit()
+            like_count = Like.query.filter_by(comment_id=comment_id).count()
+            return jsonify({
+                'status': 'success',
+                'message': 'Curtida removida com sucesso!',
+                'liked': False,
+                'like_count': like_count
+            })
+        except Exception as e:
+            db.session.rollback()
+            logger.error(f"Erro ao remover curtida: {str(e)}")
+            return jsonify({'status': 'error', 'message': 'Erro ao remover curtida.'}), 500
+    else:
+        new_like = Like(user_id=user_id, comment_id=comment_id)
+        try:
+            db.session.add(new_like)
+            db.session.commit()
+            like_count = Like.query.filter_by(comment_id=comment_id).count()
+            return jsonify({
+                'status': 'success',
+                'message': 'Comentário curtido com sucesso!',
+                'liked': True,
+                'like_count': like_count
+            })
+        except Exception as e:
+            db.session.rollback()
+            logger.error(f"Erro ao adicionar curtida: {str(e)}")
+            return jsonify({'status': 'error', 'message': 'Erro ao curtir comentário.'}), 500
+
+@app.route('/get_comment_likes/<int:comment_id>', methods=['GET'])
+def get_comment_likes(comment_id):
+    comment = Comment.query.get_or_404(comment_id)
+    like_count = Like.query.filter_by(comment_id=comment_id).count()
+    user_liked = False
+    if 'user_id' in session:
+        user_liked = Like.query.filter_by(user_id=session['user_id'], comment_id=comment_id).first() is not None
+    return jsonify({
+        'status': 'success',
+        'like_count': like_count,
+        'user_liked': user_liked
+    })
+
+@app.route('/delete_post/<int:post_id>', methods=['DELETE'])
+def delete_post(post_id):
+    if 'user_id' not in session:
+        return jsonify({'status': 'error', 'message': 'Por favor, faça login para realizar esta ação.'}), 401
+    
+    post = Post.query.get_or_404(post_id)
+    
+    if post.user_id != session['user_id']:
+        return jsonify({'status': 'error', 'message': 'Você não tem permissão para deletar esta postagem.'}), 403
+    
+    try:
+        db.session.delete(post)
+        db.session.commit()
+        return jsonify({'status': 'success', 'message': 'Postagem deletada com sucesso!'})
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Erro ao deletar postagem: {str(e)}")
+        return jsonify({'status': 'error', 'message': 'Erro ao deletar postagem. Tente novamente.'}), 500
+    
+
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    flash('Você saiu da sua conta.', 'info')
+    return redirect(url_for('registroelogin'))
+
+with app.app_context():
+    try:
+        db_path = os.path.join(instance_dir, 'app.db')
+        if not os.path.exists(instance_dir):
+            logger.error(f"Diretório instance não encontrada: {instance_dir}")
+            raise FileNotFoundError(f"Diretório instance não encontrada: {instance_dir}")
+        
+        with open(db_path, 'a'):
+            pass
+        
+        db.create_all()
+        
+        # Inicializar exemplos de código
+        if not CodeExample.query.first():
+            examples = [
+                CodeExample(
+                    title="Python: Jogo de Adivinhação",
+                    content="""import random
+numero_secreto = random.randint(1, 100)
+tentativas = 0
+while True:
+    palpite = int(input("Adivinhe o número (1-100): "))
+    tentativas += 1
+    if palpite == numero_secreto:
+        print(f"Parabéns! Você acertou em {tentativas} tentativas!")
+        break
+    elif palpite < numero_secreto:
+        print("Tente um número maior!")
+    else:
+        print("Tente um número menor!")""",
+                    language="Python",
+                    category="Programação"
+                ),
+                CodeExample(
+                    title="SQL: Consulta de Usuários",
+                    content="""SELECT id, username, email
+FROM users
+WHERE created_at >= CURRENT_DATE - INTERVAL '30 days'
+ORDER BY created_at DESC;""",
+                    language="SQL",
+                    category="Banco de Dados"
+                ),
+                CodeExample(
+                    title="Python: Calculadora Simples",
+                    content="""def calculadora():
+    num1 = float(input("Digite o primeiro número: "))
+    op = input("Digite a operação (+, -, *, /): ")
+    num2 = float(input("Digite o segundo número: "))
+    
+    if op == '+':
+        return num1 + num2
+    elif op == '-':
+        return num1 - num2
+    elif op == '*':
+        return num1 * num2
+    elif op == '/':
+        return num1 / num2 if num2 != 0 else "Erro: Divisão por zero!"
+    else:
+        return "Operação inválida!"
+
+print(calculadora())""",
+                    language="Python",
+                    category="Programação"
+                )
+            ]
+            db.session.add_all(examples)
+            db.session.commit()
+            logger.info("Exemplos de código inicializados com sucesso")
+        
+        logger.info("Tabelas do banco de dados criadas com sucesso")
+    except Exception as e:
+        logger.error(f"Erro ao criar tabelas do banco de dados: {str(e)}")
+        raise
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+
+
+
+mande apenas o def completo
