@@ -16,13 +16,14 @@ import logging
 from flask_mail import Mail
 from werkzeug.utils import secure_filename
 import unicodedata
+from backend.config import ActiveConfig
 
 # Configurar logging
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
-app.config.from_object('backend.config.Config')
+app.config.from_object(ActiveConfig)
 
 # Inicializar Cache
 cache = Cache(app, config={'CACHE_TYPE': 'simple'})
@@ -1055,12 +1056,17 @@ def logout():
 
 with app.app_context():
     try:
-        db_path = os.path.join(instance_dir, 'app.db')
+        instance_dir = app.config['INSTANCE_DIR']
         if not os.path.exists(instance_dir):
             logger.error(f"Diretório instance não encontrada: {instance_dir}")
             raise FileNotFoundError(f"Diretório instance não encontrada: {instance_dir}")
-        with open(db_path, 'a'):
-            pass
+        
+        uri = app.config['SQLALCHEMY_DATABASE_URI']
+        if uri.startswith('sqlite:///'):
+            db_path = os.path.join(instance_dir, 'app.db')
+            with open(db_path, 'a'):
+                pass
+        
         db.create_all()
         if not CodeExample.query.first():
             examples = [
@@ -1121,4 +1127,5 @@ print(calculadora())""",
         raise
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=app.config['DEBUG'])
