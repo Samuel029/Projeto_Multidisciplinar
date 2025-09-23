@@ -12,6 +12,7 @@ from firebase_admin import auth, credentials
 from flask_migrate import Migrate
 from backend.reset_password import reset_bp
 import logging
+from flask_caching import Cache
 from flask_mail import Mail
 from werkzeug.utils import secure_filename
 import unicodedata
