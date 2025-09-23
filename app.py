@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session, send_from_directory, jsonify
 from backend.progress_tracker import ProgressTracker
 from functools import wraps
-from flask_caching import Cache
 from werkzeug.exceptions import BadRequest
 from werkzeug.security import generate_password_hash, check_password_hash
 from backend.extensions import db
