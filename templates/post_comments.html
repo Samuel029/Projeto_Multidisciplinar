@@ -44,7 +44,7 @@
                 <div class="d-flex align-items-center">
                     <div class="avatar me-3">
     {% if user.profile_pic and user.profile_pic != 'default.png' %}
-        <img src="{{ url_for('static', filename='uploads/' + user.profile_pic) }}" alt="Foto de perfil" class="profile-pic-img rounded-circle" style="width:48px;height:48px;object-fit:cover;">
+        <img src="{{ url_for('static', filename='Uploads/' + user.profile_pic) }}" alt="Foto de perfil" class="profile-pic-img rounded-circle" style="width:48px;height:48px;object-fit:cover;">
     {% else %}
         <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center" style="width:48px;height:48px;font-size:1.7em;">
             {{ user.username[0]|upper }}
@@ -88,7 +88,7 @@
                         </div>
                         <div>
                             <h5 class="username">{{ post.author.username }}</h5>
-                            <small class="text-muted">{{ post.created_at.strftime('%d/%m/%Y %H:%M') }}</small>
+                            <small class="text-muted">{{ post.created_at|format_brt }}</small>
                         </div>
                     </div>
                     {% if post.user_id == user.id %}
@@ -142,7 +142,7 @@
                                 <div class="comment-header d-flex align-items-center">
                                     <div class="avatar me-3">
     {% if user.profile_pic and user.profile_pic != 'default.png' %}
-        <img src="{{ url_for('static', filename='uploads/' + user.profile_pic) }}" alt="Foto de perfil" class="profile-pic-img rounded-circle" style="width:48px;height:48px;object-fit:cover;">
+        <img src="{{ url_for('static', filename='Uploads/' + user.profile_pic) }}" alt="Foto de perfil" class="profile-pic-img rounded-circle" style="width:48px;height:48px;object-fit:cover;">
     {% else %}
         <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center" style="width:48px;height:48px;font-size:1.7em;">
             {{ user.username[0]|upper }}

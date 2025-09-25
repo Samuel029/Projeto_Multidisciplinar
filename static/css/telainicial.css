@@ -48,6 +48,15 @@
     --gradient-bg: linear-gradient(135deg, #0ea5e9, #3b82f6);
 }
 
+.comment-card {
+    border-left: 2px solid #007bff;
+    padding-left: 10px;
+}
+.reply-card {
+    border-left: 2px solid #6c757d;
+    padding-left: 10px;
+}
+
 [data-theme="dark"] {
     --primary: #4a91ff;
     --primary-light: #6ab0ff;

@@ -39,14 +39,14 @@
             <div class="user-profile mb-4">
                 <div class="d-flex align-items-center">
                     <div class="avatar me-3">
-    {% if user.profile_pic and user.profile_pic != 'default.png' %}
-        <img src="{{ url_for('static', filename='uploads/' + user.profile_pic) }}" alt="Foto de perfil" class="profile-pic-img rounded-circle" style="width:48px;height:48px;object-fit:cover;">
-    {% else %}
-        <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center" style="width:48px;height:48px;font-size:1.7em;">
-            {{ user.username[0]|upper }}
-        </div>
-    {% endif %}
-</div>
+                        {% if user.profile_pic and user.profile_pic != 'default.png' %}
+                            <img src="{{ url_for('static', filename='Uploads/' + user.profile_pic) }}" alt="Foto de perfil" class="profile-pic-img rounded-circle" style="width:48px;height:48px;object-fit:cover;">
+                        {% else %}
+                            <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center" style="width:48px;height:48px;font-size:1.7em;">
+                                {{ user.username[0]|upper }}
+                            </div>
+                        {% endif %}
+                    </div>
                     <div>
                         <h6 class="mb-0">{{ user.username }}</h6>
                         <small class="text-muted">{{ user.email }}</small>
@@ -129,63 +129,63 @@
             </nav>
 
             <!-- Post List -->
-<div class="section-header">
-    <h2 class="section-title">
-        <i class="fas fa-list"></i>
-        <span>Postagens</span>
-    </h2>
-</div>
-<div class="post-list">
-    {% if posts %}
-        {% for post in posts %}
-            <div class="post-card" data-post-id="{{ post.id }}" data-category="{{ post.category }}">
-                <div class="post-header">
-                    <div class="user-info">
-                        <div class="profile-pic-preview">
-                            {% if post.author.profile_pic and post.author.profile_pic != 'default.png' %}
-                                <img class="profile-pic-img" src="{{ url_for('static', filename='Uploads/' + post.author.profile_pic) }}" alt="Foto de perfil" />
-                            {% else %}
-                                <div class="profile-pic-avatar">
-                                    {{ post.author.username[0]|upper }}
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-list"></i>
+                    <span>Postagens</span>
+                </h2>
+            </div>
+            <div class="post-list">
+                {% if posts %}
+                    {% for post in posts %}
+                        <div class="post-card" data-post-id="{{ post.id }}" data-category="{{ post.category }}">
+                            <div class="post-header">
+                                <div class="user-info">
+                                    <div class="profile-pic-preview">
+                                        {% if post.author.profile_pic and post.author.profile_pic != 'default.png' %}
+                                            <img class="profile-pic-img" src="{{ url_for('static', filename='Uploads/' + post.author.profile_pic) }}" alt="Foto de perfil" />
+                                        {% else %}
+                                            <div class="profile-pic-avatar">
+                                                {{ post.author.username[0]|upper }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div>
+                                        <h5 class="username">{{ post.author.username }}</h5>
+                                        <small class="text-muted">{{ post.created_at|format_brt }}</small>
+                                    </div>
                                 </div>
-                            {% endif %}
+                                {% if post.user_id == user.id %}
+                                    <div class="post-actions">
+                                        <button class="btn btn-sm btn-danger delete-post" data-post-id="{{ post.id }}">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="post-content">
+                                <div class="post-category-tag">{{ post.category }}</div>
+                                <p>{{ post.content }}</p>
+                            </div>
+                            <div class="post-footer">
+                                <button class="btn btn-sm btn-outline-primary like-btn" data-post-id="{{ post.id }}">
+                                    <i class="fas fa-thumbs-up"></i> <span class="like-count">{{ post.likes|length }}</span>
+                                </button>
+                                <a href="{{ url_for('post_comments', post_id=post.id) }}" class="btn btn-sm btn-outline-secondary comment-btn">
+                                    <i class="fas fa-comment"></i> Comentar
+                                </a>
+                            </div>
                         </div>
-                        <div>
-                            <h5 class="username">{{ post.author.username }}</h5>
-                            <small class="text-muted">{{ post.created_at.strftime('%d/%m/%Y %H:%M') }}</small>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-state-card">
+                        <div class="text-center py-3">
+                            <i class="fas fa-file-alt fa-2x mb-2 text-muted"></i>
+                            <p class="text-muted">Nenhuma postagem encontrada.</p>
                         </div>
                     </div>
-                    {% if post.user_id == user.id %}
-                        <div class="post-actions">
-                            <button class="btn btn-sm btn-danger delete-post" data-post-id="{{ post.id }}">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    {% endif %}
-                </div>
-                <div class="post-content">
-                    <div class="post-category-tag">{{ post.category }}</div>
-                    <p>{{ post.content }}</p>
-                </div>
-                <div class="post-footer">
-                    <button class="btn btn-sm btn-outline-primary like-btn" data-post-id="{{ post.id }}">
-                        <i class="fas fa-thumbs-up"></i> <span class="like-count">{{ post.likes|length }}</span>
-                    </button>
-                    <a href="{{ url_for('post_comments', post_id=post.id) }}" class="btn btn-sm btn-outline-secondary comment-btn">
-                        <i class="fas fa-comment"></i> Comentar
-                    </a>
-                </div>
+                {% endif %}
             </div>
-        {% endfor %}
-    {% else %}
-        <div class="empty-state-card">
-            <div class="text-center py-3">
-                <i class="fas fa-file-alt fa-2x mb-2 text-muted"></i>
-                <p class="text-muted">Nenhuma postagem encontrada.</p>
-            </div>
-        </div>
-    {% endif %}
-</div>
         </main>
     </div>
 

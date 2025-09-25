@@ -6,7 +6,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from backend.extensions import db
 from backend.models import User, Post, Comment, Like, ResetCode, CodeExample
 from datetime import datetime
-import os 
+import pytz
+import os
 import gunicorn
 import firebase_admin
 from firebase_admin import auth, credentials
@@ -99,6 +100,23 @@ except Exception as e:
     logger.error(f"Erro ao inicializar Firebase: {str(e)}")
     raise
 
+# Filtro Jinja para converter UTC para BRT e formatar com strftime
+@app.template_filter('format_brt')
+def format_brt(datetime_obj, format_str='%d/%m/%Y %H:%M'):
+    if datetime_obj:
+        brt = pytz.timezone('America/Sao_Paulo')
+        brt_datetime = datetime_obj.replace(tzinfo=pytz.UTC).astimezone(brt)
+        return brt_datetime.strftime(format_str)
+    return ''
+
+# Função helper para converter datetime para BRT em respostas JSON
+def to_brt_str(dt, format_str='%d/%m/%Y %H:%M'):
+    if dt:
+        brt = pytz.timezone('America/Sao_Paulo')
+        brt_dt = dt.replace(tzinfo=pytz.UTC).astimezone(brt)
+        return brt_dt.strftime(format_str)
+    return ''
+
 def normalize_filename(filename):
     """Normaliza o nome do arquivo, removendo acentos e convertendo para minúsculas."""
     normalized = unicodedata.normalize('NFKD', filename).encode('ASCII', 'ignore').decode('ASCII')
@@ -134,7 +152,7 @@ def track_user_activity(activity_type):
         return
     user = db.session.get(User, session['user_id'])
     if user:
-        user.last_activity = datetime.utcnow()
+        user.last_activity = datetime.now(pytz.UTC)  # Atualizado para usar pytz.UTC
         try:
             db.session.commit()
         except Exception as e:
@@ -164,7 +182,9 @@ def telainicial():
         return redirect(url_for('registroelogin'))
     posts = Post.query.options(
         db.joinedload(Post.author),
-        db.joinedload(Post.likes)
+        db.joinedload(Post.likes),
+        db.joinedload(Post.comments).joinedload(Comment.author),
+        db.joinedload(Post.comments).joinedload(Comment.replies).joinedload(Comment.author)
     ).order_by(Post.created_at.desc()).limit(10).all()
     return render_template('telainicial.html', user=user, posts=posts)
 
@@ -442,7 +462,9 @@ def comunidade():
         return redirect(url_for('registroelogin'))
     posts = Post.query.options(
         db.joinedload(Post.comments).joinedload(Comment.author),
-        db.joinedload(Post.comments).joinedload(Comment.replies).joinedload(Comment.author)
+        db.joinedload(Post.comments).joinedload(Comment.replies).joinedload(Comment.author),
+        db.joinedload(Post.author),
+        db.joinedload(Post.likes)
     ).order_by(Post.created_at.desc()).all()
     return render_template('comunidade.html', user=user, posts=posts)
 
@@ -459,7 +481,9 @@ def create_post_form():
         return redirect(url_for('registroelogin'))
     posts = Post.query.options(
         db.joinedload(Post.comments).joinedload(Comment.author),
-        db.joinedload(Post.comments).joinedload(Comment.replies).joinedload(Comment.author)
+        db.joinedload(Post.comments).joinedload(Comment.replies).joinedload(Comment.author),
+        db.joinedload(Post.author),
+        db.joinedload(Post.likes)
     ).order_by(Post.created_at.desc()).all()
     return render_template('comunidade.html', user=user, posts=posts)
 
@@ -631,8 +655,6 @@ def active_sessions():
         ]
         logger.info(f"Sessões listadas para usuário ID {user.id}")
         return render_template('active_sessions.html', user=user, sessions=sessions)
-        # Alternative: Redirect to configuracoes with session data
-        # return redirect(url_for('configuracoes', sessions=sessions))
     except Exception as e:
         logger.error(f"Erro ao listar sessões para usuário ID {user.id}: {str(e)}")
         flash('Erro ao listar sessões.', 'error')
@@ -739,7 +761,7 @@ def code_examples():
                 'content': example.content,
                 'language': example.language,
                 'category': example.category,
-                'created_at': example.created_at.strftime('%d/%m/%Y %H:%M')
+                'created_at': to_brt_str(example.created_at)
             } for example in examples
         ])
     except Exception as e:
@@ -773,7 +795,7 @@ def create_post():
                 'content': new_post.content,
                 'category': new_post.category,
                 'username': user.username,
-                'created_at': new_post.created_at.strftime('%d/%m/%Y %H:%M')
+                'created_at': to_brt_str(new_post.created_at)
             }
         })
     except Exception as e:
@@ -804,7 +826,7 @@ def add_comment(post_id):
                 'id': new_comment.id,
                 'content': new_comment.content,
                 'username': new_comment.author.username,
-                'created_at': new_comment.created_at.strftime('%d/%m/%Y %H:%M'),
+                'created_at': to_brt_str(new_comment.created_at),
                 'is_admin': new_comment.author.is_admin,
                 'is_moderator': new_comment.author.is_moderator
             }
@@ -838,7 +860,7 @@ def add_reply(comment_id):
                 'id': new_reply.id,
                 'content': new_reply.content,
                 'username': new_reply.author.username,
-                'created_at': new_reply.created_at.strftime('%d/%m/%Y %H:%M'),
+                'created_at': to_brt_str(new_reply.created_at),
                 'is_admin': new_reply.author.is_admin,
                 'is_moderator': new_reply.author.is_moderator
             }
@@ -1125,7 +1147,6 @@ print(calculadora())""",
         logger.info("Tabelas do banco de dados criadas com sucesso")
     except Exception as e:
         logger.error(f"Erro ao criar tabelas do banco de dados: {str(e)}")
-        
         raise
         
 if __name__ == '__main__':

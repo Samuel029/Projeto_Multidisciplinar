@@ -10,6 +10,40 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/telainicial.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    <style>
+        .comment-card {
+            border-left: 2px solid #007bff;
+            padding-left: 10px;
+            margin-bottom: 10px;
+        }
+        .reply-card {
+            border-left: 2px solid #6c757d;
+            padding-left: 10px;
+            margin-bottom: 5px;
+        }
+        .comment-form, .reply-form {
+            margin-top: 10px;
+        }
+        .comment-form textarea, .reply-form textarea {
+            height: 100px; /* Tamanho fixo */
+            border-radius: 8px; /* Bordas arredondadas */
+            border: 1px solid #ced4da; /* Borda padrão do Bootstrap */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra suave */
+            transition: all 0.3s ease; /* Transição suave para foco */
+            font-family: 'Inter', sans-serif; /* Mesma fonte do projeto */
+            font-size: 0.95rem; /* Tamanho de fonte consistente */
+            padding: 10px; /* Espaçamento interno */
+            resize: none; /* Impede redimensionamento */
+        }
+        .comment-form textarea:focus, .reply-form textarea:focus {
+            border-color: #007bff; /* Cor de foco do Bootstrap */
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.3); /* Sombra ao focar */
+            outline: none; /* Remove o contorno padrão */
+        }
+        .like-btn-comment {
+            font-size: 0.9em;
+        }
+    </style>
 </head>
 <body>
     <!-- Header -->
@@ -30,42 +64,42 @@
         </div>
     </header>
 
-   <!-- Offcanvas Menu -->
-<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasMenuLabel">
-    <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="offcanvasMenuLabel">Menu</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body">
-        <div class="user-profile mb-4">
-            <div class="d-flex align-items-center">
-                <div class="avatar me-3">
-                    {% if user.profile_pic and user.profile_pic != 'default.png' %}
-                        <img src="{{ url_for('static', filename='uploads/' + user.profile_pic) }}" alt="Foto de perfil" class="profile-pic-img rounded-circle" style="width:48px;height:48px;object-fit:cover;">
-                    {% else %}
-                        <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center" style="width:48px;height:48px;font-size:1.7em;">
-                            {{ user.username[0]|upper }}
-                        </div>
-                    {% endif %}
-                </div>
-                <div>
-                    <h6 class="mb-0">{{ user.username }}</h6>
-                    <small class="text-muted">{{ user.email }}</small>
+    <!-- Offcanvas Menu -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasMenuLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasMenuLabel">Menu</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="user-profile mb-4">
+                <div class="d-flex align-items-center">
+                    <div class="avatar me-3">
+                        {% if user.profile_pic and user.profile_pic != 'default.png' %}
+                            <img src="{{ url_for('static', filename='Uploads/' + user.profile_pic) }}" alt="Foto de perfil" class="profile-pic-img rounded-circle" style="width:48px;height:48px;object-fit:cover;">
+                        {% else %}
+                            <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center" style="width:48px;height:48px;font-size:1.7em;">
+                                {{ user.username[0]|upper }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <h6 class="mb-0">{{ user.username }}</h6>
+                        <small class="text-muted">{{ user.email }}</small>
+                    </div>
                 </div>
             </div>
+            <ul class="navbar-nav">
+                <li class="nav-item mb-2"><a class="nav-link active" href="{{ url_for('telainicial') }}"><i class="fas fa-home me-2"></i>Tela Inicial</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('materiais') }}"><i class="fas fa-book me-2"></i>Materiais de Estudo</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('pdfs') }}"><i class="fas fa-file-pdf me-2"></i>PDFs e Apostilas</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('videos') }}"><i class="fas fa-video me-2"></i>Vídeos e Tutoriais</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('codigo') }}"><i class="fas fa-code me-2"></i>Exemplos de Código</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('comunidade') }}"><i class="fas fa-users me-2"></i>Comunidade</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('configuracoes') }}"><i class="fas fa-cog me-2"></i>Configurações</a></li>
+                <li class="nav-item"><a class="nav-link text-danger" href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt me-2"></i>Sair</a></li>
+            </ul>
         </div>
-        <ul class="navbar-nav">
-            <li class="nav-item mb-2"><a class="nav-link active" href="{{ url_for('telainicial') }}"><i class="fas fa-home me-2"></i>Tela Inicial</a></li>
-            <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('materiais') }}"><i class="fas fa-book me-2"></i>Materiais de Estudo</a></li>
-            <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('pdfs') }}"><i class="fas fa-file-pdf me-2"></i>PDFs e Apostilas</a></li>
-            <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('videos') }}"><i class="fas fa-video me-2"></i>Vídeos e Tutoriais</a></li>
-            <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('codigo') }}"><i class="fas fa-code me-2"></i>Exemplos de Código</a></li>
-            <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('comunidade') }}"><i class="fas fa-users me-2"></i>Comunidade</a></li>
-            <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('configuracoes') }}"><i class="fas fa-cog me-2"></i>Configurações</a></li>
-            <li class="nav-item"><a class="nav-link text-danger" href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt me-2"></i>Sair</a></li>
-        </ul>
     </div>
-</div>
 
     <!-- Main Content -->
     <div class="container">
@@ -152,7 +186,7 @@
                                                 <div class="user-info">
                                                     <div class="profile-pic-preview">
                                                         {% if post.author.profile_pic and post.author.profile_pic != 'default.png' %}
-                                                            <img class="profile-pic-img" src="{{ url_for('static', filename='uploads/' + post.author.profile_pic) }}" alt="Foto de perfil" />
+                                                            <img class="profile-pic-img" src="{{ url_for('static', filename='Uploads/' + post.author.profile_pic) }}" alt="Foto de perfil" />
                                                         {% else %}
                                                             <div class="profile-pic-avatar">
                                                                 {{ post.author.username[0]|upper }}
@@ -161,7 +195,7 @@
                                                     </div>
                                                     <div>
                                                         <h5 class="username">{{ post.author.username }}</h5>
-                                                        <small class="text-muted">{{ post.created_at.strftime('%d/%m/%Y %H:%M') }}</small>
+                                                        <small class="text-muted">{{ post.created_at|format_brt }}</small>
                                                     </div>
                                                 </div>
                                                 {% if post.user_id == user.id %}
@@ -181,8 +215,85 @@
                                                     <i class="fas fa-thumbs-up"></i> <span class="like-count">{{ post.likes|length }}</span>
                                                 </button>
                                                 <a href="{{ url_for('post_comments', post_id=post.id) }}" class="btn btn-sm btn-outline-secondary comment-btn">
-                                                    <i class="fas fa-comment"></i> Comentar
+                                                    <i class="fas fa-comment"></i> Comentar ({{ post.comments|length }})
                                                 </a>
+                                            </div>
+                                            <!-- Exibição de Comentários -->
+                                            <div class="comments-section mt-3">
+                                                <h6>Comentários</h6>
+                                                {% if post.comments %}
+                                                    {% for comment in post.comments %}
+                                                        <div class="comment-card ms-3 mb-2" data-comment-id="{{ comment.id }}">
+                                                            <div class="d-flex">
+                                                                <div class="profile-pic-preview me-2">
+                                                                    {% if comment.author.profile_pic and comment.author.profile_pic != 'default.png' %}
+                                                                        <img class="profile-pic-img" src="{{ url_for('static', filename='Uploads/' + comment.author.profile_pic) }}" alt="Foto de perfil" style="width:32px;height:32px;" />
+                                                                    {% else %}
+                                                                        <div class="profile-pic-avatar" style="width:32px;height:32px;">
+                                                                            {{ comment.author.username[0]|upper }}
+                                                                        </div>
+                                                                    {% endif %}
+                                                                </div>
+                                                                <div class="flex-grow-1">
+                                                                    <strong>{{ comment.author.username }}</strong>
+                                                                    <small class="text-muted">{{ comment.created_at|format_brt }}</small>
+                                                                    <p class="mb-1">{{ comment.content }}</p>
+                                                                    <div class="comment-actions">
+                                                                        <button class="btn btn-sm btn-outline-primary like-btn-comment" data-comment-id="{{ comment.id }}">
+                                                                            <i class="fas fa-thumbs-up"></i> <span class="like-count">{{ comment.likes|length }}</span>
+                                                                        </button>
+                                                                        {% if comment.user_id == user.id %}
+                                                                            <button class="btn btn-sm btn-outline-secondary edit-comment-btn" data-comment-id="{{ comment.id }}">Editar</button>
+                                                                            <button class="btn btn-sm btn-outline-danger delete-comment-btn" data-comment-id="{{ comment.id }}">Excluir</button>
+                                                                        {% endif %}
+                                                                    </div>
+                                                                    {% if comment.replies %}
+                                                                        {% for reply in comment.replies %}
+                                                                            <div class="reply-card ms-4 mb-1" data-reply-id="{{ reply.id }}">
+                                                                                <div class="d-flex">
+                                                                                    <div class="profile-pic-preview me-2">
+                                                                                        {% if reply.author.profile_pic and reply.author.profile_pic != 'default.png' %}
+                                                                                            <img class="profile-pic-img" src="{{ url_for('static', filename='Uploads/' + reply.author.profile_pic) }}" alt="Foto de perfil" style="width:24px;height:24px;" />
+                                                                                        {% else %}
+                                                                                            <div class="profile-pic-avatar" style="width:24px;height:24px;">
+                                                                                                {{ reply.author.username[0]|upper }}
+                                                                                            </div>
+                                                                                        {% endif %}
+                                                                                    </div>
+                                                                                    <div class="flex-grow-1">
+                                                                                        <strong>{{ reply.author.username }}</strong>
+                                                                                        <small class="text-muted">{{ reply.created_at|format_brt }}</small>
+                                                                                        <p class="mb-1">{{ reply.content }}</p>
+                                                                                        {% if reply.user_id == user.id %}
+                                                                                            <div class="reply-actions">
+                                                                                                <button class="btn btn-sm btn-outline-secondary edit-reply-btn" data-reply-id="{{ reply.id }}">Editar</button>
+                                                                                                <button class="btn btn-sm btn-outline-danger delete-reply-btn" data-reply-id="{{ reply.id }}">Excluir</button>
+                                                                                            </div>
+                                                                                        {% endif %}
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        {% endfor %}
+                                                                    {% endif %}
+                                                                    <!-- Formulário para Respostas -->
+                                                                    <form class="reply-form mt-2" data-comment-id="{{ comment.id }}" style="display: none;">
+                                                                        <textarea class="form-control" name="reply_content" placeholder="Escreva sua resposta..." required></textarea>
+                                                                        <button type="submit" class="btn btn-sm btn-primary mt-1">Enviar Resposta</button>
+                                                                        <button type="button" class="btn btn-sm btn-secondary mt-1 cancel-reply-btn">Cancelar</button>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    {% endfor %}
+                                                    <a href="{{ url_for('post_comments', post_id=post.id) }}" class="small text-muted ms-3">Ver todos os comentários</a>
+                                                {% else %}
+                                                    <p class="text-muted small ms-3">Nenhum comentário ainda.</p>
+                                                {% endif %}
+                                                <!-- Formulário para Comentários -->
+                                                <form class="comment-form ms-3 mt-2" data-post-id="{{ post.id }}">
+                                                    <textarea class="form-control" name="comment_content" placeholder="Escreva seu comentário..." required></textarea>
+                                                    <button type="submit" class="btn btn-sm btn-primary mt-1">Comentar</button>
+                                                </form>
                                             </div>
                                         </div>
                                     {% endfor %}
@@ -555,5 +666,215 @@ public:
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ url_for('static', filename='js/telainicial.js') }}"></script>
     <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+    <script>
+        // Funções para manipular curtidas, comentários, respostas, edição e exclusão
+        document.addEventListener('DOMContentLoaded', () => {
+            // Manipular curtidas de comentários
+            document.querySelectorAll('.like-btn-comment').forEach(button => {
+                button.addEventListener('click', async () => {
+                    const commentId = button.dataset.commentId;
+                    try {
+                        const response = await fetch(`/like_comment/${commentId}`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' }
+                        });
+                        const data = await response.json();
+                        if (data.status === 'success') {
+                            const likeCountSpan = button.querySelector('.like-count');
+                            likeCountSpan.textContent = data.like_count;
+                            button.classList.toggle('btn-primary', data.liked);
+                            button.classList.toggle('btn-outline-primary', !data.liked);
+                            alert(data.message);
+                        } else {
+                            alert(data.message);
+                        }
+                    } catch (error) {
+                        console.error('Erro ao curtir comentário:', error);
+                        alert('Erro ao curtir comentário.');
+                    }
+                });
+            });
+
+            // Manipular envio de comentários
+            document.querySelectorAll('.comment-form').forEach(form => {
+                form.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const postId = form.dataset.postId;
+                    const content = form.querySelector('textarea[name="comment_content"]').value;
+                    try {
+                        const response = await fetch(`/comment/${postId}`, {
+                            method: 'POST',
+                            body: new FormData(form)
+                        });
+                        const data = await response.json();
+                        if (data.status === 'success') {
+                            alert('Comentário adicionado com sucesso!');
+                            window.location.reload(); // Recarrega para mostrar o novo comentário
+                        } else {
+                            alert(data.message);
+                        }
+                    } catch (error) {
+                        console.error('Erro ao adicionar comentário:', error);
+                        alert('Erro ao adicionar comentário.');
+                    }
+                });
+            });
+
+            // Manipular envio de respostas
+            document.querySelectorAll('.reply-form').forEach(form => {
+                form.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const commentId = form.dataset.commentId;
+                    const content = form.querySelector('textarea[name="reply_content"]').value;
+                    try {
+                        const response = await fetch(`/reply/${commentId}`, {
+                            method: 'POST',
+                            body: new FormData(form)
+                        });
+                        const data = await response.json();
+                        if (data.status === 'success') {
+                            alert('Resposta adicionada com sucesso!');
+                            window.location.reload(); // Recarrega para mostrar a nova resposta
+                        } else {
+                            alert(data.message);
+                        }
+                    } catch (error) {
+                        console.error('Erro ao adicionar resposta:', error);
+                        alert('Erro ao adicionar resposta.');
+                    }
+                });
+            });
+
+            // Mostrar/esconder formulário de resposta
+            document.querySelectorAll('.like-btn-comment').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const commentId = button.dataset.commentId;
+                    const replyForm = document.querySelector(`.reply-form[data-comment-id="${commentId}"]`);
+                    if (replyForm) {
+                        replyForm.style.display = replyForm.style.display === 'none' ? 'block' : 'none';
+                    }
+                });
+            });
+
+            // Cancelar resposta
+            document.querySelectorAll('.cancel-reply-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const form = button.closest('.reply-form');
+                    form.style.display = 'none';
+                    form.querySelector('textarea').value = '';
+                });
+            });
+
+            // Manipular edição de comentários
+            document.querySelectorAll('.edit-comment-btn').forEach(button => {
+                button.addEventListener('click', async () => {
+                    const commentId = button.dataset.commentId;
+                    const commentCard = button.closest('.comment-card');
+                    const contentP = commentCard.querySelector('p.mb-1');
+                    const currentContent = contentP.textContent;
+                    const newContent = prompt('Editar comentário:', currentContent);
+                    if (newContent && newContent.trim()) {
+                        try {
+                            const response = await fetch(`/edit_comment/${commentId}`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                                body: `edit_comment_content=${encodeURIComponent(newContent)}`
+                            });
+                            const data = await response.json();
+                            if (data.status === 'success') {
+                                contentP.textContent = data.content;
+                                alert(data.message);
+                            } else {
+                                alert(data.message);
+                            }
+                        } catch (error) {
+                            console.error('Erro ao editar comentário:', error);
+                            alert('Erro ao editar comentário.');
+                        }
+                    }
+                });
+            });
+
+            // Manipular exclusão de comentários
+            document.querySelectorAll('.delete-comment-btn').forEach(button => {
+                button.addEventListener('click', async () => {
+                    if (confirm('Tem certeza que deseja excluir este comentário?')) {
+                        const commentId = button.dataset.commentId;
+                        try {
+                            const response = await fetch(`/delete_comment/${commentId}`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' }
+                            });
+                            const data = await response.json();
+                            if (data.status === 'success') {
+                                button.closest('.comment-card').remove();
+                                alert(data.message);
+                            } else {
+                                alert(data.message);
+                            }
+                        } catch (error) {
+                            console.error('Erro ao excluir comentário:', error);
+                            alert('Erro ao excluir comentário.');
+                        }
+                    }
+                });
+            });
+
+            // Manipular edição de respostas
+            document.querySelectorAll('.edit-reply-btn').forEach(button => {
+                button.addEventListener('click', async () => {
+                    const replyId = button.dataset.replyId;
+                    const replyCard = button.closest('.reply-card');
+                    const contentP = replyCard.querySelector('p.mb-1');
+                    const currentContent = contentP.textContent;
+                    const newContent = prompt('Editar resposta:', currentContent);
+                    if (newContent && newContent.trim()) {
+                        try {
+                            const response = await fetch(`/edit_reply/${replyId}`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                                body: `edit_reply_content=${encodeURIComponent(newContent)}`
+                            });
+                            const data = await response.json();
+                            if (data.status === 'success') {
+                                contentP.textContent = data.content;
+                                alert(data.message);
+                            } else {
+                                alert(data.message);
+                            }
+                        } catch (error) {
+                            console.error('Erro ao editar resposta:', error);
+                            alert('Erro ao editar resposta.');
+                        }
+                    }
+                });
+            });
+
+            // Manipular exclusão de respostas
+            document.querySelectorAll('.delete-reply-btn').forEach(button => {
+                button.addEventListener('click', async () => {
+                    if (confirm('Tem certeza que deseja excluir esta resposta?')) {
+                        const replyId = button.dataset.replyId;
+                        try {
+                            const response = await fetch(`/delete_reply/${replyId}`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' }
+                            });
+                            const data = await response.json();
+                            if (data.status === 'success') {
+                                button.closest('.reply-card').remove();
+                                alert(data.message);
+                            } else {
+                                alert(data.message);
+                            }
+                        } catch (error) {
+                            console.error('Erro ao excluir resposta:', error);
+                            alert('Erro ao excluir resposta.');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
