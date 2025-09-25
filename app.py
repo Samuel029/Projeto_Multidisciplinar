@@ -7,6 +7,7 @@ from backend.extensions import db
 from backend.models import User, Post, Comment, Like, ResetCode, CodeExample
 from datetime import datetime
 import os 
+import gunicorn
 import firebase_admin
 from firebase_admin import auth, credentials
 from flask_migrate import Migrate
