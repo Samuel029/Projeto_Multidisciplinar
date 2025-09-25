@@ -1,184 +1,310 @@
-const studyMaterials = [
-    {
-        title: "Introdução à Inteligência Artificial",
-        category: "IA",
-        description: "Aprenda os conceitos básicos de IA, incluindo aprendizado de máquina e redes neurais.",
-        level: "Iniciante",
-        downloadLink: "#"
-    },
-    {
-        title: "Deep Learning com TensorFlow",
-        category: "IA",
-        description: "Guia prático para construir modelos de deep learning usando TensorFlow.",
-        level: "Avançado",
-        downloadLink: "#"
-    },
-    {
-        title: "SQL para Iniciantes",
-        category: "Banco de Dados",
-        description: "Domine os fundamentos de SQL para gerenciamento de bancos de dados relacionais.",
-        level: "Iniciante",
-        downloadLink: "#"
-    },
-    {
-        title: "Otimização de Consultas SQL",
-        category: "Banco de Dados",
-        description: "Técnicas avançadas para melhorar a performance de consultas em bancos de dados.",
-        level: "Avançado",
-        downloadLink: "#"
-    },
-    {
-        title: "HTML e CSS: Construindo Interfaces",
-        category: "Front-end",
-        description: "Crie interfaces modernas e responsivas com HTML5 e CSS3.",
-        level: "Iniciante",
-        downloadLink: "#"
-    },
-    {
-        title: "JavaScript Avançado",
-        category: "Front-end",
-        description: "Explore recursos avançados de JavaScript, incluindo ES6+ e assincronismo.",
-        level: "Intermediário",
-        downloadLink: "#"
-    },
-    {
-        title: "Node.js para Back-end",
-        category: "Back-end",
-        description: "Desenvolva APIs robustas com Node.js e Express.",
-        level: "Intermediário",
-        downloadLink: "#"
-    },
-    {
-        title: "Segurança em APIs REST",
-        category: "Back-end",
-        description: "Boas práticas para proteger APIs REST contra ameaças comuns.",
-        level: "Avançado",
-        downloadLink: "#"
-    },
-    {
-        title: "Resolvendo Dúvidas de Programação",
-        category: "Dúvidas Gerais",
-        description: "Guia com respostas para as dúvidas mais comuns em programação.",
-        level: "Iniciante",
-        downloadLink: "#"
-    },
-    {
-        title: "Planejamento de Carreira em TI",
-        category: "Carreiras",
-        description: "Estratégias para construir uma carreira de sucesso na área de tecnologia.",
-        level: "Iniciante",
-        downloadLink: "#"
-    },
-    {
-        title: "Modelagem de Dados com UML",
-        category: "Modelagem a Banco de Dados",
-        description: "Aprenda a criar diagramas UML para modelagem de bancos de dados.",
-        level: "Intermediário",
-        downloadLink: "#"
-    },
-    {
-        title: "Lógica de Programação com Python",
-        category: "Lógica",
-        description: "Fundamentos de lógica de programação usando Python como base.",
-        level: "Iniciante",
-        downloadLink: "#"
-    },
-    {
-        title: "Gerenciamento de Processos com BPMN",
-        category: "Processos",
-        description: "Utilize BPMN para modelar e otimizar processos de negócios.",
-        level: "Intermediário",
-        downloadLink: "#"
-    },
-    {
-        title: "Desenvolvimento Android com Kotlin",
-        category: "Programação Android",
-        description: "Crie aplicativos Android modernos usando Kotlin.",
-        level: "Intermediário",
-        downloadLink: "#"
-    },
-    {
-        title: "Projetos Multidisciplinares em TI",
-        category: "Projeto Multidisciplinar",
-        description: "Guia para integrar múltiplas disciplinas em projetos de TI.",
-        level: "Avançado",
-        downloadLink: "#"
-    },
-    {
-        title: "Fundamentos de Redes de Computadores",
-        category: "Redes",
-        description: "Conceitos essenciais de redes, incluindo TCP/IP e configuração de roteadores.",
-        level: "Iniciante",
-        downloadLink: "#"
-    },
-    {
-        title: "Git e GitHub para Versionamento",
-        category: "Versionamento",
-        description: "Domine o controle de versão com Git e GitHub.",
-        level: "Iniciante",
-        downloadLink: "#"
+document.addEventListener('DOMContentLoaded', function() {
+    // Elementos da interface
+    const searchBar = document.querySelector('.search-bar');
+    const searchInput = document.querySelector('.search-bar input');
+    const searchIcon = document.querySelector('.search-bar i');
+    const categories = document.querySelectorAll('.category');
+    const viewToggleButtons = document.querySelectorAll('.view-toggle button');
+    const slideGrid = document.querySelector('.slide-grid');
+    const sideMenu = document.getElementById('offcanvasMenu');
+
+    // Inicializa componentes
+    initializeComponents();
+
+    // Configura eventos
+    setupSearchBar();
+    setupCategoryFilter();
+    setupViewToggle();
+    setupThemeSwitch();
+    setupDrawer();
+
+    function initializeComponents() {
+        // Verifica se há tema salvo no localStorage
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark-theme');
+            const themeSwitch = document.querySelector('.theme-switch');
+            if (themeSwitch) {
+                themeSwitch.innerHTML = '<i class="fas fa-sun"></i>';
+            }
+        }
     }
-];
 
-function renderStudyMaterials(materials) {
-    const container = document.getElementById('study-materials');
-    container.innerHTML = '';
+    function setupSearchBar() {
+        if (!searchBar || !searchInput || !searchIcon) return;
 
-    materials.forEach(material => {
-        const card = document.createElement('div');
-        card.classList.add('study-card');
-        card.dataset.category = material.category;
+        // Toggle da barra de pesquisa em dispositivos móveis
+        searchIcon.addEventListener('click', function(event) {
+            if (window.innerWidth <= 992) {
+                searchBar.classList.toggle('search-active');
+                if (searchBar.classList.contains('search-active')) {
+                    searchInput.focus();
+                    searchInput.value = '';
+                    filterSlides('');
+                } else {
+                    searchInput.blur();
+                    searchInput.value = '';
+                    filterSlides('');
+                }
+                event.stopPropagation();
+            }
+        });
 
-        card.innerHTML = `
-            <div class="study-card-header">
-                <i class="fas fa-book"></i>
-                <h2 class="study-card-title">${material.title}</h2>
+        // Fecha a barra de pesquisa ao clicar fora
+        document.addEventListener('click', function(event) {
+            if (window.innerWidth <= 992 && !searchBar.contains(event.target)) {
+                searchBar.classList.remove('search-active');
+                searchInput.value = '';
+                filterSlides('');
+            }
+        });
+
+        searchBar.addEventListener('click', function(event) {
+            event.stopPropagation();
+        });
+
+        // Pesquisa em tempo real
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase().trim();
+            filterSlides(searchTerm);
+        });
+
+        // Pesquisa ao pressionar Enter
+        searchInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                const searchTerm = this.value.toLowerCase().trim();
+                filterSlides(searchTerm);
+                showNotification('Pesquisa realizada!', 'success');
+            }
+        });
+    }
+
+    function filterSlides(searchTerm) {
+        const activeCategory = document.querySelector('.category.active').textContent.trim();
+        document.querySelectorAll('.slide-card').forEach(card => {
+            const title = card.querySelector('.slide-title').textContent.toLowerCase();
+            const description = card.querySelector('.slide-description').textContent.toLowerCase();
+            const instructor = card.querySelector('.instructor-name').textContent.toLowerCase();
+            const category = card.querySelector('.slide-category-tag').textContent.toLowerCase();
+            const tags = Array.from(card.querySelectorAll('.slide-tag')).map(tag => tag.textContent.toLowerCase());
+
+            // Mapear termos de pesquisa para categorias
+            const searchCategoryMap = {
+                'versionamento': 'versionamento',
+                'ia': 'i.a',
+                'i.a': 'i.a',
+                'banco de dados': 'banco de dados',
+                'modelagem a banco de dados': 'banco de dados',
+                'logica': 'lógica',
+                'processos': 'processos',
+                'frontend': 'front-end',
+                'front-end': 'front-end',
+                'backend': 'back-end',
+                'back-end': 'back-end',
+                'android': 'android',
+                'programação android': 'android',
+                'multidisciplinar': 'multidisciplinar',
+                'projeto multidisciplinar': 'multidisciplinar',
+                'carreiras': 'carreiras',
+                'redes': 'redes'
+            };
+
+            const matchedCategory = searchCategoryMap[searchTerm] || searchTerm;
+
+            const matchesSearch = searchTerm === '' ||
+                title.includes(searchTerm) ||
+                description.includes(searchTerm) ||
+                instructor.includes(searchTerm) ||
+                category.includes(matchedCategory) ||
+                tags.some(tag => tag.includes(searchTerm));
+
+            const matchesCategory = activeCategory === 'Todos' || 
+                (() => {
+                    const cardCategory = card.querySelector('.slide-category-tag').textContent.trim();
+                    const categoryMap = {
+                        'I.A': ['I.A'],
+                        'Modelagem a Banco de Dados': ['Banco de Dados'],
+                        'Programação Android': ['Android'],
+                        'Projeto Multidisciplinar': ['Multidisciplinar'],
+                        'Versionamento': ['Versionamento']
+                    };
+                    const matchedCategories = categoryMap[activeCategory] || [activeCategory];
+                    return matchedCategories.includes(cardCategory);
+                })();
+
+            if (matchesSearch && matchesCategory) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+
+    function setupCategoryFilter() {
+        categories.forEach(category => {
+            category.addEventListener('click', function() {
+                categories.forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+
+                const categoryName = this.textContent.trim();
+                document.querySelectorAll('.slide-card').forEach(card => {
+                    const cardCategory = card.querySelector('.slide-category-tag').textContent.trim();
+                    const categoryMap = {
+                        'I.A': ['I.A'],
+                        'Modelagem a Banco de Dados': ['Banco de Dados'],
+                        'Programação Android': ['Android'],
+                        'Projeto Multidisciplinar': ['Multidisciplinar'],
+                        'Versionamento': ['Versionamento']
+                    };
+
+                    if (categoryName === 'Todos') {
+                        card.style.display = 'block';
+                    } else {
+                        const matchedCategories = categoryMap[categoryName] || [categoryName];
+                        if (matchedCategories.includes(cardCategory)) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    }
+                });
+
+                // Limpa a pesquisa ao mudar de categoria
+                if (searchInput) {
+                    searchInput.value = '';
+                    searchBar.classList.remove('search-active');
+                }
+                showNotification(`Filtrando por ${categoryName}`, 'success');
+            });
+        });
+    }
+
+    function setupViewToggle() {
+        if (!viewToggleButtons || !slideGrid) return;
+
+        viewToggleButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                viewToggleButtons.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+
+                if (this.querySelector('i').classList.contains('fa-list')) {
+                    slideGrid.style.gridTemplateColumns = '1fr';
+                    slideGrid.querySelectorAll('.slide-card').forEach(card => {
+                        card.style.display = 'flex';
+                        const thumbnail = card.querySelector('.slide-thumbnail');
+                        if (thumbnail) thumbnail.style.width = '280px';
+                        const slideInfo = card.querySelector('.slide-info');
+                        if (slideInfo) slideInfo.style.flex = '1';
+                    });
+                    showNotification('Visualização em lista ativada', 'info');
+                } else {
+                    slideGrid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(300px, 1fr))';
+                    slideGrid.querySelectorAll('.slide-card').forEach(card => {
+                        card.style.display = 'block';
+                        const thumbnail = card.querySelector('.slide-thumbnail');
+                        if (thumbnail) thumbnail.style.width = 'auto';
+                    });
+                    showNotification('Visualização em grade ativada', 'info');
+                }
+            });
+        });
+    }
+
+    function setupThemeSwitch() {
+        const themeSwitch = document.createElement('div');
+        themeSwitch.classList.add('theme-switch');
+        themeSwitch.innerHTML = '<i class="fas fa-moon"></i>';
+        document.body.appendChild(themeSwitch);
+
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark-theme');
+            themeSwitch.innerHTML = '<i class="fas fa-sun"></i>';
+        }
+
+        themeSwitch.addEventListener('click', function() {
+            document.body.classList.toggle('dark-theme');
+            const isDark = document.body.classList.contains('dark-theme');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            themeSwitch.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+            showNotification(isDark ? 'Tema escuro ativado' : 'Tema claro ativado', 'success');
+        });
+    }
+
+    function setupDrawer() {
+        if (!sideMenu) return;
+
+        const drawerLinks = document.querySelectorAll('.offcanvas .nav-link');
+        if (drawerLinks && drawerLinks.length > 0) {
+            // Remove active class from all links
+            drawerLinks.forEach(link => {
+                link.classList.remove('active');
+            });
+
+            // Find and activate the "Materiais de Estudo" link
+            const materialsLink = Array.from(drawerLinks).find(link => 
+                link.getAttribute('href').includes('materiais') || 
+                link.textContent.includes('Materiais de Estudo')
+            );
+            if (materialsLink) {
+                materialsLink.classList.add('active');
+            }
+
+            // Add click event listeners to close the drawer
+            drawerLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    const bsOffcanvas = bootstrap.Offcanvas.getInstance(sideMenu);
+                    if (bsOffcanvas) bsOffcanvas.hide();
+                });
+            });
+        }
+
+        document.addEventListener('click', function(event) {
+            const isClickInsideDrawer = sideMenu.contains(event.target);
+            const isClickOnToggler = event.target.closest('.menu-btn');
+            const isOffcanvasOpen = sideMenu.classList.contains('show');
+
+            if (!isClickInsideDrawer && !isClickOnToggler && isOffcanvasOpen) {
+                const bsOffcanvas = bootstrap.Offcanvas.getInstance(sideMenu);
+                if (bsOffcanvas) bsOffcanvas.hide();
+            }
+        });
+
+        sideMenu.addEventListener('shown.bs.offcanvas', function() {
+            document.body.style.overflow = 'hidden';
+            document.body.style.paddingRight = '0';
+            sideMenu.style.top = '0';
+            sideMenu.style.height = '100vh';
+        });
+
+        sideMenu.addEventListener('hidden.bs.offcanvas', function() {
+            document.body.style.overflow = '';
+            document.body.style.paddingRight = '';
+        });
+    }
+
+    function showNotification(message, type) {
+        const notification = document.createElement('div');
+        notification.className = `notification notification-${type}`;
+        notification.innerHTML = `
+            <div class="notification-content">
+                <div class="notification-message">${message}</div>
             </div>
-            <div class="study-card-content">
-                <p>${material.description}</p>
-            </div>
-            <div class="study-card-footer">
-                <span class="level">${material.level}</span>
-                <a href="${material.downloadLink}" class="download-btn" target="_blank">Baixar</a>
-            </div>
+            <button class="notification-close"><i class="fas fa-times"></i></button>
         `;
+        document.body.appendChild(notification);
 
-        card.addEventListener('click', () => openModal(material));
-        container.appendChild(card);
-    });
-}
+        setTimeout(() => notification.classList.add('show'), 100);
 
-function openModal(material) {
-    const modal = document.getElementById('material-modal');
-    document.getElementById('modal-title').textContent = material.title;
-    document.getElementById('modal-description').textContent = material.description;
-    document.getElementById('modal-level').textContent = material.level;
-    document.getElementById('modal-category').textContent = material.category;
-    document.getElementById('modal-download').href = material.downloadLink;
-    modal.style.display = 'flex';
-}
+        notification.querySelector('.notification-close').addEventListener('click', () => {
+            notification.classList.remove('show');
+            setTimeout(() => notification.remove(), 300);
+        });
 
-function closeModal() {
-    const modal = document.getElementById('material-modal');
-    modal.style.display = 'none';
-}
-
-document.getElementById('category-filter').addEventListener('change', (e) => {
-    const selectedCategory = e.target.value;
-    const filteredMaterials = selectedCategory
-        ? studyMaterials.filter(material => material.category === selectedCategory)
-        : studyMaterials;
-    renderStudyMaterials(filteredMaterials);
-});
-
-document.getElementById('close-modal').addEventListener('click', closeModal);
-
-window.addEventListener('click', (e) => {
-    const modal = document.getElementById('material-modal');
-    if (e.target === modal) {
-        closeModal();
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.classList.remove('show');
+                setTimeout(() => notification.remove(), 300);
+            }
+        }, 4000);
     }
 });
-
-// Initial render
-renderStudyMaterials(studyMaterials);

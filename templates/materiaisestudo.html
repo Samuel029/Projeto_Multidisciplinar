@@ -3,49 +3,287 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Materiais de Estudo</title>
+    <title>TechNoBug - Materiais de Estudo</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/materiaisestudo.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
 </head>
 <body>
+    <header class="app-header">
+        <div class="header-content">
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Pesquisar slides, tópicos...">
+            </div>
+            <div class="logo" onclick="window.location.href = '{{ url_for('telainicial') }}';" style="cursor: pointer;">
+                <i class="fas fa-graduation-cap"></i>
+                <span>TechNoBug</span>
+            </div>
+            <button class="btn menu-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" aria-controls="offcanvasMenu">
+                <i class="fas fa-bars"></i>
+                <span>Menu</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Offcanvas Menu -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasMenuLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasMenuLabel">Menu</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="user-profile mb-4">
+                <div class="d-flex align-items-center">
+                    <div class="avatar me-3">
+                        {% if user.profile_pic and user.profile_pic != 'default.png' %}
+                            <img src="{{ url_for('static', filename='uploads/' + user.profile_pic) }}" alt="Foto de perfil" class="profile-pic-img rounded-circle" style="width:48px;height:48px;object-fit:cover;">
+                        {% else %}
+                            <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center" style="width:48px;height:48px;font-size:1.7em;">
+                                {{ user.username[0]|upper }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <h6 class="mb-0">{{ user.username }}</h6>
+                        <small class="text-muted">{{ user.email }}</small>
+                    </div>
+                </div>
+            </div>
+            <ul class="navbar-nav">
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('telainicial') }}"><i class="fas fa-home me-2"></i>Tela Inicial</a></li>
+                <li class="nav-item mb-2"><a class="nav-link active" href="{{ url_for('materiais') }}"><i class="fas fa-book me-2"></i>Materiais de Estudo</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('pdfs') }}"><i class="fas fa-file-pdf me-2"></i>PDFs e Apostilas</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('videos') }}"><i class="fas fa-video me-2"></i>Vídeos e Tutoriais</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('codigo') }}"><i class="fas fa-code me-2"></i>Exemplos de Código</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('comunidade') }}"><i class="fas fa-users me-2"></i>Comunidade</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('configuracoes') }}"><i class="fas fa-cog me-2"></i>Configurações</a></li>
+                <li class="nav-item"><a class="nav-link text-danger" href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt me-2"></i>Sair</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <nav class="category-nav">
+        <div class="categories-wrapper">
+            <div class="categories">
+                <div class="category active">Todos</div>
+                <div class="category">Versionamento</div>
+                <div class="category">I.A</div>
+                <div class="category">Banco de Dados</div>
+                <div class="category">Lógica</div>
+                <div class="category">Processos</div>
+                <div class="category">Front-end</div>
+                <div class="category">Back-end</div>
+                <div class="category">Android</div>
+                <div class="category">Multidisciplinar</div>
+                <div class="category">Carreiras</div>
+                <div class="category">Redes</div>
+            </div>
+        </div>
+    </nav>
+
     <div class="container">
-        <h1>Portal de Aprendizagem</h1>
+        <main class="main-content">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-book"></i>
+                    <span>Slides em Destaque</span>
+                </h2>
+                <div class="section-actions">
+                    <div class="view-toggle">
+                        <button class="active">
+                            <i class="fas fa-th"></i>
+                        </button>
+                        <button>
+                            <i class="fas fa-list"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
 
-        <div class="filter-section">
-            <select class="form-select" name="category" id="category-filter">
-                <option value="" disabled selected>Selecione a categoria</option>
-                <option value="IA">IA</option>
-                <option value="Banco de Dados">Banco de Dados</option>
-                <option value="Front-end">Front-end</option>
-                <option value="Back-end">Back-end</option>
-                <option value="Dúvidas Gerais">Dúvidas Gerais</option>
-                <option value="Carreiras">Carreiras</option>
-                <option value="Modelagem a Banco de Dados">Modelagem a Banco de Dados</option>
-                <option value="Lógica">Lógica</option>
-                <option value="Processos">Processos</option>
-                <option value="Programação Android">Programação Android</option>
-                <option value="Projeto Multidisciplinar">Projeto Multidisciplinar</option>
-                <option value="Redes">Redes</option>
-                <option value="Versionamento">Versionamento</option>
-            </select>
-        </div>
+            <div class="slide-grid">
+                <!-- Slide 1 -->
+                <div class="slide-card">
+                    <div class="slide-thumbnail">
+                        <a href="/static/slides/git_basics.pdf" download>
+                            <img src="/static/images/slides/git_basics_thumb.jpg" alt="Thumbnail do slide">
+                        </a>
+                        <div class="slide-category-tag">Versionamento</div>
+                        <div class="slide-download-icon">
+                            <i class="fas fa-download"></i>
+                        </div>
+                    </div>
+                    <div class="slide-info">
+                        <h3 class="slide-title">
+                            <a href="/static/slides/git_basics.pdf" download style="text-decoration: none; color: inherit;">
+                                Fundamentos de Git
+                            </a>
+                        </h3>
+                        <div class="slide-meta">
+                            <div class="instructor">
+                                <span class="instructor-name">TechNoBug</span>
+                            </div>
+                            <div class="slide-stats">
+                                <span><i class="fas fa-eye"></i> 5.2K</span>
+                                <span><i class="fas fa-download"></i> 3.1K</span>
+                            </div>
+                        </div>
+                        <p class="slide-description">Slides resumidos sobre os conceitos básicos de Git e versionamento de código.</p>
+                        <div class="slide-tags">
+                            <span class="slide-tag">Git</span>
+                            <span class="slide-tag">Versionamento</span>
+                            <span class="slide-tag">Iniciante</span>
+                        </div>
+                    </div>
+                </div>
 
-        <div class="study-materials" id="study-materials">
-            <!-- Study materials will be dynamically added here -->
-        </div>
+                <!-- Slide 2 -->
+                <div class="slide-card">
+                    <div class="slide-thumbnail">
+                        <a href="/static/slides/python_intro.pdf" download>
+                            <img src="/static/images/slides/python_intro_thumb.jpg" alt="Thumbnail do slide">
+                        </a>
+                        <div class="slide-category-tag">Lógica</div>
+                        <div class="slide-download-icon">
+                            <i class="fas fa-download"></i>
+                        </div>
+                    </div>
+                    <div class="slide-info">
+                        <h3 class="slide-title">
+                            <a href="/static/slides/python_intro.pdf" download style="text-decoration: none; color: inherit;">
+                                Introdução ao Python
+                            </a>
+                        </h3>
+                        <div class="slide-meta">
+                            <div class="instructor">
+                                <span class="instructor-name">TechNoBug</span>
+                            </div>
+                            <div class="slide-stats">
+                                <span><i class="fas fa-eye"></i> 8.7K</span>
+                                <span><i class="fas fa-download"></i> 4.5K</span>
+                            </div>
+                        </div>
+                        <p class="slide-description">Slides introdutórios sobre a linguagem Python para iniciantes.</p>
+                        <div class="slide-tags">
+                            <span class="slide-tag">Python</span>
+                            <span class="slide-tag">Programação</span>
+                            <span class="slide-tag">Iniciante</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 3 -->
+                <div class="slide-card">
+                    <div class="slide-thumbnail">
+                        <a href="/static/slides/ai_basics.pdf" download>
+                            <img src="/static/images/slides/ai_basics_thumb.jpg" alt="Thumbnail do slide">
+                        </a>
+                        <div class="slide-category-tag">I.A</div>
+                        <div class="slide-download-icon">
+                            <i class="fas fa-download"></i>
+                        </div>
+                    </div>
+                    <div class="slide-info">
+                        <h3 class="slide-title">
+                            <a href="/static/slides/ai_basics.pdf" download style="text-decoration: none; color: inherit;">
+                                Conceitos de Inteligência Artificial
+                            </a>
+                        </h3>
+                        <div class="slide-meta">
+                            <div class="instructor">
+                                <span class="instructor-name">TechNoBug</span>
+                            </div>
+                            <div class="slide-stats">
+                                <span><i class="fas fa-eye"></i> 6.3K</span>
+                                <span><i class="fas fa-download"></i> 2.8K</span>
+                            </div>
+                        </div>
+                        <p class="slide-description">Slides resumidos sobre os fundamentos de Inteligência Artificial.</p>
+                        <div class="slide-tags">
+                            <span class="slide-tag">IA</span>
+                            <span class="slide-tag">Inteligência Artificial</span>
+                            <span class="slide-tag">Introdução</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 4 -->
+                <div class="slide-card">
+                    <div class="slide-thumbnail">
+                        <a href="/static/slides/database_modeling.pdf" download>
+                            <img src="/static/images/slides/database_modeling_thumb.jpg" alt="Thumbnail do slide">
+                        </a>
+                        <div class="slide-category-tag">Banco de Dados</div>
+                        <div class="slide-download-icon">
+                            <i class="fas fa-download"></i>
+                        </div>
+                    </div>
+                    <div class="slide-info">
+                        <h3 class="slide-title">
+                            <a href="/static/slides/database_modeling.pdf" download style="text-decoration: none; color: inherit;">
+                                Modelagem de Banco de Dados
+                            </a>
+                        </h3>
+                        <div class="slide-meta">
+                            <div class="instructor">
+                                <span class="instructor-name">TechNoBug</span>
+                            </div>
+                            <div class="slide-stats">
+                                <span><i class="fas fa-eye"></i> 4.9K</span>
+                                <span><i class="fas fa-download"></i> 2.3K</span>
+                            </div>
+                        </div>
+                        <p class="slide-description">Slides sobre conceitos essenciais de modelagem de bancos de dados relacionais.</p>
+                        <div class="slide-tags">
+                            <span class="slide-tag">Banco de Dados</span>
+                            <span class="slide-tag">Modelagem</span>
+                            <span class="slide-tag">SQL</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 5 -->
+                <div class="slide-card">
+                    <div class="slide-thumbnail">
+                        <a href="/static/slides/html_css_basics.pdf" download>
+                            <img src="/static/images/slides/html_css_basics_thumb.jpg" alt="Thumbnail do slide">
+                        </a>
+                        <div class="slide-category-tag">Front-end</div>
+                        <div class="slide-download-icon">
+                            <i class="fas fa-download"></i>
+                        </div>
+                    </div>
+                    <div class="slide-info">
+                        <h3 class="slide-title">
+                            <a href="/static/slides/html_css_basics.pdf" download style="text-decoration: none; color: inherit;">
+                                HTML e CSS Básico
+                            </a>
+                        </h3>
+                        <div class="slide-meta">
+                            <div class="instructor">
+                                <span class="instructor-name">TechNoBug</span>
+                            </div>
+                            <div class="slide-stats">
+                                <span><i class="fas fa-eye"></i> 7.4K</span>
+                                <span><i class="fas fa-download"></i> 3.9K</span>
+                            </div>
+                        </div>
+                        <p class="slide-description">Slides introdutórios sobre HTML e CSS para desenvolvimento web.</p>
+                        <div class="slide-tags">
+                            <span class="slide-tag">HTML</span>
+                            <span class="slide-tag">CSS</span>
+                            <span class="slide-tag">Front-end</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
 
-    <div class="modal" id="material-modal">
-        <div class="modal-content">
-            <span class="close-btn" id="close-modal">×</span>
-            <h2 id="modal-title"></h2>
-            <p id="modal-description"></p>
-            <p><strong>Nível:</strong> <span id="modal-level"></span></p>
-            <p><strong>Categoria:</strong> <span id="modal-category"></span></p>
-            <a id="modal-download" class="download-btn" href="#" target="_blank">Baixar Apostila</a>
-        </div>
-    </div>
+    {% include 'footer.html' %}
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ url_for('static', filename='js/materiaisestudo.js') }}"></script>
 </body>
 </html>

@@ -1,0 +1,2123 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechNoBug</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/videoseetutoriais.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+</head>
+<body>
+    <header class="app-header">
+        <div class="header-content">
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Pesquisar vídeos, tutoriais, tópicos...">
+            </div>
+            <div class="logo" onclick="window.location.href = '{{ url_for('telainicial') }}';" style="cursor: pointer;">
+                <i class="fas fa-graduation-cap"></i>
+                <span>TechNoBug</span>
+            </div>
+            <button class="btn menu-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" aria-controls="offcanvasMenu">
+                <i class="fas fa-bars"></i>
+                <span>Menu</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Offcanvas Menu -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasMenuLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasMenuLabel">Menu</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="user-profile mb-4">
+                <div class="d-flex align-items-center">
+                    <div class="avatar me-3">
+    {% if user.profile_pic and user.profile_pic != 'default.png' %}
+        <img src="{{ url_for('static', filename='uploads/' + user.profile_pic) }}" alt="Foto de perfil" class="profile-pic-img rounded-circle" style="width:48px;height:48px;object-fit:cover;">
+    {% else %}
+        <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center" style="width:48px;height:48px;font-size:1.7em;">
+            {{ user.username[0]|upper }}
+        </div>
+    {% endif %}
+</div>
+                    <div>
+                        <h6 class="mb-0">{{ user.username }}</h6>
+                        <small class="text-muted">{{ user.email }}</small>
+                    </div>
+                </div>
+            </div>
+            <ul class="navbar-nav">
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('telainicial') }}"><i class="fas fa-home me-2"></i>Tela Inicial</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('materiais') }}"><i class="fas fa-book me-2"></i>Materiais de Estudo</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('pdfs') }}"><i class="fas fa-file-pdf me-2"></i>PDFs e Apostilas</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('videos') }}"><i class="fas fa-video me-2"></i>Vídeos e Tutoriais</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('codigo') }}"><i class="fas fa-code me-2"></i>Exemplos de Código</a></li>
+                <li class="nav-item mb-2"><a class="nav-link active" href="{{ url_for('comunidade') }}"><i class="fas fa-users me-2"></i>Comunidade</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('configuracoes') }}"><i class="fas fa-cog me-2"></i>Configurações</a></li>
+                <li class="nav-item"><a class="nav-link text-danger" href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt me-2"></i>Sair</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <nav class="category-nav">
+        <div class="categories-wrapper">
+            <div class="categories">
+                <div class="category active">Todos</div>
+                <div class="category">Versionamento</div>
+                <div class="category">I.A</div>
+                <div class="category">Modelagem a Banco de Dados</div>
+                <div class="category">Lógica</div>
+                <div class="category">Processos</div>
+                <div class="category">Front-end</div>
+                <div class="category">Back-end</div>
+                <div class="category">Programação Android</div>
+                <div class="category">Projeto Multidisciplinar</div>
+                <div class="category">Carreiras</div>
+                <div class="category">Redes</div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <main class="main-content">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-fire"></i>
+                    <span>Tutoriais em Destaque</span>
+                </h2>
+                <div class="section-actions">
+                    <div class="view-toggle">
+                        <button class="active">
+                            <i class="fas fa-th"></i>
+                        </button>
+                        <button>
+                            <i class="fas fa-list"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="video-grid">
+                <!-- Card 1: Aprenda Git e Github em 5 minutos -->
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <a href="https://youtu.be/-l4Aa8wef8s?si=ziRfdFpMjxiSdThi" target="_blank">
+                            <img src="https://img.youtube.com/vi/-l4Aa8wef8s/hqdefault.jpg" alt="Thumbnail do vídeo">
+                        </a>
+                        <div class="video-category-tag">Versionamento</div>
+                        <div class="video-play-icon">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="video-duration">4:57</div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">
+                            <a href="https://youtu.be/-l4Aa8wef8s?si=ziRfdFpMjxiSdThi" target="_blank" style="text-decoration: none; color: inherit;">
+                                Aprenda Git e Github em 5 minutos
+                            </a>
+                        </h3>
+                        <div class="video-meta">
+                            <div class="instructor">
+                                <span class="instructor-name">Mucharski</span>
+                            </div>
+                            <div class="video-stats">
+                                <span><i class="fas fa-eye"></i> 11.5K</span>
+                                <span><i class="fas fa-thumbs-up"></i> 6.1K</span>
+                            </div>
+                        </div>
+                        <p class="video-description">Um tutorial rápido e direto para aprender os conceitos básicos de Git e GitHub em apenas 5 minutos.</p>
+                        <div class="video-tags">
+                            <span class="video-tag">Git</span>
+                            <span class="video-tag">GitHub</span>
+                            <span class="video-tag">Versionamento</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2: Como Instalar Python e Visual Studio Code -->
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <a href="https://youtu.be/R9dLGLVqK9Q?si=t0m91hvDA1PA4JgN" target="_blank">
+                            <img src="https://img.youtube.com/vi/R9dLGLVqK9Q/hqdefault.jpg" alt="Thumbnail do vídeo">
+                        </a>
+                        <div class="video-category-tag">Lógica</div>
+                        <div class="video-play-icon">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="video-duration">17:22</div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">
+                            <a href="https://youtu.be/R9dLGLVqK9Q?si=t0m91hvDA1PA4JgN" target="_blank" style="text-decoration: none; color: inherit;">
+                                Como Instalar Python e Visual Studio Code no Windows | Python do Jeito Certo 2.0
+                            </a>
+                        </h3>
+                        <div class="video-meta">
+                            <div class="instructor">
+                                <span class="instructor-name">Programação Dinâmica</span>
+                            </div>
+                            <div class="video-stats">
+                                <span><i class="fas fa-eye"></i> 85K</span>
+                                <span><i class="fas fa-thumbs-up"></i> 4.5K</span>
+                            </div>
+                        </div>
+                        <p class="video-description">Aprenda a instalar o Python e o Visual Studio Code no Windows de forma correta para começar a programar.</p>
+                        <div class="video-tags">
+                            <span class="video-tag">Python</span>
+                            <span class="video-tag">Visual Studio Code</span>
+                            <span class="video-tag">Iniciante</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3: Curso Python #01 - Seja um Programador -->
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <a href="https://www.youtube.com/watch?v=S9uPNppGsGo&list=PLvE-ZAFRgX8hnECDn1v9HNTI71veL3oW0" target="_blank">
+                            <img src="https://img.youtube.com/vi/S9uPNppGsGo/hqdefault.jpg" alt="Thumbnail do vídeo">
+                        </a>
+                        <div class="video-category-tag">Lógica</div>
+                        <div class="video-play-icon">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="video-duration">29:06</div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">
+                            <a href="https://www.youtube.com/watch?v=S9uPNppGsGo&list=PLvE-ZAFRgX8hnECDn1v9HNTI71veL3oW0" target="_blank" style="text-decoration: none; color: inherit;">
+                                Curso Python #01 - Seja um Programador
+                            </a>
+                        </h3>
+                        <div class="video-meta">
+                            <div class="instructor">
+                                <span class="instructor-name">Curso em Vídeo</span>
+                            </div>
+                            <div class="video-stats">
+                                <span><i class="fas fa-eye"></i> 8.8M</span>
+                                <span><i class="fas fa-thumbs-up"></i> 474K</span>
+                            </div>
+                        </div>
+                        <p class="video-description">Primeira aula de um curso completo de Python para iniciantes, ensinando fundamentos de programação.</p>
+                        <div class="video-tags">
+                            <span class="video-tag">Python</span>
+                            <span class="video-tag">Programação</span>
+                            <span class="video-tag">Iniciante</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4: Curso Grátis de Inteligência Artificial -->
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <a href="https://www.youtube.com/watch?v=jQMbuK6URws&list=PLHz_AreHm4dm24MhlWJYiR_Rm7TFtvs6S" target="_blank">
+                            <img src="https://img.youtube.com/vi/jQMbuK6URws/hqdefault.jpg" alt="Thumbnail do vídeo">
+                        </a>
+                        <div class="video-category-tag">I.A</div>
+                        <div class="video-play-icon">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="video-duration">2:44</div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">
+                            <a href="https://www.youtube.com/watch?v=jQMbuK6URws&list=PLHz_AreHm4dm24MhlWJYiR_Rm7TFtvs6S" target="_blank" style="text-decoration: none; color: inherit;">
+                                Curso Grátis de Inteligência Artificial - @CursoemVideo IA
+                            </a>
+                        </h3>
+                        <div class="video-meta">
+                            <div class="instructor">
+                                <span class="instructor-name">Curso em Vídeo</span>
+                            </div>
+                            <div class="video-stats">
+                                <span><i class="fas fa-eye"></i> 203K</span>
+                                <span><i class="fas fa-thumbs-up"></i> 15K</span>
+                            </div>
+                        </div>
+                        <p class="video-description">Apresentação do curso gratuito de Inteligência Artificial do Curso em Vídeo.</p>
+                        <div class="video-tags">
+                            <span class="video-tag">IA</span>
+                            <span class="video-tag">Curso</span>
+                            <span class="video-tag">Gratuito</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 5: Modelagem de Dados - Conceitos de Bancos de Dados -->
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <a href="https://www.youtube.com/watch?v=Q_KTYFgvu1s&list=PLucm8g_ezqNoNHU8tjVeHmRGBFnjDIlxD" target="_blank">
+                            <img src="https://img.youtube.com/vi/Q_KTYFgvu1s/hqdefault.jpg" alt="Thumbnail do vídeo">
+                        </a>
+                        <div class="video-category-tag">Modelagem a Banco de Dados</div>
+                        <div class="video-play-icon">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="video-duration">-</div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">
+                            <a href="https://www.youtube.com/watch?v=Q_KTYFgvu1s&list=PLucm8g_ezqNoNHU8tjVeHmRGBFnjDIlxD" target="_blank" style="text-decoration: none; color: inherit;">
+                                Modelagem de Dados - Conceitos de Bancos de Dados
+                            </a>
+                        </h3>
+                        <div class="video-meta">
+                            <div class="instructor">
+                                <span class="instructor-name">Bóson Treinamentos</span>
+                            </div>
+                            <div class="video-stats">
+                                <span><i class="fas fa-eye"></i> 576K</span>
+                                <span><i class="fas fa-thumbs-up"></i> 23K</span>
+                            </div>
+                        </div>
+                        <p class="video-description">Fundamentos essenciais de modelagem de dados para bancos de dados relacionais.</p>
+                        <div class="video-tags">
+                            <span class="video-tag">Banco de Dados</span>
+                            <span class="video-tag">Modelagem</span>
+                            <span class="video-tag">SQL</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 6: Introdução à Modelagem de Dados -->
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <a href="https://www.youtube.com/watch?v=W49AO7f93Jk" target="_blank">
+                            <img src="https://img.youtube.com/vi/W49AO7f93Jk/hqdefault.jpg" alt="Thumbnail do vídeo">
+                        </a>
+                        <div class="video-category-tag">Modelagem a Banco de Dados</div>
+                        <div class="video-play-icon">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="video-duration">-</div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">
+                            <a href="https://www.youtube.com/watch?v=W49AO7f93Jk" target="_blank" style="text-decoration: none; color: inherit;">
+                                Introdução à Modelagem de Dados
+                            </a>
+                        </h3>
+                        <div class="video-meta">
+                            <div class="instructor">
+                                <span class="instructor-name">Hashtag Programação</span>
+                            </div>
+                            <div class="video-stats">
+                                <span><i class="fas fa-eye"></i> 32K</span>
+                                <span><i class="fas fa-thumbs-up"></i> 2K</span>
+                            </div>
+                        </div>
+                        <p class="video-description">Conceitos básicos de modelagem de dados para quem está começando com bancos de dados.</p>
+                        <div class="video-tags">
+                            <span class="video-tag">Modelagem</span>
+                            <span class="video-tag">Banco de Dados</span>
+                            <span class="video-tag">SQL</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 7: Git #1 - Conceitos e principais comandos de versionamento -->
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <a href="https://www.youtube.com/watch?v=GIEquFr3jcg&list=PLDqnSpzNKDvkfF_ZMfukmOG3MtGKfXlfJ" target="_blank">
+                            <img src="https://img.youtube.com/vi/GIEquFr3jcg/hqdefault.jpg" alt="Thumbnail do vídeo">
+                        </a>
+                        <div class="video-category-tag">Versionamento</div>
+                        <div class="video-play-icon">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="video-duration">1:20:10</div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">
+                            <a href="https://www.youtube.com/watch?v=GIEquFr3jcg&list=PLDqnSpzNKDvkfF_ZMfukmOG3MtGKfXlfJ" target="_blank" style="text-decoration: none; color: inherit;">
+                                Git #1 - Conceitos e principais comandos de versionamento
+                            </a>
+                        </h3>
+                        <div class="video-meta">
+                            <div class="instructor">
+                                <span class="instructor-name">Angelo Luz</span>
+                            </div>
+                            <div class="video-stats">
+                                <span><i class="fas fa-eye"></i> 11K</span>
+                                <span><i class="fas fa-thumbs-up"></i> 559</span>
+                            </div>
+                        </div>
+                        <p class="video-description">Introdução aos conceitos de versionamento com Git, cobrindo comandos essenciais para iniciantes.</p>
+                        <div class="video-tags">
+                            <span class="video-tag">Git</span>
+                            <span class="video-tag">Versionamento</span>
+                            <span class="video-tag">Iniciante</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 8: Seu primeiro código HTML - @Curso em Vídeo HTML5 e CSS3 -->
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <a href="https://www.youtube.com/watch?v=E6CdIawPTh0&list=PLHz_AreHm4dkZ9-atkcmcBaMZdmLHft8n&index=12" target="_blank">
+                            <img src="https://img.youtube.com/vi/E6CdIawPTh0/hqdefault.jpg" alt="Thumbnail do vídeo">
+                        </a>
+                        <div class="video-category-tag">Front-end</div>
+                        <div class="video-play-icon">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="video-duration">17:33</div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">
+                            <a href="https://www.youtube.com/watch?v=E6CdIawPTh0&list=PLHz_AreHm4dkZ9-atkcmcBaMZdmLHft8n&index=12" target="_blank" style="text-decoration: none; color: inherit;">
+                                Seu primeiro código HTML - @Curso em Vídeo HTML5 e CSS3
+                            </a>
+                        </h3>
+                        <div class="video-meta">
+                            <div class="instructor">
+                                <span class="instructor-name">Curso em Vídeo</span>
+                            </div>
+                            <div class="video-stats">
+                                <span><i class="fas fa-eye"></i> 962K</span>
+                                <span><i class="fas fa-thumbs-up"></i> 45K</span>
+                            </div>
+                        </div>
+                        <p class="video-description">Aprenda a criar seu primeiro código HTML com este tutorial prático do curso de HTML5 e CSS3.</p>
+                        <div class="video-tags">
+                            <span class="video-tag">HTML</span>
+                            <span class="video-tag">CSS</span>
+                            <span class="video-tag">Iniciante</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 9: Tudo sobre Front-End: salários, o que estudar e dicas para carreira -->
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <a href="https://www.youtube.com/watch?v=8xo1FID4TqU" target="_blank">
+                            <img src="https://img.youtube.com/vi/8xo1FID4TqU/hqdefault.jpg" alt="Thumbnail do vídeo">
+                        </a>
+                        <div class="video-category-tag">Front-end</div>
+                        <div class="video-play-icon">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="video-duration">18:42</div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">
+                            <a href="https://www.youtube.com/watch?v=8xo1FID4TqU" target="_blank" style="text-decoration: none; color: inherit;">
+                                Tudo sobre Front-End: 💰 salários, o que estudar e dicas para carreira
+                            </a>
+                        </h3>
+                        <div class="video-meta">
+                            <div class="instructor">
+                                <span class="instructor-name">Gabriel Rangel</span>
+                            </div>
+                            <div class="video-stats">
+                                <span><i class="fas fa-eye"></i> 122K</span>
+                                <span><i class="fas fa-thumbs-up"></i> 9.8K</span>
+                            </div>
+                        </div>
+                        <p class="video-description">Explore a carreira de Front-End, incluindo salários, habilidades essenciais e dicas para se destacar.</p>
+                        <div class="video-tags">
+                            <span class="video-tag">Front-end</span>
+                            <span class="video-tag">Carreira</span>
+                            <span class="video-tag">Programação</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 10: O que é Front End e Back End? Diferenças que Você Precisa Saber -->
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <a href="https://www.youtube.com/watch?v=LDU4BCSxPp4" target="_blank">
+                            <img src="https://img.youtube.com/vi/LDU4BCSxPp4/hqdefault.jpg" alt="Thumbnail do vídeo">
+                        </a>
+                        <div class="video-category-tag">Front-end</div>
+                        <div class="video-play-icon">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="video-duration">8:34</div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">
+                            <a href="https://www.youtube.com/watch?v=LDU4BCSxPp4" target="_blank" style="text-decoration: none; color: inherit;">
+                                O que é Front End e Back End? Diferenças que Você Precisa Saber
+                            </a>
+                        </h3>
+                        <div class="video-meta">
+                            <div class="instructor">
+                                <span class="instructor-name">Alura</span>
+                            </div>
+                            <div class="video-stats">
+                                <span><i class="fas fa-eye"></i> 16K</span>
+                                <span><i class="fas fa-thumbs-up"></i> 1K</span>
+                            </div>
+                        </div>
+                        <p class="video-description">Entenda as diferenças entre Front-End e Back-End e como eles funcionam no desenvolvimento web.</p>
+                        <div class="video-tags">
+                            <span class="video-tag">Front-end</span>
+                            <span class="video-tag">Back-end</span>
+                            <span class="video-tag">Programação</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 11: CURSO DE KOTLIN PARA INICIANTES - BEM-VINDO #01 -->
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <a href="https://www.youtube.com/watch?v=4lOjDziyce8&list=PLJ0AcghBBWSj0i1SQfr3GdwUBnUaIf5xw" target="_blank">
+                            <img src="https://img.youtube.com/vi/4lOjDziyce8/hqdefault.jpg" alt="Thumbnail do vídeo">
+                        </a>
+                        <div class="video-category-tag">Android</div>
+                        <div class="video-play-icon">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="video-duration">21:55</div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">
+                            <a href="https://www.youtube.com/watch?v=4lOjDziyce8&list=PLJ0AcghBBWSj0i1SQfr3GdwUBnUaIf5xw" target="_blank" style="text-decoration: none; color: inherit;">
+                                CURSO DE KOTLIN PARA INICIANTES - BEM-VINDO #01
+                            </a>
+                        </h3>
+                        <div class="video-meta">
+                            <div class="instructor">
+                                <span class="instructor-name">Tiago Aguiar</span>
+                            </div>
+                            <div class="video-stats">
+                                <span><i class="fas fa-eye"></i> 68K</span>
+                                <span><i class="fas fa-thumbs-up"></i> 2.2K</span>
+                            </div>
+                        </div>
+                        <p class="video-description">Introdução ao curso de Kotlin para iniciantes, abordando os conceitos básicos da linguagem.</p>
+                        <div class="video-tags">
+                            <span class="video-tag">Kotlin</span>
+                            <span class="video-tag">Android</span>
+                            <span class="video-tag">Iniciante</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 12: Curso de Flutter #1 - Apresentação -->
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <a href="https://www.youtube.com/watch?v=XeUiJJN0vsE&list=PLlBnICoI-g-d-J57QIz6Tx5xtUDGQdBFB" target="_blank">
+                            <img src="https://img.youtube.com/vi/XeUiJJN0vsE/hqdefault.jpg" alt="Thumbnail do vídeo">
+                        </a>
+                        <div class="video-category-tag">Android</div>
+                        <div class="video-play-icon">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="video-duration">4:26</div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">
+                            <a href="https://www.youtube.com/watch?v=XeUiJJN0vsE&list=PLlBnICoI-g-d-J57QIz6Tx5xtUDGQdBFB" target="_blank" style="text-decoration: none; color: inherit;">
+                                Curso de Flutter #1 - Apresentação
+                            </a>
+                        </h3>
+                        <div class="video-meta">
+                            <div class="instructor">
+                                <span class="instructor-name">Flutterando TV</span>
+                            </div>
+                            <div class="video-stats">
+                                <span><i class="fas fa-eye"></i> -</span>
+                                <span><i class="fas fa-thumbs-up"></i> 7.7K</span>
+                            </div>
+                        </div>
+                        <p class="video-description">Apresentação do curso completo de Flutter para desenvolvimento multiplataforma.</p>
+                        <div class="video-tags">
+                            <span class="video-tag">Flutter</span>
+                            <span class="video-tag">Mobile</span>
+                            <span class="video-tag">Dart</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 13: Curso Javascript Completo: Aula 01 - JS Interno e Externo -->
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <a href="https://www.youtube.com/watch?v=vEwPnjqWQ-g&list=PL2Fdisxwzt_d590u3uad46W-kHA0PTjjw" target="_blank">
+                            <img src="https://img.youtube.com/vi/vEwPnjqWQ-g/hqdefault.jpg" alt="Thumbnail do vídeo">
+                        </a>
+                        <div class="video-category-tag">Front-end</div>
+                        <div class="video-play-icon">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="video-duration">12:24</div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">
+                            <a href="https://www.youtube.com/watch?v=vEwPnjqWQ-g&list=PL2Fdisxwzt_d590u3uad46W-kHA0PTjjw" target="_blank" style="text-decoration: none; color: inherit;">
+                                Curso Javascript Completo: Aula 01 - JS Interno e Externo
+                            </a>
+                        </h3>
+                        <div class="video-meta">
+                            <div class="instructor">
+                                <span class="instructor-name">Programação Web</span>
+                            </div>
+                            <div class="video-stats">
+                                <span><i class="fas fa-eye"></i> 220K</span>
+                                <span><i class="fas fa-thumbs-up"></i> 12K</span>
+                            </div>
+                        </div>
+                        <p class="video-description">Primeira aula do curso completo de JavaScript, abordando como incluir JS em páginas HTML.</p>
+                        <div class="video-tags">
+                            <span class="video-tag">JavaScript</span>
+                            <span class="video-tag">Front-end</span>
+                            <span class="video-tag">Iniciante</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 14: Curso React: Introdução - #01 -->
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <a href="https://www.youtube.com/watch?v=FXqX7oof0I4&list=PLnDvRpP8BneyVA0SZ2okm-QBojomniQVO" target="_blank">
+                            <img src="https://img.youtube.com/vi/FXqX7oof0I4/hqdefault.jpg" alt="Thumbnail do vídeo">
+                        </a>
+                        <div class="video-category-tag">Front-end</div>
+                        <div class="video-play-icon">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="video-duration">11:44</div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">
+                            <a href="https://www.youtube.com/watch?v=FXqX7oof0I4&list=PLnDvRpP8BneyVA0SZ2okm-QBojomniQVO" target="_blank" style="text-decoration: none; color: inherit;">
+                                Curso React: Introdução - #01
+                            </a>
+                        </h3>
+                        <div class="video-meta">
+                            <div class="instructor">
+                                <span class="instructor-name">Matheus Battisti - Hora de Codar</span>
+                            </div>
+                            <div class="video-stats">
+                                <span><i class="fas fa-eye"></i> 369K</span>
+                                <span><i class="fas fa-thumbs-up"></i> 13K</span>
+                            </div>
+                        </div>
+                        <p class="video-description">Introdução ao curso de React, apresentando os conceitos básicos da biblioteca JavaScript.</p>
+                        <div class="video-tags">
+                            <span class="video-tag">React</span>
+                            <span class="video-tag">JavaScript</span>
+                            <span class="video-tag">Front-end</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 15: Processos de Desenvolvimento de Software -->
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <a href="https://www.youtube.com/watch?v=kZImAXvRjH8" target="_blank">
+                            <img src="https://img.youtube.com/vi/kZImAXvRjH8/hqdefault.jpg" alt="Thumbnail do vídeo">
+                        </a>
+                        <div class="video-category-tag">Processos</div>
+                        <div class="video-play-icon">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="video-duration">44:35</div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">
+                            <a href="https://www.youtube.com/watch?v=kZImAXvRjH8" target="_blank" style="text-decoration: none; color: inherit;">
+                                Processos de Desenvolvimento de Software
+                            </a>
+                        </h3>
+                        <div class="video-meta">
+                            <div class="instructor">
+                                <span class="instructor-name">Rainara Maia</span>
+                            </div>
+                            <div class="video-stats">
+                                <span><i class="fas fa-eye"></i> 12K</span>
+                                <span><i class="fas fa-thumbs-up"></i> 527</span>
+                            </div>
+                        </div>
+                        <p class="video-description">Aula sobre os principais processos de desenvolvimento de software utilizados na indústria.</p>
+                        <div class="video-tags">
+                            <span class="video-tag">Processos</span>
+                            <span class="video-tag">Desenvolvimento</span>
+                            <span class="video-tag">Software</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 16: Modelo em Cascata - Ciclos de Vida de Desenvolvimento de Software -->
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <a href="https://www.youtube.com/watch?v=luCQslwi8pE" target="_blank">
+                            <img src="https://img.youtube.com/vi/luCQslwi8pE/hqdefault.jpg" alt="Thumbnail do vídeo">
+                        </a>
+                        <div class="video-category-tag">Processos</div>
+                        <div class="video-play-icon">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="video-duration">11:47</div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">
+                            <a href="https://www.youtube.com/watch?v=luCQslwi8pE" target="_blank" style="text-decoration: none; color: inherit;">
+                                Modelo em Cascata - Ciclos de Vida de Desenvolvimento de Software
+                            </a>
+                        </h3>
+                        <div class="video-meta">
+                            <div class="instructor">
+                                <span class="instructor-name">Bóson Treinamentos</span>
+                            </div>
+                            <div class="video-stats">
+                                <span><i class="fas fa-eye"></i> 27K</span>
+                                <span><i class="fas fa-thumbs-up"></i> 1.5K</span>
+                            </div>
+                        </div>
+                        <p class="video-description">Explicação detalhada sobre o modelo em cascata no desenvolvimento de software.</p>
+                        <div class="video-tags">
+                            <span class="video-tag">Waterfall</span>
+                            <span class="video-tag">Processos</span>
+                            <span class="video-tag">Desenvolvimento</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 17: Curso Lógica de Programação Completo 2025 -->
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <a href="https://www.youtube.com/watch?v=iF2MdbrTiBM" target="_blank">
+                            <img src="https://img.youtube.com/vi/iF2MdbrTiBM/hqdefault.jpg" alt="Thumbnail do vídeo">
+                        </a>
+                        <div class="video-category-tag">Lógica</div>
+                        <div class="video-play-icon">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="video-duration">3:02:05</div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">
+                            <a href="https://www.youtube.com/watch?v=iF2MdbrTiBM" target="_blank" style="text-decoration: none; color: inherit;">
+                                Curso Lógica de Programação Completo 2025 [Iniciantes] + Desafios
+                            </a>
+                        </h3>
+                        <div class="video-meta">
+                            <div class="instructor">
+                                <span class="instructor-name">Dev Aprender | Jhonatan de Souza</span>
+                            </div>
+                            <div class="video-stats">
+                                <span><i class="fas fa-eye"></i> 3.2M</span>
+                                <span><i class="fas fa-thumbs-up"></i> 133K</span>
+                            </div>
+                        </div>
+                        <p class="video-description">Curso completo de lógica de programação para iniciantes com muitos exercícios práticos.</p>
+                        <div class="video-tags">
+                            <span class="video-tag">Lógica</span>
+                            <span class="video-tag">Iniciante</span>
+                            <span class="video-tag">Programação</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 18: CURSO DE JAVA PARA INICIANTES - BEM-VINDO #01 -->
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <a href="https://www.youtube.com/watch?v=mRryrODqQcw&list=PLJ0AcghBBWSi6nK2CUkw9ngvwWB1gE8mL" target="_blank">
+                            <img src="https://img.youtube.com/vi/mRryrODqQcw/hqdefault.jpg" alt="Thumbnail do vídeo">
+                        </a>
+                        <div class="video-category-tag">Back-end</div>
+                        <div class="video-play-icon">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="video-duration">6:13</div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">
+                            <a href="https://www.youtube.com/watch?v=mRryrODqQcw&list=PLJ0AcghBBWSi6nK2CUkw9ngvwWB1gE8mL" target="_blank" style="text-decoration: none; color: inherit;">
+                                CURSO DE JAVA PARA INICIANTES - BEM-VINDO #01
+                            </a>
+                        </h3>
+                        <div class="video-meta">
+                            <div class="instructor">
+                                <span class="instructor-name">Tiago Aguiar</span>
+                            </div>
+                            <div class="video-stats">
+                                <span><i class="fas fa-eye"></i> 260K</span>
+                                <span><i class="fas fa-thumbs-up"></i> 11K</span>
+                            </div>
+                        </div>
+                        <p class="video-description">Introdução ao curso de Java para iniciantes, apresentando os conceitos básicos da linguagem.</p>
+                        <div class="video-tags">
+                            <span class="video-tag">Java</span>
+                            <span class="video-tag">Back-end</span>
+                            <span class="video-tag">Iniciante</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 19: Como vai ser o Curso de Redes? - Curso Redes #01 -->
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <a href="https://www.youtube.com/watch?v=QkMbqL8QD9w&list=PLHz_AreHm4dkd4lr9G0Up-W-YaHYdTDuP" target="_blank">
+                            <img src="https://img.youtube.com/vi/QkMbqL8QD9w/hqdefault.jpg" alt="Thumbnail do vídeo">
+                        </a>
+                        <div class="video-category-tag">Redes</div>
+                        <div class="video-play-icon">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="video-duration">23:19</div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">
+                            <a href="https://www.youtube.com/watch?v=QkMbqL8QD9w&list=PLHz_AreHm4dkd4lr9G0Up-W-YaHYdTDuP" target="_blank" style="text-decoration: none; color: inherit;">
+                                Como vai ser o Curso de Redes? - Curso Redes #01
+                            </a>
+                        </h3>
+                        <div class="video-meta">
+                            <div class="instructor">
+                                <span class="instructor-name">Curso em Vídeo</span>
+                            </div>
+                            <div class="video-stats">
+                                <span><i class="fas fa-eye"></i> 697K</span>
+                                <span><i class="fas fa-thumbs-up"></i> 32K</span>
+                            </div>
+                        </div>
+                        <p class="video-description">Apresentação do curso completo de redes de computadores para iniciantes.</p>
+                        <div class="video-tags">
+                            <span class="video-tag">Redes</span>
+                            <span class="video-tag">Computadores</span>
+                            <span class="video-tag">Iniciante</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 20: O que é Rede de Computadores?! -->
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <a href="https://www.youtube.com/watch?v=jLYSmtDGF-k" target="_blank">
+                            <img src="https://img.youtube.com/vi/jLYSmtDGF-k/hqdefault.jpg" alt="Thumbnail do vídeo">
+                        </a>
+                        <div class="video-category-tag">Redes</div>
+                        <div class="video-play-icon">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="video-duration">10:03</div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">
+                            <a href="https://www.youtube.com/watch?v=jLYSmtDGF-k" target="_blank" style="text-decoration: none; color: inherit;">
+                                O que é Rede de Computadores?!
+                            </a>
+                        </h3>
+                        <div class="video-meta">
+                            <div class="instructor">
+                                <span class="instructor-name">Prof. Marcel Rios - Informática</span>
+                            </div>
+                            <div class="video-stats">
+                                <span><i class="fas fa-eye"></i> 23K</span>
+                                <span><i class="fas fa-thumbs-up"></i> 1.7K</span>
+                            </div>
+                        </div>
+                        <p class="video-description">Introdução aos conceitos básicos de redes de computadores para iniciantes.</p>
+                        <div class="video-tags">
+                            <span class="video-tag">Redes</span>
+                            <span class="video-tag">Computadores</span>
+                            <span class="video-tag">Conceitos</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 21: Inteligência Artificial Explicada em Apenas 11 Minutos -->
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <a href="https://www.youtube.com/watch?v=HNBtdyMjxKU&t=283s" target="_blank">
+                            <img src="https://img.youtube.com/vi/HNBtdyMjxKU/hqdefault.jpg" alt="Thumbnail do vídeo">
+                        </a>
+                        <div class="video-category-tag">I.A</div>
+                        <div class="video-play-icon">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="video-duration">11:23</div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">
+                            <a href="https://www.youtube.com/watch?v=HNBtdyMjxKU&t=283s" target="_blank" style="text-decoration: none; color: inherit;">
+                                Inteligência Artificial Explicada em Apenas 11 Minutos
+                            </a>
+                        </h3>
+                        <div class="video-meta">
+                            <div class="instructor">
+                                <span class="instructor-name">Bruno Picinini</span>
+                            </div>
+                            <div class="video-stats">
+                                <span><i class="fas fa-eye"></i> 171K</span>
+                                <span><i class="fas fa-thumbs-up"></i> 6.7K</span>
+                            </div>
+                        </div>
+                        <p class="video-description">Explicação rápida e direta sobre o que é Inteligência Artificial e como ela funciona.</p>
+                        <div class="video-tags">
+                            <span class="video-tag">IA</span>
+                            <span class="video-tag">Inteligência Artificial</span>
+                            <span class="video-tag">Introdução</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 22: Aprenda IA em 30 Minutos -->
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <a href="https://www.youtube.com/watch?v=0Qy-yafeHIg" target="_blank">
+                            <img src="https://img.youtube.com/vi/0Qy-yafeHIg/hqdefault.jpg" alt="Thumbnail do vídeo">
+                        </a>
+                        <div class="video-category-tag">I.A</div>
+                        <div class="video-play-icon">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="video-duration">30:23</div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">
+                            <a href="https://www.youtube.com/watch?v=0Qy-yafeHIg" target="_blank" style="text-decoration: none; color: inherit;">
+                                Aprenda IA em 30 Minutos: Fique 10 Passos à Frente da Média
+                            </a>
+                        </h3>
+                        <div class="video-meta">
+                            <div class="instructor">
+                                <span class="instructor-name">Sancler Miranda | IA Revolution</span>
+                            </div>
+                            <div class="video-stats">
+                                <span><i class="fas fa-eye"></i> 60K</span>
+                                <span><i class="fas fa-thumbs-up"></i> 2.8K</span>
+                            </div>
+                        </div>
+                        <p class="video-description">Guia rápido para entender os conceitos fundamentais de Inteligência Artificial.</p>
+                        <div class="video-tags">
+                            <span class="video-tag">IA</span>
+                            <span class="video-tag">ChatGPT</span>
+                            <span class="video-tag">Tutorial</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 23: Inteligência Artificial na Prática com Python -->
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <a href="https://www.youtube.com/watch?v=GMDb2jtzKZQ&list=PLpdAy0tYrnKyVQDckS5IDB24QrSap2u8y" target="_blank">
+                            <img src="https://img.youtube.com/vi/GMDb2jtzKZQ/hqdefault.jpg" alt="Thumbnail do vídeo">
+                        </a>
+                        <div class="video-category-tag">I.A</div>
+                        <div class="video-play-icon">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="video-duration">-</div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">
+                            <a href="https://www.youtube.com/watch?v=GMDb2jtzKZQ&list=PLpdAy0tYrnKyVQDckS5IDB24QrSap2u8y" target="_blank" style="text-decoration: none; color: inherit;">
+                                Inteligência Artificial na Prática com Python [Projeto Flappy Bird]
+                            </a>
+                        </h3>
+                        <div class="video-meta">
+                            <div class="instructor">
+                                <span class="instructor-name">Hashtag Programação</span>
+                            </div>
+                            <div class="video-stats">
+                                <span><i class="fas fa-eye"></i> 326K</span>
+                                <span><i class="fas fa-thumbs-up"></i> 7.8K</span>
+                            </div>
+                        </div>
+                        <p class="video-description">Aula prática de IA com Python criando um jogo Flappy Bird inteligente.</p>
+                        <div class="video-tags">
+                            <span class="video-tag">Python</span>
+                            <span class="video-tag">IA</span>
+                            <span class="video-tag">Projeto Prático</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    {% include 'footer.html' %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="static\js\videosetutoriais.js"></script>
+</body>
+</html>
+
+
+
+
+
+acimaé o videos e tutoriais.html
+
+videos e tutoriais.css
+
+:root {
+    --primary: #1a73e8;
+    --primary-light: #4a91ff;
+    --primary-dark: #1357b9;
+    --primary-transparent: rgba(26, 115, 232, 0.1);
+    --secondary: #202124;
+    --secondary-light: #3c4043;
+    --secondary-dark: #141517;
+    --accent: #ff4444;
+    --light: #ffffff;
+    --light-gray: #f1f3f4;
+    --medium-gray: #dadce0;
+    --dark-gray: #80868b;
+    --dark: #202124;
+    --success: #34c759;
+    --warning: #fbbc05;
+    --danger: #ff4444;
+    --font-primary: 'Inter', sans-serif;
+    --font-secondary: 'Inter', sans-serif;
+    --font-size-base: 1rem;
+    --font-size-sm: 0.875rem;
+    --font-size-lg: 1.25rem;
+    --font-size-xl: 1.5rem;
+    --font-size-xxl: 2rem;
+    --font-size-hero: 3rem;
+    --space-xs: 0.25rem;
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+    --space-xxl: 3rem;
+    --border-radius-sm: 0.375rem;
+    --border-radius-md: 0.75rem;
+    --border-radius-lg: 1rem;
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 3px 8px rgba(0, 0, 0, 0.12);
+    --shadow-lg: 0 5px 15px rgba(0, 0, 0, 0.15);
+    --transition-fast: 0.2s ease;
+    --transition-normal: 0.3s ease;
+    --primary-color: #1e293b;
+    --secondary-color: #0ea5e9;
+    --accent-color: #f97316;
+    --text-color: #1e293b;
+    --background-color: #f1f5f9;
+    --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    --card-bg: #ffffff;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --gradient-bg: linear-gradient(135deg, #0ea5e9, #3b82f6);
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+}
+
+body {
+    font-family: var(--font-primary);
+    color: var(--text-color);
+    background-color: var(--background-color);
+    line-height: 1.7;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+.avatar-initials {
+    width: 50px;
+    height: 50px;
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    background-color: var(--primary);
+    color: var(--light);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-secondary);
+    font-weight: 700;
+    color: var(--secondary);
+}
+
+h1 { font-size: var(--font-size-hero); }
+h2 { font-size: var(--font-size-xxl); }
+h3 { font-size: var(--font-size-xl); }
+h4 { font-size: var(--font-size-lg); }
+h5 { font-size: var(--font-size-base); }
+h6 { font-size: var(--font-size-sm); }
+
+a {
+    color: var(--primary);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+a:hover { color: var(--primary-dark); }
+
+.app-header {
+    background: var(--gradient-bg);
+    color: white;
+    padding: 1.5rem 0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    position: relative;
+    max-width: 100%;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 700;
+    font-size: 1.8rem;
+    transition: opacity var(--transition-fast);
+}
+
+.logo i {
+    font-size: 1.6rem;
+}
+
+.search-bar {
+    position: relative;
+    flex-grow: 1;
+    max-width: 500px;
+    margin: 0 2rem;
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 12px 20px 12px 45px;
+    border-radius: 50px;
+    border: none;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    font-size: 1rem;
+    transition: var(--transition);
+}
+
+.search-bar input:focus {
+    background-color: rgba(255, 255, 255, 0.3);
+    outline: none;
+}
+
+.search-bar input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.search-bar i {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.offcanvas {
+    width: 320px;
+    box-shadow: var(--shadow-lg);
+    background-color: var(--light);
+    transition: transform var(--transition-normal);
+    z-index: 1200;
+    position: fixed;
+    top: 0;
+    height: 100vh;
+}
+
+.offcanvas-header {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white;
+    padding: var(--space-lg);
+}
+
+.offcanvas-title {
+    font-weight: 700;
+    font-size: var(--font-size-lg);
+}
+
+.btn-close {
+    filter: brightness(0) invert(1);
+}
+
+.offcanvas-body {
+    padding: var(--space-lg);
+    overflow-y: auto;
+}
+
+.nav-link {
+    padding: var(--space-md) var(--space-lg);
+    color: var(--secondary);
+    border-radius: var(--border-radius-sm);
+    font-size: var(--font-size-base);
+    font-weight: 500;
+    transition: background-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
+    display: flex;
+    align-items: center;
+}
+
+.nav-link:hover {
+    background-color: var(--primary-transparent);
+    color: var(--primary);
+    transform: translateX(5px);
+}
+
+.nav-link.active {
+    background-color: var(--primary);
+    color: white;
+    transform: translateX(5px);
+}
+
+.nav-link i {
+    margin-right: var(--space-md);
+}
+
+.navbar-nav .nav-item {
+    margin-bottom: var(--space-sm);
+}
+
+.category-nav {
+    padding: 1.5rem 0;
+    position: sticky;
+    top: 90px;
+    background-color: var(--background-color);
+    z-index: 90;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+.categories-wrapper {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    max-width: 100%;
+}
+
+.categories {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    max-width: 100%;
+}
+
+.categories {
+    overflow-x: auto;
+    padding-bottom: 10px;
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    scrollbar-color: #1a73e8 #e3e8ef;
+}
+
+.categories::-webkit-scrollbar {
+    height: 8px;
+}
+
+.categories::-webkit-scrollbar-thumb {
+    background: #1a73e8;
+    border-radius: 6px;
+}
+
+.categories::-webkit-scrollbar-track {
+    background: #e3e8ef;
+    border-radius: 6px;
+}
+
+.categories::-webkit-scrollbar-thumb:hover {
+    background: #1357b9;
+}
+
+.categories {
+    scrollbar-width: thin;
+    scrollbar-color: #1a73e8 #e3e8ef;
+}
+
+.category {
+    padding: 10px 20px;
+    background-color: white;
+    color: var(--text-color);
+    border-radius: 50px;
+    white-space: nowrap;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid #e2e8f0;
+    transition: var(--transition);
+    font-size: 0.95rem;
+}
+
+.category.active {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.menu-btn {
+    color: var(--light);
+    font-size: var(--font-size-base);
+    background: var(--primary-dark);
+    border: none;
+    padding: 8px 16px;
+    border-radius: var(--border-radius-sm);
+    transition: var(--transition-normal);
+}
+
+.menu-btn:hover {
+    background: var(--primary);
+    transform: scale(1.05);
+}
+
+.category:hover:not(.active) {
+    background-color: #f8fafc;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 2rem;
+    max-width: 100%;
+}
+
+.main-content {
+    margin-top: 2rem;
+    max-width: 100%;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.section-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.section-title i {
+    color: var(--accent-color);
+}
+
+.section-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.view-toggle {
+    display: flex;
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+}
+
+.view-toggle button {
+    border: none;
+    background: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.view-toggle button.active {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+.video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+    max-width: 100%;
+}
+
+.video-card {
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+    transition: var(--transition);
+    position: relative;
+    max-width: 100%;
+}
+
+.video-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+.video-thumbnail {
+    position: relative;
+    height: 180px;
+    overflow: hidden;
+}
+
+.video-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--transition);
+}
+
+.video-card:hover .video-thumbnail img {
+    transform: scale(1.05);
+}
+
+.video-category-tag {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background-color: var(--accent-color);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.video-duration {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.video-play-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: var(--transition);
+}
+
+.video-play-icon i {
+    font-size: 1.8rem;
+}
+
+.video-card:hover .video-play-icon {
+    opacity: 1;
+}
+
+.video-info {
+    padding: 1.25rem;
+}
+
+.video-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0 0 10px 0;
+    color: var(--primary-color);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-height: 1.4;
+}
+
+.video-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.instructor {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.instructor-name {
+    font-size: 0.9rem;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.video-stats {
+    display: flex;
+    gap: 12px;
+    font-size: 0.85rem;
+    color: #64748b;
+}
+
+.video-stats span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.video-description {
+    font-size: 0.9rem;
+    color: #64748b;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: 12px;
+}
+
+.video-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.video-tag {
+    font-size: 0.75rem;
+    color: #64748b;
+    background-color: #f1f5f9;
+    padding: 4px 10px;
+    border-radius: 4px;
+}
+
+.app-footer {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 3rem 0;
+    margin-top: auto;
+    max-width: 100%;
+}
+
+.footer-content {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 3rem;
+    max-width: 100%;
+}
+
+.footer-column h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.footer-column h3::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 40px;
+    height: 3px;
+    background-color: var(--accent-color);
+}
+
+.footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-links li {
+    margin-bottom: 12px;
+}
+
+.footer-links a {
+    color: #cbd5e1;
+    text-decoration: none;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.footer-links a:hover {
+    color: white;
+}
+
+.footer-bottom {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 1.5rem 2rem 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin-top: 2rem;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #94a3b8;
+    max-width: 100%;
+}
+
+@media (max-width: 1400px) {
+    .container { max-width: 1140px; }
+}
+
+@media (max-width: 1200px) {
+    .container { max-width: 960px; }
+    .logo { font-size: 1.6rem; }
+}
+
+@media (max-width: 992px) {
+    .container { max-width: 720px; }
+    .header-content {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem;
+        position: relative;
+        max-width: 100%;
+    }
+    .logo {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 1.4rem;
+    }
+    .search-bar.search-active + .logo {
+        display: none;
+    }
+    .search-bar {
+        max-width: unset;
+        margin: 0;
+        order: -1;
+        position: relative;
+    }
+    .search-bar input {
+        display: none;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        max-width: 200px;
+        width: 100%;
+        padding: 8px 15px 8px 36px;
+        z-index: 101;
+        border-radius: var(--border-radius-md);
+        background-color: rgba(255, 255, 255, 0.95);
+        color: var(--text-color);
+        box-shadow: var(--shadow-md);
+        transition: opacity var(--transition-fast), transform var(--transition-fast);
+        opacity: 0;
+        transform: translate(-50%, -40%);
+    }
+    .search-bar.search-active input {
+        display: block;
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+    .search-bar input::placeholder {
+        color: var(--dark-gray);
+    }
+    .search-bar i {
+        position: static;
+        transform: none;
+        font-size: 1.2rem;
+        cursor: pointer;
+        padding: var(--space-sm);
+    }
+    .search-bar.search-active i {
+        position: absolute;
+        left: calc(50% - 94px);
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-color);
+        z-index: 102;
+    }
+    .menu-btn {
+        order: 1;
+    }
+    .offcanvas { width: 280px; }
+}
+
+@media (max-width: 768px) {
+    .container { max-width: 540px; padding: var(--space-md); }
+    .logo { font-size: 1.4rem; }
+    .video-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .container { max-width: 100%; padding: var(--space-sm); }
+    .logo { font-size: 1.2rem; }
+    .video-grid { grid-template-columns: 1fr; }
+    .categories { gap: 8px; }
+    .category { padding: 8px 16px; font-size: 0.85rem; }
+}
+
+
+
+
+videos e tutoriais.js
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Elementos da interface
+    const searchBar = document.querySelector('.search-bar');
+    const searchInput = document.querySelector('.search-bar input');
+    const searchIcon = document.querySelector('.search-bar i');
+    const categories = document.querySelectorAll('.category');
+    const viewToggleButtons = document.querySelectorAll('.view-toggle button');
+    const videoGrid = document.querySelector('.video-grid');
+    const sideMenu = document.getElementById('offcanvasMenu');
+
+    // Inicializa componentes
+    initializeComponents();
+
+    // Configura eventos
+    setupSearchBar();
+    setupCategoryFilter();
+    setupViewToggle();
+    setupThemeSwitch();
+    setupDrawer();
+
+    function initializeComponents() {
+        // Verifica se há tema salvo no localStorage
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark-theme');
+            const themeSwitch = document.querySelector('.theme-switch');
+            if (themeSwitch) {
+                themeSwitch.innerHTML = '<i class="fas fa-sun"></i>';
+            }
+        }
+    }
+
+    function setupSearchBar() {
+        if (!searchBar || !searchInput || !searchIcon) return;
+
+        // Toggle da barra de pesquisa em dispositivos móveis
+        searchIcon.addEventListener('click', function(event) {
+            if (window.innerWidth <= 992) {
+                searchBar.classList.toggle('search-active');
+                if (searchBar.classList.contains('search-active')) {
+                    searchInput.focus();
+                    searchInput.value = '';
+                    filterVideos('');
+                } else {
+                    searchInput.blur();
+                    searchInput.value = '';
+                    filterVideos('');
+                }
+                event.stopPropagation();
+            }
+        });
+
+        // Fecha a barra de pesquisa ao clicar fora
+        document.addEventListener('click', function(event) {
+            if (window.innerWidth <= 992 && !searchBar.contains(event.target)) {
+                searchBar.classList.remove('search-active');
+                searchInput.value = '';
+                filterVideos('');
+            }
+        });
+
+        searchBar.addEventListener('click', function(event) {
+            event.stopPropagation();
+        });
+
+        // Pesquisa em tempo real
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase().trim();
+            filterVideos(searchTerm);
+        });
+
+        // Pesquisa ao pressionar Enter
+        searchInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                const searchTerm = this.value.toLowerCase().trim();
+                filterVideos(searchTerm);
+                showNotification('Pesquisa realizada!', 'success');
+            }
+        });
+    }
+
+    function filterVideos(searchTerm) {
+        const activeCategory = document.querySelector('.category.active').textContent.trim();
+        document.querySelectorAll('.video-card').forEach(card => {
+            const title = card.querySelector('.video-title').textContent.toLowerCase();
+            const description = card.querySelector('.video-description').textContent.toLowerCase();
+            const instructor = card.querySelector('.instructor-name').textContent.toLowerCase();
+            const category = card.querySelector('.video-category-tag').textContent.toLowerCase();
+            const tags = Array.from(card.querySelectorAll('.video-tag')).map(tag => tag.textContent.toLowerCase());
+
+            // Mapear termos de pesquisa para categorias
+            const searchCategoryMap = {
+                'versionamento': 'versionamento',
+                'ia': 'i.a',
+                'i.a': 'i.a',
+                'banco de dados': 'banco de dados',
+                'modelagem a banco de dados': 'banco de dados',
+                'logica': 'lógica',
+                'processos': 'processos',
+                'frontend': 'front-end',
+                'front-end': 'front-end',
+                'backend': 'back-end',
+                'back-end': 'back-end',
+                'android': 'android',
+                'programação android': 'android',
+                'multidisciplinar': 'multidisciplinar',
+                'projeto multidisciplinar': 'multidisciplinar',
+                'carreiras': 'carreiras',
+                'redes': 'redes'
+            };
+
+            const matchedCategory = searchCategoryMap[searchTerm] || searchTerm;
+
+            const matchesSearch = searchTerm === '' ||
+                title.includes(searchTerm) ||
+                description.includes(searchTerm) ||
+                instructor.includes(searchTerm) ||
+                category.includes(matchedCategory) ||
+                tags.some(tag => tag.includes(searchTerm));
+
+            const matchesCategory = activeCategory === 'Todos' || 
+                (() => {
+                    const cardCategory = card.querySelector('.video-category-tag').textContent.trim();
+                    const categoryMap = {
+                        'I.A': ['I.A'],
+                        'Modelagem a Banco de Dados': ['Banco de Dados'],
+                        'Programação Android': ['Android'],
+                        'Projeto Multidisciplinar': ['Multidisciplinar'],
+                        'Versionamento': ['Versionamento']
+                    };
+                    const matchedCategories = categoryMap[activeCategory] || [activeCategory];
+                    return matchedCategories.includes(cardCategory);
+                })();
+
+            if (matchesSearch && matchesCategory) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+
+    function setupCategoryFilter() {
+        categories.forEach(category => {
+            category.addEventListener('click', function() {
+                categories.forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+
+                const categoryName = this.textContent.trim();
+                document.querySelectorAll('.video-card').forEach(card => {
+                    const cardCategory = card.querySelector('.video-category-tag').textContent.trim();
+                    const categoryMap = {
+                        'I.A': ['I.A'],
+                        'Modelagem a Banco de Dados': ['Banco de Dados'],
+                        'Programação Android': ['Android'],
+                        'Projeto Multidisciplinar': ['Multidisciplinar'],
+                        'Versionamento': ['Versionamento']
+                    };
+
+                    if (categoryName === 'Todos') {
+                        card.style.display = 'block';
+                    } else {
+                        const matchedCategories = categoryMap[categoryName] || [categoryName];
+                        if (matchedCategories.includes(cardCategory)) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    }
+                });
+
+                // Limpa a pesquisa ao mudar de categoria
+                if (searchInput) {
+                    searchInput.value = '';
+                    searchBar.classList.remove('search-active');
+                }
+                showNotification(`Filtrando por ${categoryName}`, 'success');
+            });
+        });
+    }
+
+    function setupViewToggle() {
+        if (!viewToggleButtons || !videoGrid) return;
+
+        viewToggleButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                viewToggleButtons.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+
+                if (this.querySelector('i').classList.contains('fa-list')) {
+                    videoGrid.style.gridTemplateColumns = '1fr';
+                    videoGrid.querySelectorAll('.video-card').forEach(card => {
+                        card.style.display = 'flex';
+                        const thumbnail = card.querySelector('.video-thumbnail');
+                        if (thumbnail) thumbnail.style.width = '280px';
+                        const videoInfo = card.querySelector('.video-info');
+                        if (videoInfo) videoInfo.style.flex = '1';
+                    });
+                    showNotification('Visualização em lista ativada', 'info');
+                } else {
+                    videoGrid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(300px, 1fr))';
+                    videoGrid.querySelectorAll('.video-card').forEach(card => {
+                        card.style.display = 'block';
+                        const thumbnail = card.querySelector('.video-thumbnail');
+                        if (thumbnail) thumbnail.style.width = 'auto';
+                    });
+                    showNotification('Visualização em grade ativada', 'info');
+                }
+            });
+        });
+    }
+
+    function setupThemeSwitch() {
+        const themeSwitch = document.createElement('div');
+        themeSwitch.classList.add('theme-switch');
+        themeSwitch.innerHTML = '<i class="fas fa-moon"></i>';
+        document.body.appendChild(themeSwitch);
+
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark-theme');
+            themeSwitch.innerHTML = '<i class="fas fa-sun"></i>';
+        }
+
+        themeSwitch.addEventListener('click', function() {
+            document.body.classList.toggle('dark-theme');
+            const isDark = document.body.classList.contains('dark-theme');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            themeSwitch.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+            showNotification(isDark ? 'Tema escuro ativado' : 'Tema claro ativado', 'success');
+        });
+    }
+
+    function setupDrawer() {
+    if (!sideMenu) return;
+
+    const drawerLinks = document.querySelectorAll('.offcanvas .nav-link');
+    if (drawerLinks && drawerLinks.length > 0) {
+        // Remove active class from all links
+        drawerLinks.forEach(link => {
+            link.classList.remove('active');
+        });
+
+        // Find and activate the "Vídeos e Tutoriais" link
+        const videosLink = Array.from(drawerLinks).find(link => 
+            link.getAttribute('href').includes('videos') || 
+            link.textContent.includes('Vídeos e Tutoriais')
+        );
+        if (videosLink) {
+            videosLink.classList.add('active');
+        }
+
+        // Add click event listeners to close the drawer
+        drawerLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                const bsOffcanvas = bootstrap.Offcanvas.getInstance(sideMenu);
+                if (bsOffcanvas) bsOffcanvas.hide();
+            });
+        });
+    }
+
+    document.addEventListener('click', function(event) {
+        const isClickInsideDrawer = sideMenu.contains(event.target);
+        const isClickOnToggler = event.target.closest('.menu-btn');
+        const isOffcanvasOpen = sideMenu.classList.contains('show');
+
+        if (!isClickInsideDrawer && !isClickOnToggler && isOffcanvasOpen) {
+            const bsOffcanvas = bootstrap.Offcanvas.getInstance(sideMenu);
+            if (bsOffcanvas) bsOffcanvas.hide();
+        }
+    });
+
+    sideMenu.addEventListener('shown.bs.offcanvas', function() {
+        document.body.style.overflow = 'hidden';
+        document.body.style.paddingRight = '0';
+        sideMenu.style.top = '0';
+        sideMenu.style.height = '100vh';
+    });
+
+    sideMenu.addEventListener('hidden.bs.offcanvas', function() {
+        document.body.style.overflow = '';
+        document.body.style.paddingRight = '';
+    });
+}
+
+    function showNotification(message, type) {
+        const notification = document.createElement('div');
+        notification.className = `notification notification-${type}`;
+        notification.innerHTML = `
+            <div class="notification-content">
+                <div class="notification-message">${message}</div>
+            </div>
+            <button class="notification-close"><i class="fas fa-times"></i></button>
+        `;
+        document.body.appendChild(notification);
+
+        setTimeout(() => notification.classList.add('show'), 100);
+
+        notification.querySelector('.notification-close').addEventListener('click', () => {
+            notification.classList.remove('show');
+            setTimeout(() => notification.remove(), 300);
+        });
+
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.classList.remove('show');
+                setTimeout(() => notification.remove(), 300);
+            }
+        }, 4000);
+    }
+});
+
+
+
+abaixo é o materiais de estudo.html, eu amndei os arquivos de videos e tutoriais, para voce entender como foi fieto e replicar criando e me enviando completo os 3 arequivos para materiais de estudo, lá no caso serão slides resumidos 
+
+
+abaixo é meu pdf e apostilas.html <!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechNoBug - PDFs e Apostilas</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/pdfeapostilas.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+</head>
+<body>
+    <header class="app-header">
+        <div class="header-content">
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Pesquisar PDFs, apostilas, tópicos...">
+            </div>
+            <div class="logo" onclick="window.location.href = '{{ url_for('telainicial') }}';" style="cursor: pointer;">
+                <i class="fas fa-graduation-cap"></i>
+                <span>TechNoBug</span>
+            </div>
+            <button class="btn menu-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" aria-controls="offcanvasMenu">
+                <i class="fas fa-bars"></i>
+                <span>Menu</span>
+            </button>
+        </div>
+    </header>
+
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasMenuLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasMenuLabel">Menu</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="user-profile mb-4">
+                <div class="d-flex align-items-center">
+                    <div class="avatar me-3">
+                        {% if user.profile_pic and user.profile_pic != 'default.png' %}
+                            <img src="{{ url_for('static', filename='uploads/' + user.profile_pic) }}" alt="Avatar" class="rounded-circle" style="width:48px;height:48px;">
+                        {% else %}
+                            <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center" style="width:48px;height:48px;font-size:1.7em;">
+                                {{ user.username[0]|upper }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <h6 class="mb-0">{{ user.username }}</h6>
+                        <small class="text-muted">{{ user.email }}</small>
+                    </div>
+                </div>
+            </div>
+            <ul class="navbar-nav">
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('telainicial') }}"><i class="fas fa-home me-2"></i>Tela Inicial</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('materiais') }}"><i class="fas fa-book me-2"></i>Materiais de Estudo</a></li>
+                <li class="nav-item mb-2"><a class="nav-link active" href="{{ url_for('pdfs') }}"><i class="fas fa-file-pdf me-2"></i>PDFs e Apostilas</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('videos') }}"><i class="fas fa-video me-2"></i>Vídeos e Tutoriais</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('codigo') }}"><i class="fas fa-code me-2"></i>Exemplos de Código</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('comunidade') }}"><i class="fas fa-users me-2"></i>Comunidade</a></li>
+                <li class="nav-item mb-2"><a class="nav-link" href="{{ url_for('configuracoes') }}"><i class="fas fa-cog me-2"></i>Configurações</a></li>
+                <li class="nav-item"><a class="nav-link text-danger" href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt me-2"></i>Sair</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <nav class="category-nav">
+        <div class="categories-wrapper">
+            <div class="categories">
+    <div class="category active">Todos</div>
+    <div class="category">Banco de Dados</div>
+    <div class="category">Desenvolvimento Web</div>
+    <div class="category">Engenharia de Software</div>
+    <div class="category">Estudo</div>
+    <div class="category">Linguagens de Programação</div>
+    <div class="category">Redes</div>
+    <div class="category">Redes Neurais</div>
+    <div class="category">Segurança</div>
+</div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <main class="main-content">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-file-pdf"></i>
+                    <span>PDFs e Apostilas em Destaque</span>
+                </h2>
+                <div class="section-actions">
+                    <div class="view-toggle">
+                        <button class="active">
+                            <i class="fas fa-th"></i>
+                        </button>
+                        <button>
+                            <i class="fas fa-list"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pdf-grid" id="pdf-grid">
+                <!-- PDF cards will be dynamically inserted here -->
+            </div>
+        </main>
+    </div>
+
+    {% include 'footer.html' %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/pdfeapostilas.js') }}"></script>
+</body>
+</html>
+
+
+
+
+quero que tenha esse sistema de clicar e abaixar
