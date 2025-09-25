@@ -116,7 +116,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (event.key === 'Enter') {
                 event.preventDefault();
                 const searchTerm = this.value.trim();
-                window.location.href = searchTerm ? `/telainicial?search=${encodeURIComponent(searchTerm)}` : '/telainicial';
+                window.location.href = searchTerm ? `/comunidade?search=${encodeURIComponent(searchTerm)}` : '/comunidade';
             }
         });
 
@@ -258,7 +258,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     .then(data => {
                         if (data.status === 'success') {
                             showNotification('Postagem deletada com sucesso!', 'success');
-                            setTimeout(() => window.location.href = '/telainicial', 1000);
+                            setTimeout(() => window.location.href = '/comunidade', 1000);
                         } else {
                             showNotification('Erro ao deletar postagem.', 'error');
                         }

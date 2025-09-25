@@ -37,7 +37,7 @@
                 <div class="d-flex align-items-center">
                     <div class="avatar me-3">
                         {% if user.profile_pic and user.profile_pic != 'default.png' %}
-                            <img src="{{ url_for('static', filename='uploads/' + user.profile_pic) }}" alt="Avatar" class="rounded-circle" style="width:48px;height:48px;">
+                            <img src="{{ url_for('static', filename='Uploads/' + user.profile_pic) }}" alt="Foto de perfil" class="profile-pic-img rounded-circle" style="width:48px;height:48px;object-fit:cover;">
                         {% else %}
                             <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center" style="width:48px;height:48px;font-size:1.7em;">
                                 {{ user.username[0]|upper }}

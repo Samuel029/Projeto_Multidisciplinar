@@ -164,7 +164,7 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(data => {
                 if (data.status === 'success') {
                     showNotification('Postagem criada com sucesso!', 'success');
-                    window.location.href = '/telainicial';
+                    window.location.href = '/comunidade';
                 } else {
                     showNotification(data.message || 'Erro ao criar postagem', 'error');
                 }

@@ -103,8 +103,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 'back-end': 'back-end',
                 'android': 'android',
                 'programação android': 'android',
-                'multidisciplinar': 'multidisciplinar',
-                'projeto multidisciplinar': 'multidisciplinar',
                 'carreiras': 'carreiras',
                 'redes': 'redes'
             };
@@ -125,7 +123,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         'I.A': ['I.A'],
                         'Modelagem a Banco de Dados': ['Banco de Dados'],
                         'Programação Android': ['Android'],
-                        'Projeto Multidisciplinar': ['Multidisciplinar'],
                         'Versionamento': ['Versionamento']
                     };
                     const matchedCategories = categoryMap[activeCategory] || [activeCategory];
@@ -153,7 +150,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         'I.A': ['I.A'],
                         'Modelagem a Banco de Dados': ['Banco de Dados'],
                         'Programação Android': ['Android'],
-                        'Projeto Multidisciplinar': ['Multidisciplinar'],
                         'Versionamento': ['Versionamento']
                     };
 
