@@ -14,6 +14,18 @@
     <link rel="https://cdn.jsdelivr.net/npm/emoji-picker-element@1.21.3/dist/pickers.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/post_comments.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    <style>
+        .profile-pic-img {
+            display: block;
+            object-fit: cover;
+        }
+        .profile-pic-avatar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2em;
+        }
+    </style>
 </head>
 <body>
     <!-- Header -->
@@ -43,14 +55,14 @@
             <div class="user-profile mb-4">
                 <div class="d-flex align-items-center">
                     <div class="avatar me-3">
-    {% if user.profile_pic and user.profile_pic != 'default.png' %}
-        <img src="{{ url_for('static', filename='Uploads/' + user.profile_pic) }}" alt="Foto de perfil" class="profile-pic-img rounded-circle" style="width:48px;height:48px;object-fit:cover;">
-    {% else %}
-        <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center" style="width:48px;height:48px;font-size:1.7em;">
-            {{ user.username[0]|upper }}
-        </div>
-    {% endif %}
-</div>
+                        {% if user.profile_pic and user.profile_pic != 'default.png' %}
+                            <img src="{{ url_for('static', filename='Uploads/' + user.profile_pic) }}" alt="Foto de perfil" class="profile-pic-img rounded-circle" style="width:48px;height:48px;object-fit:cover;">
+                        {% else %}
+                            <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center" style="width:48px;height:48px;font-size:1.7em;">
+                                {{ user.username[0]|upper }}
+                            </div>
+                        {% endif %}
+                    </div>
                     <div>
                         <h6 class="mb-0">{{ user.username }}</h6>
                         <small class="text-muted">{{ user.email }}</small>
@@ -79,9 +91,9 @@
                     <div class="user-info">
                         <div class="profile-pic-preview">
                             {% if post.author.profile_pic and post.author.profile_pic != 'default.png' %}
-                                <img class="profile-pic-img" src="{{ url_for('static', filename='Uploads/' + post.author.profile_pic) }}" alt="Foto de perfil" />
+                                <img class="profile-pic-img rounded-circle" src="{{ url_for('static', filename='Uploads/' + post.author.profile_pic) }}" alt="Foto de perfil" style="width:40px;height:40px;object-fit:cover;" />
                             {% else %}
-                                <div class="profile-pic-avatar">
+                                <div class="profile-pic-avatar bg-primary text-white rounded-circle d-flex justify-content-center align-items-center" style="width:40px;height:40px;font-size:1.5em;">
                                     {{ post.author.username[0]|upper }}
                                 </div>
                             {% endif %}
@@ -105,7 +117,7 @@
                 </div>
                 <div class="post-footer">
                     <button class="btn btn-sm btn-outline-primary like-btn" data-post-id="{{ post.id }}">
-                        <i class="fas fa-thumbs-up"></i> <span class="like-count">0</span>
+                        <i class="fas fa-thumbs-up"></i> <span class="like-count">{{ post.likes|length }}</span>
                     </button>
                     <a href="{{ url_for('telainicial') }}" class="btn btn-sm btn-outline-secondary close-comments">
                         <i class="fas fa-times"></i> Fechar
@@ -141,14 +153,14 @@
                             <div class="comment-wrapper">
                                 <div class="comment-header d-flex align-items-center">
                                     <div class="avatar me-3">
-    {% if user.profile_pic and user.profile_pic != 'default.png' %}
-        <img src="{{ url_for('static', filename='Uploads/' + user.profile_pic) }}" alt="Foto de perfil" class="profile-pic-img rounded-circle" style="width:48px;height:48px;object-fit:cover;">
-    {% else %}
-        <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center" style="width:48px;height:48px;font-size:1.7em;">
-            {{ user.username[0]|upper }}
-        </div>
-    {% endif %}
-</div>
+                                        {% if comment.author.profile_pic and comment.author.profile_pic != 'default.png' %}
+                                            <img src="{{ url_for('static', filename='Uploads/' + comment.author.profile_pic) }}" alt="Foto de perfil" class="profile-pic-img rounded-circle" style="width:48px;height:48px;object-fit:cover;">
+                                        {% else %}
+                                            <div class="avatar-initials bg-primary text-white rounded-circle d-flex justify-content-center align-items-center" style="width:48px;height:48px;font-size:1.7em;">
+                                                {{ comment.author.username[0]|upper }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
                                     <div class="comment-meta">
                                         <h6 class="mb-0">
                                             {{ comment.author.username }}
@@ -176,7 +188,7 @@
                                 </div>
                                 <div class="comment-footer d-flex align-items-center gap-2">
                                     <button class="btn btn-sm btn-outline-primary comment-like-btn" data-comment-id="{{ comment.id }}">
-                                        <i class="fas fa-thumbs-up"></i> <span class="like-count">0</span>
+                                        <i class="fas fa-thumbs-up"></i> <span class="like-count">{{ comment.likes|length }}</span>
                                     </button>
                                     <button class="btn btn-sm btn-outline-secondary reply-btn" data-comment-id="{{ comment.id }}">
                                         <i class="fas fa-reply"></i> Responder
@@ -219,15 +231,15 @@
                                             <div class="comment reply" data-reply-id="{{ reply.id }}">
                                                 <div class="comment-wrapper">
                                                     <div class="comment-header d-flex align-items-center">
-                                                        <div class="profile-pic-preview">
-                            {% if post.author.profile_pic and post.author.profile_pic != 'default.png' %}
-                                <img class="profile-pic-img" src="{{ url_for('static', filename='Uploads/' + post.author.profile_pic) }}" alt="Foto de perfil" />
-                            {% else %}
-                                <div class="profile-pic-avatar">
-                                    {{ post.author.username[0]|upper }}
-                                </div>
-                            {% endif %}
-                        </div>
+                                                        <div class="profile-pic-preview me-2">
+                                                            {% if reply.author.profile_pic and reply.author.profile_pic != 'default.png' %}
+                                                                <img class="profile-pic-img rounded-circle" src="{{ url_for('static', filename='Uploads/' + reply.author.profile_pic) }}" alt="Foto de perfil" style="width:32px;height:32px;object-fit:cover;" />
+                                                            {% else %}
+                                                                <div class="profile-pic-avatar bg-primary text-white rounded-circle d-flex justify-content-center align-items-center" style="width:32px;height:32px;font-size:1.2em;">
+                                                                    {{ reply.author.username[0]|upper }}
+                                                                </div>
+                                                            {% endif %}
+                                                        </div>
                                                         <div class="comment-meta">
                                                             <h6 class="mb-0">
                                                                 {{ reply.author.username }}
@@ -255,7 +267,7 @@
                                                     </div>
                                                     <div class="comment-footer d-flex align-items-center gap-2">
                                                         <button class="btn btn-sm btn-outline-primary comment-like-btn" data-reply-id="{{ reply.id }}">
-                                                            <i class="fas fa-thumbs-up"></i> <span class="like-count">0</span>
+                                                            <i class="fas fa-thumbs-up"></i> <span class="like-count">{{ reply.likes|length }}</span>
                                                         </button>
                                                     </div>
                                                     <!-- Edit Reply Form (Hidden by Default) -->
@@ -300,5 +312,43 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/emoji-picker-element@1.21.3/index.js" type="module"></script>
     <script src="{{ url_for('static', filename='js/post_comments.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Verificar imagens de perfil ao carregar a página
+            document.querySelectorAll('.profile-pic-img').forEach(img => {
+                img.addEventListener('error', () => {
+                    console.warn(`Imagem de perfil não encontrada: ${img.src}`);
+                    // Criar ou mostrar avatar de fallback
+                    const parent = img.closest('.avatar, .profile-pic-preview');
+                    if (parent) {
+                        let avatar = parent.querySelector('.profile-pic-avatar, .avatar-initials');
+                        if (!avatar) {
+                            // Criar avatar de fallback se não existir
+                            const authorName = parent.querySelector('.username, h6')?.textContent || 'U';
+                            avatar = document.createElement('div');
+                            avatar.className = 'profile-pic-avatar bg-primary text-white rounded-circle d-flex justify-content-center align-items-center';
+                            avatar.style.cssText = img.style.cssText || 'width:40px;height:40px;font-size:1.2em;';
+                            avatar.textContent = authorName[0].toUpperCase();
+                            parent.prepend(avatar);
+                        }
+                        avatar.style.display = 'flex';
+                        img.style.display = 'none';
+                    }
+                });
+                img.addEventListener('load', () => {
+                    img.style.display = 'block';
+                    const avatar = img.closest('.avatar, .profile-pic-preview')?.querySelector('.profile-pic-avatar, .avatar-initials');
+                    if (avatar) {
+                        avatar.style.display = 'none';
+                    }
+                });
+            });
+
+            // Contadores de like atualizados
+            document.querySelectorAll('.like-count').forEach(span => {
+                // Já está correto no HTML, mas pode ser usado para atualizações dinâmicas
+            });
+        });
+    </script>
 </body>
 </html>

@@ -25,23 +25,33 @@
             margin-top: 10px;
         }
         .comment-form textarea, .reply-form textarea {
-            height: 100px; /* Tamanho fixo */
-            border-radius: 8px; /* Bordas arredondadas */
-            border: 1px solid #ced4da; /* Borda padrão do Bootstrap */
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra suave */
-            transition: all 0.3s ease; /* Transição suave para foco */
-            font-family: 'Inter', sans-serif; /* Mesma fonte do projeto */
-            font-size: 0.95rem; /* Tamanho de fonte consistente */
-            padding: 10px; /* Espaçamento interno */
-            resize: none; /* Impede redimensionamento */
+            height: 100px;
+            border-radius: 8px;
+            border: 1px solid #ced4da;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            padding: 10px;
+            resize: none;
         }
         .comment-form textarea:focus, .reply-form textarea:focus {
-            border-color: #007bff; /* Cor de foco do Bootstrap */
-            box-shadow: 0 0 8px rgba(0, 123, 255, 0.3); /* Sombra ao focar */
-            outline: none; /* Remove o contorno padrão */
+            border-color: #007bff;
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+            outline: none;
         }
         .like-btn-comment {
             font-size: 0.9em;
+        }
+        .profile-pic-img {
+            display: block;
+            object-fit: cover;
+        }
+        .profile-pic-avatar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2em;
         }
     </style>
 </head>
@@ -186,9 +196,9 @@
                                                 <div class="user-info">
                                                     <div class="profile-pic-preview">
                                                         {% if post.author.profile_pic and post.author.profile_pic != 'default.png' %}
-                                                            <img class="profile-pic-img" src="{{ url_for('static', filename='Uploads/' + post.author.profile_pic) }}" alt="Foto de perfil" />
+                                                            <img class="profile-pic-img rounded-circle" src="{{ url_for('static', filename='Uploads/' + post.author.profile_pic) }}" alt="Foto de perfil" style="width:40px;height:40px;object-fit:cover;" />
                                                         {% else %}
-                                                            <div class="profile-pic-avatar">
+                                                            <div class="profile-pic-avatar bg-primary text-white rounded-circle d-flex justify-content-center align-items-center" style="width:40px;height:40px;">
                                                                 {{ post.author.username[0]|upper }}
                                                             </div>
                                                         {% endif %}
@@ -227,9 +237,9 @@
                                                             <div class="d-flex">
                                                                 <div class="profile-pic-preview me-2">
                                                                     {% if comment.author.profile_pic and comment.author.profile_pic != 'default.png' %}
-                                                                        <img class="profile-pic-img" src="{{ url_for('static', filename='Uploads/' + comment.author.profile_pic) }}" alt="Foto de perfil" style="width:32px;height:32px;" />
+                                                                        <img class="profile-pic-img rounded-circle" src="{{ url_for('static', filename='Uploads/' + comment.author.profile_pic) }}" alt="Foto de perfil" style="width:32px;height:32px;object-fit:cover;" />
                                                                     {% else %}
-                                                                        <div class="profile-pic-avatar" style="width:32px;height:32px;">
+                                                                        <div class="profile-pic-avatar bg-primary text-white rounded-circle d-flex justify-content-center align-items-center" style="width:32px;height:32px;">
                                                                             {{ comment.author.username[0]|upper }}
                                                                         </div>
                                                                     {% endif %}
@@ -242,6 +252,7 @@
                                                                         <button class="btn btn-sm btn-outline-primary like-btn-comment" data-comment-id="{{ comment.id }}">
                                                                             <i class="fas fa-thumbs-up"></i> <span class="like-count">{{ comment.likes|length }}</span>
                                                                         </button>
+                                                                        <button class="btn btn-sm btn-outline-secondary reply-btn" data-comment-id="{{ comment.id }}">Responder</button>
                                                                         {% if comment.user_id == user.id %}
                                                                             <button class="btn btn-sm btn-outline-secondary edit-comment-btn" data-comment-id="{{ comment.id }}">Editar</button>
                                                                             <button class="btn btn-sm btn-outline-danger delete-comment-btn" data-comment-id="{{ comment.id }}">Excluir</button>
@@ -253,9 +264,9 @@
                                                                                 <div class="d-flex">
                                                                                     <div class="profile-pic-preview me-2">
                                                                                         {% if reply.author.profile_pic and reply.author.profile_pic != 'default.png' %}
-                                                                                            <img class="profile-pic-img" src="{{ url_for('static', filename='Uploads/' + reply.author.profile_pic) }}" alt="Foto de perfil" style="width:24px;height:24px;" />
+                                                                                            <img class="profile-pic-img rounded-circle" src="{{ url_for('static', filename='Uploads/' + reply.author.profile_pic) }}" alt="Foto de perfil" style="width:24px;height:24px;object-fit:cover;" />
                                                                                         {% else %}
-                                                                                            <div class="profile-pic-avatar" style="width:24px;height:24px;">
+                                                                                            <div class="profile-pic-avatar bg-primary text-white rounded-circle d-flex justify-content-center align-items-center" style="width:24px;height:24px;">
                                                                                                 {{ reply.author.username[0]|upper }}
                                                                                             </div>
                                                                                         {% endif %}
@@ -667,7 +678,6 @@ public:
     <script src="{{ url_for('static', filename='js/telainicial.js') }}"></script>
     <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
     <script>
-        // Funções para manipular curtidas, comentários, respostas, edição e exclusão
         document.addEventListener('DOMContentLoaded', () => {
             // Manipular curtidas de comentários
             document.querySelectorAll('.like-btn-comment').forEach(button => {
@@ -700,7 +710,6 @@ public:
                 form.addEventListener('submit', async (e) => {
                     e.preventDefault();
                     const postId = form.dataset.postId;
-                    const content = form.querySelector('textarea[name="comment_content"]').value;
                     try {
                         const response = await fetch(`/comment/${postId}`, {
                             method: 'POST',
@@ -709,7 +718,7 @@ public:
                         const data = await response.json();
                         if (data.status === 'success') {
                             alert('Comentário adicionado com sucesso!');
-                            window.location.reload(); // Recarrega para mostrar o novo comentário
+                            window.location.reload();
                         } else {
                             alert(data.message);
                         }
@@ -725,7 +734,6 @@ public:
                 form.addEventListener('submit', async (e) => {
                     e.preventDefault();
                     const commentId = form.dataset.commentId;
-                    const content = form.querySelector('textarea[name="reply_content"]').value;
                     try {
                         const response = await fetch(`/reply/${commentId}`, {
                             method: 'POST',
@@ -734,7 +742,7 @@ public:
                         const data = await response.json();
                         if (data.status === 'success') {
                             alert('Resposta adicionada com sucesso!');
-                            window.location.reload(); // Recarrega para mostrar a nova resposta
+                            window.location.reload();
                         } else {
                             alert(data.message);
                         }
@@ -746,8 +754,8 @@ public:
             });
 
             // Mostrar/esconder formulário de resposta
-            document.querySelectorAll('.like-btn-comment').forEach(button => {
-                button.addEventListener('click', (e) => {
+            document.querySelectorAll('.reply-btn').forEach(button => {
+                button.addEventListener('click', () => {
                     const commentId = button.dataset.commentId;
                     const replyForm = document.querySelector(`.reply-form[data-comment-id="${commentId}"]`);
                     if (replyForm) {
@@ -782,7 +790,7 @@ public:
                             });
                             const data = await response.json();
                             if (data.status === 'success') {
-                                contentP.textContent = data.content;
+                                contentP.textContent = newContent;
                                 alert(data.message);
                             } else {
                                 alert(data.message);
@@ -837,7 +845,7 @@ public:
                             });
                             const data = await response.json();
                             if (data.status === 'success') {
-                                contentP.textContent = data.content;
+                                contentP.textContent = newContent;
                                 alert(data.message);
                             } else {
                                 alert(data.message);
@@ -871,6 +879,25 @@ public:
                             console.error('Erro ao excluir resposta:', error);
                             alert('Erro ao excluir resposta.');
                         }
+                    }
+                });
+            });
+
+            // Verificar imagens de perfil ao carregar a página
+            document.querySelectorAll('.profile-pic-img').forEach(img => {
+                img.addEventListener('error', () => {
+                    console.warn(`Imagem de perfil não encontrada: ${img.src}`);
+                    const avatar = img.parentElement.querySelector('.profile-pic-avatar');
+                    if (avatar) {
+                        avatar.style.display = 'flex';
+                        img.style.display = 'none';
+                    }
+                });
+                img.addEventListener('load', () => {
+                    img.style.display = 'block';
+                    const avatar = img.parentElement.querySelector('.profile-pic-avatar');
+                    if (avatar) {
+                        avatar.style.display = 'none';
                     }
                 });
             });

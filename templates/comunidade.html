@@ -9,6 +9,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/telainicial.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    <style>
+        .profile-pic-img {
+            display: block;
+            object-fit: cover;
+        }
+        .profile-pic-avatar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2em;
+        }
+    </style>
 </head>
 <body>
     <!-- Header -->
@@ -143,9 +155,9 @@
                                 <div class="user-info">
                                     <div class="profile-pic-preview">
                                         {% if post.author.profile_pic and post.author.profile_pic != 'default.png' %}
-                                            <img class="profile-pic-img" src="{{ url_for('static', filename='Uploads/' + post.author.profile_pic) }}" alt="Foto de perfil" />
+                                            <img class="profile-pic-img rounded-circle" src="{{ url_for('static', filename='Uploads/' + post.author.profile_pic) }}" alt="Foto de perfil" style="width:40px;height:40px;object-fit:cover;" />
                                         {% else %}
-                                            <div class="profile-pic-avatar">
+                                            <div class="profile-pic-avatar bg-primary text-white rounded-circle d-flex justify-content-center align-items-center" style="width:40px;height:40px;font-size:1.5em;">
                                                 {{ post.author.username[0]|upper }}
                                             </div>
                                         {% endif %}
@@ -172,7 +184,7 @@
                                     <i class="fas fa-thumbs-up"></i> <span class="like-count">{{ post.likes|length }}</span>
                                 </button>
                                 <a href="{{ url_for('post_comments', post_id=post.id) }}" class="btn btn-sm btn-outline-secondary comment-btn">
-                                    <i class="fas fa-comment"></i> Comentar
+                                    <i class="fas fa-comment"></i> Comentar ({{ post.comments|length }})
                                 </a>
                             </div>
                         </div>
@@ -194,5 +206,80 @@
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ url_for('static', filename='js/telainicial.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Verificar imagens de perfil ao carregar a página
+            document.querySelectorAll('.profile-pic-img').forEach(img => {
+                img.addEventListener('error', () => {
+                    console.warn(`Imagem de perfil não encontrada: ${img.src}`);
+                    const parent = img.closest('.profile-pic-preview') || img.closest('.avatar');
+                    const avatar = parent.querySelector('.profile-pic-avatar, .avatar-initials');
+                    if (avatar) {
+                        avatar.style.display = 'flex';
+                        img.style.display = 'none';
+                    }
+                });
+                img.addEventListener('load', () => {
+                    img.style.display = 'block';
+                    const parent = img.closest('.profile-pic-preview') || img.closest('.avatar');
+                    const avatar = parent.querySelector('.profile-pic-avatar, .avatar-initials');
+                    if (avatar) {
+                        avatar.style.display = 'none';
+                    }
+                });
+            });
+
+            // Manipular curtidas de postagens
+            document.querySelectorAll('.like-btn').forEach(button => {
+                button.addEventListener('click', async () => {
+                    const postId = button.dataset.postId;
+                    try {
+                        const response = await fetch(`/like_post/${postId}`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' }
+                        });
+                        const data = await response.json();
+                        if (data.status === 'success') {
+                            const likeCountSpan = button.querySelector('.like-count');
+                            likeCountSpan.textContent = data.like_count;
+                            button.classList.toggle('btn-primary', data.liked);
+                            button.classList.toggle('btn-outline-primary', !data.liked);
+                            alert(data.message);
+                        } else {
+                            alert(data.message);
+                        }
+                    } catch (error) {
+                        console.error('Erro ao curtir postagem:', error);
+                        alert('Erro ao curtir postagem.');
+                    }
+                });
+            });
+
+            // Manipular exclusão de postagens
+            document.querySelectorAll('.delete-post').forEach(button => {
+                button.addEventListener('click', async () => {
+                    if (confirm('Tem certeza que deseja excluir esta postagem?')) {
+                        const postId = button.dataset.postId;
+                        try {
+                            const response = await fetch(`/delete_post/${postId}`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' }
+                            });
+                            const data = await response.json();
+                            if (data.status === 'success') {
+                                button.closest('.post-card').remove();
+                                alert(data.message);
+                            } else {
+                                alert(data.message);
+                            }
+                        } catch (error) {
+                            console.error('Erro ao excluir postagem:', error);
+                            alert('Erro ao excluir postagem.');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
