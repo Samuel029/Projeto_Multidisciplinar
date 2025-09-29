@@ -1,0 +1,63 @@
+[
+    {
+        "title": "Aula 1 - Backend",
+        "category": "Back-end",
+        "author": "TechNoBug",
+        "description": "Introdução aos conceitos fundamentais de desenvolvimento back-end.",
+        "tags": [
+            "Back-end",
+            "Programação",
+            "Iniciante"
+        ],
+        "views": "1.2K",
+        "downloads": "0.8K",
+        "thumbnail": "/static/thumbnails/Aula 1 - Backend_thumb.jpg",
+        "file_path": "/slides/Aula1-Backend.pdf"
+    },
+    {
+        "title": "Aula 1 - Frontend",
+        "category": "Front-end",
+        "author": "TechNoBug",
+        "description": "Fundamentos de desenvolvimento front-end com HTML, CSS e JavaScript.",
+        "tags": [
+            "Front-end",
+            "HTML",
+            "CSS",
+            "JavaScript"
+        ],
+        "views": "1.5K",
+        "downloads": "1.0K",
+        "thumbnail": "/static/thumbnails/Aula 1 - Frontend_thumb.jpg",
+        "file_path": "/slides/Aula1-Frontend.pdf"
+    },
+    {
+        "title": "Aula 2 - Frontend",
+        "category": "Front-end",
+        "author": "TechNoBug",
+        "description": "Aprofundamento em técnicas de front-end para interfaces interativas.",
+        "tags": [
+            "Front-end",
+            "JavaScript",
+            "Intermediário"
+        ],
+        "views": "1.3K",
+        "downloads": "0.9K",
+        "thumbnail": "/static/thumbnails/Aula 2 - Frontend_thumb.jpg",
+        "file_path": "/slides/Aula2-Frontend.pdf"
+    },
+    {
+        "title": "Aula 2 - Back End",
+        "category": "Back-end",
+        "author": "TechNoBug",
+        "description": "Técnicas avançadas de back-end, incluindo APIs e integração com banco de dados.",
+        "tags": [
+            "Back-end",
+            "APIs",
+            "Intermediário"
+        ],
+        "views": "1.1K",
+        "downloads": "0.7K",
+        "thumbnail": "/static/thumbnails/Aula 2 - Back End_thumb.jpg",
+        "file_path": "/slides/Aula2-BackEnd.pdf"
+    }
+]

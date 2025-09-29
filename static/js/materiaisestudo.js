@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Inicializa componentes
     initializeComponents();
+    loadSlides();
 
     // Configura eventos
     setupSearchBar();
@@ -18,8 +19,63 @@ document.addEventListener('DOMContentLoaded', function() {
     setupThemeSwitch();
     setupDrawer();
 
+    async function loadSlides() {
+        try {
+            const response = await fetch('/data/pdfs_slides.json');
+            if (!response.ok) throw new Error('Erro ao carregar o arquivo JSON');
+            const slides = await response.json();
+            renderSlides(slides);
+        } catch (error) {
+            console.error('Erro ao carregar slides:', error);
+            showNotification('Erro ao carregar os slides', 'danger');
+        }
+    }
+
+    function renderSlides(slides) {
+        slideGrid.innerHTML = '';
+        slides.forEach(slide => {
+            const card = document.createElement('div');
+            card.className = 'slide-card';
+            // Codificar o file_path para lidar com espaços e caracteres especiais
+            const encodedFilePath = encodeURI(slide.file_path);
+            card.innerHTML = `
+                <div class="slide-thumbnail">
+                    <a href="${encodedFilePath}" target="_blank" download>
+                        <img src="${slide.thumbnail}" alt="Thumbnail do slide" onerror="this.src='/static/thumbnails/default_thumb.jpg'">
+                    </a>
+                    <div class="slide-category-tag">${slide.category}</div>
+                    <div class="slide-download-icon">
+                        <a href="${encodedFilePath}" download>
+                            <i class="fas fa-download"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="slide-info">
+                    <h3 class="slide-title">
+                        <a href="${encodedFilePath}" download style="text-decoration: none; color: inherit;">
+                            ${slide.title}
+                        </a>
+                    </h3>
+                    <div class="slide-meta">
+                        <div class="instructor">
+                            <span class="instructor-name">${slide.author}</span>
+                        </div>
+                        <div class="slide-stats">
+                            <span><i class="fas fa-eye"></i> ${slide.views}</span>
+                            <span><i class="fas fa-download"></i> ${slide.downloads}</span>
+                        </div>
+                    </div>
+                    <p class="slide-description">${slide.description}</p>
+                    <div class="slide-tags">
+                        ${slide.tags.map(tag => `<span class="slide-tag">${tag}</span>`).join('')}
+                    </div>
+                </div>
+            `;
+            slideGrid.appendChild(card);
+        });
+    }
+
     function initializeComponents() {
-        // Verifica se há tema salvo no localStorage
         if (localStorage.getItem('theme') === 'dark') {
             document.body.classList.add('dark-theme');
             const themeSwitch = document.querySelector('.theme-switch');
@@ -32,7 +88,6 @@ document.addEventListener('DOMContentLoaded', function() {
     function setupSearchBar() {
         if (!searchBar || !searchInput || !searchIcon) return;
 
-        // Toggle da barra de pesquisa em dispositivos móveis
         searchIcon.addEventListener('click', function(event) {
             if (window.innerWidth <= 992) {
                 searchBar.classList.toggle('search-active');
@@ -49,7 +104,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // Fecha a barra de pesquisa ao clicar fora
         document.addEventListener('click', function(event) {
             if (window.innerWidth <= 992 && !searchBar.contains(event.target)) {
                 searchBar.classList.remove('search-active');
@@ -62,13 +116,11 @@ document.addEventListener('DOMContentLoaded', function() {
             event.stopPropagation();
         });
 
-        // Pesquisa em tempo real
         searchInput.addEventListener('input', function() {
             const searchTerm = this.value.toLowerCase().trim();
             filterSlides(searchTerm);
         });
 
-        // Pesquisa ao pressionar Enter
         searchInput.addEventListener('keypress', function(event) {
             if (event.key === 'Enter') {
                 event.preventDefault();
@@ -88,23 +140,11 @@ document.addEventListener('DOMContentLoaded', function() {
             const category = card.querySelector('.slide-category-tag').textContent.toLowerCase();
             const tags = Array.from(card.querySelectorAll('.slide-tag')).map(tag => tag.textContent.toLowerCase());
 
-            // Mapear termos de pesquisa para categorias
             const searchCategoryMap = {
-                'versionamento': 'versionamento',
-                'ia': 'i.a',
-                'i.a': 'i.a',
-                'banco de dados': 'banco de dados',
-                'modelagem a banco de dados': 'banco de dados',
-                'logica': 'lógica',
-                'processos': 'processos',
                 'frontend': 'front-end',
                 'front-end': 'front-end',
                 'backend': 'back-end',
-                'back-end': 'back-end',
-                'android': 'android',
-                'programação android': 'android',
-                'carreiras': 'carreiras',
-                'redes': 'redes'
+                'back-end': 'back-end'
             };
 
             const matchedCategory = searchCategoryMap[searchTerm] || searchTerm;
@@ -120,10 +160,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 (() => {
                     const cardCategory = card.querySelector('.slide-category-tag').textContent.trim();
                     const categoryMap = {
-                        'I.A': ['I.A'],
-                        'Modelagem a Banco de Dados': ['Banco de Dados'],
-                        'Programação Android': ['Android'],
-                        'Versionamento': ['Versionamento']
+                        'Todos': ['Back-end', 'Front-end'],
+                        'Back-end': ['Back-end'],
+                        'Front-end': ['Front-end']
                     };
                     const matchedCategories = categoryMap[activeCategory] || [activeCategory];
                     return matchedCategories.includes(cardCategory);
@@ -147,10 +186,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.querySelectorAll('.slide-card').forEach(card => {
                     const cardCategory = card.querySelector('.slide-category-tag').textContent.trim();
                     const categoryMap = {
-                        'I.A': ['I.A'],
-                        'Modelagem a Banco de Dados': ['Banco de Dados'],
-                        'Programação Android': ['Android'],
-                        'Versionamento': ['Versionamento']
+                        'Todos': ['Back-end', 'Front-end'],
+                        'Back-end': ['Back-end'],
+                        'Front-end': ['Front-end']
                     };
 
                     if (categoryName === 'Todos') {
@@ -165,7 +203,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 });
 
-                // Limpa a pesquisa ao mudar de categoria
                 if (searchInput) {
                     searchInput.value = '';
                     searchBar.classList.remove('search-active');
@@ -231,12 +268,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const drawerLinks = document.querySelectorAll('.offcanvas .nav-link');
         if (drawerLinks && drawerLinks.length > 0) {
-            // Remove active class from all links
             drawerLinks.forEach(link => {
                 link.classList.remove('active');
             });
 
-            // Find and activate the "Materiais de Estudo" link
             const materialsLink = Array.from(drawerLinks).find(link => 
                 link.getAttribute('href').includes('materiais') || 
                 link.textContent.includes('Materiais de Estudo')
@@ -245,7 +280,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 materialsLink.classList.add('active');
             }
 
-            // Add click event listeners to close the drawer
             drawerLinks.forEach(link => {
                 link.addEventListener('click', function() {
                     const bsOffcanvas = bootstrap.Offcanvas.getInstance(sideMenu);

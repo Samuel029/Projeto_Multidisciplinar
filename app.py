@@ -30,10 +30,12 @@ app.config.from_object(ActiveConfig)
 # Inicializar Cache
 cache = Cache(app, config={'CACHE_TYPE': 'simple'})
 
-# Configurar diretórios para PDFs e JSON
+# Configurar diretórios para PDFs, Slides e JSON
 PDFS_FOLDER = os.path.join(app.root_path, 'pdfs')
+SLIDES_FOLDER = os.path.join(app.root_path, 'static', 'pdfs_slides')
 DATA_FOLDER = os.path.join(app.root_path, 'data')
 app.config['PDFS_FOLDER'] = PDFS_FOLDER
+app.config['SLIDES_FOLDER'] = SLIDES_FOLDER
 app.config['DATA_FOLDER'] = DATA_FOLDER
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
@@ -58,9 +60,9 @@ migrate = Migrate(app, db)
 # Registrar o blueprint de recuperação de senha
 app.register_blueprint(reset_bp)
 
-# Criar pastas instance, pdfs e data se não existirem
+# Criar pastas instance, pdfs, slides e data se não existirem
 instance_dir = app.config['INSTANCE_DIR']
-for directory in [instance_dir, PDFS_FOLDER, DATA_FOLDER]:
+for directory in [instance_dir, PDFS_FOLDER, SLIDES_FOLDER, DATA_FOLDER]:
     if not os.path.exists(directory):
         try:
             os.makedirs(directory)
@@ -432,6 +434,23 @@ def serve_pdf(filename):
         return render_template('404.html'), 404
     except Exception as e:
         logger.error(f"Erro ao servir PDF {filename}: {str(e)}")
+        return render_template('404.html'), 404
+
+@app.route('/slides/<path:filename>')
+def serve_slide(filename):
+    try:
+        file_path = os.path.join(app.config['SLIDES_FOLDER'], filename)
+        if os.path.exists(file_path):
+            logger.info(f"Servindo slide: {file_path}")
+            return send_from_directory(app.config['SLIDES_FOLDER'], filename)
+        actual_filename = find_file_case_insensitive(app.config['SLIDES_FOLDER'], filename)
+        if actual_filename:
+            logger.info(f"Slide encontrado (case-insensitive): {actual_filename}")
+            return send_from_directory(app.config['SLIDES_FOLDER'], actual_filename)
+        logger.error(f"Slide não encontrado: {filename} em {app.config['SLIDES_FOLDER']}")
+        return render_template('404.html'), 404
+    except Exception as e:
+        logger.error(f"Erro ao servir slide {filename}: {str(e)}")
         return render_template('404.html'), 404
 
 @app.route('/codigo')
@@ -1076,6 +1095,14 @@ def logout():
     session.clear()
     flash('Você saiu da sua conta.', 'info')
     return redirect(url_for('registroelogin'))
+
+@app.route('/data/pdfs_slides.json')
+def serve_pdfs_slides_json():
+    try:
+        return send_from_directory(app.config['DATA_FOLDER'], 'pdfs_slides.json')
+    except Exception as e:
+        logger.error(f"Erro ao servir pdfs_slides.json: {str(e)}")
+        return render_template('404.html'), 404
 
 with app.app_context():
     try:
